@@ -42,8 +42,8 @@ export default {
                 // Dark Mode Colors
                 'dark-primary': '#1f2937',
                 'dark-secondary': '#334155',
-                'dark-text-primary': '#FFFFFF',
-                'dark-text-secondary': '#C9D1D9',
+                'dark-text-primary': '#ffffff',
+                'dark-text-secondary': '#cbd5e1',
                 'dark-accent-primary': '#FF6347',
                 'dark-highlight-primary': '#1E90FF',
             },

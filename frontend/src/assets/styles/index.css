@@ -26,14 +26,14 @@
     }
 
     .neu-form-input {
-        @apply bg-primary text-secondary active:placeholder:text-primary focus:placeholder:text-primary placeholder:text-secondary font-indie-flower shadow-neu-light-xs focus:shadow-neu-inset-light-xs w-full appearance-none rounded-lg border border-light-secondary px-3 py-2 outline-none transition duration-300 placeholder:tracking-wide;
+        @apply bg-primary text-secondary active:placeholder:text-primary focus:placeholder:text-primary placeholder:text-secondary w-full appearance-none rounded-lg border border-light-secondary px-3 py-2 font-indie-flower shadow-neu-light-xs outline-none transition duration-300 placeholder:tracking-wide focus:shadow-neu-inset-light-xs;
         /* dark mode */
-        @apply dark:shadow-neu-dark-xs dark:focus:shadow-neu-inset-dark-xs dark:border-dark-secondary;
+        @apply dark:border-dark-secondary dark:shadow-neu-dark-xs dark:focus:shadow-neu-inset-dark-xs;
     }
 
     /* ------------------------- neu-input-group & Icon ------------------------- */
     .neu-input-group {
-        @apply shadow-neu-light-xs dark:shadow-neu-dark-xs flex w-full items-center rounded-lg border border-light-secondary focus-within:shadow-none dark:border-dark-secondary dark:focus-within:shadow-none;
+        @apply flex w-full items-center rounded-lg border border-light-secondary shadow-neu-light-xs focus-within:shadow-none dark:border-dark-secondary dark:shadow-neu-dark-xs dark:focus-within:shadow-none;
     }
 
     .neu-input-icon {
@@ -41,7 +41,7 @@
     }
 
     .neu-input-group-prepend .neu-form-input {
-        @apply focus:shadow-neu-inset-light-xs dark:focus:shadow-neu-inset-dark-xs rounded-l-none rounded-r-lg shadow-none;
+        @apply rounded-l-none rounded-r-lg shadow-none focus:shadow-neu-inset-light-xs dark:focus:shadow-neu-inset-dark-xs;
     }
 
     .neu-input-group-prepend .neu-input-icon {
@@ -49,7 +49,7 @@
     }
 
     .neu-input-group-append .neu-form-input {
-        @apply focus:shadow-neu-inset-light-xs dark:focus:shadow-neu-inset-dark-xs rounded-l-lg rounded-r-none shadow-none;
+        @apply rounded-l-lg rounded-r-none shadow-none focus:shadow-neu-inset-light-xs dark:focus:shadow-neu-inset-dark-xs;
     }
 
     .neu-input-group-append .neu-input-icon {
@@ -68,13 +68,13 @@
     }
 
     .neu-input-group:focus-within .neu-input-icon {
-        @apply shadow-neu-light-xs dark:shadow-neu-dark-xs border border-light-secondary dark:border-dark-secondary;
+        @apply border border-light-secondary shadow-neu-light-xs dark:border-dark-secondary dark:shadow-neu-dark-xs;
     }
 
     .neu-form-select {
-        @apply bg-primary text-primary active:placeholder:text-primary focus:placeholder:text-primary placeholder:text-secondary font-indie-flower shadow-neu-light-xs focus:shadow-neu-inset-light-xs w-full appearance-none rounded-lg border border-light-secondary px-3 py-2 outline-none transition duration-300 placeholder:tracking-wide;
+        @apply bg-primary text-primary active:placeholder:text-primary focus:placeholder:text-primary placeholder:text-secondary w-full appearance-none rounded-lg border border-light-secondary px-3 py-2 font-indie-flower shadow-neu-light-xs outline-none transition duration-300 placeholder:tracking-wide focus:shadow-neu-inset-light-xs;
         /* dark mode */
-        @apply dark:shadow-neu-dark-xs dark:focus:shadow-neu-inset-dark-xs dark:border-dark-secondary;
+        @apply dark:border-dark-secondary dark:shadow-neu-dark-xs dark:focus:shadow-neu-inset-dark-xs;
         /* arrow */
         @apply appearance-none bg-no-repeat pr-10;
         background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="%23767676" d="M8.037 11.166L14.5 22.36c.825 1.43 2.175 1.43 3 0l6.463-11.195c.826-1.43.15-2.598-1.5-2.598H9.537c-1.65 0-2.326 1.17-1.5 2.6z"/></svg>');
@@ -147,10 +147,25 @@
     }
 
     .lineargradient-dark {
-        background: linear-gradient(145deg, #37465b, #2e3b4d);
+        background: linear-gradient(145deg, #37465b, #afb3b7);
     }
 
     .lineargradient-light {
         background: linear-gradient(145deg, #ffc3c6, #e6a4a7);
+    }
+
+    /* ----------------------------- Thin Scrollbar ----------------------------- */
+    .scrollbar-thin {
+        &::-webkit-scrollbar {
+            width: 4px; /* Set the width of the scrollbar */
+            height: 4px; /* Set the height of the scrollbar for vertical scrollbar */
+        }
+        &::-webkit-scrollbar-thumb {
+            @apply bg-dark-secondary dark:bg-light-secondary; /* Set the color of the scrollbar thumb */
+            border-radius: 10px; /* Set the border radius of the scrollbar thumb */
+        }
+        &::-webkit-scrollbar-thumb:hover {
+            @apply bg-dark-primary dark:bg-light-primary; /* Set the color of the scrollbar thumb on hover */
+        }
     }
 }
