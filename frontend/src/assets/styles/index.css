@@ -1,0 +1,156 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Remove default CSS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Reset styles */
+.reset {
+    all: unset;
+}
+
+@layer components {
+    .neu-form-group {
+        @apply flex flex-col gap-2;
+    }
+
+    .neu-form-label,
+    .neu-form-checkbox-label,
+    .neu-form-text {
+        @apply text-secondary font-indie-flower text-sm leading-3;
+    }
+
+    .neu-form-input {
+        @apply bg-primary text-secondary active:placeholder:text-primary focus:placeholder:text-primary placeholder:text-secondary font-indie-flower shadow-neu-light-xs focus:shadow-neu-inset-light-xs w-full appearance-none rounded-lg border border-light-secondary px-3 py-2 outline-none transition duration-300 placeholder:tracking-wide;
+        /* dark mode */
+        @apply dark:shadow-neu-dark-xs dark:focus:shadow-neu-inset-dark-xs dark:border-dark-secondary;
+    }
+
+    /* ------------------------- neu-input-group & Icon ------------------------- */
+    .neu-input-group {
+        @apply shadow-neu-light-xs dark:shadow-neu-dark-xs flex w-full items-center rounded-lg border border-light-secondary focus-within:shadow-none dark:border-dark-secondary dark:focus-within:shadow-none;
+    }
+
+    .neu-input-icon {
+        @apply text-secondary bg-primary size-10 border-light-secondary px-2 py-1 dark:border-dark-secondary;
+    }
+
+    .neu-input-group-prepend .neu-form-input {
+        @apply focus:shadow-neu-inset-light-xs dark:focus:shadow-neu-inset-dark-xs rounded-l-none rounded-r-lg shadow-none;
+    }
+
+    .neu-input-group-prepend .neu-input-icon {
+        @apply rounded-l-lg rounded-r-none border-r;
+    }
+
+    .neu-input-group-append .neu-form-input {
+        @apply focus:shadow-neu-inset-light-xs dark:focus:shadow-neu-inset-dark-xs rounded-l-lg rounded-r-none shadow-none;
+    }
+
+    .neu-input-group-append .neu-input-icon {
+        @apply rounded-l-none rounded-r-lg border-l;
+    }
+
+    .neu-input-group .neu-form-input {
+        @apply border-none;
+    }
+
+    .neu-input-group:hover .neu-form-input,
+    .neu-input-group:focus .neu-form-input,
+    .neu-input-group:hover .neu-input-icon,
+    .neu-input-group:focus-within .neu-input-icon {
+        @apply placeholder:text-primary text-primary;
+    }
+
+    .neu-input-group:focus-within .neu-input-icon {
+        @apply shadow-neu-light-xs dark:shadow-neu-dark-xs border border-light-secondary dark:border-dark-secondary;
+    }
+
+    .neu-form-select {
+        @apply bg-primary text-primary active:placeholder:text-primary focus:placeholder:text-primary placeholder:text-secondary font-indie-flower shadow-neu-light-xs focus:shadow-neu-inset-light-xs w-full appearance-none rounded-lg border border-light-secondary px-3 py-2 outline-none transition duration-300 placeholder:tracking-wide;
+        /* dark mode */
+        @apply dark:shadow-neu-dark-xs dark:focus:shadow-neu-inset-dark-xs dark:border-dark-secondary;
+        /* arrow */
+        @apply appearance-none bg-no-repeat pr-10;
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="%23767676" d="M8.037 11.166L14.5 22.36c.825 1.43 2.175 1.43 3 0l6.463-11.195c.826-1.43.15-2.598-1.5-2.598H9.537c-1.65 0-2.326 1.17-1.5 2.6z"/></svg>');
+        background-position: right 0.5rem center;
+        background-size: 1.5rem 1.5rem;
+    }
+}
+
+@layer utilities {
+    .flex-center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /*                                Color Scheme                                */
+    /* -------------------------------------------------------------------------- */
+
+    .bg-primary {
+        @apply bg-light-primary dark:bg-dark-primary;
+    }
+
+    .bg-secondary {
+        @apply bg-light-secondary dark:bg-dark-secondary;
+    }
+
+    .bg-accent-primary {
+        @apply bg-light-accent-primary dark:bg-dark-accent-primary;
+    }
+
+    .bg-highlight-primary {
+        @apply bg-light-highlight-primary dark:bg-dark-highlight-primary;
+    }
+
+    /* ------------------------------- Text Colors ------------------------------ */
+    .text-primary {
+        @apply text-light-text-primary dark:text-dark-text-primary;
+    }
+
+    .text-secondary {
+        @apply text-light-text-secondary dark:text-dark-text-secondary;
+    }
+
+    .text-accent-primary {
+        @apply text-light-accent-primary dark:text-dark-accent-primary;
+    }
+
+    .text-theme-primary {
+        @apply text-light-primary dark:text-dark-primary;
+    }
+
+    .text-theme-secondary {
+        @apply text-light-secondary dark:text-dark-secondary;
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /*                              Svg Shadow Effect                             */
+    /* -------------------------------------------------------------------------- */
+    .svg-shadow-light-xs {
+        filter: drop-shadow(-2px -2px 4px #ffcfd3) drop-shadow(2px 2px 4px #db9d9f);
+    }
+
+    .svg-shadow-dark-xs {
+        filter: drop-shadow(3px 3px 6px #263140) drop-shadow(-3px -3px 6px #394960);
+    }
+
+    .btn {
+        @apply bg-accent-primary rounded-md px-4 py-2 text-light-text-primary shadow-md dark:text-dark-text-secondary;
+    }
+
+    .lineargradient-dark {
+        background: linear-gradient(145deg, #37465b, #2e3b4d);
+    }
+
+    .lineargradient-light {
+        background: linear-gradient(145deg, #ffc3c6, #e6a4a7);
+    }
+}
