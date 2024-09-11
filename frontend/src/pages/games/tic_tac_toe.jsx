@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react'
+
+import NeuButton from '../../components/common/buttons/neu-button'
+
 import Close from '../../components/common/svg/close'
 import Circle from '../../components/common/svg/circle'
 import Reset from '../../components/common/svg/reset'
@@ -209,16 +212,12 @@ export function TicTacToe() {
             <div className="mb-2 grid w-full grid-cols-2 border-b border-light-secondary py-3 dark:border-dark-secondary">
                 <div className="text-primary flex-center font-indie-flower text-2xl font-bold tracking-wider">Tic Tac Toe</div>
                 <div className="flex-center gap-3">
-                    <button className="bg-primary dark:lineargradient-dark lineargradient-light group flex items-center justify-center overflow-hidden rounded-lg border border-light-secondary p-1.5 shadow-neu-light-xs dark:border-dark-secondary dark:shadow-neu-dark-xs">
-                        <div className="text-secondary group-hover:text-primary group-focus:text-primary dark:lineargradient-dark lineargradient-light inline-flex h-full w-full items-center justify-center gap-2 overflow-hidden rounded-lg px-2 py-1 font-medium shadow-neu-light-xs transition-all duration-300 group-hover:shadow-none group-focus:shadow-none group-active:shadow-none dark:shadow-neu-dark-xs">
-                            <span className="font-indie-flower text-sm font-semibold tracking-wider">Classic</span>
-                        </div>
-                    </button>
-                    <button className="bg-primary dark:lineargradient-dark lineargradient-light group flex items-center justify-center overflow-hidden rounded-lg border border-light-secondary p-1.5 shadow-neu-light-xs dark:border-dark-secondary dark:shadow-neu-dark-xs">
-                        <div className="text-secondary group-hover:text-primary group-focus:text-primary dark:lineargradient-dark lineargradient-light inline-flex h-full w-full items-center justify-center gap-2 overflow-hidden rounded-lg px-2 py-1 font-medium shadow-neu-light-xs transition-all duration-300 group-hover:shadow-none group-focus:shadow-none group-active:shadow-none dark:shadow-neu-dark-xs">
-                            <span className="font-indie-flower text-sm font-semibold tracking-wider">Advance</span>
-                        </div>
-                    </button>
+                    <NeuButton type="button">
+                        <span className="font-indie-flower text-sm font-semibold tracking-wider">Classic</span>
+                    </NeuButton>
+                    <NeuButton type="button">
+                        <span className="font-indie-flower text-sm font-semibold tracking-wider">Advance</span>
+                    </NeuButton>
                 </div>
             </div>
 
@@ -304,27 +303,14 @@ export function TicTacToe() {
 
                     {/* New Game & Set Player Button */}
                     <div className="grid grid-cols-2 gap-4">
-                        <button
-                            type="button"
-                            title="Start New Game"
-                            onClick={() => initializeGame(true)}
-                            className="bg-primary dark:lineargradient-dark lineargradient-light group flex items-center justify-center overflow-hidden rounded-full border border-light-secondary p-1.5 shadow-neu-light-xs dark:border-dark-secondary dark:shadow-neu-dark-xs">
-                            <div className="text-secondary group-hover:text-primary group-focus:text-primary dark:lineargradient-dark lineargradient-light inline-flex h-full w-full items-center justify-center gap-2 overflow-hidden rounded-full px-2 py-1 font-medium shadow-neu-light-xs transition-all duration-300 group-hover:shadow-none group-focus:shadow-none group-active:shadow-none dark:shadow-neu-dark-xs">
-                                <GamePad className="size-6" />
-                                <span className="font-indie-flower text-sm font-semibold tracking-wider">New Game</span>
-                            </div>
-                        </button>
-
-                        <button
-                            type="button"
-                            title="Set Player Names"
-                            onClick={handleSetNamesClick}
-                            className="bg-primary dark:lineargradient-dark lineargradient-light group flex items-center justify-center overflow-hidden rounded-full border border-light-secondary p-1.5 shadow-neu-light-xs dark:border-dark-secondary dark:shadow-neu-dark-xs">
-                            <div className="text-secondary group-hover:text-primary group-focus:text-primary dark:lineargradient-dark lineargradient-light inline-flex h-full w-full items-center justify-center gap-2 overflow-hidden rounded-full px-2 py-1 font-medium shadow-neu-light-xs transition-all duration-300 group-hover:shadow-none group-focus:shadow-none group-active:shadow-none dark:shadow-neu-dark-xs">
-                                <GamePad className="size-6" />
-                                <span className="font-indie-flower text-sm font-semibold tracking-wider">Set Names</span>
-                            </div>
-                        </button>
+                        <NeuButton type="button" title="Start New Game" onClick={() => initializeGame(true)}>
+                            <GamePad className="size-6" />
+                            <span className="font-indie-flower text-sm font-semibold tracking-wider">New Game</span>
+                        </NeuButton>
+                        <NeuButton type="button" title="Set Player Names" onClick={handleSetNamesClick}>
+                            <GamePad className="size-6" />
+                            <span className="font-indie-flower text-sm font-semibold tracking-wider">Set Names</span>
+                        </NeuButton>
                     </div>
                 </div>
 
@@ -360,13 +346,10 @@ export function TicTacToe() {
                                         onKeyDown={(e) => e.key === 'Enter' && closeModal()}
                                     />
                                 </div>
-                                <button
-                                    onClick={closeModal}
-                                    className="bg-primary dark:lineargradient-dark lineargradient-light group flex items-center justify-center overflow-hidden rounded-full border border-light-secondary p-1.5 shadow-neu-light-xs dark:border-dark-secondary dark:shadow-neu-dark-xs">
-                                    <div className="text-secondary group-hover:text-primary group-focus:text-primary dark:lineargradient-dark lineargradient-light inline-flex h-full w-full items-center justify-center gap-2 overflow-hidden rounded-full px-2 py-1 font-medium shadow-neu-light-xs transition-all duration-300 group-hover:shadow-none group-focus:shadow-none group-active:shadow-none dark:shadow-neu-dark-xs">
-                                        <span className="font-indie-flower text-sm font-semibold tracking-wider">Close</span>
-                                    </div>
-                                </button>
+
+                                <NeuButton type="button" title="Close Modal" onClick={closeModal}>
+                                    <span className="font-indie-flower text-sm font-semibold tracking-wider">Close</span>
+                                </NeuButton>
                             </div>
                         </div>
                     </div>
