@@ -2,7 +2,7 @@ import React, { lazy, Suspense } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import SideNav from './components/layout/sidenav/sidenav'
 import TicTacToeClassic from './pages/games/tic-tac-toe/classic'
-import TicTacToeAdvanced from './pages/games/tic-tac-toe/advanced'
+import TicTacToeUltimate from './pages/games/tic-tac-toe/ultimate'
 import Shadows from './pages/ShadowsGrid'
 
 function App() {
@@ -17,7 +17,7 @@ function App() {
                 <Route path="/games/tic-tac-toe">
                     <Route index element={<TicTacToeClassic />} />
                     <Route path="classic" element={<TicTacToeClassic />} />
-                    <Route path="advanced" element={<TicTacToeAdvanced />} />
+                    <Route path="ultimate" element={<TicTacToeUltimate />} />
                 </Route>
             </Routes>
             {/* </Suspense> */}

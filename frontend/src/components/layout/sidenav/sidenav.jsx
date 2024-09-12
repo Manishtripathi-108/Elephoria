@@ -6,7 +6,7 @@ import avatarImage from '../../../assets/images/square/animal-orange-bird.png'
 const menuItems = {
     Game: [
         { name: 'Tic Tac Toe', url: '/games/tic-tac-toe' },
-        { name: 'Tic Tac Toe Advanced', url: '/games/tic-tac-toe/advanced' },
+        { name: 'Tic Tac Toe Ultimate', url: '/games/tic-tac-toe/Ultimate' },
     ],
     Shadows: [{ name: 'Shadows Grid', url: '/shadows' }],
 }

@@ -8,6 +8,7 @@ import Close from '../../../components/common/svg/close'
 import Circle from '../../../components/common/svg/circle'
 import Reset from '../../../components/common/svg/reset'
 import GamePad from '../../../components/common/svg/gamepad'
+import Heading from './components/heading'
 
 export function TicTacToe() {
     // State to track the size of the board
@@ -208,17 +209,7 @@ export function TicTacToe() {
     return (
         <div className="grid place-items-center">
             {/* Heading */}
-            <div className="mb-2 grid w-full grid-cols-2 border-b border-light-secondary py-3 dark:border-dark-secondary">
-                <div className="text-primary flex-center font-indie-flower text-2xl font-bold tracking-wider">Tic Tac Toe</div>
-                <div className="flex-center gap-3">
-                    <NeuButton type="button">
-                        <span className="font-indie-flower text-sm font-semibold tracking-wider">Classic</span>
-                    </NeuButton>
-                    <NeuButton type="button">
-                        <span className="font-indie-flower text-sm font-semibold tracking-wider">Advance</span>
-                    </NeuButton>
-                </div>
-            </div>
+            <Heading title="Classic Tic-Tac-Toe" />
 
             <div className="flex w-full flex-col flex-wrap items-center justify-around gap-5 py-5 md:flex-row md:items-start">
                 {/* Game Board */}
