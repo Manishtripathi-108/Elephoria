@@ -4,7 +4,10 @@ import warriorImage from '../../../assets/images/landscape/man-warrior.png'
 import avatarImage from '../../../assets/images/square/animal-orange-bird.png'
 
 const menuItems = {
-    Game: [{ name: 'Tic Tac Toe', url: '/games/tic-tac-toe' }],
+    Game: [
+        { name: 'Tic Tac Toe', url: '/games/tic-tac-toe' },
+        { name: 'Tic Tac Toe Advanced', url: '/games/tic-tac-toe/advanced' },
+    ],
     Shadows: [{ name: 'Shadows Grid', url: '/shadows' }],
 }
 
