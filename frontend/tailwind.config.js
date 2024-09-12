@@ -49,7 +49,7 @@ export default {
             },
             boxShadow: {
                 // Light Mode Shadows
-                'neu-light-xs': '3px 3px 7px #db9d9f, -3px -3px 7px #ffcfd3',
+                'neu-light-xs': '3px 3px 5px #db9d9f, -3px -3px 5px #ffcfd3',
                 'neu-light-sm': '5px 5px 11px #db9d9f, -5px -5px 11px #ffcfd3',
                 'neu-light-md': '6px 6px 12px #db9d9f, -6px -6px 12px #ffcfd3',
                 'neu-light-lg': '10px 10px 20px #db9d9f, -10px -10px 20px #ffcfd3',
@@ -63,7 +63,7 @@ export default {
                 'neu-inset-light-xl': 'inset 20px 20px 40px #bd8789, inset -20px -20px 40px #ffd1d8',
 
                 // Dark Mode Shadows
-                'neu-dark-xs': '3px 3px 7px #11171e, -3px -3px 7px #2d3b50',
+                'neu-dark-xs': '3px 3px 5px #11171e, -3px -3px 5px #2d3b50',
                 'neu-dark-sm': '5px 5px 10px #11171e, -5px -5px 10px #2d3b50',
                 'neu-dark-md': '6px 6px 12px #11171e, -6px -6px 12px #2d3b50',
                 'neu-dark-lg': '10px 10px 20px #11171e, -10px -10px 20px #2d3b50',
