@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import NeuButton from '../../../components/common/buttons/neu-button'
-import PlayerNameModal from './components/player-name-modal'
-import GameOverModal from './components/game-over-modal'
-
-import Close from '../../../components/common/svg/close'
 import Circle from '../../../components/common/svg/circle'
-import Reset from '../../../components/common/svg/reset'
+import Close from '../../../components/common/svg/close'
 import GamePad from '../../../components/common/svg/gamepad'
+import Reset from '../../../components/common/svg/reset'
+import GameOverModal from './components/game-over-modal'
 import Heading from './components/heading'
+import PlayerNameModal from './components/player-name-modal'
 
 export function TicTacToe() {
     // State to track the size of the board

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+
 import warriorImage from '../../../assets/images/landscape/man-warrior.png'
 import avatarImage from '../../../assets/images/square/animal-orange-bird.png'
 

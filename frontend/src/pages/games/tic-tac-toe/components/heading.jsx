@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+
 import NeuButton from '../../../../components/common/buttons/neu-button'
 
 const Heading = ({ title }) => {

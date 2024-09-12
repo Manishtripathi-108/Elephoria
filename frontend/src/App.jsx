@@ -1,9 +1,10 @@
-import React, { lazy, Suspense } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import React, { Suspense, lazy } from 'react'
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
+
 import SideNav from './components/layout/sidenav/sidenav'
+import Shadows from './pages/ShadowsGrid'
 import TicTacToeClassic from './pages/games/tic-tac-toe/classic'
 import TicTacToeUltimate from './pages/games/tic-tac-toe/ultimate'
-import Shadows from './pages/ShadowsGrid'
 
 function App() {
     return (

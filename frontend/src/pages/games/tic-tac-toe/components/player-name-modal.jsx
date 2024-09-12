@@ -1,6 +1,7 @@
 import React from 'react'
-import Players from '../../../../components/common/svg/players'
+
 import NeuButton from '../../../../components/common/buttons/neu-button'
+import Players from '../../../../components/common/svg/players'
 
 const PlayerNameModal = ({ playerXName, playerOName, setPlayerXName, setPlayerOName, closeModal }) => {
     return (

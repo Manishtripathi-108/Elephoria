@@ -1,4 +1,5 @@
 import React from 'react'
+
 import Reset from '../../../../components/common/svg/reset'
 
 const GameOverModal = ({ initializeGame, playerXName, playerOName, getGameStatus }) => {
