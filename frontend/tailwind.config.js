@@ -7,7 +7,7 @@ export default {
                 'scale-up': 'scale-up 0.3s cubic-bezier(0.6, -0.28, 0.74, 0.05) forwards',
                 'anti-rotate': 'anti-rotate 5s linear infinite',
                 'pulse': 'pulse 1s infinite',
-                'puff-in': 'puff-in 0.3s 0.3s forwards',
+                'puff-in': 'puff-in 0.3s forwards',
             },
             keyframes: {
                 'scale-up': {
@@ -26,8 +26,8 @@ export default {
                 },
 
                 'puff-in': {
-                    '0%': { opacity: 0, transformOrigin: '50% 50%', transform: 'scale(2, 2)', filter: 'blur(2px)' },
-                    '100%': { opacity: 1, transformOrigin: '50% 50%', transform: 'scale(1, 1)', filter: 'blur(0px)' },
+                    '0%': { opacity: 0, transformOrigin: '50% 50%', transform: 'scale(2, 2)', filter: 'blur(2px)', visibility: 'hidden' },
+                    '100%': { opacity: 1, transformOrigin: '50% 50%', transform: 'scale(1, 1)', filter: 'blur(0px)', visibility: 'visible' },
                 },
             },
             colors: {
