@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react'
 
-import NeuButton from '../../components/common/buttons/neu-button'
+import NeuButton from '../../../components/common/buttons/neu-button'
+import PlayerNameModal from './components/player-name-modal'
+import GameOverModal from './components/game-over-modal'
 
-import Close from '../../components/common/svg/close'
-import Circle from '../../components/common/svg/circle'
-import Reset from '../../components/common/svg/reset'
-import GamePad from '../../components/common/svg/gamepad'
-import Players from '../../components/common/svg/players'
-
-const initialBoard = Array(9).fill(null)
+import Close from '../../../components/common/svg/close'
+import Circle from '../../../components/common/svg/circle'
+import Reset from '../../../components/common/svg/reset'
+import GamePad from '../../../components/common/svg/gamepad'
 
 export function TicTacToe() {
     // State to track the size of the board
@@ -243,18 +242,14 @@ export function TicTacToe() {
                     </div>
 
                     {/* Game Over Modal */}
-                    <div
-                        onClick={() => initializeGame()}
-                        className={`${getGameStatus().isGameOver ? 'flex animate-puff-in' : 'hidden'} text-secondary absolute left-0 top-0 z-10 h-full w-full cursor-pointer flex-col items-center justify-center gap-8 font-indie-flower opacity-0`}>
-                        <div className="bg-secondary absolute left-0 top-0 h-full w-full opacity-70 blur-sm saturate-150"></div>
-                        <span className="text-primary font z-20 text-6xl font-bold tracking-wider opacity-100">
-                            {getGameStatus().isDraw ? "It's a draw!" : `${getGameStatus().winner === 'X' ? playerXName : playerOName} wins!`}
-                        </span>
-                        <button type="button" title="Play Again" className="text-primary flex-center z-20 opacity-100">
-                            <Reset className="size-20 animate-anti-rotate md:size-28" />
-                        </button>
-                        <span className="z-20 text-2xl tracking-wider opacity-100">Play Again</span>
-                    </div>
+                    {getGameStatus().isGameOver && (
+                        <GameOverModal
+                            initializeGame={initializeGame}
+                            playerXName={playerXName}
+                            playerOName={playerOName}
+                            getGameStatus={getGameStatus}
+                        />
+                    )}
 
                     {/* Reset Game & Board Size Select */}
                     <div className="mt-3 flex items-center justify-end gap-5">
@@ -316,43 +311,13 @@ export function TicTacToe() {
 
                 {/* Player Names Form Modal */}
                 {isModalOpen && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                        <div id="player-form-modal" className="bg-primary rounded-lg p-3">
-                            <div className="bg-primary grid grid-rows-2 gap-4 rounded-lg p-8 shadow-neu-light-sm dark:shadow-neu-dark-sm">
-                                <h2 className="text-primary m-0 flex items-center justify-center font-indie-flower text-xl font-bold leading-none">
-                                    Set Player Names
-                                </h2>
-                                <div className="neu-input-group neu-input-group-prepend">
-                                    <Players className="neu-input-icon" />
-                                    <input
-                                        id="player1"
-                                        className="neu-form-input"
-                                        type="text"
-                                        placeholder="Player 1"
-                                        value={playerXName}
-                                        onChange={(e) => setPlayerXName(e.target.value)}
-                                        onKeyDown={(e) => e.key === 'Enter' && document.getElementById('player2').focus()}
-                                    />
-                                </div>
-                                <div className="neu-input-group neu-input-group-prepend">
-                                    <Players className="neu-input-icon" />
-                                    <input
-                                        id="player2"
-                                        className="neu-form-input"
-                                        type="text"
-                                        placeholder="Player 2"
-                                        value={playerOName}
-                                        onChange={(e) => setPlayerOName(e.target.value)}
-                                        onKeyDown={(e) => e.key === 'Enter' && closeModal()}
-                                    />
-                                </div>
-
-                                <NeuButton type="button" title="Close Modal" onClick={closeModal}>
-                                    <span className="font-indie-flower text-sm font-semibold tracking-wider">Close</span>
-                                </NeuButton>
-                            </div>
-                        </div>
-                    </div>
+                    <PlayerNameModal
+                        playerOName={playerOName}
+                        playerXName={playerXName}
+                        setPlayerOName={setPlayerOName}
+                        setPlayerXName={setPlayerXName}
+                        closeModal={closeModal}
+                    />
                 )}
             </div>
         </div>
