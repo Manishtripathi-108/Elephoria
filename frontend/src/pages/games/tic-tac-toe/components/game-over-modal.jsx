@@ -8,7 +8,7 @@ const GameOverModal = ({ initializeGame, playerXName, playerOName, getGameStatus
 
     return (
         <div
-            onClick={initializeGame}
+        onClick={() => initializeGame()}
             className="text-secondary invisible absolute left-0 top-0 z-10 flex h-full w-full animate-puff-in cursor-pointer flex-col items-center justify-center gap-8 font-indie-flower">
             {/* Background Overlay */}
             <div className="bg-secondary absolute left-0 top-0 h-full w-full opacity-70 blur-sm saturate-150"></div>

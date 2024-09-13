@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import NeuButton from '../../../components/common/buttons/neu-button'
 import Circle from '../../../components/common/svg/circle'
@@ -97,9 +97,9 @@ export function TicTacToe() {
 
     const updateScore = (winner) => {
         if (winner === 'X') {
-            setPlayerXScore((prevScore) => prevScore + 1)
+            setPlayerXScore(playerXScore + 1)
         } else if (winner === 'O') {
-            setPlayerOScore((prevScore) => prevScore + 1)
+            setPlayerOScore(playerOScore + 1)
         }
     }
 
@@ -165,45 +165,9 @@ export function TicTacToe() {
         }
     }
 
-    // Open modal to set player names
-    const handleSetNamesClick = () => {
-        setIsModalOpen(true)
+    const toggleModal = (isOpen) => {
+        setIsModalOpen(isOpen)
     }
-
-    // Close modal
-    const closeModal = () => {
-        setIsModalOpen(false)
-    }
-
-    // Close modal when clicking outside of it
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            const playerModal = document.getElementById('player-form-modal')
-            if (playerModal && !playerModal.contains(event.target)) {
-                closeModal()
-            }
-        }
-
-        // Focus on the first input field when modal is open
-        if (isModalOpen) {
-            const player1Input = document.getElementById('player1')
-            if (player1Input) {
-                player1Input.focus()
-            }
-        }
-
-        // Add event listener when modal is open
-        if (isModalOpen) {
-            document.addEventListener('mousedown', handleClickOutside)
-        } else {
-            document.removeEventListener('mousedown', handleClickOutside)
-        }
-
-        // Clean up event listener on component unmount or when modal closes
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside)
-        }
-    }, [isModalOpen])
 
     return (
         <div className="grid place-items-center">
@@ -292,7 +256,7 @@ export function TicTacToe() {
                             <GamePad className="size-6" />
                             <span className="font-indie-flower text-sm font-semibold tracking-wider">New Game</span>
                         </NeuButton>
-                        <NeuButton type="button" title="Set Player Names" onClick={handleSetNamesClick}>
+                        <NeuButton type="button" title="Set Player Names" onClick={() => toggleModal(true)}>
                             <GamePad className="size-6" />
                             <span className="font-indie-flower text-sm font-semibold tracking-wider">Set Names</span>
                         </NeuButton>
@@ -306,7 +270,7 @@ export function TicTacToe() {
                         playerXName={playerXName}
                         setPlayerOName={setPlayerOName}
                         setPlayerXName={setPlayerXName}
-                        closeModal={closeModal}
+                        closeModal={() => toggleModal(false)}
                     />
                 )}
             </div>
