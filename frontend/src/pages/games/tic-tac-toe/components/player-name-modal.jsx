@@ -33,7 +33,6 @@ const PlayerNameModal = ({ playerXName, playerOName, setPlayerXName, setPlayerON
             const playerModal = document.getElementById('player-form-modal')
             if (playerModal && !playerModal.contains(event.target)) {
                 !Error && closeModal()
-                console.log('clicked outside')
             }
         }
         document.addEventListener('mousedown', handleClickOutside)

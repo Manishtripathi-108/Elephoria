@@ -10,8 +10,8 @@ import Heading from './components/heading'
 import PlayerNameModal from './components/player-name-modal'
 
 const Ultimate = () => {
-    // Micro board: 9x9 grid, each representing a cell in the 9 smaller boards.
-    const [board, setBoard] = useState(Array.from({ length: 9 }, () => Array(9).fill(null)))
+    const initialBoard = Array.from({ length: 9 }, () => Array(9).fill(null))
+    const [board, setBoard] = useState(initialBoard)
 
     const [isXNext, setIsXNext] = useState(true)
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -26,7 +26,7 @@ const Ultimate = () => {
                 type="button"
                 tabIndex="10"
                 key={`${macroIndex}-${microIndex}`}
-                className={`flex-center text-secondary bg-primary p-1 md:p-3 size-7 md:size-16 rounded-md ${value === null ? 'shadow-neu-light-xs dark:shadow-neu-dark-xs' : 'shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs'}`}
+                className={`flex-center text-secondary transition-all duration-300 bg-primary p-1 md:p-3 size-7 md:size-16 rounded-md ${value === null ? 'hover:bg-secondary active:shadow-neu-inset-light-xs dark:active:shadow-neu-inset-dark-xs active:bg-primary focus:bg-secondary shadow-neu-light-xs dark:shadow-neu-dark-xs' : 'shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs'}`}
                 onClick={() => handleSquareClick(macroIndex, microIndex)}>
                 {value === 'X' && <Close className={`svg-shadow-light-xs dark:svg-shadow-dark-xs size-full`} />}
                 {value === 'O' && <Circle className={`svg-shadow-light-xs dark:svg-shadow-dark-xs size-full`} />}
@@ -79,7 +79,7 @@ const Ultimate = () => {
     }
 
     const initializeGame = (isNewGame = false) => {
-        setBoard(Array.from({ length: 9 }, () => Array(9).fill(null)))
+        setBoard(initialBoard)
         setIsXNext(true)
 
         if (isNewGame) {
