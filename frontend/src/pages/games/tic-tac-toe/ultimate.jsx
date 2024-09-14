@@ -111,7 +111,6 @@ const Ultimate = () => {
                     },
                 }))
             } else if (updatedBoard.every((macroBoard) => macroBoard.every((cell) => cell))) {
-                console.log('Draw')
                 setGameState((prevState) => ({
                     ...prevState,
                     board: updatedBoard,

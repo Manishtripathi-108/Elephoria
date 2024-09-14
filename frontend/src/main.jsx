@@ -6,7 +6,7 @@ import './assets/styles/index.css'
 
 // Create the root element and render the application
 createRoot(document.getElementById('root')).render(
-    // <StrictMode>
-    <App />
-    // </StrictMode>
+    <StrictMode>
+        <App />
+    </StrictMode>
 )

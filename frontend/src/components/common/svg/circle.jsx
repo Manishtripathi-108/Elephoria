@@ -11,9 +11,9 @@ const Circle = (props) => {
             strokeWidth="2"
             strokeDasharray={50}
             strokeLinecap="round"
+            strokeDashoffset={50}
             {...props}>
-            <circle cx="12" cy="12" r="8" />
-            <animate attributeName="stroke-dashoffset" dur=".2s" from="50" to="0" repeatCount="freeze" />
+            <circle className="animate-close-n-zero" cx="12" cy="12" r="8" />
         </svg>
     )
 }

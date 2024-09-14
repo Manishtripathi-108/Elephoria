@@ -4,30 +4,32 @@ export default {
     theme: {
         extend: {
             animation: {
-                'scale-up': 'scale-up 0.3s cubic-bezier(0.6, -0.28, 0.74, 0.05) forwards',
                 'anti-rotate': 'anti-rotate 5s linear infinite',
-                pulse: 'pulse 1s infinite',
+                'close-n-zero': 'close-n-zero 0.2s forwards',
+                'pulse': 'pulse 1s infinite',
                 'puff-in': 'puff-in 0.3s forwards',
+                'scale-up': 'scale-up 0.3s cubic-bezier(0.6, -0.28, 0.74, 0.05) forwards',
             },
             keyframes: {
-                'scale-up': {
-                    '0%': { transform: 'scale(0)', opacity: '0', visibility: 'hidden' },
-                    '100%': { transform: 'scale(1)', opacity: '1', visibility: 'visible' },
-                },
-
                 'anti-rotate': {
                     '0%': { transform: 'rotate(360deg)' },
                     '100%': { transform: 'rotate(0)' },
                 },
-
-                pulse: {
+                'close-n-zero': {
+                    from: { 'stroke-dashoffset': '50' },
+                    to: { 'stroke-dashoffset': '0' },
+                },
+                'pulse': {
                     '0%, 100%': { opacity: '1', transform: 'scale(1, 1)', transformOrigin: '50% 50%' },
                     '50%': { opacity: '1', transform: 'scale(0.9, 0.9)', transformOrigin: '50% 50%' },
                 },
-
                 'puff-in': {
                     '0%': { opacity: 0, transformOrigin: '50% 50%', transform: 'scale(2, 2)', filter: 'blur(2px)', visibility: 'hidden' },
                     '100%': { opacity: 1, transformOrigin: '50% 50%', transform: 'scale(1, 1)', filter: 'blur(0px)', visibility: 'visible' },
+                },
+                'scale-up': {
+                    '0%': { transform: 'scale(0)', opacity: '0', visibility: 'hidden' },
+                    '100%': { transform: 'scale(1)', opacity: '1', visibility: 'visible' },
                 },
             },
             colors: {
