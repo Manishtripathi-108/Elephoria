@@ -23,12 +23,13 @@ const Ultimate = () => {
         isXNext: true,
         isGameOver: false,
         isDraw: false,
+        activeMacroIndex: null,
         winner: null,
         winingLine: [],
         winningMacroIndex: null,
     })
 
-    const { board, isXNext, isGameOver, isDraw, winner, winingLine, winningMacroIndex } = gameState
+    const { board, isXNext, isGameOver, isDraw, activeMacroIndex, winner, winingLine, winningMacroIndex } = gameState
     const { playerX, playerO } = players
 
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -46,24 +47,27 @@ const Ultimate = () => {
 
     // Render Square Component
     const renderSquare = (value, macroIndex, microIndex) => {
-        const winningSquareClass = winningMacroIndex === macroIndex && winingLine.includes(microIndex) ? 'text-accent-primary *:animate-pulse' : ''
+        const winningSquareClass =
+            winningMacroIndex === macroIndex && winingLine.includes(microIndex)
+                ? 'text-light-text-primary dark:text-dark-text-primary *:animate-pulse'
+                : ''
 
         const squareClasses =
             value === null
-                ? 'hover:bg-secondary active:shadow-neu-inset-light-xs dark:active:shadow-neu-inset-dark-xs active:bg-primary shadow-neu-light-xs dark:shadow-neu-dark-xs'
-                : 'shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs'
+                ? macroIndex === activeMacroIndex
+                    ? 'hover:bg-secondary active:shadow-neu-inset-light-secondary-xs dark:active:shadow-neu-inset-dark-secondary-xs active:bg-primary shadow-neu-light-secondary-xs dark:shadow-neu-dark-secondary-xs'
+                    : 'shadow-neu-light-xs dark:shadow-neu-dark-xs'
+                : macroIndex === activeMacroIndex
+                  ? 'shadow-neu-inset-light-secondary-xs dark:shadow-neu-inset-dark-secondary-xs text-white dark:text-black'
+                  : 'shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs text-secondary'
 
         return (
             <button
                 tabIndex="10"
                 key={`${macroIndex}-${microIndex}`}
-                className={`flex-center text-secondary bg-primary p-1 md:p-3 size-7 md:size-16 rounded-md transition-all duration-300 ${squareClasses} ${winningSquareClass}`}
+                className={`flex-center bg-primary p-1 md:p-3 size-7 md:size-16 rounded-md transition-all duration-300 ${squareClasses} ${winningSquareClass}`}
                 onClick={() => handleSquareClick(macroIndex, microIndex)}>
-                {value === 'X' ? (
-                    <Close className="svg-shadow-light-xs dark:svg-shadow-dark-xs size-full" />
-                ) : value === 'O' ? (
-                    <Circle className="svg-shadow-light-xs dark:svg-shadow-dark-xs size-full" />
-                ) : null}
+                {value === 'X' ? <Close className="size-full" /> : value === 'O' ? <Circle className="size-full" /> : null}
             </button>
         )
     }
@@ -88,7 +92,9 @@ const Ultimate = () => {
     // Handle Square Click
     const handleSquareClick = useCallback(
         (macroIndex, microIndex) => {
-            if (board[macroIndex][microIndex] || isGameOver) return
+            if (isGameOver || board[macroIndex][microIndex] || (activeMacroIndex !== null && activeMacroIndex !== macroIndex)) {
+                return
+            }
 
             const updatedBoard = board.map((macroBoard, i) =>
                 i === macroIndex ? macroBoard.map((cell, j) => (j === microIndex ? (isXNext ? 'X' : 'O') : cell)) : macroBoard
@@ -124,6 +130,7 @@ const Ultimate = () => {
                     ...prevState,
                     board: updatedBoard,
                     isXNext: !isXNext,
+                    activeMacroIndex: microIndex,
                 }))
             }
         },
@@ -162,11 +169,12 @@ const Ultimate = () => {
                         {board.map((macroBoard, macroIndex) => (
                             <div
                                 key={macroIndex}
-                                className="relative grid grid-cols-3 md:gap-3 md:p-3 p-2 gap-2 shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs rounded-md">
+                                className={`relative ${macroIndex === activeMacroIndex && 'bg-highlight-primary *:bg-highlight-primary'} grid grid-cols-3 md:gap-3 md:p-3 p-2 gap-2 shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs rounded-md`}>
                                 {macroBoard.map((cell, microIndex) => renderSquare(cell, macroIndex, microIndex))}
                             </div>
                         ))}
                     </div>
+                    
                 </div>
 
                 {/* Score Board */}

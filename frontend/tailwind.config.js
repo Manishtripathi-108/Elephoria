@@ -53,17 +53,21 @@ export default {
             boxShadow: {
                 // Light Mode Shadows
                 'neu-light-xs': '3px 3px 5px #db9d9f, -3px -3px 5px #ffcfd3',
-                'neu-light-sm': '5px 5px 11px #db9d9f, -5px -5px 11px #ffcfd3',
+                'neu-light-sm': '5px 5px 10px #db9d9f, -5px -5px 10px #ffcfd3',
                 'neu-light-md': '6px 6px 12px #db9d9f, -6px -6px 12px #ffcfd3',
                 'neu-light-lg': '10px 10px 20px #db9d9f, -10px -10px 20px #ffcfd3',
                 'neu-light-xl': '20px 20px 40px #db9d9f, -20px -20px 40px #ffcfd3',
 
                 // Light Mode Inset Shadows
                 'neu-inset-light-xs': 'inset 3px 3px 7px #bd8789, inset -3px -3px 7px #ffd1d8',
-                'neu-inset-light-sm': 'inset 5px 5px 11px #bd8789, inset -5px -5px 11px #ffd1d8',
+                'neu-inset-light-sm': 'inset 5px 5px 10px #bd8789, inset -5px -5px 10px #ffd1d8',
                 'neu-inset-light-md': 'inset 6px 6px 12px #bd8789, inset -6px -6px 12px #ffd1d8',
                 'neu-inset-light-lg': 'inset 10px 10px 20px #bd8789, inset -10px -10px 20px #ffd1d8',
                 'neu-inset-light-xl': 'inset 20px 20px 40px #bd8789, inset -20px -20px 40px #ffd1d8',
+
+                // Light Mode Secondary Shadows
+                'neu-light-secondary-xs': '3px 3px 5px #29428e, -3px -3px 5px #5990ff',
+                'neu-inset-light-secondary-xs': 'inset 3px 3px 5px #29428e, inset -3px -3px 5px #5990ff',
 
                 // Dark Mode Shadows
                 'neu-dark-xs': '3px 3px 5px #11171e, -3px -3px 5px #2d3b50',
@@ -71,6 +75,9 @@ export default {
                 'neu-dark-md': '6px 6px 12px #11171e, -6px -6px 12px #2d3b50',
                 'neu-dark-lg': '10px 10px 20px #11171e, -10px -10px 20px #2d3b50',
                 'neu-dark-xl': '20px 20px 40px #11171e, -20px -20px 40px #2d3b50;',
+
+                'neu-dark-secondary-xs': '3px 3px 5px #135ba1, -3px -3px 5px #29c5ff',
+                'neu-inset-dark-secondary-xs': 'inset 3px 3px 5px #135ba1, inset -3px -3px 5px #29c5ff',
 
                 // Dark Mode Inset Shadows
                 'neu-inset-dark-xs': 'inset 3px 3px 7px #11171e, inset -3px -3px 7px #2d3b50',
