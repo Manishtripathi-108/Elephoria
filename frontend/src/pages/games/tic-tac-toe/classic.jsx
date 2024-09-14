@@ -105,36 +105,37 @@ export function TicTacToe() {
         (index) => {
             if (board[index] || isGameOver) return
 
-            const newBoard = board.slice()
-            newBoard[index] = isXNext ? 'X' : 'O'
+            const updatedBoard = board.slice()
+            updatedBoard[index] = isXNext ? 'X' : 'O'
 
-            const winnerInfo = checkWinner(newBoard)
+            const winnerInfo = checkWinner(updatedBoard)
 
             if (winnerInfo) {
+                const winnerName = winnerInfo.winner === 'X' ? 'playerX' : 'playerO'
                 setGameState((prevState) => ({
                     ...prevState,
-                    board: newBoard,
+                    board: updatedBoard,
                     isGameOver: true,
                     winner: winnerInfo.winner,
                 }))
                 setPlayers((prevState) => ({
                     ...prevState,
-                    [winnerInfo.winner === 'X' ? 'playerX' : 'playerO']: {
-                        ...prevState[winnerInfo.winner === 'X' ? 'playerX' : 'playerO'],
-                        score: prevState[winnerInfo.winner === 'X' ? 'playerX' : 'playerO'].score + 1,
+                    [winnerName]: {
+                        ...prevState[winnerName],
+                        score: prevState[winnerName].score + 1,
                     },
                 }))
-            } else if (newBoard.every(Boolean)) {
+            } else if (updatedBoard.every(Boolean)) {
                 setGameState((prevState) => ({
                     ...prevState,
-                    board: newBoard,
+                    board: updatedBoard,
                     isGameOver: true,
                     isDraw: true,
                 }))
             } else {
                 setGameState((prevState) => ({
                     ...prevState,
-                    board: newBoard,
+                    board: updatedBoard,
                     isXNext: !isXNext,
                 }))
             }
@@ -155,7 +156,11 @@ export function TicTacToe() {
                     ${boardSize === 9 ? 'size-28 md:size-40' : boardSize === 16 ? 'size-20 md:size-36' : 'size-16 md:size-28'} 
                     ${isWinningSquare ? 'text-accent-primary *:animate-pulse' : ''}`}
                     onClick={() => handleClick(index)}>
-                    {value === 'X' ? <Close className="size-full" /> : value === 'O' ? <Circle className="size-full" /> : null}
+                    {value === 'X' ? (
+                        <Close className="svg-shadow-light-xs dark:svg-shadow-dark-xs size-full" />
+                    ) : value === 'O' ? (
+                        <Circle className="svg-shadow-light-xs dark:svg-shadow-dark-xs size-full" />
+                    ) : null}
                 </button>
             )
         },
@@ -168,10 +173,10 @@ export function TicTacToe() {
             setGameState((prevState) => ({
                 ...prevState,
                 board: Array(boardSize).fill(null),
+                isXNext: isNewGame ? true : Math.random() < 0.5,
                 isGameOver: false,
                 isDraw: false,
                 winner: null,
-                isXNext: isNewGame ? true : Math.random() < 0.5,
             }))
             if (isNewGame) {
                 setPlayers({
@@ -233,12 +238,12 @@ export function TicTacToe() {
                 <div className="flex flex-col items-center justify-center gap-5">
                     {/* Game Status */}
                     <h2 className="text-primary grid place-items-center font-indie-flower text-2xl font-bold tracking-wider md:pt-5">
-                        {gameState.isGameOver
-                            ? gameState.isDraw
+                        {isGameOver
+                            ? isDraw
                                 ? "It's a draw!"
-                                : `${gameState.winner === 'X' ? playerX.name : playerO.name} wins!`
+                                : `${winner === 'X' ? playerX.name : playerO.name} wins!`
                             : `${isXNext ? playerX.name : playerO.name}'s turn`}
-                        <span>{!gameState.isGameOver && `${isXNext ? '(X)' : '(O)'}`}</span>
+                        <span>{!isGameOver && `${isXNext ? '(X)' : '(O)'}`}</span>
                     </h2>
 
                     {/* Score Board */}

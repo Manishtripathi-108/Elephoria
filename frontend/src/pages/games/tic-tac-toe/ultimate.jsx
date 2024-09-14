@@ -10,16 +10,28 @@ import PlayerNameModal from './components/player-name-modal'
 
 const Ultimate = () => {
     const initialBoard = Array(9).fill(Array(9).fill(null))
-    const [board, setBoard] = useState(initialBoard)
-    const [isXNext, setIsXNext] = useState(true)
+
+    // Group player-related states
+    const [players, setPlayers] = useState({
+        playerX: { name: 'Player 1', score: 0 },
+        playerO: { name: 'Player 2', score: 0 },
+    })
+
+    // Group game-related states
+    const [gameState, setGameState] = useState({
+        board: initialBoard,
+        isXNext: true,
+        isGameOver: false,
+        isDraw: false,
+        winner: null,
+        winingLine: [],
+        winningMacroIndex: null,
+    })
+
+    const { board, isXNext, isGameOver, isDraw, winner, winingLine, winningMacroIndex } = gameState
+    const { playerX, playerO } = players
+
     const [isModalOpen, setIsModalOpen] = useState(false)
-    const [playerXName, setPlayerXName] = useState('Player 1')
-    const [playerOName, setPlayerOName] = useState('Player 2')
-    const [playerXScore, setPlayerXScore] = useState(0)
-    const [playerOScore, setPlayerOScore] = useState(0)
-    const [isGameOver, setIsGameOver] = useState(false)
-    const [isDraw, setIsDraw] = useState(false)
-    const [winner, setWinner] = useState(null)
 
     const WIN_PATTERN = [
         [0, 1, 2],
@@ -32,22 +44,37 @@ const Ultimate = () => {
         [2, 4, 6],
     ]
 
-    const renderSquare = (value, macroIndex, microIndex) => (
-        <button
-            key={`${macroIndex}-${microIndex}`}
-            className={`flex-center text-secondary bg-primary p-1 md:p-3 size-7 md:size-16 rounded-md transition-all duration-300 
-            ${value === null ? 'hover:bg-secondary active:shadow-neu-inset-light-xs dark:active:shadow-neu-inset-dark-xs active:bg-primary focus:bg-secondary shadow-neu-light-xs dark:shadow-neu-dark-xs' : 'shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs'}`}
-            onClick={() => handleSquareClick(macroIndex, microIndex)}>
-            {value === 'X' && <Close className="svg-shadow-light-xs dark:svg-shadow-dark-xs size-full" />}
-            {value === 'O' && <Circle className="svg-shadow-light-xs dark:svg-shadow-dark-xs size-full" />}
-        </button>
-    )
+    const renderSquare = (value, macroIndex, microIndex) => {
+        // const winnerInfo = checkWinner(macroIndex, board)
+        // const isWinningSquare = winnerInfo?.line.includes(microIndex)
 
-    const checkWinner = useCallback((currentBoard) => {
+        // ToDo: Add winning square styles
+
+        return (
+            <button
+                key={`${macroIndex}-${microIndex}`}
+                className={`flex-center text-secondary bg-primary p-1 md:p-3 size-7 md:size-16 rounded-md transition-all duration-300 
+                ${value === null ? 'hover:bg-secondary active:shadow-neu-inset-light-xs dark:active:shadow-neu-inset-dark-xs active:bg-primary focus:bg-secondary shadow-neu-light-xs dark:shadow-neu-dark-xs' : 'shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs'}`}
+                onClick={() => handleSquareClick(macroIndex, microIndex)}>
+                {value === 'X' ? (
+                    <Close className="svg-shadow-light-xs dark:svg-shadow-dark-xs size-full" />
+                ) : value === 'O' ? (
+                    <Circle className="svg-shadow-light-xs dark:svg-shadow-dark-xs size-full" />
+                ) : null}
+            </button>
+        )
+    }
+
+    const checkWinner = useCallback((marcoIndex, currentBoard) => {
         for (let [a, b, c] of WIN_PATTERN) {
             if (currentBoard[a] && currentBoard[a] === currentBoard[b] && currentBoard[a] === currentBoard[c]) {
-                setWinner(currentBoard[a])
-                setIsGameOver(true)
+                setGameState((prevState) => ({
+                    ...prevState,
+                    winner: currentBoard[a],
+                    isGameOver: true,
+                    winingLine: [a, b, c],
+                    winningMacroIndex: marcoIndex,
+                }))
                 return currentBoard[a]
             }
         }
@@ -62,29 +89,55 @@ const Ultimate = () => {
                 i === macroIndex ? macroBoard.map((cell, j) => (j === microIndex ? (isXNext ? 'X' : 'O') : cell)) : macroBoard
             )
 
-            setBoard(updatedBoard)
-            setIsXNext(!isXNext)
+            const winnerInfo = checkWinner(macroIndex, updatedBoard[macroIndex])
 
-            const currentWinner = checkWinner(updatedBoard[macroIndex])
-            if (currentWinner) {
-                currentWinner === 'X' ? setPlayerXScore(playerXScore + 1) : setPlayerOScore(playerOScore + 1)
+            if (winnerInfo) {
+                const winnerName = winnerInfo === 'X' ? 'playerX' : 'playerO'
+                setGameState((prevState) => ({
+                    ...prevState,
+                    board: updatedBoard,
+                    isGameOver: true,
+                    winner: winnerInfo,
+                }))
+                setPlayers((prevState) => ({
+                    ...prevState,
+                    [winnerName]: {
+                        ...prevState[winnerName],
+                        score: prevState[winnerName].score + 1,
+                    },
+                }))
+            } else if (updatedBoard[macroIndex].every(Boolean)) {
+                setGameState((prevState) => ({
+                    ...prevState,
+                    board: updatedBoard,
+                    isXNext: !isXNext,
+                    isDraw: true,
+                }))
+            } else {
+                setGameState((prevState) => ({
+                    ...prevState,
+                    board: updatedBoard,
+                    isXNext: !isXNext,
+                }))
             }
         },
-        [board, isXNext, isGameOver, playerXScore, playerOScore, checkWinner]
+        [board, isXNext, isGameOver, checkWinner]
     )
 
     const initializeGame = (isNewGame = false) => {
-        setBoard(initialBoard)
-        setIsXNext(isNewGame ? true : Math.random() < 0.5)
-        setIsGameOver(false)
-        setIsDraw(false)
-        setWinner(null)
+        setGameState({
+            board: initialBoard,
+            isXNext: isNewGame ? true : Math.random() < 0.5,
+            isGameOver: false,
+            isDraw: false,
+            winner: null,
+        })
 
         if (isNewGame) {
-            setPlayerXScore(0)
-            setPlayerOScore(0)
-            setPlayerXName('Player 1')
-            setPlayerOName('Player 2')
+            setPlayers({
+                playerX: { name: 'Player 1', score: 0 },
+                playerO: { name: 'Player 2', score: 0 },
+            })
         }
     }
 
@@ -107,24 +160,27 @@ const Ultimate = () => {
                     </div>
                 </div>
 
+                {/* Score Board */}
                 <div className="flex flex-col items-center justify-center gap-5">
+                    {/* Game Status */}
                     <h2 className="text-primary grid place-items-center font-indie-flower text-2xl font-bold tracking-wider md:pt-5">
                         {isGameOver
                             ? isDraw
                                 ? "It's a draw!"
-                                : `${winner === 'X' ? playerXName : playerOName} wins!`
-                            : `${isXNext ? playerXName : playerOName}'s turn`}
+                                : `${winner === 'X' ? playerX.name : playerO.name} wins!`
+                            : `${isXNext ? playerX.name : playerO.name}'s turn`}
                         <span>{!isGameOver && `${isXNext ? '(X)' : '(O)'}`}</span>
                     </h2>
 
-                    <div className="text-secondary grid w-10/12 grid-cols-2 place-items-center gap-10 px-4 font-indie-flower tracking-wider">
+                    {/* Score Board */}
+                    <div className="text-secondary grid w-10/12 grid-cols-2 place-items-center justify-between gap-10 px-4 font-indie-flower tracking-wider">
                         <div className="grid place-items-center">
-                            {playerXName} <div>(X)</div>
-                            <div>{playerXScore}</div>
+                            {playerX.name} <div>(X)</div>
+                            <div>{playerX.score}</div>
                         </div>
                         <div className="grid place-items-center">
-                            {playerOName} <div>(O)</div>
-                            <div>{playerOScore}</div>
+                            {playerO.name} <div>(O)</div>
+                            <div>{playerO.score}</div>
                         </div>
                     </div>
 
@@ -134,23 +190,22 @@ const Ultimate = () => {
                             <GamePad className="size-6" />
                             <span className="font-indie-flower text-sm font-semibold tracking-wider">New Game</span>
                         </NeuButton>
-
                         <NeuButton type="button" title="Set Player Names" onClick={() => toggleModal(true)}>
                             <GamePad className="size-6" />
                             <span className="font-indie-flower text-sm font-semibold tracking-wider">Set Names</span>
                         </NeuButton>
                     </div>
-
-                    {isModalOpen && (
-                        <PlayerNameModal
-                            playerOName={playerOName}
-                            playerXName={playerXName}
-                            setPlayerOName={setPlayerOName}
-                            setPlayerXName={setPlayerXName}
-                            closeModal={() => toggleModal(false)}
-                        />
-                    )}
                 </div>
+
+                {isModalOpen && (
+                    <PlayerNameModal
+                        playerOName={playerOName}
+                        playerXName={playerXName}
+                        setPlayerOName={setPlayerOName}
+                        setPlayerXName={setPlayerXName}
+                        closeModal={() => toggleModal(false)}
+                    />
+                )}
             </div>
         </div>
     )
