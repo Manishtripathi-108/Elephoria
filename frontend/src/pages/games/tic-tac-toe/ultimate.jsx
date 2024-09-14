@@ -21,7 +21,7 @@ const Ultimate = () => {
     const [isDraw, setIsDraw] = useState(false)
     const [winner, setWinner] = useState(null)
 
-    const winPatterns = [
+    const WIN_PATTERN = [
         [0, 1, 2],
         [3, 4, 5],
         [6, 7, 8],
@@ -44,7 +44,7 @@ const Ultimate = () => {
     )
 
     const checkWinner = useCallback((currentBoard) => {
-        for (let [a, b, c] of winPatterns) {
+        for (let [a, b, c] of WIN_PATTERN) {
             if (currentBoard[a] && currentBoard[a] === currentBoard[b] && currentBoard[a] === currentBoard[c]) {
                 setWinner(currentBoard[a])
                 setIsGameOver(true)
@@ -134,7 +134,7 @@ const Ultimate = () => {
                             <GamePad className="size-6" />
                             <span className="font-indie-flower text-sm font-semibold tracking-wider">New Game</span>
                         </NeuButton>
-                        
+
                         <NeuButton type="button" title="Set Player Names" onClick={() => toggleModal(true)}>
                             <GamePad className="size-6" />
                             <span className="font-indie-flower text-sm font-semibold tracking-wider">Set Names</span>

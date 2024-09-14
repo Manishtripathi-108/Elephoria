@@ -1,54 +1,34 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import NeuButton from '../../../../components/common/buttons/neu-button'
 import ErrorIcon from '../../../../components/common/svg/error-circle'
 import Players from '../../../../components/common/svg/players'
 
-const PlayerNameModal = ({ playerXName, playerOName, setPlayerXName, setPlayerOName, closeModal }) => {
-    const [Error, setError] = useState(false)
+const PlayerNameModal = ({ setPlayerName, playerXName, playerOName, closeModal }) => {
+    const [error, setError] = useState(false)
+    const player1InputRef = useRef(null)
+    const player2InputRef = useRef(null)
 
-    const handlePlayer1NameChange = (value) => {
-        if (value === '') {
-            setError(true)
-            setPlayerXName(value)
-        } else {
-            setError(false)
-            setPlayerXName(value)
-        }
-    }
-
-    const handlePlayer2NameChange = (value) => {
-        if (value === '') {
-            setError(true)
-            setPlayerOName(value)
-        } else {
-            setError(false)
-            setPlayerOName(value)
-        }
+    const handlePlayerNameChange = (player, value) => {
+        setPlayerName(player, value)
+        setError(value === '')
     }
 
     // Handle closing the modal if clicking outside of it
     useEffect(() => {
         const handleClickOutside = (event) => {
             const playerModal = document.getElementById('player-form-modal')
-            if (playerModal && !playerModal.contains(event.target)) {
-                !Error && closeModal()
+            if (playerModal && !playerModal.contains(event.target) && !error) {
+                closeModal()
             }
         }
         document.addEventListener('mousedown', handleClickOutside)
+        return () => document.removeEventListener('mousedown', handleClickOutside)
+    }, [closeModal, error])
 
-        // Cleanup the event listener when the component unmounts
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside)
-        }
-    }, [closeModal])
-
-    // Handle focusing the player1 input field when the modal opens
+    // Focus the player1 input field when the modal opens
     useEffect(() => {
-        const player1Input = document.getElementById('player1')
-        if (player1Input) {
-            player1Input.focus()
-        }
+        player1InputRef.current?.focus()
     }, [])
 
     return (
@@ -61,35 +41,37 @@ const PlayerNameModal = ({ playerXName, playerOName, setPlayerXName, setPlayerON
                     <div className="neu-input-group neu-input-group-prepend">
                         <Players className="neu-input-icon" />
                         <input
+                            ref={player1InputRef}
                             id="player1"
                             className="neu-form-input"
                             type="text"
                             placeholder="Enter Name for Player 1"
                             value={playerXName}
-                            onChange={(e) => handlePlayer1NameChange(e.target.value)}
-                            onKeyDown={(e) => e.key === 'Enter' && document.getElementById('player2').focus()}
+                            onChange={(e) => handlePlayerNameChange('playerX', e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && player2InputRef.current?.focus()}
                             required
                         />
                     </div>
                     <div className="neu-input-group neu-input-group-prepend">
                         <Players className="neu-input-icon" />
                         <input
+                            ref={player2InputRef}
                             id="player2"
                             className="neu-form-input"
                             type="text"
                             placeholder="Enter Name for Player 2"
                             value={playerOName}
-                            onChange={(e) => handlePlayer2NameChange(e.target.value)}
-                            onKeyDown={(e) => e.key === 'Enter' && !Error && closeModal()}
+                            onChange={(e) => handlePlayerNameChange('playerO', e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && !error && closeModal()}
                             required
                         />
                     </div>
 
-                    <NeuButton type="button" title="Close Modal" onClick={() => !Error && closeModal()}>
+                    <NeuButton type="button" title="Close Modal" onClick={() => !error && closeModal()}>
                         <span className="font-indie-flower text-sm font-semibold tracking-wider">Close</span>
                     </NeuButton>
 
-                    {Error && (
+                    {error && (
                         <div className="flex items-center justify-start bg-red-500 gap-2 rounded-xl border border-light-secondary px-2 py-2 font-indie-flower tracking-wider text-primary shadow-neu-md-soft dark:border-dark-secondary dark:shadow-neu-dark-md">
                             <ErrorIcon className="size-6 shrink-0" />
                             <span className="text-xs">
