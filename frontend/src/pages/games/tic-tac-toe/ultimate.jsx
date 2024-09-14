@@ -4,6 +4,7 @@ import NeuButton from '../../../components/common/buttons/neu-button'
 import Circle from '../../../components/common/svg/circle'
 import Close from '../../../components/common/svg/close'
 import GamePad from '../../../components/common/svg/gamepad'
+import Reset from '../../../components/common/svg/reset'
 import GameOverModal from './components/game-over-modal'
 import Heading from './components/heading'
 import PlayerNameModal from './components/player-name-modal'
@@ -55,7 +56,7 @@ const Ultimate = () => {
         const squareClasses =
             value === null
                 ? macroIndex === activeMacroIndex
-                    ? 'hover:bg-secondary active:shadow-neu-inset-light-secondary-xs dark:active:shadow-neu-inset-dark-secondary-xs active:bg-primary shadow-neu-light-secondary-xs dark:shadow-neu-dark-secondary-xs'
+                    ? 'hover:bg-secondary active:shadow-neu-inset-light-secondary-xs dark:active:shadow-neu-inset-dark-secondary-xs active:bg-highlight-primary shadow-neu-light-secondary-xs dark:shadow-neu-dark-secondary-xs'
                     : 'shadow-neu-light-xs dark:shadow-neu-dark-xs'
                 : macroIndex === activeMacroIndex
                   ? 'shadow-neu-inset-light-secondary-xs dark:shadow-neu-inset-dark-secondary-xs text-white dark:text-black'
@@ -65,7 +66,7 @@ const Ultimate = () => {
             <button
                 tabIndex="10"
                 key={`${macroIndex}-${microIndex}`}
-                className={`flex-center bg-primary p-1 md:p-3 size-7 md:size-16 rounded-md transition-all duration-300 ${squareClasses} ${winningSquareClass}`}
+                className={`flex-center bg-primary p-1 md:p-2 size-7 md:size-12 rounded-md transition-all duration-300 ${squareClasses} ${winningSquareClass}`}
                 onClick={() => handleSquareClick(macroIndex, microIndex)}>
                 {value === 'X' ? <Close className="size-full" /> : value === 'O' ? <Circle className="size-full" /> : null}
             </button>
@@ -145,6 +146,7 @@ const Ultimate = () => {
             isGameOver: false,
             isDraw: false,
             winner: null,
+            activeMacroIndex: null,
             winingLine: [],
             winningMacroIndex: null,
         })
@@ -174,12 +176,21 @@ const Ultimate = () => {
                             </div>
                         ))}
                     </div>
-                    
+
+                    {/* Game Over Modal */}
+                    {isGameOver && (
+                        <GameOverModal
+                            initializeGame={initializeGame}
+                            playerXName={playerX.name}
+                            playerOName={playerO.name}
+                            isGameDraw={isDraw}
+                            winner={winner}
+                        />
+                    )}
                 </div>
 
-                {/* Score Board */}
+                {/* Game Status */}
                 <div className="flex flex-col items-center justify-center gap-5">
-                    {/* Game Status */}
                     <h2 className="text-primary grid place-items-center font-indie-flower text-2xl font-bold tracking-wider md:pt-5">
                         {isGameOver
                             ? isDraw
@@ -203,6 +214,9 @@ const Ultimate = () => {
 
                     {/* New Game & Set Player Button */}
                     <div className="grid grid-cols-2 gap-4">
+                        <button type="button" title="Reset Game" className="text-primary col-span-2 flex-center" onClick={() => initializeGame()}>
+                            <Reset className="size-8" strokeWidth={2} />
+                        </button>
                         <NeuButton type="button" title="Start New Game" onClick={() => initializeGame(true)}>
                             <GamePad className="size-6" />
                             <span className="font-indie-flower text-sm font-semibold tracking-wider">New Game</span>
