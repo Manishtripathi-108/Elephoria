@@ -44,6 +44,7 @@ const Ultimate = () => {
         [2, 4, 6],
     ]
 
+    // Render Square Component
     const renderSquare = (value, macroIndex, microIndex) => {
         // const winnerInfo = checkWinner(macroIndex, board)
         // const isWinningSquare = winnerInfo?.line.includes(microIndex)
@@ -52,9 +53,10 @@ const Ultimate = () => {
 
         return (
             <button
+                tabIndex="10"
                 key={`${macroIndex}-${microIndex}`}
-                className={`flex-center text-secondary bg-primary p-1 md:p-3 size-7 md:size-16 rounded-md transition-all duration-300 
-                ${value === null ? 'hover:bg-secondary active:shadow-neu-inset-light-xs dark:active:shadow-neu-inset-dark-xs active:bg-primary focus:bg-secondary shadow-neu-light-xs dark:shadow-neu-dark-xs' : 'shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs'}`}
+                className={`flex-center text-secondary bg-primary p-1 md:p-3 size-7 md:size-16 rounded-md transition-all duration-300
+                ${value === null ? 'hover:bg-secondary active:shadow-neu-inset-light-xs dark:active:shadow-neu-inset-dark-xs active:bg-primary shadow-neu-light-xs dark:shadow-neu-dark-xs' : 'shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs'}`}
                 onClick={() => handleSquareClick(macroIndex, microIndex)}>
                 {value === 'X' ? (
                     <Close className="svg-shadow-light-xs dark:svg-shadow-dark-xs size-full" />
@@ -65,6 +67,7 @@ const Ultimate = () => {
         )
     }
 
+    // Check if there is a winner
     const checkWinner = useCallback((marcoIndex, currentBoard) => {
         for (let [a, b, c] of WIN_PATTERN) {
             if (currentBoard[a] && currentBoard[a] === currentBoard[b] && currentBoard[a] === currentBoard[c]) {
@@ -81,6 +84,7 @@ const Ultimate = () => {
         return null
     }, [])
 
+    // Handle Square Click
     const handleSquareClick = useCallback(
         (macroIndex, microIndex) => {
             if (board[macroIndex][microIndex] || isGameOver) return
@@ -106,11 +110,13 @@ const Ultimate = () => {
                         score: prevState[winnerName].score + 1,
                     },
                 }))
-            } else if (updatedBoard[macroIndex].every(Boolean)) {
+            } else if (updatedBoard.every((macroBoard) => macroBoard.every((cell) => cell))) {
+                console.log('Draw')
                 setGameState((prevState) => ({
                     ...prevState,
                     board: updatedBoard,
                     isXNext: !isXNext,
+                    isGameOver: true,
                     isDraw: true,
                 }))
             } else {
@@ -124,6 +130,7 @@ const Ultimate = () => {
         [board, isXNext, isGameOver, checkWinner]
     )
 
+    // Initialize Game
     const initializeGame = (isNewGame = false) => {
         setGameState({
             board: initialBoard,

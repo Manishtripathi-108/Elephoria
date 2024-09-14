@@ -151,6 +151,7 @@ export function TicTacToe() {
 
             return (
                 <button
+                    tabIndex="10"
                     key={index}
                     className={`flex-center text-secondary bg-primary p-3 shadow-neu-inset-light-md dark:shadow-neu-inset-dark-md 
                     ${boardSize === 9 ? 'size-28 md:size-40' : boardSize === 16 ? 'size-20 md:size-36' : 'size-16 md:size-28'} 
