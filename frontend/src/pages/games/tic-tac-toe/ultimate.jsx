@@ -46,17 +46,18 @@ const Ultimate = () => {
 
     // Render Square Component
     const renderSquare = (value, macroIndex, microIndex) => {
-        // const winnerInfo = checkWinner(macroIndex, board)
-        // const isWinningSquare = winnerInfo?.line.includes(microIndex)
+        const winningSquareClass = winningMacroIndex === macroIndex && winingLine.includes(microIndex) ? 'text-accent-primary *:animate-pulse' : ''
 
-        // ToDo: Add winning square styles
+        const squareClasses =
+            value === null
+                ? 'hover:bg-secondary active:shadow-neu-inset-light-xs dark:active:shadow-neu-inset-dark-xs active:bg-primary shadow-neu-light-xs dark:shadow-neu-dark-xs'
+                : 'shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs'
 
         return (
             <button
                 tabIndex="10"
                 key={`${macroIndex}-${microIndex}`}
-                className={`flex-center text-secondary bg-primary p-1 md:p-3 size-7 md:size-16 rounded-md transition-all duration-300
-                ${value === null ? 'hover:bg-secondary active:shadow-neu-inset-light-xs dark:active:shadow-neu-inset-dark-xs active:bg-primary shadow-neu-light-xs dark:shadow-neu-dark-xs' : 'shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs'}`}
+                className={`flex-center text-secondary bg-primary p-1 md:p-3 size-7 md:size-16 rounded-md transition-all duration-300 ${squareClasses} ${winningSquareClass}`}
                 onClick={() => handleSquareClick(macroIndex, microIndex)}>
                 {value === 'X' ? (
                     <Close className="svg-shadow-light-xs dark:svg-shadow-dark-xs size-full" />
@@ -137,6 +138,8 @@ const Ultimate = () => {
             isGameOver: false,
             isDraw: false,
             winner: null,
+            winingLine: [],
+            winningMacroIndex: null,
         })
 
         if (isNewGame) {
@@ -205,10 +208,14 @@ const Ultimate = () => {
 
                 {isModalOpen && (
                     <PlayerNameModal
-                        playerOName={playerOName}
-                        playerXName={playerXName}
-                        setPlayerOName={setPlayerOName}
-                        setPlayerXName={setPlayerXName}
+                        setPlayerName={(player, name) =>
+                            setPlayers((prevState) => ({
+                                ...prevState,
+                                [player]: { ...prevState[player], name },
+                            }))
+                        }
+                        playerXName={playerX.name}
+                        playerOName={playerO.name}
                         closeModal={() => toggleModal(false)}
                     />
                 )}

@@ -38,8 +38,9 @@ export default {
                 'light-secondary': '#FFE6E6',
                 'light-text-primary': '#333333',
                 'light-text-secondary': '#666666',
-                'light-accent-primary': '#FFD700',
-                'light-highlight-primary': '#FF6F61',
+                'light-accent-primary': '#dc2626',
+                'light-highlight-primary': '#4169E1',
+
 
                 // Dark Mode Colors
                 'dark-primary': '#1f2937',

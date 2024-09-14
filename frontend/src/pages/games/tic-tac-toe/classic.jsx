@@ -147,7 +147,7 @@ export function TicTacToe() {
     const renderSquare = useCallback(
         (value, index) => {
             const winnerInfo = checkWinner(board)
-            const isWinningSquare = winnerInfo?.line.includes(index)
+            const winningSquareClass = winnerInfo?.line.includes(index) ? 'text-accent-primary *:animate-pulse' : ''
 
             return (
                 <button
@@ -155,7 +155,7 @@ export function TicTacToe() {
                     key={index}
                     className={`flex-center text-secondary bg-primary p-3 shadow-neu-inset-light-md dark:shadow-neu-inset-dark-md 
                     ${boardSize === 9 ? 'size-28 md:size-40' : boardSize === 16 ? 'size-20 md:size-36' : 'size-16 md:size-28'} 
-                    ${isWinningSquare ? 'text-accent-primary *:animate-pulse' : ''}`}
+                    ${winningSquareClass}`}
                     onClick={() => handleClick(index)}>
                     {value === 'X' ? (
                         <Close className="svg-shadow-light-xs dark:svg-shadow-dark-xs size-full" />

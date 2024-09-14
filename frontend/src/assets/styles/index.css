@@ -123,6 +123,10 @@
         @apply text-light-accent-primary dark:text-dark-accent-primary;
     }
 
+    .text-highlight-primary {
+        @apply text-light-highlight-primary dark:text-dark-highlight-primary;
+    }
+
     .text-theme-primary {
         @apply text-light-primary dark:text-dark-primary;
     }
