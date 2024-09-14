@@ -19,6 +19,9 @@ const Ultimate = () => {
     const [playerOName, setPlayerOName] = useState('Player 2')
     const [playerXScore, setPlayerXScore] = useState(0)
     const [playerOScore, setPlayerOScore] = useState(0)
+    const [isGameOver, setIsGameOver] = useState(false)
+    const [isDraw, setIsDraw] = useState(false)
+    const [winner, setWinner] = useState(null)
 
     const renderSquare = (value, macroIndex, microIndex) => {
         return (
@@ -49,6 +52,8 @@ const Ultimate = () => {
         for (let pattern of winPatterns) {
             const [a, b, c] = pattern
             if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+                setWinner(board[a])
+                setIsGameOver(true)
                 return board[a]
             }
         }
@@ -56,7 +61,7 @@ const Ultimate = () => {
     }
 
     const handleSquareClick = (macroIndex, microIndex) => {
-        if (board[macroIndex][microIndex]) return
+        if (board[macroIndex][microIndex] || isGameOver) return
 
         // Mark the cell with the current player's mark (X or O)
         const newMicroBoards = board.map((board, i) =>
@@ -67,10 +72,10 @@ const Ultimate = () => {
         // Switch turns
         setIsXNext(!isXNext)
 
-        const winner = checkWinner(newMicroBoards[macroIndex])
-        if (winner) {
+        const getWinner = checkWinner(newMicroBoards[macroIndex])
+        if (getWinner) {
             // Update the score
-            if (winner === 'X') {
+            if (getWinner === 'X') {
                 setPlayerXScore(playerXScore + 1)
             } else {
                 setPlayerOScore(playerOScore + 1)
@@ -81,6 +86,9 @@ const Ultimate = () => {
     const initializeGame = (isNewGame = false) => {
         setBoard(initialBoard)
         setIsXNext(true)
+        setWinner(null)
+        setIsDraw(false)
+        setIsGameOver(false)
 
         if (isNewGame) {
             setIsXNext(true)
@@ -120,14 +128,14 @@ const Ultimate = () => {
 
                 <div className="flex flex-col items-center justify-center gap-5">
                     {/* Game Status */}
-                    {/* <h2 className="text-primary grid grid-rows-2 place-items-center font-indie-flower text-2xl font-bold tracking-wider md:pt-5">
-                        {getGameStatus().isGameOver
-                            ? getGameStatus().isDraw
+                    <h2 className="text-primary grid grid-rows-2 place-items-center font-indie-flower text-2xl font-bold tracking-wider md:pt-5">
+                        {isGameOver
+                            ? isDraw
                                 ? "It's a draw!"
-                                : `${getGameStatus().winner === 'X' ? playerXName : playerOName} wins!`
+                                : `${winner === 'X' ? playerXName : playerOName} wins!`
                             : `${isXNext ? playerXName : playerOName}'s turn`}
-                        <span>{!getGameStatus().isGameOver ? `${isXNext ? '(X)' : '(O)'}` : ' '}</span>
-                    </h2> */}
+                        <span>{!isGameOver ? `${isXNext ? '(X)' : '(O)'}` : ' '}</span>
+                    </h2>
 
                     {/* Score Board */}
                     <div className="text-secondary grid w-10/12 grid-cols-2 place-items-center justify-between gap-10 px-4 font-indie-flower tracking-wider">
