@@ -88,7 +88,7 @@ const Ultimate = () => {
 
     const handleSquareClick = useCallback(
         (macroIndex, microIndex) => {
-            // Early exit if the game is over, the square is already filled, or the macro board is inactive, or the mini-board is already won
+            // Early exit if the game is over, the square is filled, or the board is inactive/won
             if (
                 isGameOver ||
                 miniBoard[macroIndex][microIndex] ||
@@ -98,75 +98,76 @@ const Ultimate = () => {
                 return
             }
 
-            // Update the mini board
+            // Update the mini board with the new move
             const updatedBoard = miniBoard.map((macroBoard, i) =>
                 i === macroIndex ? macroBoard.map((cell, j) => (j === microIndex ? (isXNext ? 'X' : 'O') : cell)) : macroBoard
             )
 
             const miniBoardWinner = checkWinner(updatedBoard[macroIndex])
-            const isLargeBoardFull = updatedBoard.every((macroBoard) => macroBoard.every((cell) => cell))
             const isMiniBoardFull = updatedBoard[macroIndex].every((cell) => cell)
+            const isLargeBoardFull = updatedBoard.every((macroBoard) => macroBoard.every((cell) => cell))
 
-            // Function to update the game state with any overrides
-            const updatedGameState = (prevState, overrides = {}) => ({
-                ...prevState,
-                miniBoard: updatedBoard,
-                isXNext: !isXNext,
-                activeMacroIndex: microIndex,
-                ...overrides,
-            })
+            // Helper to update game state with overrides
+            const updateGameState = (overrides = {}) =>
+                setGameState((prevState) => ({
+                    ...prevState,
+                    miniBoard: updatedBoard,
+                    isXNext: !isXNext,
+                    activeMacroIndex: microIndex,
+                    ...overrides,
+                }))
 
-            // Handle board winner
+            // Handle mini-board winner
             if (miniBoardWinner) {
                 const updatedLargeBoard = largeBoard.map((cell, i) => (i === macroIndex ? miniBoardWinner : cell))
-                setGameState((prevState) => updatedGameState(prevState, { largeBoard: updatedLargeBoard }))
+                updateGameState({ largeBoard: updatedLargeBoard })
 
                 const largeBoardWinner = checkWinner(updatedLargeBoard, true)
                 if (largeBoardWinner) {
-                    const winnerName = largeBoardWinner === 'X' ? 'playerX' : 'playerO'
-                    setGameState((prevState) => ({
-                        ...prevState,
-                        isGameOver: true,
-                        winner: largeBoardWinner,
-                    }))
-                    setPlayers((prevState) => ({
-                        ...prevState,
-                        [winnerName]: {
-                            ...prevState[winnerName],
-                            score: prevState[winnerName].score + 1,
-                        },
-                    }))
+                    if (largeBoardWinner === 'D') {
+                        updateGameState({ isGameOver: true, isDraw: true })
+                    } else {
+                        const winnerName = largeBoardWinner === 'X' ? 'playerX' : 'playerO'
+                        setGameState((prevState) => ({
+                            ...prevState,
+                            isGameOver: true,
+                            winner: largeBoardWinner,
+                        }))
+                        setPlayers((prevState) => ({
+                            ...prevState,
+                            [winnerName]: {
+                                ...prevState[winnerName],
+                                score: prevState[winnerName].score + 1,
+                            },
+                        }))
+                    }
                 }
             }
-            // Handle full board (draw)
+            // Handle overall game draw
             else if (isLargeBoardFull) {
-                setGameState((prevState) => updatedGameState(prevState, { isGameOver: true, isDraw: true }))
+                updateGameState({ isGameOver: true, isDraw: true })
             }
-            // Handle case where the mini board is full
+            // Handle mini-board draw
             else if (isMiniBoardFull) {
                 const updatedLargeBoard = largeBoard.map((cell, i) => (i === macroIndex ? 'D' : cell))
-                setGameState((prevState) => updatedGameState(prevState, { largeBoard: updatedLargeBoard }))
+                updateGameState({ largeBoard: updatedLargeBoard })
 
-                // Check if the next macro board is already won
                 if (updatedLargeBoard[microIndex]) {
-                    setGameState((prevState) => updatedGameState(prevState, { activeMacroIndex: null }))
+                    updateGameState({ activeMacroIndex: null })
                 }
 
                 const largeBoardWinner = checkWinner(updatedLargeBoard, true)
-                if (largeBoardWinner) {
-                    const isLargeBoardDraw = largeBoardWinner === 'D'
-                    if (isLargeBoardDraw) {
-                        setGameState((prevState) => updatedGameState(prevState, { isGameOver: true, isDraw: true }))
-                    }
+                if (largeBoardWinner === 'D') {
+                    updateGameState({ isGameOver: true, isDraw: true })
                 }
             }
             // Handle case where the next macro board is already won or full
             else if (largeBoard[microIndex]) {
-                setGameState((prevState) => updatedGameState(prevState, { activeMacroIndex: null }))
+                updateGameState({ activeMacroIndex: null })
             }
-            // Normal case, just update the game state
+            // Normal case: update game state with just the move
             else {
-                setGameState(updatedGameState)
+                updateGameState()
             }
         },
         [miniBoard, largeBoard, isXNext, isGameOver, checkWinner, activeMacroIndex]
