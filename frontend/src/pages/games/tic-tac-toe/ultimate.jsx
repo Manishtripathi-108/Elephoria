@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import NeuButton from '../../../components/common/buttons/neu-button'
 import Circle from '../../../components/common/svg/circle'
@@ -10,7 +10,8 @@ import Heading from './components/heading'
 import PlayerNameModal from './components/player-name-modal'
 
 const Ultimate = () => {
-    const initialBoard = Array(9).fill(Array(9).fill(null))
+    const initialMiniBoard = Array(9).fill(Array(9).fill(null))
+    const initialLargeBoard = Array(9).fill(null)
 
     // Group player-related states
     const [players, setPlayers] = useState({
@@ -20,17 +21,17 @@ const Ultimate = () => {
 
     // Group game-related states
     const [gameState, setGameState] = useState({
-        board: initialBoard,
+        miniBoard: initialMiniBoard,
+        largeBoard: initialLargeBoard,
         isXNext: true,
         isGameOver: false,
         isDraw: false,
         activeMacroIndex: null,
         winner: null,
         winingLine: [],
-        winningMacroIndex: null,
     })
 
-    const { board, isXNext, isGameOver, isDraw, activeMacroIndex, winner, winingLine, winningMacroIndex } = gameState
+    const { miniBoard, largeBoard, isXNext, isGameOver, isDraw, activeMacroIndex, winner, winingLine } = gameState
     const { playerX, playerO } = players
 
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -48,11 +49,6 @@ const Ultimate = () => {
 
     // Render Square Component
     const renderSquare = (value, macroIndex, microIndex) => {
-        const winningSquareClass =
-            winningMacroIndex === macroIndex && winingLine.includes(microIndex)
-                ? 'text-light-text-primary dark:text-dark-text-primary *:animate-pulse'
-                : ''
-
         const squareClasses =
             value === null
                 ? macroIndex === activeMacroIndex
@@ -66,7 +62,7 @@ const Ultimate = () => {
             <button
                 tabIndex="10"
                 key={`${macroIndex}-${microIndex}`}
-                className={`flex-center bg-primary p-1 md:p-2 size-7 md:size-12 rounded-md transition-all duration-300 ${squareClasses} ${winningSquareClass}`}
+                className={`flex-center bg-primary p-1 md:p-2 size-7 md:size-12 rounded-md transition-all duration-300 ${squareClasses}`}
                 onClick={() => handleSquareClick(macroIndex, microIndex)}>
                 {value === 'X' ? <Close className="size-full" /> : value === 'O' ? <Circle className="size-full" /> : null}
             </button>
@@ -74,81 +70,114 @@ const Ultimate = () => {
     }
 
     // Check if there is a winner
-    const checkWinner = useCallback((marcoIndex, currentBoard) => {
+    const checkWinner = useCallback((currentBoard, isLargeBoard = false) => {
         for (let [a, b, c] of WIN_PATTERN) {
             if (currentBoard[a] && currentBoard[a] === currentBoard[b] && currentBoard[a] === currentBoard[c]) {
-                setGameState((prevState) => ({
-                    ...prevState,
-                    winner: currentBoard[a],
-                    isGameOver: true,
-                    winingLine: [a, b, c],
-                    winningMacroIndex: marcoIndex,
-                }))
+                if (isLargeBoard)
+                    setGameState((prevState) => ({
+                        ...prevState,
+                        winner: currentBoard[a],
+                        isGameOver: true,
+                        winingLine: [a, b, c],
+                    }))
                 return currentBoard[a]
             }
         }
         return null
     }, [])
 
-    // Handle Square Click
+    // useEffect(() => {
+    //     console.log('activeMacroIndex:', activeMacroIndex)
+    //     console.log('Game Status:', gameState)
+    // }, [activeMacroIndex])
+
     const handleSquareClick = useCallback(
         (macroIndex, microIndex) => {
-            if (isGameOver || board[macroIndex][microIndex] || (activeMacroIndex !== null && activeMacroIndex !== macroIndex)) {
+            // Early exit if the game is over, the square is already filled, or the macro board is inactive, or the mini-board is already won
+            if (
+                isGameOver ||
+                miniBoard[macroIndex][microIndex] ||
+                (activeMacroIndex !== null && activeMacroIndex !== macroIndex) ||
+                largeBoard[macroIndex]
+            ) {
                 return
             }
 
-            const updatedBoard = board.map((macroBoard, i) =>
+            // Update the mini board
+            const updatedBoard = miniBoard.map((macroBoard, i) =>
                 i === macroIndex ? macroBoard.map((cell, j) => (j === microIndex ? (isXNext ? 'X' : 'O') : cell)) : macroBoard
             )
 
-            const winnerInfo = checkWinner(macroIndex, updatedBoard[macroIndex])
+            const miniBoardWinner = checkWinner(updatedBoard[macroIndex])
+            const isLargeBoardFull = updatedBoard.every((macroBoard) => macroBoard.every((cell) => cell))
+            const isMiniBoardFull = updatedBoard[macroIndex].every((cell) => cell)
 
-            if (winnerInfo) {
-                const winnerName = winnerInfo === 'X' ? 'playerX' : 'playerO'
-                setGameState((prevState) => ({
-                    ...prevState,
-                    board: updatedBoard,
-                    isGameOver: true,
-                    winner: winnerInfo,
-                }))
-                setPlayers((prevState) => ({
-                    ...prevState,
-                    [winnerName]: {
-                        ...prevState[winnerName],
-                        score: prevState[winnerName].score + 1,
-                    },
-                }))
-            } else if (updatedBoard.every((macroBoard) => macroBoard.every((cell) => cell))) {
-                setGameState((prevState) => ({
-                    ...prevState,
-                    board: updatedBoard,
-                    isXNext: !isXNext,
-                    isGameOver: true,
-                    isDraw: true,
-                }))
-            } else {
-                setGameState((prevState) => ({
-                    ...prevState,
-                    board: updatedBoard,
-                    isXNext: !isXNext,
-                    activeMacroIndex: microIndex,
-                }))
+            // Function to update the game state with any overrides
+            const updatedGameState = (prevState, overrides = {}) => ({
+                ...prevState,
+                miniBoard: updatedBoard,
+                isXNext: !isXNext,
+                activeMacroIndex: microIndex,
+                ...overrides,
+            })
+
+            // Handle board winner
+            if (miniBoardWinner) {
+                const updatedLargeBoard = largeBoard.map((cell, i) => (i === macroIndex ? miniBoardWinner : cell))
+                setGameState((prevState) => updatedGameState(prevState, { largeBoard: updatedLargeBoard }))
+
+                const largeBoardWinner = checkWinner(updatedLargeBoard, true)
+                if (largeBoardWinner) {
+                    const winnerName = largeBoardWinner === 'X' ? 'playerX' : 'playerO'
+                    setGameState((prevState) => ({
+                        ...prevState,
+                        isGameOver: true,
+                        winner: largeBoardWinner,
+                    }))
+                    setPlayers((prevState) => ({
+                        ...prevState,
+                        [winnerName]: {
+                            ...prevState[winnerName],
+                            score: prevState[winnerName].score + 1,
+                        },
+                    }))
+                }
+            }
+            // Handle full board (draw)
+            else if (isLargeBoardFull) {
+                setGameState((prevState) => updatedGameState(prevState, { isGameOver: true, isDraw: true }))
+            }
+            // Handle case where the mini board is full
+            else if (isMiniBoardFull) {
+                const updatedLargeBoard = largeBoard.map((cell, i) => (i === macroIndex ? 'D' : cell))
+                setGameState((prevState) => updatedGameState(prevState, { largeBoard: updatedLargeBoard }))
+                if (updatedLargeBoard[microIndex]) {
+                    setGameState((prevState) => updatedGameState(prevState, { activeMacroIndex: null }))
+                }
+            }
+            // Handle case where the next macro board is already won or full
+            else if (largeBoard[microIndex]) {
+                setGameState((prevState) => updatedGameState(prevState, { activeMacroIndex: null }))
+            }
+            // Normal case, just update the game state
+            else {
+                setGameState(updatedGameState)
             }
         },
-        [board, isXNext, isGameOver, checkWinner]
+        [miniBoard, largeBoard, isXNext, isGameOver, checkWinner, activeMacroIndex]
     )
 
     // Initialize Game
     const initializeGame = (isNewGame = false) => {
         setGameState({
-            board: initialBoard,
+            miniBoard: initialMiniBoard,
+            largeBoard: initialLargeBoard,
             isXNext: isNewGame ? true : Math.random() < 0.5,
             isGameOver: false,
             isDraw: false,
             winner: null,
             activeMacroIndex: null,
             winingLine: [],
-            winningMacroIndex: null,
         })
 
         if (isNewGame) {
@@ -168,11 +197,31 @@ const Ultimate = () => {
             <div className="flex w-full flex-col flex-wrap items-center justify-around gap-5 py-5 md:flex-row md:items-start">
                 <div className="relative w-fit p-2 shadow-neu-light-md dark:shadow-neu-dark-md rounded-lg">
                     <div className="grid grid-cols-3 gap-2">
-                        {board.map((macroBoard, macroIndex) => (
+                        {miniBoard.map((macroBoard, macroIndex) => (
                             <div
                                 key={macroIndex}
-                                className={`relative ${macroIndex === activeMacroIndex && 'bg-highlight-primary *:bg-highlight-primary'} grid grid-cols-3 md:gap-3 md:p-3 p-2 gap-2 shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs rounded-md`}>
+                                className={`${macroIndex === activeMacroIndex && 'bg-highlight-primary *:bg-highlight-primary'} relative grid grid-cols-3 md:gap-3 md:p-3 p-2 gap-2 shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs rounded-md`}>
                                 {macroBoard.map((cell, microIndex) => renderSquare(cell, macroIndex, microIndex))}
+
+                                {largeBoard[macroIndex] && (
+                                    <div className="absolute inset-0 z-10 flex-center invisible animate-puff-in">
+                                        <div className="bg-secondary opacity-70 blur-sm saturate-150 absolute inset-0"></div>
+                                        <span
+                                            className={`text-primary z-20 text-5xl font-bold tracking-wider ${
+                                                winingLine.includes(macroIndex)
+                                                    ? 'text-light-text-primary dark:text-dark-text-primary *:animate-pulse'
+                                                    : ''
+                                            }`}>
+                                            {largeBoard[macroIndex] === 'X' ? (
+                                                <Close className="size-full" />
+                                            ) : largeBoard[macroIndex] === 'O' ? (
+                                                <Circle className="size-full" />
+                                            ) : (
+                                                'Draw'
+                                            )}
+                                        </span>
+                                    </div>
+                                )}
                             </div>
                         ))}
                     </div>
@@ -200,7 +249,7 @@ const Ultimate = () => {
                         <span>{!isGameOver && `${isXNext ? '(X)' : '(O)'}`}</span>
                     </h2>
 
-                    {/* Score Board */}
+                    {/* Score miniBoard */}
                     <div className="text-secondary grid w-10/12 grid-cols-2 place-items-center justify-between gap-10 px-4 font-indie-flower tracking-wider">
                         <div className="grid place-items-center">
                             {playerX.name} <div>(X)</div>
