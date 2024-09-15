@@ -86,11 +86,6 @@ const Ultimate = () => {
         return null
     }, [])
 
-    // useEffect(() => {
-    //     console.log('activeMacroIndex:', activeMacroIndex)
-    //     console.log('Game Status:', gameState)
-    // }, [activeMacroIndex])
-
     const handleSquareClick = useCallback(
         (macroIndex, microIndex) => {
             // Early exit if the game is over, the square is already filled, or the macro board is inactive, or the mini-board is already won
@@ -151,8 +146,18 @@ const Ultimate = () => {
             else if (isMiniBoardFull) {
                 const updatedLargeBoard = largeBoard.map((cell, i) => (i === macroIndex ? 'D' : cell))
                 setGameState((prevState) => updatedGameState(prevState, { largeBoard: updatedLargeBoard }))
+
+                // Check if the next macro board is already won
                 if (updatedLargeBoard[microIndex]) {
                     setGameState((prevState) => updatedGameState(prevState, { activeMacroIndex: null }))
+                }
+
+                const largeBoardWinner = checkWinner(updatedLargeBoard, true)
+                if (largeBoardWinner) {
+                    const isLargeBoardDraw = largeBoardWinner === 'D'
+                    if (isLargeBoardDraw) {
+                        setGameState((prevState) => updatedGameState(prevState, { isGameOver: true, isDraw: true }))
+                    }
                 }
             }
             // Handle case where the next macro board is already won or full
@@ -207,7 +212,7 @@ const Ultimate = () => {
                                     <div className="absolute inset-0 z-10 flex-center invisible animate-puff-in">
                                         <div className="bg-secondary opacity-70 blur-sm saturate-150 absolute inset-0"></div>
                                         <span
-                                            className={`text-primary z-20 text-5xl font-bold tracking-wider ${
+                                            className={`text-primary z-20 text-5xl font-bold tracking-wider font-indie-flower text-center ${
                                                 winingLine.includes(macroIndex)
                                                     ? 'text-light-text-primary dark:text-dark-text-primary *:animate-pulse'
                                                     : ''
@@ -232,7 +237,7 @@ const Ultimate = () => {
                             initializeGame={initializeGame}
                             playerXName={playerX.name}
                             playerOName={playerO.name}
-                            isGameDraw={isDraw}
+                            isDraw={isDraw}
                             winner={winner}
                         />
                     )}

@@ -211,7 +211,7 @@ export function TicTacToe() {
                             initializeGame={initializeGame}
                             playerXName={playerX.name}
                             playerOName={playerO.name}
-                            isGameDraw={isDraw}
+                            isDraw={isDraw}
                             winner={winner}
                         />
                     )}
