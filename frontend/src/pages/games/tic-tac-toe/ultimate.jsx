@@ -120,10 +120,16 @@ const Ultimate = () => {
             // Handle mini-board winner
             if (miniBoardWinner) {
                 const updatedLargeBoard = largeBoard.map((cell, i) => (i === macroIndex ? miniBoardWinner : cell))
-                updateGameState({ largeBoard: updatedLargeBoard })
+                updateGameState({ largeBoard: updatedLargeBoard })                
+
+                // If the mini-board is won, set the active macro board to null if it's the same as the current mini board
+                if(activeMacroIndex !== null && activeMacroIndex === microIndex) {
+                    updateGameState({ activeMacroIndex: null })
+                }
 
                 const largeBoardWinner = checkWinner(updatedLargeBoard, true)
                 if (largeBoardWinner) {
+                    // if the large board is won and the winner is not a draw
                     if (largeBoardWinner === 'D') {
                         updateGameState({ isGameOver: true, isDraw: true })
                     } else {
