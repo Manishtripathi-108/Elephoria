@@ -9,6 +9,7 @@ const menuItems = {
         { name: 'Tic Tac Toe', url: '/games/tic-tac-toe' },
         { name: 'Tic Tac Toe Ultimate', url: '/games/tic-tac-toe/Ultimate' },
     ],
+    Authentication: [{ name: 'Login', url: '/login' }],
     Shadows: [{ name: 'Shadows Grid', url: '/shadows' }],
 }
 
