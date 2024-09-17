@@ -10,6 +10,9 @@
     "bracketSameLine": true,
     "printWidth": 150,
     "importOrder": [
+        "^react$", "^react-dom$",
+        "^react-router-dom$",
+        "^@?\\w",
         "^components/(.*)$",
         "^[./]",
         "^[../]",

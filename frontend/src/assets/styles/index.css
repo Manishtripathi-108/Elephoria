@@ -15,18 +15,25 @@
 }
 
 @layer components {
-    .neu-form-group {
-        @apply flex flex-col gap-2;
+    /* -------------------------------------------------------------------------- */
+    /*                                  neu-form                                  */
+    /* -------------------------------------------------------------------------- */
+    .neu-form-group,
+    .neu-form-file-group {
+        @apply flex w-full flex-col gap-2;
     }
 
     .neu-form-label,
-    .neu-form-checkbox-label,
     .neu-form-text {
         @apply text-secondary font-indie-flower text-sm leading-3;
     }
 
+    /*-- ------------------------- neu-form-input ------------------------- */
+    .neu-form-select,
+    .neu-form-textarea,
     .neu-form-input {
-        @apply bg-primary text-secondary active:placeholder:text-primary focus:placeholder:text-primary placeholder:text-secondary w-full appearance-none rounded-lg border border-light-secondary px-3 py-2 font-indie-flower shadow-neu-light-xs outline-none transition duration-300 placeholder:tracking-wide focus:shadow-neu-inset-light-xs;
+        @apply bg-primary text-primary active:placeholder:text-primary focus:placeholder:text-primary placeholder:text-secondary w-full appearance-none rounded-lg border border-light-secondary px-3 py-2 font-indie-flower shadow-neu-light-xs outline-none transition duration-300 placeholder:tracking-wide focus:shadow-neu-inset-light-xs;
+
         /* dark mode */
         @apply dark:border-dark-secondary dark:shadow-neu-dark-xs dark:focus:shadow-neu-inset-dark-xs;
     }
@@ -37,7 +44,7 @@
     }
 
     .neu-input-icon {
-        @apply text-secondary bg-primary size-10 border-light-secondary px-2 py-1 dark:border-dark-secondary;
+        @apply text-secondary size-10 border-light-secondary px-2 py-1 dark:border-dark-secondary;
     }
 
     .neu-input-group-prepend .neu-form-input {
@@ -70,20 +77,337 @@
     .neu-input-group:focus-within .neu-input-icon {
         @apply border border-light-secondary shadow-neu-light-xs dark:border-dark-secondary dark:shadow-neu-dark-xs;
     }
+    .neu-input-group:focus-within .neu-input-icon.error{
+        @apply border border-light-accent-primary dark:border-dark-accent-primary;
+    }
 
-    .neu-form-select {
-        @apply bg-primary text-primary active:placeholder:text-primary focus:placeholder:text-primary placeholder:text-secondary w-full appearance-none rounded-lg border border-light-secondary px-3 py-2 font-indie-flower shadow-neu-light-xs outline-none transition duration-300 placeholder:tracking-wide focus:shadow-neu-inset-light-xs;
+    /* ------------------------- neu-inset-outset-input ------------------------- */
+    .neu-inset-outset-input {
+        @apply bg-primary appearance-none rounded-xl border-none shadow-neu-inset-light-sm outline-none placeholder:tracking-wide;
+
         /* dark mode */
-        @apply dark:border-dark-secondary dark:shadow-neu-dark-xs dark:focus:shadow-neu-inset-dark-xs;
-        /* arrow */
+        @apply dark:shadow-neu-inset-dark-sm;
+    }
+
+    .neu-inset-outset-input:focus,
+    .neu-inset-outset-input:hover,
+    .neu-inset-outset-input:active {
+        @apply shadow-neu-md-soft placeholder:text-primary;
+
+        /* dark mode */
+        @apply dark:shadow-neu-dark-md;
+    }
+
+    /* ---------------------------- neu-form-textarea --------------------------- */
+    .neu-form-textarea {
+        @apply transition-all duration-300;
+    }
+
+    /* ----------------------------- neu-form-select ---------------------------- */
+    .neu-form-select {
         @apply appearance-none bg-no-repeat pr-10;
+
         background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="%23767676" d="M8.037 11.166L14.5 22.36c.825 1.43 2.175 1.43 3 0l6.463-11.195c.826-1.43.15-2.598-1.5-2.598H9.537c-1.65 0-2.326 1.17-1.5 2.6z"/></svg>');
         background-position: right 0.5rem center;
         background-size: 1.5rem 1.5rem;
     }
+
+    /* ------------------------------- neu-form-file ---------------------------- */
+    .neu-form-file {
+        @apply hidden;
+    }
+
+    .neu-form-file-group label {
+        @apply bg-primary text-secondary hover:text-primary relative cursor-pointer overflow-hidden rounded-lg border border-light-secondary px-4 py-2 font-indie-flower shadow-neu-light-xs transition duration-300 ease-in-out active:shadow-neu-inset-light-sm;
+        /* dark mode */
+        @apply dark:border-dark-secondary dark:shadow-neu-dark-xs dark:active:shadow-neu-inset-dark-sm;
+    }
+
+    .neu-form-file-group label:after {
+        content: 'Browse';
+        @apply text-secondary bg-secondary absolute right-0 top-0 px-4 py-2 font-indie-flower;
+    }
+
+    .neu-form-file-preview {
+        @apply bg-primary mx-auto size-fit rounded-lg border border-light-secondary p-3 shadow-neu-inset-light-sm;
+        /* dark mode */
+        @apply dark:border-dark-secondary dark:shadow-neu-inset-dark-sm;
+    }
+
+    /* ----------------------------- neu-form-checkbox -------------------------- */
+    .neu-form-group-checkbox {
+        @apply bg-primary flex flex-col items-start gap-2 rounded-2xl px-16 py-12 shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs;
+    }
+
+    .neu-form-checkbox-label {
+        @apply inline-flex cursor-pointer items-center;
+    }
+
+    .neu-form-checkbox {
+        @apply bg-primary flex-center disabled:text-secondary size-4 appearance-none rounded border border-light-secondary shadow-neu-inset-light-xs outline-none transition-all duration-300 ease-in-out placeholder:tracking-wide;
+
+        /* dark mode */
+        @apply dark:border-dark-secondary dark:shadow-neu-inset-dark-xs;
+    }
+
+    .neu-form-checkbox:checked {
+        @apply bg-primary text-primary flex-center;
+    }
+
+    .neu-form-checkbox:checked:after {
+        content: '\2713';
+        @apply text-primary flex-center size-full font-bold transition-all;
+    }
+
+    .neu-form-checkbox:checked:after {
+        transform: scale(0.8);
+    }
+
+    .neu-form-checkbox-text {
+        @apply text-secondary ml-2 font-indie-flower text-sm transition-all duration-500;
+    }
+
+    .neu-form-checkbox-label:hover .neu-form-checkbox-text,
+    .neu-form-checkbox:checked ~ .neu-form-checkbox-text {
+        @apply text-primary translate-x-2;
+    }
+
+    /* ------------------------------- neu-form-radio --------------------------- */
+    .neu-form-group-radio {
+        @apply bg-primary flex flex-col items-start gap-2 rounded-2xl px-16 py-12 shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs;
+    }
+    .neu-form-radio-label {
+        @apply relative inline-flex cursor-pointer items-center;
+    }
+
+    .neu-form-radio {
+        @apply sr-only;
+    }
+
+    .neu-form-radio-indicator {
+        @apply before:shadow-neu-md-soft relative size-5 overflow-hidden rounded-full shadow-neu-light-xs before:absolute before:left-[10%] before:top-[10%] before:size-4/5 before:rounded-full dark:shadow-neu-dark-xs dark:before:shadow-neu-dark-md;
+    }
+
+    .neu-form-radio-text {
+        @apply text-secondary ml-2 font-indie-flower transition-all duration-500;
+    }
+
+    .neu-form-radio-label:hover .neu-form-radio-text,
+    .neu-form-radio:checked ~ .neu-form-radio-text {
+        @apply text-primary translate-x-2;
+    }
+
+    .neu-form-radio:checked ~ .neu-form-radio-indicator:before {
+        @apply shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs;
+    }
+
+    /* ------------------------------- neu-switch ------------------------------- */
+
+    .neu-form-switch-label {
+        @apply relative inline-flex cursor-pointer items-center;
+    }
+
+    .neu-form-switch {
+        @apply sr-only;
+    }
+
+    .neu-form-switch-indicator {
+        @apply bg-primary h-12 w-24 rounded-full shadow-neu-inset-light-sm outline-none ring-0;
+        @apply dark:shadow-neu-inset-dark-sm;
+    }
+
+    .neu-form-switch-indicator:after {
+        @apply bg-primary ease-Out-back absolute left-1 top-1 flex size-10 -rotate-180 items-center justify-center rounded-full shadow-neu-light-xs outline-none duration-300 content-['✖️'];
+        @apply dark:shadow-neu-dark-xs;
+    }
+
+    .neu-form-switch:hover ~ .neu-form-switch-indicator:after {
+        @apply scale-95;
+    }
+
+    .neu-form-switch:checked ~ .neu-form-switch-indicator:after {
+        @apply translate-x-12 rotate-0 content-['✔️'];
+    }
+
+    /* ------------------------------- neu-slider ------------------------------- */
+    .neu-form-range-group {
+        @apply w-full;
+    }
+    .neu-form-range {
+        @apply bg-primary relative h-2 w-full appearance-none rounded-full shadow-neu-light-xs outline-none dark:shadow-neu-dark-xs;
+    }
+    .neu-form-range::-webkit-slider-thumb {
+        @apply bg-accent h-6 w-6 cursor-pointer appearance-none rounded-full shadow-neu-light-xs transition duration-300 ease-in-out dark:shadow-neu-dark-xs;
+    }
+    .neu-form-range::-moz-range-thumb {
+        @apply bg-accent relative h-6 w-6 cursor-pointer appearance-none rounded-full shadow-neu-light-xs transition duration-300 ease-in-out;
+    }
+
+    .neu-form-double-range-group {
+        @apply flex w-full flex-col gap-4;
+    }
+
+    /* ---------------------------------- Error --------------------------------- */
+    .neu-form-error {
+        @apply text-accent-primary font-indie-flower text-sm;
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /*                                neu-calendar                                */
+    /* -------------------------------------------------------------------------- */
+    .neu-calendar-container {
+        @apply relative w-72;
+    }
+
+    .neu-calendar {
+        @apply bg-primary absolute left-0 top-12 z-50 mt-2 w-full overflow-hidden rounded-lg shadow-neu-light-xs dark:shadow-neu-dark-xs;
+    }
+
+    .neu-calendar-header {
+        @apply flex items-center justify-between px-4 py-2 shadow-neu-light-xs dark:shadow-neu-dark-sm;
+    }
+
+    .neu-calendar-header-btn {
+        @apply neu-btn p-1.5;
+    }
+
+    .neu-calendar-header-title {
+        @apply neu-btn mx-3 w-full text-nowrap px-4 py-1.5 text-sm;
+    }
+
+    .neu-calendar-body,
+    .neu-calendar-body-days,
+    .neu-calendar-body-months,
+    .neu-calendar-body-years {
+        @apply m-1 grid gap-1 p-4 text-sm shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs;
+    }
+
+    .neu-calendar-body-days {
+        @apply grid-cols-7;
+    }
+
+    .neu-calendar-body-months {
+        @apply grid-cols-3;
+    }
+
+    .neu-calendar-body-years {
+        @apply grid-cols-4;
+    }
+
+    .neu-calendar-item {
+        @apply text-primary hover:bg-secondary flex cursor-pointer items-center justify-center rounded-lg p-2 transition hover:text-white hover:shadow-neu-light-xs dark:hover:shadow-neu-dark-xs;
+    }
+
+    .neu-calendar-item.active {
+        @apply bg-secondary text-white shadow-neu-light-xs dark:shadow-neu-dark-xs;
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /*                                  neu-badge                                 */
+    /* -------------------------------------------------------------------------- */
+    .neu-badge {
+        @apply text-secondary rounded-full border border-light-secondary px-2 py-1 text-center font-indie-flower text-sm shadow-neu-inset-light-sm;
+
+        /* dark mode */
+        @apply dark:border-dark-secondary dark:shadow-neu-inset-dark-xs;
+    }
+
+    .neu-badge-primary {
+        @apply text-primary;
+    }
+
+    .neu-badge-secondary {
+        @apply text-secondary;
+    }
+
+    .neu-badge-accent {
+        @apply text-accent;
+    }
+
+    .neu-badge-highlight {
+        @apply text-highlight;
+    }
+
+    .neu-badge-md {
+        @apply px-3 py-2;
+    }
+
+    .neu-badge-lg {
+        @apply px-4 py-3 text-base;
+    }
+
+    .neu-badge-xl {
+        @apply px-5 py-4 text-lg;
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /*                                   neu-btn                                  */
+    /* -------------------------------------------------------------------------- */
+
+    .neu-btn {
+        @apply text-secondary bg-primary rounded-lg border border-light-secondary px-4 py-2 text-center tracking-wider shadow-neu-light-xs transition-all duration-300;
+
+        /* dark mode */
+        @apply dark:border-dark-secondary dark:shadow-neu-dark-xs;
+    }
+
+    .neu-btn.active,
+    .neu-btn:active {
+        @apply text-primary shadow-neu-inset-light-sm;
+        /* dark mode*/
+        @apply dark:shadow-neu-inset-dark-xs;
+    }
+
+    .neu-btn:hover:not(.active),
+    .neu-btn:focus:not(.active) {
+        @apply text-primary scale-105 transform;
+    }
+
+    /*-- -------------------------------- neu-btn-pill -------------------------------- */
+    .neu-btn-pill {
+        @apply rounded-l-full rounded-r-full;
+    }
+
+    /*-- -------------------------------- neu-icon-btn -------------------------------- */
+    .neu-icon-btn {
+        @apply flex items-center justify-center gap-2 text-sm;
+    }
+
+    /*-- -------------------------------- neu-icon-only-btn ------------------------------*/
+    .neu-icon-only-btn {
+        @apply shadow-neu-md-soft rounded-full p-2;
+
+        /* dark mode */
+        @apply dark:bg-none dark:shadow-neu-dark-md;
+    }
+
+    .neu-icon-only-square-btn {
+        @apply bg-btn-gradient shadow-neu-md-soft rounded-lg p-2;
+
+        /* dark mode    */
+        @apply dark:bg-none dark:shadow-neu-dark-md;
+    }
+
+    /*-- -------------------------------- neu-btn Sizes -------------------------------- */
+    .neu-btn-sm {
+        @apply px-2 py-1 text-xs;
+    }
+
+    .neu-btn-lg {
+        @apply px-4 py-3 text-base;
+    }
+
+    .neu-btn-xl {
+        @apply px-5 py-4 text-lg;
+    }
 }
 
 @layer utilities {
+    /* ---------------------------------- Error --------------------------------- */
+    .error {
+        @apply border-light-accent-primary transition-all duration-300 dark:border-dark-accent-primary focus:border-light-accent-primary focus-within:border-light-accent-primary dark:focus:border-dark-accent-primary dark:focus-within:border-dark-accent-primary hover:border-light-accent-primary dark:hover:border-dark-accent-primary;
+    }
+
     .flex-center {
         display: flex;
         justify-content: center;
