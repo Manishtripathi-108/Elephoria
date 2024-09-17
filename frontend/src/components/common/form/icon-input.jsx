@@ -28,7 +28,7 @@ const IconInput = ({ type, placeholder, value, onChange, name, id, error, groupC
                     id={id}
                 />
             </div>
-            {error && <small className="neu-form-text neu-form-text-error">{error}</small>}
+            {error && <small className="neu-form-text error">{error}</small>}
         </div>
     )
 }

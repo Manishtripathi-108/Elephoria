@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react'
 
+import AppName from '../../../public/app-name'
 import Heart from '../../assets/svgs/heart'
 import IconInput from '../../components/common/form/icon-input'
 
@@ -51,13 +52,20 @@ function Login() {
                     className="bg-primary absolute left-[40%] top-0 z-0 flex h-full w-3/5 items-center justify-center p-6 transition-all duration-[1.25s]"
                     ref={registerContainerRef}>
                     <form className="flex h-full w-full flex-col items-center justify-center" method="post" action="/register">
-                        <h2 className="form_title text-primary mb-8 text-3xl font-bold">Create Account</h2>
+                        <h2 className="form_title text-primary mb-8 text-3xl font-bold">Create Your Account</h2>
                         <div className="flex-center text-primary gap-5">{/* Social Icons */}</div>
-                        <span className="text-secondary mb-3 mt-8">or use email for registration</span>
-                        <IconInput groupClass="my-2 w-3/4" type="text" placeholder="Name" />
-                        <IconInput groupClass="my-2 w-3/4" type="email" placeholder="Email" />
-                        <IconInput groupClass="my-2 w-3/4" type="password" placeholder="Password" />
-                        <button className="neu-btn mt-12" type="button">
+                        <span className="text-secondary mb-3 mt-8">Or use your email for registration</span>
+
+                        {/* Name Input */}
+                        <IconInput groupClass="my-2 w-3/4" type="text" placeholder="Enter your full name" />
+
+                        {/* Email Input */}
+                        <IconInput groupClass="my-2 w-3/4" type="email" placeholder="Enter your email address" />
+
+                        {/* Password Input */}
+                        <IconInput groupClass="my-2 w-3/4" type="password" placeholder="Create a secure password" />
+
+                        <button className="neu-btn mt-12" type="submit">
                             SIGN UP
                         </button>
                     </form>
@@ -68,15 +76,23 @@ function Login() {
                     className="bg-primary absolute left-[40%] top-0 z-[100] flex h-full w-3/5 items-center justify-center p-6 transition-all duration-[1.25s]"
                     ref={loginContainerRef}>
                     <form className="flex h-full w-full flex-col items-center justify-center" method="post" action="/login">
-                        <h2 className="form_title text-primary mb-8 text-3xl font-bold">Sign in to Website</h2>
+                        <h2 className="form_title text-primary mb-8 text-3xl font-bold flex-center">
+                            <span className="text-nowrap"> Sign in to</span> <AppName className="ml-3 shrink-0" />
+                        </h2>
                         <div className="flex-center text-primary gap-5">{/* Social Icons */}</div>
-                        <span className="text-secondary mb-3 mt-8">or use your email account</span>
-                        <IconInput groupClass="my-2 w-3/4" type="email" placeholder="Email" />
-                        <IconInput groupClass="my-2 w-3/4" type="password" placeholder="Password" />
+                        <span className="text-secondary mb-3 mt-8">Or use your email account to log in</span>
+
+                        {/* Email Input */}
+                        <IconInput groupClass="my-2 w-3/4" type="email" placeholder="Enter your email address" />
+
+                        {/* Password Input */}
+                        <IconInput groupClass="my-2 w-3/4" type="password" placeholder="Enter your password" />
+
                         <a className="text-primary mb-8 mt-6 border-b border-solid border-b-[#a0a5a8] text-[15px]" href="#">
                             Forgot your password?
                         </a>
-                        <button className="neu-btn mt-12" type="button">
+
+                        <button className="neu-btn mt-12" type="submit">
                             SIGN IN
                         </button>
                     </form>
@@ -90,26 +106,26 @@ function Login() {
                     <div className="switch-circles bg-primary size-[500px] absolute bottom-[-60%] left-[-60%] rounded-full shadow-neu-inset-light-sm transition-all duration-[1.25s] dark:shadow-neu-inset-dark-sm"></div>
                     <div className="switch-circles bg-primary size-[350px] absolute bottom-[-60%] left-[-60%] top-[-30%] rounded-full shadow-neu-inset-light-sm transition-all duration-[1.25s] dark:shadow-neu-inset-dark-sm"></div>
 
-                    {/* Login */}
+                    {/* Login Switch */}
                     <div
                         className="px-13 absolute flex w-full flex-col items-center justify-center py-12 transition-all duration-[1.25s]"
                         ref={switchSignInRef}>
                         <h2 className="text-primary mb-8 text-3xl font-bold">Welcome Back!</h2>
                         <p className="text-secondary px-2 text-center text-sm leading-relaxed tracking-wide">
-                            To keep connected with us please login with your personal info.
+                            To stay connected with us, please log in with your personal details.
                         </p>
                         <button className="neu-btn mt-12" onClick={toggleForm}>
                             SIGN IN
                         </button>
                     </div>
 
-                    {/* Register */}
+                    {/* Register Switch */}
                     <div
                         className="px-13 invisible absolute flex w-full flex-col items-center justify-center py-12 opacity-0 transition-all duration-[1.25s]"
                         ref={switchSignUpRef}>
-                        <h2 className="text-primary mb-8 text-3xl font-bold">Hello Friend!</h2>
+                        <h2 className="text-primary mb-8 text-3xl font-bold">Hello, Friend!</h2>
                         <p className="text-secondary px-2 text-center text-sm leading-relaxed tracking-wide">
-                            Enter your personal details and start your journey with us.
+                            Create an account to start your journey with us. Let’s get started by filling out the form.
                         </p>
                         <button className="neu-btn mt-12" onClick={toggleForm}>
                             SIGN UP

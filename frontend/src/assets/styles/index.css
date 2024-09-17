@@ -247,11 +247,6 @@
         @apply flex w-full flex-col gap-4;
     }
 
-    /* ---------------------------------- Error --------------------------------- */
-    .neu-form-error {
-        @apply text-accent-primary font-indie-flower text-sm;
-    }
-
     /* -------------------------------------------------------------------------- */
     /*                                neu-calendar                                */
     /* -------------------------------------------------------------------------- */
@@ -405,7 +400,7 @@
 @layer utilities {
     /* ---------------------------------- Error --------------------------------- */
     .error {
-        @apply border-light-accent-primary transition-all duration-300 dark:border-dark-accent-primary focus:border-light-accent-primary focus-within:border-light-accent-primary dark:focus:border-dark-accent-primary dark:focus-within:border-dark-accent-primary hover:border-light-accent-primary dark:hover:border-dark-accent-primary;
+        @apply border-light-accent-primary transition-all duration-300 dark:border-dark-accent-primary focus:border-light-accent-primary focus-within:border-light-accent-primary dark:focus:border-dark-accent-primary dark:focus-within:border-dark-accent-primary hover:border-light-accent-primary dark:hover:border-dark-accent-primary text-accent-primary;
     }
 
     .flex-center {
