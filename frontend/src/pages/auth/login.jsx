@@ -5,36 +5,11 @@ import * as Yup from 'yup'
 
 import IconInput from '../../components/common/form/icon-input'
 
-// For validation schema if needed
-
-// Helper functions for field-level validation
-const validateEmail = (value) => {
-    let error
-    if (!value) {
-        error = 'Required'
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) {
-        error = 'Invalid email address'
-    }
-    return error
-}
-
-const validatePassword = (value) => {
-    let error
-    if (!value) {
-        error = 'Required'
-    } else if (value.length < 6) {
-        error = 'Password must be at least 6 characters'
-    }
-    return error
-}
-
-const validateName = (value) => {
-    let error
-    if (!value) {
-        error = 'Required'
-    }
-    return error
-}
+const validationSchema = Yup.object({
+    name: Yup.string().required('Required'),
+    email: Yup.string().email('Invalid email address').required('Required'),
+    password: Yup.string().min(6, 'Password must be at least 6 characters').required('Required'),
+})
 
 function Login() {
     const switchContainerRef = useRef(null)
@@ -77,12 +52,13 @@ function Login() {
     return (
         <div className="grid place-items-center h-dvh w-dvw">
             <div className="bg-primary relative h-[600px] w-[70%] overflow-hidden rounded-xl p-6 shadow-neu-light-lg dark:shadow-neu-dark-lg">
-                {/* Register Container */}
+                {/* Register Form with Formik */}
                 <div
                     className="bg-primary absolute left-[40%] top-0 z-0 flex h-full w-3/5 items-center justify-center p-6 transition-all duration-[1.25s]"
                     ref={registerContainerRef}>
                     <Formik
                         initialValues={{ name: '', email: '', password: '' }}
+                        validationSchema={validationSchema}
                         onSubmit={(values) => {
                             alert(JSON.stringify(values, null, 2))
                         }}>
@@ -92,25 +68,22 @@ function Login() {
                                 <span className="text-secondary mb-3 mt-8">Or use your email for registration</span>
 
                                 {/* Name Field */}
-                                <Field
-                                    name="name"
-                                    validate={validateName}
-                                    render={({ field, form }) => (
+                                <Field name="name">
+                                    {({ field, form }) => (
                                         <IconInput
                                             groupClass="my-2 w-3/4"
                                             type="text"
                                             placeholder="Enter your full name"
+                                            icon='line-md:person-filled'
                                             {...field}
                                             error={form.errors.name && form.touched.name ? form.errors.name : ''}
                                         />
                                     )}
-                                />
+                                </Field>
 
                                 {/* Email Field */}
-                                <Field
-                                    name="email"
-                                    validate={validateEmail}
-                                    render={({ field, form }) => (
+                                <Field name="email">
+                                    {({ field, form }) => (
                                         <IconInput
                                             groupClass="my-2 w-3/4"
                                             type="email"
@@ -119,13 +92,11 @@ function Login() {
                                             error={form.errors.email && form.touched.email ? form.errors.email : ''}
                                         />
                                     )}
-                                />
+                                </Field>
 
                                 {/* Password Field */}
-                                <Field
-                                    name="password"
-                                    validate={validatePassword}
-                                    render={({ field, form }) => (
+                                <Field name="password">
+                                    {({ field, form }) => (
                                         <IconInput
                                             groupClass="my-2 w-3/4"
                                             type="password"
@@ -134,7 +105,7 @@ function Login() {
                                             error={form.errors.password && form.touched.password ? form.errors.password : ''}
                                         />
                                     )}
-                                />
+                                </Field>
 
                                 <button className="neu-btn mt-12" type="submit">
                                     SIGN UP
@@ -150,6 +121,10 @@ function Login() {
                     ref={loginContainerRef}>
                     <Formik
                         initialValues={{ email: '', password: '' }}
+                        validationSchema={Yup.object({
+                            email: Yup.string().email('Invalid email address').required('Required'),
+                            password: Yup.string().min(6, 'Must be at least 6 characters').required('Required'),
+                        })}
                         onSubmit={(values) => {
                             alert(JSON.stringify(values, null, 2))
                         }}>
@@ -159,10 +134,8 @@ function Login() {
                                 <span className="text-secondary mb-3 mt-8">Or use your email account to log in</span>
 
                                 {/* Email Field */}
-                                <Field
-                                    name="email"
-                                    validate={validateEmail}
-                                    render={({ field, form }) => (
+                                <Field name="email">
+                                    {({ field, form }) => (
                                         <IconInput
                                             groupClass="my-2 w-3/4"
                                             type="email"
@@ -171,13 +144,11 @@ function Login() {
                                             error={form.errors.email && form.touched.email ? form.errors.email : ''}
                                         />
                                     )}
-                                />
+                                </Field>
 
                                 {/* Password Field */}
-                                <Field
-                                    name="password"
-                                    validate={validatePassword}
-                                    render={({ field, form }) => (
+                                <Field name="password">
+                                    {({ field, form }) => (
                                         <IconInput
                                             groupClass="my-2 w-3/4"
                                             type="password"
@@ -186,7 +157,7 @@ function Login() {
                                             error={form.errors.password && form.touched.password ? form.errors.password : ''}
                                         />
                                     )}
-                                />
+                                </Field>
 
                                 <a className="text-primary mb-8 mt-6 border-b border-solid border-b-[#a0a5a8] text-[15px]" href="#">
                                     Forgot your password?
