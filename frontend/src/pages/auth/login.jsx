@@ -1,7 +1,5 @@
 import React, { useRef, useState } from 'react'
 
-import AppName from '../../../public/app-name'
-import Heart from '../../assets/svgs/heart'
 import IconInput from '../../components/common/form/icon-input'
 
 // Assuming you have the relevant CSS for styles
@@ -57,7 +55,8 @@ function Login() {
                         <span className="text-secondary mb-3 mt-8">Or use your email for registration</span>
 
                         {/* Name Input */}
-                        <IconInput groupClass="my-2 w-3/4" type="text" placeholder="Enter your full name" />
+
+                        <IconInput groupClass="my-2 w-3/4" type="text" placeholder="Enter your full name" icon="line-md:person-filled" />
 
                         {/* Email Input */}
                         <IconInput groupClass="my-2 w-3/4" type="email" placeholder="Enter your email address" />
@@ -77,7 +76,7 @@ function Login() {
                     ref={loginContainerRef}>
                     <form className="flex h-full w-full flex-col items-center justify-center" method="post" action="/login">
                         <h2 className="form_title text-primary mb-8 text-3xl font-bold flex-center">
-                            <span className="text-nowrap"> Sign in to</span> <AppName className="ml-3 shrink-0" />
+                            <span className="text-nowrap"> Sign in to</span>
                         </h2>
                         <div className="flex-center text-primary gap-5">{/* Social Icons */}</div>
                         <span className="text-secondary mb-3 mt-8">Or use your email account to log in</span>
