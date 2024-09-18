@@ -1,8 +1,40 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef } from 'react'
+
+import { ErrorMessage, Field, Form, Formik } from 'formik'
+import * as Yup from 'yup'
 
 import IconInput from '../../components/common/form/icon-input'
 
-// Assuming you have the relevant CSS for styles
+// For validation schema if needed
+
+// Helper functions for field-level validation
+const validateEmail = (value) => {
+    let error
+    if (!value) {
+        error = 'Required'
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) {
+        error = 'Invalid email address'
+    }
+    return error
+}
+
+const validatePassword = (value) => {
+    let error
+    if (!value) {
+        error = 'Required'
+    } else if (value.length < 6) {
+        error = 'Password must be at least 6 characters'
+    }
+    return error
+}
+
+const validateName = (value) => {
+    let error
+    if (!value) {
+        error = 'Required'
+    }
+    return error
+}
 
 function Login() {
     const switchContainerRef = useRef(null)
@@ -49,52 +81,123 @@ function Login() {
                 <div
                     className="bg-primary absolute left-[40%] top-0 z-0 flex h-full w-3/5 items-center justify-center p-6 transition-all duration-[1.25s]"
                     ref={registerContainerRef}>
-                    <form className="flex h-full w-full flex-col items-center justify-center" method="post" action="/register">
-                        <h2 className="form_title text-primary mb-8 text-3xl font-bold">Create Your Account</h2>
-                        <div className="flex-center text-primary gap-5">{/* Social Icons */}</div>
-                        <span className="text-secondary mb-3 mt-8">Or use your email for registration</span>
+                    <Formik
+                        initialValues={{ name: '', email: '', password: '' }}
+                        onSubmit={(values) => {
+                            alert(JSON.stringify(values, null, 2))
+                        }}>
+                        {() => (
+                            <Form className="flex h-full w-full flex-col items-center justify-center">
+                                <h2 className="form_title text-primary mb-8 text-3xl font-bold">Create Your Account</h2>
+                                <span className="text-secondary mb-3 mt-8">Or use your email for registration</span>
 
-                        {/* Name Input */}
+                                {/* Name Field */}
+                                <Field
+                                    name="name"
+                                    validate={validateName}
+                                    render={({ field, form }) => (
+                                        <IconInput
+                                            groupClass="my-2 w-3/4"
+                                            type="text"
+                                            placeholder="Enter your full name"
+                                            {...field}
+                                            error={form.errors.name && form.touched.name ? form.errors.name : ''}
+                                        />
+                                    )}
+                                />
 
-                        <IconInput groupClass="my-2 w-3/4" type="text" placeholder="Enter your full name" icon="line-md:person-filled" />
+                                {/* Email Field */}
+                                <Field
+                                    name="email"
+                                    validate={validateEmail}
+                                    render={({ field, form }) => (
+                                        <IconInput
+                                            groupClass="my-2 w-3/4"
+                                            type="email"
+                                            placeholder="Enter your email address"
+                                            {...field}
+                                            error={form.errors.email && form.touched.email ? form.errors.email : ''}
+                                        />
+                                    )}
+                                />
 
-                        {/* Email Input */}
-                        <IconInput groupClass="my-2 w-3/4" type="email" placeholder="Enter your email address" />
+                                {/* Password Field */}
+                                <Field
+                                    name="password"
+                                    validate={validatePassword}
+                                    render={({ field, form }) => (
+                                        <IconInput
+                                            groupClass="my-2 w-3/4"
+                                            type="password"
+                                            placeholder="Create a secure password"
+                                            {...field}
+                                            error={form.errors.password && form.touched.password ? form.errors.password : ''}
+                                        />
+                                    )}
+                                />
 
-                        {/* Password Input */}
-                        <IconInput groupClass="my-2 w-3/4" type="password" placeholder="Create a secure password" />
-
-                        <button className="neu-btn mt-12" type="submit">
-                            SIGN UP
-                        </button>
-                    </form>
+                                <button className="neu-btn mt-12" type="submit">
+                                    SIGN UP
+                                </button>
+                            </Form>
+                        )}
+                    </Formik>
                 </div>
 
-                {/* Login Container */}
+                {/* Login Form with Formik */}
                 <div
                     className="bg-primary absolute left-[40%] top-0 z-[100] flex h-full w-3/5 items-center justify-center p-6 transition-all duration-[1.25s]"
                     ref={loginContainerRef}>
-                    <form className="flex h-full w-full flex-col items-center justify-center" method="post" action="/login">
-                        <h2 className="form_title text-primary mb-8 text-3xl font-bold flex-center">
-                            <span className="text-nowrap"> Sign in to</span>
-                        </h2>
-                        <div className="flex-center text-primary gap-5">{/* Social Icons */}</div>
-                        <span className="text-secondary mb-3 mt-8">Or use your email account to log in</span>
+                    <Formik
+                        initialValues={{ email: '', password: '' }}
+                        onSubmit={(values) => {
+                            alert(JSON.stringify(values, null, 2))
+                        }}>
+                        {() => (
+                            <Form className="flex h-full w-full flex-col items-center justify-center">
+                                <h2 className="form_title text-primary mb-8 text-3xl font-bold">Sign in to Your Account</h2>
+                                <span className="text-secondary mb-3 mt-8">Or use your email account to log in</span>
 
-                        {/* Email Input */}
-                        <IconInput groupClass="my-2 w-3/4" type="email" placeholder="Enter your email address" />
+                                {/* Email Field */}
+                                <Field
+                                    name="email"
+                                    validate={validateEmail}
+                                    render={({ field, form }) => (
+                                        <IconInput
+                                            groupClass="my-2 w-3/4"
+                                            type="email"
+                                            placeholder="Enter your email address"
+                                            {...field}
+                                            error={form.errors.email && form.touched.email ? form.errors.email : ''}
+                                        />
+                                    )}
+                                />
 
-                        {/* Password Input */}
-                        <IconInput groupClass="my-2 w-3/4" type="password" placeholder="Enter your password" />
+                                {/* Password Field */}
+                                <Field
+                                    name="password"
+                                    validate={validatePassword}
+                                    render={({ field, form }) => (
+                                        <IconInput
+                                            groupClass="my-2 w-3/4"
+                                            type="password"
+                                            placeholder="Enter your password"
+                                            {...field}
+                                            error={form.errors.password && form.touched.password ? form.errors.password : ''}
+                                        />
+                                    )}
+                                />
 
-                        <a className="text-primary mb-8 mt-6 border-b border-solid border-b-[#a0a5a8] text-[15px]" href="#">
-                            Forgot your password?
-                        </a>
+                                <a className="text-primary mb-8 mt-6 border-b border-solid border-b-[#a0a5a8] text-[15px]" href="#">
+                                    Forgot your password?
+                                </a>
 
-                        <button className="neu-btn mt-12" type="submit">
-                            SIGN IN
-                        </button>
-                    </form>
+                                <button className="neu-btn mt-12" type="submit">
+                                    SIGN IN
+                                </button>
+                            </Form>
+                        )}
+                    </Formik>
                 </div>
 
                 {/* Switch Container */}
