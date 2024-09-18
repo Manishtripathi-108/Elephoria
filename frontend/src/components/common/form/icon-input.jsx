@@ -9,7 +9,7 @@ const iconNames = {
     angry: 'line-md:emoji-angry-filled',
 }
 
-const IconInput = ({ type = 'text', placeholder = '', value, onChange, name, id, error, groupClass = '', inputClass = '', icon = '' }) => {
+const IconInput = ({ type = 'text', placeholder = '', value, onChange, onBlur, name, id, error, groupClass = '', inputClass = '', icon = '' }) => {
     const [showPassword, setShowPassword] = useState(false)
 
     // Determine the icon to display
@@ -41,6 +41,7 @@ const IconInput = ({ type = 'text', placeholder = '', value, onChange, name, id,
                     placeholder={placeholder}
                     value={value}
                     onChange={onChange}
+                    onBlur={onBlur}
                     name={name}
                     id={id}
                 />

@@ -9,7 +9,7 @@ const menuItems = {
         { name: 'Tic Tac Toe', url: '/games/tic-tac-toe' },
         { name: 'Tic Tac Toe Ultimate', url: '/games/tic-tac-toe/Ultimate' },
     ],
-    Authentication: [{ name: 'Login', url: '/login' }],
+    Authentication: [{ name: 'Login/Signup', url: '/auth' }],
     Shadows: [{ name: 'Shadows Grid', url: '/shadows' }],
 }
 
@@ -33,7 +33,7 @@ const Sidenav = () => {
                             </div>
                         </div>
                         <div className="mr-2">
-                            <a className="text-primary text-base font-medium" href="javascript:void(0)">
+                            <a className="text-primary text-base font-medium" href="">
                                 Roronoa Zoro
                             </a>
                             <span className="text-secondary block text-xs font-medium">Sword Master</span>
@@ -41,7 +41,7 @@ const Sidenav = () => {
                     </div>
                     <a
                         className="text-secondary relative inline-flex cursor-pointer items-center justify-end border-0 text-center align-middle text-base font-medium transition-colors duration-150 ease-in-out"
-                        href="javascript:void(0)">
+                        href="">
                         <span className="mr-2 inline-block text-sm">Logout</span>
                     </a>
                 </div>

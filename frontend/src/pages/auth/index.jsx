@@ -1,6 +1,7 @@
 import React, { useRef } from 'react'
 
-import { ErrorMessage, Field, Form, Formik } from 'formik'
+import { Icon } from '@iconify/react'
+import { Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
 import IconInput from '../../components/common/form/icon-input'
@@ -11,7 +12,7 @@ const validationSchema = Yup.object({
     password: Yup.string().min(6, 'Password must be at least 6 characters').required('Required'),
 })
 
-function Login() {
+function AuthComponent() {
     const switchContainerRef = useRef(null)
     const registerContainerRef = useRef(null)
     const loginContainerRef = useRef(null)
@@ -65,16 +66,21 @@ function Login() {
                         {() => (
                             <Form className="flex h-full w-full flex-col items-center justify-center">
                                 <h2 className="form_title text-primary mb-8 text-3xl font-bold">Create Your Account</h2>
+                                <div className="flex-center text-primary gap-5">
+                                    <Icon icon="logos:google-icon" className="size-7 cursor-pointer" />
+                                    <Icon icon="logos:facebook" className="size-7 cursor-pointer" />
+                                    <Icon icon="simple-icons:github" className="size-7 cursor-pointer text-white" />
+                                </div>
                                 <span className="text-secondary mb-3 mt-8">Or use your email for registration</span>
 
                                 {/* Name Field */}
                                 <Field name="name">
                                     {({ field, form }) => (
                                         <IconInput
-                                            groupClass="my-2 w-3/4"
+                                            groupClass="my-3 w-3/4"
                                             type="text"
                                             placeholder="Enter your full name"
-                                            icon='line-md:person-filled'
+                                            icon="line-md:person-filled"
                                             {...field}
                                             error={form.errors.name && form.touched.name ? form.errors.name : ''}
                                         />
@@ -85,7 +91,7 @@ function Login() {
                                 <Field name="email">
                                     {({ field, form }) => (
                                         <IconInput
-                                            groupClass="my-2 w-3/4"
+                                            groupClass="my-3 w-3/4"
                                             type="email"
                                             placeholder="Enter your email address"
                                             {...field}
@@ -98,7 +104,7 @@ function Login() {
                                 <Field name="password">
                                     {({ field, form }) => (
                                         <IconInput
-                                            groupClass="my-2 w-3/4"
+                                            groupClass="my-3 w-3/4"
                                             type="password"
                                             placeholder="Create a secure password"
                                             {...field}
@@ -107,7 +113,7 @@ function Login() {
                                     )}
                                 </Field>
 
-                                <button className="neu-btn mt-12" type="submit">
+                                <button className="neu-btn mt-5" type="submit">
                                     SIGN UP
                                 </button>
                             </Form>
@@ -131,13 +137,18 @@ function Login() {
                         {() => (
                             <Form className="flex h-full w-full flex-col items-center justify-center">
                                 <h2 className="form_title text-primary mb-8 text-3xl font-bold">Sign in to Your Account</h2>
+                                <div className="flex-center text-primary gap-5">
+                                    <Icon icon="logos:google-icon" className="size-7 cursor-pointer" />
+                                    <Icon icon="logos:facebook" className="size-7 cursor-pointer" />
+                                    <Icon icon="simple-icons:github" className="size-7 cursor-pointer text-white" />
+                                </div>
                                 <span className="text-secondary mb-3 mt-8">Or use your email account to log in</span>
 
                                 {/* Email Field */}
                                 <Field name="email">
                                     {({ field, form }) => (
                                         <IconInput
-                                            groupClass="my-2 w-3/4"
+                                            groupClass="my-3 w-3/4"
                                             type="email"
                                             placeholder="Enter your email address"
                                             {...field}
@@ -150,7 +161,7 @@ function Login() {
                                 <Field name="password">
                                     {({ field, form }) => (
                                         <IconInput
-                                            groupClass="my-2 w-3/4"
+                                            groupClass="my-3 w-3/4"
                                             type="password"
                                             placeholder="Enter your password"
                                             {...field}
@@ -159,11 +170,13 @@ function Login() {
                                     )}
                                 </Field>
 
-                                <a className="text-primary mb-8 mt-6 border-b border-solid border-b-[#a0a5a8] text-[15px]" href="#">
+                                <a
+                                    className="text-secondary text-right ml-auto hover:text-highlight-primary transition-colors duration-300 mb-8 mt-2 border-b border-transparent border-solid hover:border-b-light-highlight-primary dark:hover:border-b-dark-highlight-primary text-sm"
+                                    href="#">
                                     Forgot your password?
                                 </a>
 
-                                <button className="neu-btn mt-12" type="submit">
+                                <button className="neu-btn mt-5" type="submit">
                                     SIGN IN
                                 </button>
                             </Form>
@@ -187,7 +200,7 @@ function Login() {
                         <p className="text-secondary px-2 text-center text-sm leading-relaxed tracking-wide">
                             To stay connected with us, please log in with your personal details.
                         </p>
-                        <button className="neu-btn mt-12" onClick={toggleForm}>
+                        <button className="neu-btn mt-5" onClick={toggleForm}>
                             SIGN IN
                         </button>
                     </div>
@@ -200,7 +213,7 @@ function Login() {
                         <p className="text-secondary px-2 text-center text-sm leading-relaxed tracking-wide">
                             Create an account to start your journey with us. Let’s get started by filling out the form.
                         </p>
-                        <button className="neu-btn mt-12" onClick={toggleForm}>
+                        <button className="neu-btn mt-5" onClick={toggleForm}>
                             SIGN UP
                         </button>
                     </div>
@@ -210,4 +223,4 @@ function Login() {
     )
 }
 
-export default Login
+export default AuthComponent

@@ -1,9 +1,10 @@
 import React, { Suspense, lazy } from 'react'
+
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 
 import SideNav from './components/layout/sidenav/sidenav'
 import Shadows from './pages/ShadowsGrid'
-import Login from './pages/auth/login'
+import AuthPage from './pages/auth'
 import TicTacToeClassic from './pages/games/tic-tac-toe/classic'
 import TicTacToeUltimate from './pages/games/tic-tac-toe/ultimate'
 
@@ -14,7 +15,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<SideNav />} />
                 <Route path="/shadows" element={<Shadows />} />
-                <Route path="/login" element={<Login />} />
+                <Route path="/auth" element={<AuthPage />} />
 
                 {/* Tic-Tac-Toe Routes */}
                 <Route path="/games/tic-tac-toe">
