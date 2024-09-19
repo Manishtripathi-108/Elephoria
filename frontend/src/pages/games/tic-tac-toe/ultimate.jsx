@@ -103,6 +103,7 @@ const Ultimate = () => {
                 i === macroIndex ? macroBoard.map((cell, j) => (j === microIndex ? (isXNext ? 'X' : 'O') : cell)) : macroBoard
             )
 
+            // Memoize results for better readability and optimization
             const miniBoardWinner = checkWinner(updatedBoard[macroIndex])
             const isMiniBoardFull = updatedBoard[macroIndex].every((cell) => cell)
             const isLargeBoardFull = updatedBoard.every((macroBoard) => macroBoard.every((cell) => cell))
@@ -117,28 +118,30 @@ const Ultimate = () => {
                     ...overrides,
                 }))
 
+            let updatedLargeBoard = largeBoard
+
             // Handle mini-board winner
             if (miniBoardWinner) {
-                const updatedLargeBoard = largeBoard.map((cell, i) => (i === macroIndex ? miniBoardWinner : cell))
-                updateGameState({ largeBoard: updatedLargeBoard })                
+                updatedLargeBoard = largeBoard.map((cell, i) => (i === macroIndex ? miniBoardWinner : cell))
+                updateGameState({ largeBoard: updatedLargeBoard })
 
-                // If the mini-board is won, set the active macro board to null if it's the same as the current mini board
-                if(activeMacroIndex !== null && activeMacroIndex === microIndex) {
+                // If the large board is already won, and next index is won, reset the activeMacroIndex
+                if (updatedLargeBoard[microIndex]) {
                     updateGameState({ activeMacroIndex: null })
                 }
 
                 const largeBoardWinner = checkWinner(updatedLargeBoard, true)
+
+                // Handle the large board win or draw
                 if (largeBoardWinner) {
-                    // if the large board is won and the winner is not a draw
-                    if (largeBoardWinner === 'D') {
-                        updateGameState({ isGameOver: true, isDraw: true })
-                    } else {
+                    updateGameState({
+                        isGameOver: true,
+                        isDraw: largeBoardWinner === 'D',
+                        winner: largeBoardWinner !== 'D' ? largeBoardWinner : null,
+                    })
+
+                    if (largeBoardWinner !== 'D') {
                         const winnerName = largeBoardWinner === 'X' ? 'playerX' : 'playerO'
-                        setGameState((prevState) => ({
-                            ...prevState,
-                            isGameOver: true,
-                            winner: largeBoardWinner,
-                        }))
                         setPlayers((prevState) => ({
                             ...prevState,
                             [winnerName]: {
@@ -147,32 +150,18 @@ const Ultimate = () => {
                             },
                         }))
                     }
+                    return
                 }
-            }
-            // Handle overall game draw
-            else if (isLargeBoardFull) {
+            } else if (isLargeBoardFull) {
+                // Handle overall game draw
                 updateGameState({ isGameOver: true, isDraw: true })
-            }
-            // Handle mini-board draw
-            else if (isMiniBoardFull) {
-                const updatedLargeBoard = largeBoard.map((cell, i) => (i === macroIndex ? 'D' : cell))
+                return
+            } else if (isMiniBoardFull) {
+                // Handle mini-board draw
+                updatedLargeBoard = largeBoard.map((cell, i) => (i === macroIndex ? 'D' : cell))
                 updateGameState({ largeBoard: updatedLargeBoard })
-
-                if (updatedLargeBoard[microIndex]) {
-                    updateGameState({ activeMacroIndex: null })
-                }
-
-                const largeBoardWinner = checkWinner(updatedLargeBoard, true)
-                if (largeBoardWinner === 'D') {
-                    updateGameState({ isGameOver: true, isDraw: true })
-                }
-            }
-            // Handle case where the next macro board is already won or full
-            else if (largeBoard[microIndex]) {
-                updateGameState({ activeMacroIndex: null })
-            }
-            // Normal case: update game state with just the move
-            else {
+            } else {
+                // Normal case: update game state with just the move
                 updateGameState()
             }
         },
