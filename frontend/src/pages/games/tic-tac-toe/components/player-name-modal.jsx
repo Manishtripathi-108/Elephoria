@@ -73,7 +73,7 @@ const PlayerNameModal = ({ setPlayerName, playerXName, playerOName, closeModal }
                     </NeuButton>
 
                     {error && (
-                        <div className="flex items-center justify-start bg-red-500 gap-2 rounded-xl border border-light-secondary px-2 py-2 font-indie-flower tracking-wider text-primary shadow-neu-md-soft dark:border-dark-secondary dark:shadow-neu-dark-md">
+                        <div className="flex items-center justify-start bg-red-500 gap-2 rounded-xl border border-light-secondary px-2 py-2 font-indie-flower tracking-wider text-primary shadow-neu-light-md dark:border-dark-secondary dark:shadow-neu-dark-md">
                             <Icon icon="meteocons:code-yellow-fill" className="size-10 shrink-0" />
                             <span className="text-xs">
                                 Player names cannot be empty! <br /> Please enter a name for both players.

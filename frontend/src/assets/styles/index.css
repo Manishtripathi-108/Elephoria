@@ -77,7 +77,8 @@
     .neu-input-group:focus-within .neu-input-icon {
         @apply border border-light-secondary shadow-neu-light-xs dark:border-dark-secondary dark:shadow-neu-dark-xs;
     }
-    .neu-input-group:focus-within .neu-input-icon.error{
+
+    .neu-input-group:focus-within .neu-input-icon.error {
         @apply border border-light-accent-primary dark:border-dark-accent-primary;
     }
 
@@ -92,7 +93,7 @@
     .neu-inset-outset-input:focus,
     .neu-inset-outset-input:hover,
     .neu-inset-outset-input:active {
-        @apply shadow-neu-md-soft placeholder:text-primary;
+        @apply placeholder:text-primary shadow-neu-light-md;
 
         /* dark mode */
         @apply dark:shadow-neu-dark-md;
@@ -176,6 +177,7 @@
     .neu-form-group-radio {
         @apply bg-primary flex flex-col items-start gap-2 rounded-2xl px-16 py-12 shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs;
     }
+
     .neu-form-radio-label {
         @apply relative inline-flex cursor-pointer items-center;
     }
@@ -185,7 +187,7 @@
     }
 
     .neu-form-radio-indicator {
-        @apply before:shadow-neu-md-soft relative size-5 overflow-hidden rounded-full shadow-neu-light-xs before:absolute before:left-[10%] before:top-[10%] before:size-4/5 before:rounded-full dark:shadow-neu-dark-xs dark:before:shadow-neu-dark-md;
+        @apply relative size-5 overflow-hidden rounded-full shadow-neu-light-xs before:absolute before:left-[10%] before:top-[10%] before:size-4/5 before:rounded-full before:shadow-neu-light-md dark:shadow-neu-dark-xs dark:before:shadow-neu-dark-md;
     }
 
     .neu-form-radio-text {
@@ -233,12 +235,15 @@
     .neu-form-range-group {
         @apply w-full;
     }
+
     .neu-form-range {
         @apply bg-primary relative h-2 w-full appearance-none rounded-full shadow-neu-light-xs outline-none dark:shadow-neu-dark-xs;
     }
+
     .neu-form-range::-webkit-slider-thumb {
         @apply bg-accent h-6 w-6 cursor-pointer appearance-none rounded-full shadow-neu-light-xs transition duration-300 ease-in-out dark:shadow-neu-dark-xs;
     }
+
     .neu-form-range::-moz-range-thumb {
         @apply bg-accent relative h-6 w-6 cursor-pointer appearance-none rounded-full shadow-neu-light-xs transition duration-300 ease-in-out;
     }
@@ -350,7 +355,7 @@
     .neu-btn:active {
         @apply text-primary shadow-neu-inset-light-sm;
         /* dark mode*/
-        @apply dark:shadow-neu-inset-dark-xs;
+        @apply dark:shadow-neu-inset-dark-sm;
     }
 
     .neu-btn:hover:not(.active),
@@ -370,14 +375,14 @@
 
     /*-- -------------------------------- neu-icon-only-btn ------------------------------*/
     .neu-icon-only-btn {
-        @apply shadow-neu-md-soft rounded-full p-2;
+        @apply rounded-full p-2 shadow-neu-light-md;
 
         /* dark mode */
         @apply dark:bg-none dark:shadow-neu-dark-md;
     }
 
     .neu-icon-only-square-btn {
-        @apply bg-btn-gradient shadow-neu-md-soft rounded-lg p-2;
+        @apply rounded-lg p-2 shadow-neu-light-md;
 
         /* dark mode    */
         @apply dark:bg-none dark:shadow-neu-dark-md;
@@ -400,7 +405,7 @@
 @layer utilities {
     /* ---------------------------------- Error --------------------------------- */
     .error {
-        @apply border-light-accent-primary transition-all duration-300 dark:border-dark-accent-primary focus:border-light-accent-primary focus-within:border-light-accent-primary dark:focus:border-dark-accent-primary dark:focus-within:border-dark-accent-primary hover:border-light-accent-primary dark:hover:border-dark-accent-primary text-accent-primary;
+        @apply text-accent-primary border-light-accent-primary transition-all duration-300 focus-within:border-light-accent-primary hover:border-light-accent-primary focus:border-light-accent-primary dark:border-dark-accent-primary dark:focus-within:border-dark-accent-primary dark:hover:border-dark-accent-primary dark:focus:border-dark-accent-primary;
     }
 
     .flex-center {
@@ -480,15 +485,22 @@
     /* ----------------------------- Thin Scrollbar ----------------------------- */
     .scrollbar-thin {
         &::-webkit-scrollbar {
-            width: 4px; /* Set the width of the scrollbar */
-            height: 4px; /* Set the height of the scrollbar for vertical scrollbar */
+            width: 4px;
+            /* Set the width of the scrollbar */
+            height: 4px;
+            /* Set the height of the scrollbar for vertical scrollbar */
         }
+
         &::-webkit-scrollbar-thumb {
-            @apply bg-dark-secondary dark:bg-light-secondary; /* Set the color of the scrollbar thumb */
-            border-radius: 10px; /* Set the border radius of the scrollbar thumb */
+            @apply bg-dark-secondary dark:bg-light-secondary;
+            /* Set the color of the scrollbar thumb */
+            border-radius: 10px;
+            /* Set the border radius of the scrollbar thumb */
         }
+
         &::-webkit-scrollbar-thumb:hover {
-            @apply bg-dark-primary dark:bg-light-primary; /* Set the color of the scrollbar thumb on hover */
+            @apply bg-dark-primary dark:bg-light-primary;
+            /* Set the color of the scrollbar thumb on hover */
         }
     }
 }
