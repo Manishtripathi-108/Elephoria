@@ -7,12 +7,34 @@ import Players from '../../../../components/common/svg/players'
 
 const PlayerNameModal = ({ setPlayerName, playerXName, playerOName, closeModal }) => {
     const [error, setError] = useState(false)
+    const [message, setMessage] = useState('')
     const player1InputRef = useRef(null)
     const player2InputRef = useRef(null)
 
     const handlePlayerNameChange = (player, value) => {
         setPlayerName(player, value)
-        setError(value === '')
+        const regex = /^[a-zA-Z0-9 ]+$/
+
+        if (value === '') {
+            setError(true)
+            setMessage('Player names cannot be empty! Please enter a name for both players.')
+            return
+        }
+
+        if (value.length > 30) {
+            setError(true)
+            setMessage('Player names cannot be more than 30 characters long.')
+            return
+        }
+
+        if (!regex.test(value)) {
+            setError(true)
+            setMessage('Player names must be only contain alphabets and numbers.')
+            return
+        }
+
+        setError(false)
+        setMessage('')
     }
 
     // Handle closing the modal if clicking outside of it
@@ -75,9 +97,7 @@ const PlayerNameModal = ({ setPlayerName, playerXName, playerOName, closeModal }
                     {error && (
                         <div className="flex items-center justify-start bg-red-500 gap-2 rounded-xl border border-light-secondary px-2 py-2 font-indie-flower tracking-wider text-primary shadow-neu-light-md dark:border-dark-secondary dark:shadow-neu-dark-md">
                             <Icon icon="meteocons:code-yellow-fill" className="size-10 shrink-0" />
-                            <span className="text-xs">
-                                Player names cannot be empty! <br /> Please enter a name for both players.
-                            </span>
+                            <span className="text-xs">{message}</span>
                         </div>
                     )}
                 </div>

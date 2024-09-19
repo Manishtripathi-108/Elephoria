@@ -160,6 +160,9 @@ const Ultimate = () => {
                 // Handle mini-board draw
                 updatedLargeBoard = largeBoard.map((cell, i) => (i === macroIndex ? 'D' : cell))
                 updateGameState({ largeBoard: updatedLargeBoard })
+            } else if (largeBoard[microIndex]) {
+                // If the large board is already won, and next index is won, reset the activeMacroIndex
+                updateGameState({ activeMacroIndex: null })
             } else {
                 // Normal case: update game state with just the move
                 updateGameState()
@@ -195,99 +198,97 @@ const Ultimate = () => {
         <div className="grid place-items-center">
             <Heading title="Ultimate Tic-Tac-Toe" />
 
-            <div className="flex w-full flex-col flex-wrap items-center justify-around gap-5 py-5 md:flex-row md:items-start">
-                <div className="grid place-items-center gap-5">
-                    {/* Player Names and Reset Button */}
-                    <div className="flex items-center justify-evenly w-full text-primary">
-                        <Icon icon="game-icons:tic-tac-toe" className="size-7" />
+            <div className="grid place-items-center gap-5 py-5">
+                {/* Player Names and Reset Button */}
+                <div className="flex items-center justify-evenly w-full text-primary">
+                    <Icon icon="game-icons:tic-tac-toe" className="size-7" />
 
-                        <h2 className="font-indie-flower text-2xl font-bold tracking-wider">
-                            {isGameOver ? (
-                                isDraw ? (
-                                    "It's a draw!"
-                                ) : (
-                                    `${winner === 'X' ? playerX.name : playerO.name} wins!`
-                                )
+                    <h2 className="font-indie-flower text-2xl font-bold tracking-wider">
+                        {isGameOver ? (
+                            isDraw ? (
+                                "It's a draw!"
                             ) : (
-                                <>
-                                    {`${isXNext ? playerX.name : playerO.name}'s turn`}
-                                    <span className="ml-3">{isXNext ? '(X)' : '(O)'}</span>
-                                </>
-                            )}
-                        </h2>
-
-                        <button type="button" title="Reset Game" className="neu-btn neu-icon-only-square-btn" onClick={() => initializeGame()}>
-                            <Icon icon="game-icons:broom" className="size-7" />
-                        </button>
-                    </div>
-
-                    {/* Game Board */}
-                    <div className="relative w-fit p-2 shadow-neu-light-md dark:shadow-neu-dark-md rounded-lg">
-                        <div className="grid grid-cols-3 gap-2">
-                            {miniBoard.map((macroBoard, macroIndex) => (
-                                <div
-                                    key={macroIndex}
-                                    className={`${macroIndex === activeMacroIndex && 'bg-highlight-primary *:bg-highlight-primary'} relative grid grid-cols-3 md:gap-3 md:p-3 p-2 gap-2 shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs rounded-md`}>
-                                    {macroBoard.map((cell, microIndex) => renderSquare(cell, macroIndex, microIndex))}
-
-                                    {largeBoard[macroIndex] && (
-                                        <div className="absolute inset-0 z-10 flex-center invisible animate-puff-in">
-                                            <div className="bg-secondary opacity-70 blur-sm saturate-150 absolute inset-0"></div>
-                                            <span
-                                                className={`text-primary z-20 text-5xl font-bold tracking-wider font-indie-flower text-center ${
-                                                    winingLine.includes(macroIndex)
-                                                        ? 'text-light-text-primary dark:text-dark-text-primary *:animate-pulse'
-                                                        : ''
-                                                }`}>
-                                                {largeBoard[macroIndex] === 'X' ? (
-                                                    <Close className="size-full" />
-                                                ) : largeBoard[macroIndex] === 'O' ? (
-                                                    <Circle className="size-full" />
-                                                ) : (
-                                                    'Draw'
-                                                )}
-                                            </span>
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-
-                        {/* Game Over Modal */}
-                        {isGameOver && (
-                            <GameOverModal
-                                initializeGame={initializeGame}
-                                playerXName={playerX.name}
-                                playerOName={playerO.name}
-                                isDraw={isDraw}
-                                winner={winner}
-                            />
+                                `${winner === 'X' ? playerX.name : playerO.name} wins!`
+                            )
+                        ) : (
+                            <>
+                                {`${isXNext ? playerX.name : playerO.name}'s turn`}
+                                <span className="ml-3">{isXNext ? '(X)' : '(O)'}</span>
+                            </>
                         )}
+                    </h2>
+
+                    <button type="button" title="Reset Game" className="neu-btn neu-icon-only-square-btn" onClick={() => initializeGame()}>
+                        <Icon icon="game-icons:broom" className="size-7" />
+                    </button>
+                </div>
+
+                {/* Game Board */}
+                <div className="relative w-fit p-2 shadow-neu-light-md dark:shadow-neu-dark-md rounded-lg">
+                    <div className="grid grid-cols-3 gap-2">
+                        {miniBoard.map((macroBoard, macroIndex) => (
+                            <div
+                                key={macroIndex}
+                                className={`${macroIndex === activeMacroIndex && 'bg-highlight-primary *:bg-highlight-primary'} relative grid grid-cols-3 md:gap-3 md:p-3 p-2 gap-2 shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs rounded-md`}>
+                                {macroBoard.map((cell, microIndex) => renderSquare(cell, macroIndex, microIndex))}
+
+                                {largeBoard[macroIndex] && (
+                                    <div className="absolute inset-0 z-10 flex-center invisible animate-puff-in">
+                                        <div className="bg-secondary opacity-70 blur-sm saturate-150 absolute inset-0"></div>
+                                        <span
+                                            className={`text-primary z-20 text-5xl font-bold tracking-wider font-indie-flower text-center ${
+                                                winingLine.includes(macroIndex)
+                                                    ? 'text-light-text-primary dark:text-dark-text-primary *:animate-pulse'
+                                                    : ''
+                                            }`}>
+                                            {largeBoard[macroIndex] === 'X' ? (
+                                                <Close className="size-full" />
+                                            ) : largeBoard[macroIndex] === 'O' ? (
+                                                <Circle className="size-full" />
+                                            ) : (
+                                                'Draw'
+                                            )}
+                                        </span>
+                                    </div>
+                                )}
+                            </div>
+                        ))}
                     </div>
 
-                    {/* Score Board */}
-                    <div className="grid w-10/12 grid-cols-2 md:text-2xl text-primary place-items-center justify-between gap-10 px-4 font-indie-flower tracking-wider">
-                        <div class="rounded-lg text-nowrap text-center p-3 shadow-neu-inset-light-sm dark:shadow-neu-inset-dark-sm">
-                            <div class="mb-3 rounded-lg p-4 shadow-neu-light-xs dark:shadow-neu-dark-xs font-bold">{playerX.name} (X)</div>
-                            <div class="rounded-lg p-1 shadow-neu-light-xs dark:shadow-neu-dark-xs">{playerX.score}</div>
-                        </div>
-                        <div class="rounded-lg text-nowrap text-center p-3 shadow-neu-inset-light-sm dark:shadow-neu-inset-dark-sm">
-                            <div class="mb-3 rounded-lg p-4 shadow-neu-light-xs dark:shadow-neu-dark-xs font-bold">{playerO.name} (X)</div>
-                            <div class="rounded-lg p-1 shadow-neu-light-xs dark:shadow-neu-dark-xs">{playerO.score}</div>
-                        </div>
-                    </div>
+                    {/* Game Over Modal */}
+                    {isGameOver && (
+                        <GameOverModal
+                            initializeGame={initializeGame}
+                            playerXName={playerX.name}
+                            playerOName={playerO.name}
+                            isDraw={isDraw}
+                            winner={winner}
+                        />
+                    )}
+                </div>
 
-                    {/* New Game & Set Player Button */}
-                    <div className="grid grid-cols-2 gap-4">
-                        <NeuButton type="button" title="Start New Game" onClick={() => initializeGame(true)}>
-                            <Icon icon="emojione-monotone:video-game" className="size-6" />
-                            <span className="font-indie-flower text-sm font-semibold tracking-wider">New Game</span>
-                        </NeuButton>
-                        <NeuButton type="button" title="Set Player Names" onClick={() => toggleModal(true)}>
-                            <Icon icon="wpf:name" className="size-5" />
-                            <span className="font-indie-flower text-sm font-semibold tracking-wider">Set Names</span>
-                        </NeuButton>
+                {/* Score Board */}
+                <div className="grid w-10/12 grid-cols-2 md:text-2xl text-primary place-items-center justify-between gap-10 px-4 font-indie-flower tracking-wider">
+                    <div className="rounded-lg text-nowrap text-center p-3 shadow-neu-inset-light-sm dark:shadow-neu-inset-dark-sm">
+                        <div className="mb-3 rounded-lg p-4 shadow-neu-light-xs dark:shadow-neu-dark-xs font-bold">{playerX.name} (X)</div>
+                        <div className="rounded-lg p-1 shadow-neu-light-xs dark:shadow-neu-dark-xs">{playerX.score}</div>
                     </div>
+                    <div className="rounded-lg text-nowrap text-center p-3 shadow-neu-inset-light-sm dark:shadow-neu-inset-dark-sm">
+                        <div className="mb-3 rounded-lg p-4 shadow-neu-light-xs dark:shadow-neu-dark-xs font-bold">{playerO.name} (X)</div>
+                        <div className="rounded-lg p-1 shadow-neu-light-xs dark:shadow-neu-dark-xs">{playerO.score}</div>
+                    </div>
+                </div>
+
+                {/* New Game & Set Player Button */}
+                <div className="grid grid-cols-2 gap-4">
+                    <NeuButton type="button" title="Start New Game" onClick={() => initializeGame(true)}>
+                        <Icon icon="emojione-monotone:video-game" className="size-6" />
+                        <span className="font-indie-flower text-sm font-semibold tracking-wider">New Game</span>
+                    </NeuButton>
+                    <NeuButton type="button" title="Set Player Names" onClick={() => toggleModal(true)}>
+                        <Icon icon="wpf:name" className="size-5" />
+                        <span className="font-indie-flower text-sm font-semibold tracking-wider">Set Names</span>
+                    </NeuButton>
                 </div>
 
                 {isModalOpen && (

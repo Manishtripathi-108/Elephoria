@@ -1,10 +1,10 @@
 import React, { useCallback, useState } from 'react'
 
+import { Icon } from '@iconify/react'
+
 import NeuButton from '../../../components/common/buttons/neu-button'
 import Circle from '../../../components/common/svg/circle'
 import Close from '../../../components/common/svg/close'
-import GamePad from '../../../components/common/svg/gamepad'
-import Reset from '../../../components/common/svg/reset'
 import GameOverModal from './components/game-over-modal'
 import Heading from './components/heading'
 import PlayerNameModal from './components/player-name-modal'
@@ -196,7 +196,31 @@ export function TicTacToe() {
             {/* Heading */}
             <Heading title="Classic Tic-Tac-Toe" />
 
-            <div className="flex w-full flex-col flex-wrap items-center justify-around gap-5 py-5 md:flex-row md:items-start">
+            <div className="grid place-items-center gap-5 py-5">
+                {/* Player Names and Reset Button */}
+                <div className="flex items-center justify-evenly w-full text-primary">
+                    <Icon icon="game-icons:tic-tac-toe" className="size-7" />
+
+                    <h2 className="font-indie-flower text-2xl font-bold tracking-wider">
+                        {isGameOver ? (
+                            isDraw ? (
+                                "It's a draw!"
+                            ) : (
+                                `${winner === 'X' ? playerX.name : playerO.name} wins!`
+                            )
+                        ) : (
+                            <>
+                                {`${isXNext ? playerX.name : playerO.name}'s turn`}
+                                <span className="ml-3">{isXNext ? '(X)' : '(O)'}</span>
+                            </>
+                        )}
+                    </h2>
+
+                    <button type="button" title="Reset Game" className="neu-btn neu-icon-only-square-btn" onClick={() => initializeGame()}>
+                        <Icon icon="game-icons:broom" className="size-7" />
+                    </button>
+                </div>
+
                 {/* Game Board */}
                 <div className="relative w-fit p-2 shadow-neu-light-md dark:shadow-neu-dark-md">
                     <div
@@ -218,9 +242,6 @@ export function TicTacToe() {
 
                     {/* Reset Game & Board Size Select */}
                     <div className="mt-3 flex items-center justify-end gap-5">
-                        <button type="button" title="Reset Game" className="text-primary flex-center" onClick={() => initializeGame()}>
-                            <Reset className="size-8" strokeWidth={2} />
-                        </button>
                         <div className="neu-form-group w-32">
                             <select
                                 className="neu-form-select"
@@ -236,40 +257,27 @@ export function TicTacToe() {
                 </div>
 
                 {/* Score Board */}
-                <div className="flex flex-col items-center justify-center gap-5">
-                    {/* Game Status */}
-                    <h2 className="text-primary grid place-items-center font-indie-flower text-2xl font-bold tracking-wider md:pt-5">
-                        {isGameOver
-                            ? isDraw
-                                ? "It's a draw!"
-                                : `${winner === 'X' ? playerX.name : playerO.name} wins!`
-                            : `${isXNext ? playerX.name : playerO.name}'s turn`}
-                        <span>{!isGameOver && `${isXNext ? '(X)' : '(O)'}`}</span>
-                    </h2>
-
-                    {/* Score Board */}
-                    <div className="text-secondary grid w-10/12 grid-cols-2 place-items-center justify-between gap-10 px-4 font-indie-flower tracking-wider">
-                        <div className="grid place-items-center">
-                            {playerX.name} <div>(X)</div>
-                            <div>{playerX.score}</div>
-                        </div>
-                        <div className="grid place-items-center">
-                            {playerO.name} <div>(O)</div>
-                            <div>{playerO.score}</div>
-                        </div>
+                <div className="grid w-10/12 grid-cols-2 md:text-2xl text-primary place-items-center justify-between gap-10 px-4 font-indie-flower tracking-wider">
+                    <div className="rounded-lg text-nowrap text-center p-3 shadow-neu-inset-light-sm dark:shadow-neu-inset-dark-sm">
+                        <div className="mb-3 rounded-lg p-4 shadow-neu-light-xs dark:shadow-neu-dark-xs font-bold">{playerX.name} (X)</div>
+                        <div className="rounded-lg p-1 shadow-neu-light-xs dark:shadow-neu-dark-xs">{playerX.score}</div>
                     </div>
-
-                    {/* New Game & Set Player Button */}
-                    <div className="grid grid-cols-2 gap-4">
-                        <NeuButton type="button" title="Start New Game" onClick={() => initializeGame(true)}>
-                            <GamePad className="size-6" />
-                            <span className="font-indie-flower text-sm font-semibold tracking-wider">New Game</span>
-                        </NeuButton>
-                        <NeuButton type="button" title="Set Player Names" onClick={() => toggleModal(true)}>
-                            <GamePad className="size-6" />
-                            <span className="font-indie-flower text-sm font-semibold tracking-wider">Set Names</span>
-                        </NeuButton>
+                    <div className="rounded-lg text-nowrap text-center p-3 shadow-neu-inset-light-sm dark:shadow-neu-inset-dark-sm">
+                        <div className="mb-3 rounded-lg p-4 shadow-neu-light-xs dark:shadow-neu-dark-xs font-bold">{playerO.name} (X)</div>
+                        <div className="rounded-lg p-1 shadow-neu-light-xs dark:shadow-neu-dark-xs">{playerO.score}</div>
                     </div>
+                </div>
+
+                {/* New Game & Set Player Button */}
+                <div className="grid grid-cols-2 gap-4">
+                    <NeuButton type="button" title="Start New Game" onClick={() => initializeGame(true)}>
+                        <Icon icon="emojione-monotone:video-game" className="size-6" />
+                        <span className="font-indie-flower text-sm font-semibold tracking-wider">New Game</span>
+                    </NeuButton>
+                    <NeuButton type="button" title="Set Player Names" onClick={() => toggleModal(true)}>
+                        <Icon icon="wpf:name" className="size-5" />
+                        <span className="font-indie-flower text-sm font-semibold tracking-wider">Set Names</span>
+                    </NeuButton>
                 </div>
             </div>
 
