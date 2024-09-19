@@ -88,6 +88,7 @@ export default {
             },
             fontFamily: {
                 'indie-flower': ['"Indie Flower"', 'cursive', 'serif'],
+                'aladin': ['"Aladin"', 'system-ui'],
             },
         },
     },
