@@ -1,6 +1,6 @@
 import React from 'react'
 
-import Reset from '../../../../components/common/svg/reset'
+import { Icon } from '@iconify/react/dist/iconify.js'
 
 const GameOverModal = ({ initializeGame, playerXName, playerOName, isDraw, winner }) => {
     const message = isDraw ? "It's a draw!" : `${winner === 'X' ? playerXName : playerOName} wins!`
@@ -17,7 +17,7 @@ const GameOverModal = ({ initializeGame, playerXName, playerOName, isDraw, winne
 
             {/* Play Again Button */}
             <button type="button" title="Play Again" className="text-primary flex-center z-20">
-                <Reset className="size-12 animate-anti-rotate md:size-20" />
+                <Icon icon="solar:restart-outline" className="size-12 md:size-20"/>
             </button>
 
             {/* Play Again Text */}

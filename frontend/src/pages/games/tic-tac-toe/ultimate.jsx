@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react'
 
+import { Icon } from '@iconify/react'
+
 import NeuButton from '../../../components/common/buttons/neu-button'
 import Circle from '../../../components/common/svg/circle'
 import Close from '../../../components/common/svg/close'
-import GamePad from '../../../components/common/svg/gamepad'
-import Reset from '../../../components/common/svg/reset'
 import GameOverModal from './components/game-over-modal'
 import Heading from './components/heading'
 import PlayerNameModal from './components/player-name-modal'
@@ -265,14 +265,14 @@ const Ultimate = () => {
                     {/* New Game & Set Player Button */}
                     <div className="grid grid-cols-2 gap-4">
                         <button type="button" title="Reset Game" className="text-primary col-span-2 flex-center" onClick={() => initializeGame()}>
-                            <Reset className="size-8" strokeWidth={2} />
+                            <Icon icon="game-icons:broom" className="size-8" />
                         </button>
                         <NeuButton type="button" title="Start New Game" onClick={() => initializeGame(true)}>
-                            <GamePad className="size-6" />
+                            <Icon icon="emojione-monotone:video-game" className="size-6" />
                             <span className="font-indie-flower text-sm font-semibold tracking-wider">New Game</span>
                         </NeuButton>
                         <NeuButton type="button" title="Set Player Names" onClick={() => toggleModal(true)}>
-                            <GamePad className="size-6" />
+                            <Icon icon="wpf:name" className="size-5" />
                             <span className="font-indie-flower text-sm font-semibold tracking-wider">Set Names</span>
                         </NeuButton>
                     </div>
