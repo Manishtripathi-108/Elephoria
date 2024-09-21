@@ -1,10 +1,10 @@
 import React, { useRef } from 'react'
 
-import { Icon } from '@iconify/react'
 import { Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
 import IconInput from '../../components/common/form/icon-input'
+import GoogleLogin from './GoogleLogin'
 
 const validationSchema = Yup.object({
     name: Yup.string().required('Required'),
@@ -67,9 +67,7 @@ function AuthComponent() {
                             <Form className="flex h-full w-full flex-col items-center justify-center">
                                 <h2 className="form_title text-primary mb-8 text-3xl font-bold">Create Your Account</h2>
                                 <div className="flex-center text-primary gap-5">
-                                    <Icon icon="logos:google-icon" className="size-7 cursor-pointer" />
-                                    <Icon icon="logos:facebook" className="size-7 cursor-pointer" />
-                                    <Icon icon="simple-icons:github" className="size-7 cursor-pointer text-white" />
+                                    <GoogleLogin />
                                 </div>
                                 <span className="text-secondary mb-3 mt-8">Or use your email for registration</span>
 
@@ -138,9 +136,7 @@ function AuthComponent() {
                             <Form className="flex h-full w-full flex-col items-center justify-center">
                                 <h2 className="form_title text-primary mb-8 text-3xl font-bold">Sign in to Your Account</h2>
                                 <div className="flex-center text-primary gap-5">
-                                    <Icon icon="logos:google-icon" className="size-7 cursor-pointer" />
-                                    <Icon icon="logos:facebook" className="size-7 cursor-pointer" />
-                                    <Icon icon="simple-icons:github" className="size-7 cursor-pointer text-white" />
+                                    <GoogleLogin />
                                 </div>
                                 <span className="text-secondary mb-3 mt-8">Or use your email account to log in</span>
 
