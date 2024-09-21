@@ -8,7 +8,8 @@ const UploadInput = ({ id, file, setFile, fileName, setFileName }) => {
     const handleFileChange = (e) => {
         const file = e.target.files[0]
         if (file) {
-            setFileName(file.name)
+            const fileName = file.name.length > 20 ? file.name.slice(0, 20) + '...' : file.name
+            setFileName(fileName)
             setFile(file)
         }
     }
@@ -23,12 +24,14 @@ const UploadInput = ({ id, file, setFile, fileName, setFileName }) => {
 
     return (
         <div className="size-80 mb-6 shadow-neu-light-sm dark:shadow-neu-dark-sm font-indie-flower flex flex-col items-center justify-between gap-2 bg-primary p-2.5 rounded-lg">
-            <div className="flex-1 w-full flex items-center justify-center flex-col rounded-lg border-2 border-dashed border-light-highlight-primary dark:border-dark-highlight-primary text-highlight-primary">
+            <label
+                htmlFor={id}
+                className="flex-1 w-full flex items-center justify-center flex-col rounded-lg border-2 border-dashed border-light-highlight-primary dark:border-dark-highlight-primary text-highlight-primary">
                 <Icon icon="line-md:cloud-alt-upload-filled-loop" className="size-28" />
                 <p className="text-center text-primary tracking-wider p-1">
                     {fileName !== 'Upload File' ? 'File Uploaded! Click on the button below to upload!' : 'Browse File to upload!'}
                 </p>
-            </div>
+            </label>
             <div className="flex w-full gap-2 items-center justify-center">
                 <label
                     htmlFor={id}

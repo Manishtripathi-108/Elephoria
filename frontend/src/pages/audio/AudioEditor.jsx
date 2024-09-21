@@ -16,68 +16,68 @@ const AudioEditor = () => {
     const [format, setFormat] = useState('mp3')
     const [fileName, setFileName] = useState('Upload File')
 
-    // const handleUpload = async (e) => {
-    //     e.preventDefault()
-    //     if (!file) return
+    const handleUpload = async (e) => {
+        e.preventDefault()
+        if (!file) return
 
-    //     const formData = new FormData()
-    //     formData.append('audio', file)
+        const formData = new FormData()
+        formData.append('audio', file)
 
-    //     try {
-    //         const response = await axios.post('http://localhost:5000/upload', formData)
-    //         console.log('File uploaded:', response.data)
-    //     } catch (error) {
-    //         console.error('Error uploading file:', error)
-    //     }
-    // }
+        try {
+            const response = await axios.post('http://localhost:5000/upload', formData)
+            console.log('File uploaded:', response.data)
+        } catch (error) {
+            console.error('Error uploading file:', error)
+        }
+    }
 
-    // const handleEditMetadata = async (e) => {
-    //     e.preventDefault()
-    //     if (!file) return
+    const handleEditMetadata = async (e) => {
+        e.preventDefault()
+        if (!file) return
 
-    //     const formData = new FormData()
-    //     formData.append('audio', file)
-    //     formData.append('artist', artist)
-    //     formData.append('album', album)
-    //     formData.append('title', title)
+        const formData = new FormData()
+        formData.append('audio', file)
+        formData.append('artist', artist)
+        formData.append('album', album)
+        formData.append('title', title)
 
-    //     try {
-    //         const response = await axios.post('http://localhost:5000/edit-metadata', formData, {
-    //             responseType: 'blob', // Expect a file as the response
-    //         })
-    //         const url = window.URL.createObjectURL(new Blob([response.data]))
-    //         const link = document.createElement('a')
-    //         link.href = url
-    //         link.setAttribute('download', 'edited_audio.mp3')
-    //         document.body.appendChild(link)
-    //         link.click()
-    //     } catch (error) {
-    //         console.error('Error editing metadata:', error)
-    //     }
-    // }
+        try {
+            const response = await axios.post('http://localhost:5000/edit-metadata', formData, {
+                responseType: 'blob', // Expect a file as the response
+            })
+            const url = window.URL.createObjectURL(new Blob([response.data]))
+            const link = document.createElement('a')
+            link.href = url
+            link.setAttribute('download', 'edited_audio.mp3')
+            document.body.appendChild(link)
+            link.click()
+        } catch (error) {
+            console.error('Error editing metadata:', error)
+        }
+    }
 
-    // const handleConvert = async (e) => {
-    //     e.preventDefault()
-    //     if (!file) return
+    const handleConvert = async (e) => {
+        e.preventDefault()
+        if (!file) return
 
-    //     const formData = new FormData()
-    //     formData.append('audio', file)
-    //     formData.append('format', format)
+        const formData = new FormData()
+        formData.append('audio', file)
+        formData.append('format', format)
 
-    //     try {
-    //         const response = await axios.post('http://localhost:5000/convert', formData, {
-    //             responseType: 'blob',
-    //         })
-    //         const url = window.URL.createObjectURL(new Blob([response.data]))
-    //         const link = document.createElement('a')
-    //         link.href = url
-    //         link.setAttribute('download', `converted_audio.${format}`)
-    //         document.body.appendChild(link)
-    //         link.click()
-    //     } catch (error) {
-    //         console.error('Error converting file:', error)
-    //     }
-    // }
+        try {
+            const response = await axios.post('http://localhost:5000/convert', formData, {
+                responseType: 'blob',
+            })
+            const url = window.URL.createObjectURL(new Blob([response.data]))
+            const link = document.createElement('a')
+            link.href = url
+            link.setAttribute('download', `converted_audio.${format}`)
+            document.body.appendChild(link)
+            link.click()
+        } catch (error) {
+            console.error('Error converting file:', error)
+        }
+    }
 
     return (
         <div className="m-6 flex-center gap-6 flex-col">
@@ -154,7 +154,7 @@ const AudioEditor = () => {
                     <label className="neu-form-label" htmlFor="format">
                         Format
                     </label>
-                    <select className="neu-form-select" value={format} onChange={(e) => setFormat(e.target.value)}>
+                    <select id='format' className="neu-form-select" value={format} onChange={(e) => setFormat(e.target.value)}>
                         <option value="mp3">MP3</option>
                         <option value="wav">WAV</option>
                     </select>
