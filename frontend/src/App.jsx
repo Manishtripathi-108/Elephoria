@@ -9,6 +9,7 @@ import Shadows from './pages/ShadowsGrid'
 import AuthPage from './pages/auth/AuthState'
 import TicTacToeClassic from './pages/games/tic-tac-toe/classic'
 import TicTacToeUltimate from './pages/games/tic-tac-toe/ultimate'
+import MusicEditor from './pages/audio/AudioEditor'
 
 function App() {
     return (
@@ -40,6 +41,7 @@ function App() {
                 <Route path="/" element={<SideNav />} />
                 <Route path="/shadows" element={<Shadows />} />
                 <Route path="/auth" element={<AuthPage />} />
+                <Route path="/audio" element={<MusicEditor />} />
 
                 {/* Tic-Tac-Toe Routes */}
                 <Route path="/games/tic-tac-toe">

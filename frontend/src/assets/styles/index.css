@@ -345,7 +345,7 @@
     /* -------------------------------------------------------------------------- */
 
     .neu-btn {
-        @apply text-secondary bg-primary rounded-lg border border-light-secondary px-4 py-2 text-center tracking-wider shadow-neu-light-xs transition-all duration-300;
+        @apply text-secondary bg-primary rounded-lg border border-light-secondary px-4 py-2 text-center font-indie-flower tracking-wider shadow-neu-light-xs transition-all duration-300;
 
         /* dark mode */
         @apply dark:border-dark-secondary dark:shadow-neu-dark-xs;

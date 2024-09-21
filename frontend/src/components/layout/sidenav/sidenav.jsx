@@ -11,6 +11,7 @@ const menuItems = {
     ],
     Authentication: [{ name: 'Login/Signup', url: '/auth' }],
     Shadows: [{ name: 'Shadows Grid', url: '/shadows' }],
+    Audio: [{ name: 'Music Editor', url: '/audio' }],
 }
 
 const Sidenav = () => {
