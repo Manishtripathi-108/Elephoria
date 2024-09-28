@@ -3,20 +3,34 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 
 import UploadInput from '../../components/common/form/upload-input'
+import Toast from '../../components/common/notifications/toast'
 
 const AudioEditor = () => {
     const [file, setFile] = useState(null)
-    const [message, setMessage] = useState('')
-    const [artist, setArtist] = useState('')
-    const [album, setAlbum] = useState('')
-    const [title, setTitle] = useState('')
-    const [format, setFormat] = useState('mp3')
+    const [metadata, setMetadata] = useState({
+        artist: '',
+        album: '',
+        title: '',
+        format: '',
+    })
+
     const [fileName, setFileName] = useState('Upload File')
+    const [toast, setToast] = useState(null)
+
+    const { artist, album, title, format } = metadata || {}
+
+    const showToast = (message, type) => {
+        setToast({ message, type })
+    }
+
+    const handleDismiss = () => {
+        setToast(null)
+    }
 
     const handleFileUpload = async (e) => {
         e.preventDefault()
         if (!file) {
-            setMessage('Please select a file first!')
+            showToast('Please select a file first!', 'warning')
             return
         }
 
@@ -29,10 +43,19 @@ const AudioEditor = () => {
                     'Content-Type': 'multipart/form-data',
                 },
             })
-            setMessage(response.data.message + ` File: ${response.data.file.originalname}`)
+
+            setMetadata((prev) => ({
+                ...prev,
+                artist: response.data?.metadata?.tags?.artist || 'No artist found',
+                album: response.data?.metadata?.tags?.album || 'No album found',
+                title: response.data?.metadata?.tags?.title || 'No title found',
+                format: response.data?.metadata?.format || 'No format found',
+            }))
+
+            showToast('File uploaded and metadata extracted successfully!', 'success')
         } catch (error) {
             console.error('Error uploading file:', error)
-            setMessage('File upload failed.')
+            showToast('File upload failed', 'error')
         }
     }
 
@@ -56,8 +79,10 @@ const AudioEditor = () => {
             link.setAttribute('download', 'edited_audio.mp3')
             document.body.appendChild(link)
             link.click()
+            setToast({ message: 'Metadata edited successfully!', type: 'success' })
         } catch (error) {
             console.error('Error editing metadata:', error)
+            setToast({ message: 'Error editing metadata', type: 'error' })
         }
     }
 
@@ -79,13 +104,16 @@ const AudioEditor = () => {
             link.setAttribute('download', `converted_audio.${format}`)
             document.body.appendChild(link)
             link.click()
+            setToast({ message: 'File converted successfully!', type: 'success' })
         } catch (error) {
             console.error('Error converting file:', error)
+            showToast('Error converting file', 'error')
         }
     }
 
     return (
         <div className="m-6 flex-center gap-6 flex-col">
+            {/* Upload audio form */}
             <form
                 id="upload-audio"
                 onSubmit={handleFileUpload}
@@ -98,9 +126,9 @@ const AudioEditor = () => {
                 <button type="submit" title="Upload Audio" className="neu-btn flex-shrink-0" onClick={handleFileUpload}>
                     Upload Audio
                 </button>
-                {message && <p className="text-sm text-primary mt-2 font-indie-flower">{message}</p>}
             </form>
 
+            {/* Edit metadata form */}
             <form
                 id="edit-metadata"
                 className="w-full max-w-2xl flex-center flex-col rounded-lg gap-6 p-6 shadow-neu-light-md dark:shadow-neu-dark-md"
@@ -150,6 +178,7 @@ const AudioEditor = () => {
                 </button>
             </form>
 
+            {/* Convert audio format */}
             <form
                 id="convert-audio"
                 onSubmit={handleConvert}
@@ -166,6 +195,9 @@ const AudioEditor = () => {
                     </select>
                 </div>
             </form>
+
+            {/* Display toast notification */}
+            {toast && <Toast message={toast.message} type={toast.type} onDismiss={handleDismiss} duration={5000} />}
         </div>
     )
 }
