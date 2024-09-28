@@ -47,7 +47,7 @@ const AudioEditor = () => {
         formData.append('title', title)
 
         try {
-            const response = await axios.post('http://localhost:5000/edit-metadata', formData, {
+            const response = await axios.post('/api/edit-metadata', formData, {
                 responseType: 'blob', // Expect a file as the response
             })
             const url = window.URL.createObjectURL(new Blob([response.data]))
@@ -70,7 +70,7 @@ const AudioEditor = () => {
         formData.append('format', format)
 
         try {
-            const response = await axios.post('http://localhost:5000/convert', formData, {
+            const response = await axios.post('/api/convert', formData, {
                 responseType: 'blob',
             })
             const url = window.URL.createObjectURL(new Blob([response.data]))

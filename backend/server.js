@@ -2,7 +2,9 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const multer = require("multer");
+const path = require("path");
 const ffmpeg = require("fluent-ffmpeg");
+const fs = require("fs");
 // const mongoose = require('mongoose');
 
 // Load environment variables
@@ -40,11 +42,98 @@ app.get("/api", (req, res) => {
 });
 
 // Route to handle file uploads
+// app.post("/api/upload", upload.single("audio"), (req, res) => {
+// 	if (!req.file) {
+// 		return res.status(400).json({ message: "No file uploaded!" });
+// 	}
+// 	res.json({ message: "File uploaded successfully!", file: req.file });
+// });
+
+// Route to upload audio and extract metadata
 app.post("/api/upload", upload.single("audio"), (req, res) => {
 	if (!req.file) {
 		return res.status(400).json({ message: "No file uploaded!" });
 	}
-	res.json({ message: "File uploaded successfully!", file: req.file });
+
+	// Use ffprobe to extract metadata from the uploaded audio file
+	ffmpeg.ffprobe(req.file.path, (err, metadata) => {
+		if (err) {
+			return res
+				.status(500)
+				.json({ message: "Error extracting metadata", error: err });
+		}
+
+		// Metadata from ffprobe
+		const extractedMetadata = {
+			format: metadata.format.format_name,
+			duration: metadata.format.duration,
+			bitrate: metadata.format.bit_rate,
+			tags: metadata.format.tags, // Includes title, artist, album, etc., if available
+		};
+
+		// Send response with metadata
+		res.json({
+			message: "File uploaded and metadata extracted successfully!",
+			file: req.file,
+			metadata: extractedMetadata,
+		});
+	});
+});
+
+// Endpoint for editing metadata
+app.post("/api/edit-metadata", upload.single("audio"), (req, res) => {
+	const { artist, album, title } = req.body;
+	const filePath = req.file.path;
+	const outputFile = `uploads/edited_${Date.now()}.mp3`;
+
+	ffmpeg(filePath)
+		.outputOptions([
+			`-metadata artist=${artist}`,
+			`-metadata album=${album}`,
+			`-metadata title=${title}`,
+		])
+		.save(outputFile)
+		.on("end", () => {
+			res.download(outputFile, (err) => {
+				if (err) {
+					console.error("Error sending the edited file:", err);
+				}
+
+				// Delete the uploaded and processed files after the download
+				fs.unlinkSync(filePath);
+				fs.unlinkSync(outputFile);
+			});
+		})
+		.on("error", (err) => {
+			console.error("Error editing metadata:", err);
+			res.status(500).json({ error: "Error processing the file" });
+		});
+});
+
+// Endpoint for converting audio format
+app.post("/api/convert", upload.single("audio"), (req, res) => {
+	const format = req.body.format; // Desired format (e.g., 'mp3', 'wav')
+	const filePath = req.file.path;
+	const outputFile = `uploads/converted_${Date.now()}.${format}`;
+
+	ffmpeg(filePath)
+		.toFormat(format)
+		.save(outputFile)
+		.on("end", () => {
+			res.download(outputFile, (err) => {
+				if (err) {
+					console.error("Error sending the converted file:", err);
+				}
+
+				// Delete the uploaded and processed files after the download
+				fs.unlinkSync(filePath);
+				fs.unlinkSync(outputFile);
+			});
+		})
+		.on("error", (err) => {
+			console.error("Error converting file:", err);
+			res.status(500).json({ error: "Error converting the file" });
+		});
 });
 
 // Set PORT from environment or default to 3000
