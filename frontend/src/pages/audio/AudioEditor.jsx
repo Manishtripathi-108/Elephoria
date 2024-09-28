@@ -29,7 +29,7 @@ const AudioEditor = () => {
                     'Content-Type': 'multipart/form-data',
                 },
             })
-            setMessage(response.data.message + ` File: ${response.data.file}`)
+            setMessage(response.data.message + ` File: ${response.data.file.originalname}`)
         } catch (error) {
             console.error('Error uploading file:', error)
             setMessage('File upload failed.')
@@ -98,7 +98,7 @@ const AudioEditor = () => {
                 <button type="submit" title="Upload Audio" className="neu-btn flex-shrink-0" onClick={handleFileUpload}>
                     Upload Audio
                 </button>
-                {message && <p>{message}</p>}
+                {message && <p className="text-sm text-primary mt-2 font-indie-flower">{message}</p>}
             </form>
 
             <form
