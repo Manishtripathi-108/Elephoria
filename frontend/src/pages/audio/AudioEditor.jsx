@@ -1,33 +1,38 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
-import { Icon } from '@iconify/react'
+import axios from 'axios'
 
 import UploadInput from '../../components/common/form/upload-input'
 
-// import { set } from 'mongoose'
-
-// import axios from 'axios'
-
 const AudioEditor = () => {
     const [file, setFile] = useState(null)
+    const [message, setMessage] = useState('')
     const [artist, setArtist] = useState('')
     const [album, setAlbum] = useState('')
     const [title, setTitle] = useState('')
     const [format, setFormat] = useState('mp3')
     const [fileName, setFileName] = useState('Upload File')
 
-    const handleUpload = async (e) => {
+    const handleFileUpload = async (e) => {
         e.preventDefault()
-        if (!file) return
+        if (!file) {
+            setMessage('Please select a file first!')
+            return
+        }
 
         const formData = new FormData()
         formData.append('audio', file)
 
         try {
-            const response = await axios.post('http://localhost:5000/upload', formData)
-            console.log('File uploaded:', response.data)
+            const response = await axios.post('/api/upload', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
+            setMessage(response.data.message + ` File: ${response.data.file}`)
         } catch (error) {
             console.error('Error uploading file:', error)
+            setMessage('File upload failed.')
         }
     }
 
@@ -83,16 +88,17 @@ const AudioEditor = () => {
         <div className="m-6 flex-center gap-6 flex-col">
             <form
                 id="upload-audio"
-                onSubmit={handleUpload}
+                onSubmit={handleFileUpload}
                 className="w-full max-w-2xl flex-center flex-col rounded-lg p-6 shadow-neu-light-md dark:shadow-neu-dark-md">
-                <h2 className="text-primary font-aladin tracking-wider text-2xl">Upload Audio</h2>
+                <h2 className="text-primary font-aladin tracking-wider text-2xl mb-2">Upload Audio</h2>
                 <p className="text-primary text-center mb-6">Upload an audio file to edit metadata, convert format, and more!</p>
 
                 <UploadInput id="upload_audio" file={file} setFile={setFile} fileName={fileName} setFileName={setFileName} />
 
-                <button type="submit" title="Upload Audio" className="neu-btn flex-shrink-0">
+                <button type="submit" title="Upload Audio" className="neu-btn flex-shrink-0" onClick={handleFileUpload}>
                     Upload Audio
                 </button>
+                {message && <p>{message}</p>}
             </form>
 
             <form
@@ -154,7 +160,7 @@ const AudioEditor = () => {
                     <label className="neu-form-label" htmlFor="format">
                         Format
                     </label>
-                    <select id='format' className="neu-form-select" value={format} onChange={(e) => setFormat(e.target.value)}>
+                    <select id="format" className="neu-form-select" value={format} onChange={(e) => setFormat(e.target.value)}>
                         <option value="mp3">MP3</option>
                         <option value="wav">WAV</option>
                     </select>
