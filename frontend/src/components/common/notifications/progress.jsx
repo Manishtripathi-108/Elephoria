@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Icon } from '@iconify/react'
 
-const Progress = ({ percentage }) => {
+const Progress = ({ percentage, timeLeft }) => {
     return (
         <div
             className="max-w-xs relative bg-white border border-gray-200 rounded-xl shadow-lg dark:bg-neutral-800 dark:border-neutral-700"
@@ -17,7 +17,7 @@ const Progress = ({ percentage }) => {
 
                     <button
                         type="button"
-                        className="absolute top-3 end-3 inline-flex shrink-0 justify-center items-center size-5 rounded-lg text-gray-800 opacity-50 hover:opacity-100 focus:outline-none focus:opacity-100 dark:text-white"
+                        className="absolute top-3 right-3 inline-flex shrink-0 justify-center items-center size-5 rounded-lg text-gray-800 opacity-50 hover:opacity-100 focus:outline-none focus:opacity-100 dark:text-white"
                         aria-label="Close">
                         <span className="sr-only">Close</span>
                         <Icon icon="line-md:close-small" className="size-5" />
@@ -31,20 +31,23 @@ const Progress = ({ percentage }) => {
 
                     {/* Progress */}
                     <div className="mt-2 flex flex-col gap-x-3">
-                        <span className="block mb-1.5 text-xs text-gray-500 dark:text-neutral-400">57% · 5 seconds left</span>
+                        <span className="block mb-1.5 text-xs text-gray-500 dark:text-neutral-400">
+                            {percentage}% · {timeLeft} seconds left
+                        </span>
                         <div
                             className="flex w-full h-1 bg-gray-200 rounded-full overflow-hidden dark:bg-neutral-700"
                             role="progressbar"
-                            aria-valuenow="57"
+                            aria-valuenow={percentage}
                             aria-valuemin="0"
                             aria-valuemax="100">
-                            <div className="flex flex-col justify-center w-[57%] overflow-hidden bg-blue-600 text-xs text-white text-center whitespace-nowrap dark:bg-neutral-200"></div>
+                            <div
+                                className="flex flex-col justify-center bg-blue-600 text-xs text-white text-center whitespace-nowrap dark:bg-neutral-200"
+                                style={{ width: `${percentage}%` }}></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        // <!-- End Toast -->
     )
 }
 

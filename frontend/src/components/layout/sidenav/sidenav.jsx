@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { Link } from 'react-router-dom'
 
 import warriorImage from '../../../assets/images/landscape/man-warrior.png'
