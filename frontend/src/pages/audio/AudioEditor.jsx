@@ -2,22 +2,21 @@ import React, { useEffect, useState } from 'react'
 
 import axios from 'axios'
 
+import AppName from '../../assets/svgs/app-name'
+import Logo from '../../assets/svgs/logo'
 import UploadInput from '../../components/common/form/upload-input'
 import Toast from '../../components/common/notifications/toast'
 
 const AudioEditor = () => {
     const [file, setFile] = useState(null)
-    const [metadata, setMetadata] = useState({
-        artist: '',
-        album: '',
-        title: '',
-        format: '',
-    })
+    const [metaData, setMetadata] = useState(null)
 
     const [fileName, setFileName] = useState('Upload File')
     const [toast, setToast] = useState(null)
 
-    const { artist, album, title, format } = metadata || {}
+    useEffect(() => {
+        console.log('metaData:', metaData)
+    }, [metaData])
 
     const showToast = (message, type) => {
         setToast({ message, type })
@@ -43,14 +42,8 @@ const AudioEditor = () => {
                     'Content-Type': 'multipart/form-data',
                 },
             })
-
-            setMetadata((prev) => ({
-                ...prev,
-                artist: response.data?.metadata?.tags?.artist || 'No artist found',
-                album: response.data?.metadata?.tags?.album || 'No album found',
-                title: response.data?.metadata?.tags?.title || 'No title found',
-                format: response.data?.metadata?.format || 'No format found',
-            }))
+            console.log('Response:', response.data)
+            setMetadata(response.data?.metadata?.format?.tags)
 
             showToast('File uploaded and metadata extracted successfully!', 'success')
         } catch (error) {
@@ -64,21 +57,31 @@ const AudioEditor = () => {
         if (!file) return
 
         const formData = new FormData()
+
+        // Append the file
         formData.append('audio', file)
-        formData.append('artist', artist)
-        formData.append('album', album)
-        formData.append('title', title)
+
+        // Loop through the metaData object and append each key-value pair
+        Object.entries(metaData).forEach(([key, value]) => {
+            formData.append(key, value)
+        })
 
         try {
             const response = await axios.post('/api/edit-metadata', formData, {
                 responseType: 'blob', // Expect a file as the response
             })
+
+            const originalFilename = response.headers['content-disposition']
+                .split('filename=')[1]
+                .replace(/"/g, '')
+
             const url = window.URL.createObjectURL(new Blob([response.data]))
             const link = document.createElement('a')
             link.href = url
-            link.setAttribute('download', 'edited_audio.mp3')
+            link.setAttribute('download', originalFilename) // Use original filename for download
             document.body.appendChild(link)
             link.click()
+
             setToast({ message: 'Metadata edited successfully!', type: 'success' })
         } catch (error) {
             console.error('Error editing metadata:', error)
@@ -86,33 +89,14 @@ const AudioEditor = () => {
         }
     }
 
-    const handleConvert = async (e) => {
-        e.preventDefault()
-        if (!file) return
-
-        const formData = new FormData()
-        formData.append('audio', file)
-        formData.append('format', format)
-
-        try {
-            const response = await axios.post('/api/convert', formData, {
-                responseType: 'blob',
-            })
-            const url = window.URL.createObjectURL(new Blob([response.data]))
-            const link = document.createElement('a')
-            link.href = url
-            link.setAttribute('download', `converted_audio.${format}`)
-            document.body.appendChild(link)
-            link.click()
-            setToast({ message: 'File converted successfully!', type: 'success' })
-        } catch (error) {
-            console.error('Error converting file:', error)
-            showToast('Error converting file', 'error')
-        }
-    }
-
     return (
         <div className="m-6 flex-center gap-6 flex-col">
+            {/* Logo and app name */}
+            <div className="flex-center gap-2 text-primary">
+                <Logo className="w-12 h-12" />
+                <AppName className="w-24 h-12" />
+            </div>
+
             {/* Upload audio form */}
             <form
                 id="upload-audio"
@@ -134,66 +118,36 @@ const AudioEditor = () => {
                 className="w-full max-w-2xl flex-center flex-col rounded-lg gap-6 p-6 shadow-neu-light-md dark:shadow-neu-dark-md"
                 onSubmit={handleEditMetadata}>
                 <h2 className="text-primary font-aladin tracking-wider text-2xl">Edit Metadata</h2>
-                <div className="neu-form-group mb-4">
-                    <label className="neu-form-label" htmlFor="artist">
-                        Artist
-                    </label>
-                    <input
-                        className="neu-form-input"
-                        id="artist"
-                        type="text"
-                        placeholder="Artist"
-                        value={artist}
-                        onChange={(e) => setArtist(e.target.value)}
-                    />
-                </div>
-                <div className="neu-form-group mb-4">
-                    <label className="neu-form-label" htmlFor="album">
-                        Album
-                    </label>
-                    <input
-                        className="neu-form-input"
-                        id="album"
-                        type="text"
-                        placeholder="Album"
-                        value={album}
-                        onChange={(e) => setAlbum(e.target.value)}
-                    />
-                </div>
-                <div className="neu-form-group mb-4">
-                    <label className="neu-form-label" htmlFor="title">
-                        Title
-                    </label>
-                    <input
-                        className="neu-form-input"
-                        id="title"
-                        type="text"
-                        placeholder="Title"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                    />
-                </div>
+
+                {metaData && (
+                    <div className="w-full flex flex-wrap gap-5">
+                        {Object.entries(metaData).map(([key, value]) => (
+                            <div key={key} className="neu-form-group mb-4 w-fit">
+                                <label className="neu-form-label" htmlFor={key}>
+                                    {key
+                                        .split('_')
+                                        .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                                        .join(' ')}
+                                </label>
+                                <input
+                                    className="neu-form-input"
+                                    id={key}
+                                    type="text"
+                                    placeholder={key
+                                        .split('_')
+                                        .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                                        .join(' ')}
+                                    value={value}
+                                    onChange={(e) => setMetadata({ ...metaData, [key]: e.target.value })}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                )}
+
                 <button type="submit" className="neu-btn">
                     Edit Metadata
                 </button>
-            </form>
-
-            {/* Convert audio format */}
-            <form
-                id="convert-audio"
-                onSubmit={handleConvert}
-                className="w-full max-w-2xl flex-center flex-col rounded-lg gap-6 p-6 shadow-neu-light-md dark:shadow-neu-dark-md">
-                <h2 className="text-primary font-aladin tracking-wider text-2xl">Convert Audio Format</h2>
-
-                <div className="neu-form-group w-full">
-                    <label className="neu-form-label" htmlFor="format">
-                        Format
-                    </label>
-                    <select id="format" className="neu-form-select" value={format} onChange={(e) => setFormat(e.target.value)}>
-                        <option value="mp3">MP3</option>
-                        <option value="wav">WAV</option>
-                    </select>
-                </div>
             </form>
 
             {/* Display toast notification */}
