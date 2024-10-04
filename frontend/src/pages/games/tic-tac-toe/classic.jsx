@@ -2,9 +2,9 @@ import React, { useCallback, useState } from 'react'
 
 import { Icon } from '@iconify/react'
 
+import Circle from '../../../assets/svg/circle'
+import Close from '../../../assets/svg/close'
 import NeuButton from '../../../components/common/buttons/neu-button'
-import Circle from '../../../components/common/svg/circle'
-import Close from '../../../components/common/svg/close'
 import GameOverModal from './components/game-over-modal'
 import Heading from './components/heading'
 import PlayerNameModal from './components/player-name-modal'

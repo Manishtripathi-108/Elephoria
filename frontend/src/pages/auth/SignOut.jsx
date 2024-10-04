@@ -14,7 +14,11 @@ const Logout = () => {
         }
     }
 
-    return <button className='neu-btn mt-12 ml-12' onClick={handleLogout}>Sign out</button>
+    return (
+        <button className="neu-btn mt-12 ml-12" onClick={handleLogout}>
+            Sign out
+        </button>
+    )
 }
 
 export default Logout

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 
 import axios from 'axios'
 
-import AppName from '../../assets/svgs/app-name'
-import Logo from '../../assets/svgs/logo'
+import AppName from '../../assets/svg/app-name'
+import Logo from '../../assets/svg/logo'
 import UploadInput from '../../components/common/form/upload-input'
 import Toast from '../../components/common/notifications/toast'
 
@@ -42,7 +42,7 @@ const AudioEditor = () => {
                     'Content-Type': 'multipart/form-data',
                 },
             })
-            console.log('Response:', response.data)
+
             setMetadata(response.data?.metadata?.format?.tags)
 
             showToast('File uploaded and metadata extracted successfully!', 'success')
@@ -71,9 +71,7 @@ const AudioEditor = () => {
                 responseType: 'blob', // Expect a file as the response
             })
 
-            const originalFilename = response.headers['content-disposition']
-                .split('filename=')[1]
-                .replace(/"/g, '')
+            const originalFilename = response.headers['content-disposition'].split('filename=')[1].replace(/"/g, '')
 
             const url = window.URL.createObjectURL(new Blob([response.data]))
             const link = document.createElement('a')

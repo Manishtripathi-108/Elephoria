@@ -6,10 +6,10 @@ import PrivateRoute from './components/PrivateRoute'
 import SideNav from './components/layout/sidenav/sidenav'
 import NotFound from './pages/404-page'
 import Shadows from './pages/ShadowsGrid'
+import MusicEditor from './pages/audio/AudioEditor'
 import AuthPage from './pages/auth/AuthState'
 import TicTacToeClassic from './pages/games/tic-tac-toe/classic'
 import TicTacToeUltimate from './pages/games/tic-tac-toe/ultimate'
-import MusicEditor from './pages/audio/AudioEditor'
 
 function App() {
     return (

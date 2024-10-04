@@ -17,7 +17,7 @@ const GameOverModal = ({ initializeGame, playerXName, playerOName, isDraw, winne
 
             {/* Play Again Button */}
             <button type="button" title="Play Again" className="text-primary flex-center z-20">
-                <Icon icon="solar:restart-outline" className="size-12 md:size-20"/>
+                <Icon icon="solar:restart-outline" className="size-12 md:size-20" />
             </button>
 
             {/* Play Again Text */}
