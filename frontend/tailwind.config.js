@@ -6,7 +6,7 @@ export default {
             animation: {
                 'anti-rotate': 'anti-rotate 5s linear infinite',
                 'close-n-zero': 'close-n-zero 0.2s forwards',
-                'pulse': 'pulse 1s infinite',
+                pulse: 'pulse 1s infinite',
                 'puff-in': 'puff-in 0.3s forwards',
                 'scale-up': 'scale-up 0.3s cubic-bezier(0.6, -0.28, 0.74, 0.05) forwards',
             },
@@ -19,7 +19,7 @@ export default {
                     from: { 'stroke-dashoffset': '50' },
                     to: { 'stroke-dashoffset': '0' },
                 },
-                'pulse': {
+                pulse: {
                     '0%, 100%': { opacity: '1', transform: 'scale(1, 1)', transformOrigin: '50% 50%' },
                     '50%': { opacity: '1', transform: 'scale(0.9, 0.9)', transformOrigin: '50% 50%' },
                 },
@@ -40,7 +40,6 @@ export default {
                 'light-text-secondary': '#666666',
                 'light-accent-primary': '#dc2626',
                 'light-highlight-primary': '#4169E1',
-
 
                 // Dark Mode Colors
                 'dark-primary': '#1f2937',
@@ -88,6 +87,7 @@ export default {
             },
             fontFamily: {
                 'indie-flower': ['"Indie Flower"', 'cursive', 'serif'],
+                aladin: ['"Aladin"', 'system-ui'],
             },
         },
     },
