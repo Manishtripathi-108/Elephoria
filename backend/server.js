@@ -7,6 +7,7 @@ const path = require("path");
 // Import handlers
 const { uploadAudio } = require("./audioHandlers/uploadAudio");
 const { editMetadata } = require("./audioHandlers/editMetadata");
+const getJson = require("./anime/getJson");
 
 // Load environment variables
 dotenv.config();
@@ -50,6 +51,8 @@ app.post("/api/upload", upload.single("audio"), uploadAudio);
 
 // Endpoint for editing metadata
 app.post("/api/edit-metadata", upload.single("audio"), editMetadata);
+
+app.get("/api/json", getJson);
 
 // Set PORT from environment or default to 3000
 const PORT = process.env.PORT || 3000;
