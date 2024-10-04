@@ -1,12 +1,24 @@
 {
-    "plugins": ["prettier-plugin-tailwindcss", "@trivago/prettier-plugin-sort-imports"],
+    "plugins": [
+        "prettier-plugin-tailwindcss",
+        "@trivago/prettier-plugin-sort-imports"
+    ],
     "trailingComma": "es5",
     "tabWidth": 4,
     "semi": false,
     "singleQuote": true,
     "bracketSameLine": true,
     "printWidth": 150,
-    "importOrder": ["^react$", "^react-dom$", "^react-router-dom$", "^@?\\w", "^components/(.*)$", "^[./]", "^[../]", "^assets/(.*)$"],
+    "importOrder": [
+        "^react$",
+        "^react-dom$",
+        "^react-router-dom$",
+        "^@?\\w",
+        "^components/(.*)$",
+        "^[./]",
+        "^[../]",
+        "^assets/(.*)$"
+    ],
     "importOrderSeparation": true,
     "importOrderSortSpecifiers": true
 }

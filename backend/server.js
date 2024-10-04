@@ -18,6 +18,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+/* ------------------ Serve Static Files for Uploaded Images ---------------- */
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 /* ------------------ Multer configuration for file uploads ----------------- */
 const storage = multer.diskStorage({
 	destination: (req, file, cb) => {

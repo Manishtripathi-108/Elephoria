@@ -7,7 +7,7 @@ import SideNav from './components/layout/sidenav/sidenav'
 import NotFound from './pages/404-page'
 import Shadows from './pages/ShadowsGrid'
 import MusicEditor from './pages/audio/AudioEditor'
-import AuthPage from './pages/auth/AuthState'
+// import AuthPage from './pages/auth/AuthState'
 import TicTacToeClassic from './pages/games/tic-tac-toe/classic'
 import TicTacToeUltimate from './pages/games/tic-tac-toe/ultimate'
 
@@ -40,7 +40,7 @@ function App() {
 
                 <Route path="/" element={<SideNav />} />
                 <Route path="/shadows" element={<Shadows />} />
-                <Route path="/auth" element={<AuthPage />} />
+                {/* <Route path="/auth" element={<AuthPage />} /> */}
                 <Route path="/audio" element={<MusicEditor />} />
 
                 {/* Tic-Tac-Toe Routes */}

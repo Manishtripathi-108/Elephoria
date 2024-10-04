@@ -10,13 +10,10 @@ import Toast from '../../components/common/notifications/toast'
 const AudioEditor = () => {
     const [file, setFile] = useState(null)
     const [metaData, setMetadata] = useState(null)
+    const [coverImage, setCoverImage] = useState(null)
 
     const [fileName, setFileName] = useState('Upload File')
     const [toast, setToast] = useState(null)
-
-    useEffect(() => {
-        console.log('metaData:', metaData)
-    }, [metaData])
 
     const showToast = (message, type) => {
         setToast({ message, type })
@@ -43,7 +40,11 @@ const AudioEditor = () => {
                 },
             })
 
+            console.log('Response:', response.data)
+
+            // Set metadata and cover image URL
             setMetadata(response.data?.metadata?.format?.tags)
+            setCoverImage(response.data?.coverImage) // Set the full URL of the cover image
 
             showToast('File uploaded and metadata extracted successfully!', 'success')
         } catch (error) {
@@ -117,29 +118,40 @@ const AudioEditor = () => {
                 onSubmit={handleEditMetadata}>
                 <h2 className="text-primary font-aladin tracking-wider text-2xl">Edit Metadata</h2>
 
+                {/* Display cover image if available */}
+                {coverImage && (
+                    <div className="size-72 dark:shadow-neu-inset-dark-sm p-3 shadow-neu-inset-light-sm rounded-lg overflow-hidden">
+                        <div className="rounded-md overflow-hidden w-full">
+                            <img src={coverImage} alt="Cover Image" className="w-full h-full object-cover" />
+                        </div>
+                    </div>
+                )}
+
                 {metaData && (
-                    <div className="w-full flex flex-wrap gap-5">
-                        {Object.entries(metaData).map(([key, value]) => (
-                            <div key={key} className="neu-form-group mb-4 w-fit">
-                                <label className="neu-form-label" htmlFor={key}>
-                                    {key
-                                        .split('_')
-                                        .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-                                        .join(' ')}
-                                </label>
-                                <input
-                                    className="neu-form-input"
-                                    id={key}
-                                    type="text"
-                                    placeholder={key
-                                        .split('_')
-                                        .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-                                        .join(' ')}
-                                    value={value}
-                                    onChange={(e) => setMetadata({ ...metaData, [key]: e.target.value })}
-                                />
-                            </div>
-                        ))}
+                    <div className="w-full flex flex-wrap gap-x-5">
+                        {Object.entries(metaData)
+                            .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
+                            .map(([key, value]) => (
+                                <div key={key} className="neu-form-group mb-4 w-fit">
+                                    <label className="neu-form-label" htmlFor={key}>
+                                        {key
+                                            .split('_')
+                                            .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                                            .join(' ')}
+                                    </label>
+                                    <input
+                                        className="neu-form-input"
+                                        id={key}
+                                        type="text"
+                                        placeholder={key
+                                            .split('_')
+                                            .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                                            .join(' ')}
+                                        value={value}
+                                        onChange={(e) => setMetadata({ ...metaData, [key]: e.target.value })}
+                                    />
+                                </div>
+                            ))}
                     </div>
                 )}
 

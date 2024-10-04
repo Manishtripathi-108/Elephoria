@@ -26,7 +26,7 @@ const UploadInput = ({ id, file, setFile, fileName, setFileName }) => {
         <div className="size-80 mb-6 shadow-neu-light-sm dark:shadow-neu-dark-sm font-indie-flower flex flex-col items-center justify-between gap-2 bg-primary p-2.5 rounded-lg">
             <label
                 htmlFor={id}
-                className="flex-1 w-full flex items-center justify-center flex-col rounded-lg border-2 border-dashed border-light-highlight-primary dark:border-dark-highlight-primary text-highlight-primary">
+                className="flex-1 w-full flex items-center cursor-pointer justify-center flex-col rounded-lg border-2 border-dashed border-light-highlight-primary dark:border-dark-highlight-primary text-highlight-primary">
                 <Icon icon="line-md:cloud-alt-upload-filled-loop" className="size-28" />
                 <p className="text-center text-primary tracking-wider p-1">
                     {fileName !== 'Upload File' ? 'File Uploaded! Click on the button below to upload!' : 'Browse File to upload!'}
