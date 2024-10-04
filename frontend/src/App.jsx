@@ -10,6 +10,7 @@ import MusicEditor from './pages/audio/AudioEditor'
 // import AuthPage from './pages/auth/AuthState'
 import TicTacToeClassic from './pages/games/tic-tac-toe/classic'
 import TicTacToeUltimate from './pages/games/tic-tac-toe/ultimate'
+import Anime from './pages/anime/anime'
 
 function App() {
     return (
@@ -42,6 +43,7 @@ function App() {
                 <Route path="/shadows" element={<Shadows />} />
                 {/* <Route path="/auth" element={<AuthPage />} /> */}
                 <Route path="/audio" element={<MusicEditor />} />
+                <Route path="/anime" element={<Anime />} />
 
                 {/* Tic-Tac-Toe Routes */}
                 <Route path="/games/tic-tac-toe">

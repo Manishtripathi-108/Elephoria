@@ -5,15 +5,31 @@ import { Link } from 'react-router-dom'
 import warriorImage from '../../../assets/images/landscape/man-warrior.png'
 import avatarImage from '../../../assets/images/square/animal-orange-bird.png'
 
-const menuItems = {
-    Game: [
-        { name: 'Tic Tac Toe', url: '/games/tic-tac-toe' },
-        { name: 'Tic Tac Toe Ultimate', url: '/games/tic-tac-toe/Ultimate' },
-    ],
-    // Authentication: [{ name: 'Login/Signup', url: '/auth' }],
-    Shadows: [{ name: 'Shadows Grid', url: '/shadows' }],
-    Audio: [{ name: 'Music Editor', url: '/audio' }],
-}
+const menuItems = [
+    {
+        category: 'Game',
+        items: [
+            { name: 'Tic Tac Toe', url: '/games/tic-tac-toe' },
+            { name: 'Tic Tac Toe Ultimate', url: '/games/tic-tac-toe/Ultimate' },
+        ],
+    },
+    // {
+    //     category: 'Authentication',
+    //     items: [{ name: 'Login/Signup', url: '/auth' }]
+    // },
+    {
+        category: 'Shadows',
+        items: [{ name: 'Shadows Grid', url: '/shadows' }],
+    },
+    {
+        category: 'Audio',
+        items: [{ name: 'Music Editor', url: '/audio' }],
+    },
+    {
+        category: 'Anime',
+        items: [{ name: 'Anime', url: '/anime' }],
+    },
+]
 
 const Sidenav = () => {
     return (
@@ -52,23 +68,25 @@ const Sidenav = () => {
 
                 <div className="scrollbar-thin relative my-5 overflow-y-scroll md:pl-3">
                     <div className="flex w-full flex-col font-medium">
-                        {Object.keys(menuItems).map((key, index) => (
-                            <div key={index} className="block px-4 pb-2">
-                                {/* Section Heading */}
-                                <span className="text-secondary-dark text-primary font-semibold uppercase">{key}</span>
+                        {menuItems
+                            .sort((a, b) => a.category.localeCompare(b.category))
+                            .map((menu, menuIndex) => (
+                                <div key={menuIndex} className="block px-4 pb-2">
+                                    {/* Section Heading */}
+                                    <span className="text-secondary-dark text-primary font-semibold uppercase">{menu.category}</span>
 
-                                {/* Sub Links */}
-                                {menuItems[key].map((item, itemIndex) => (
-                                    <div key={itemIndex} className="my-1 flex cursor-pointer select-none items-center py-2">
-                                        <Link
-                                            className="text-secondary flex flex-grow items-center text-sm hover:text-dark-primary dark:hover:text-light-primary"
-                                            to={item.url}>
-                                            {item.name}
-                                        </Link>
-                                    </div>
-                                ))}
-                            </div>
-                        ))}
+                                    {/* Sub Links */}
+                                    {menu.items.map((item, itemIndex) => (
+                                        <div key={itemIndex} className="my-1 flex cursor-pointer select-none items-center py-2">
+                                            <Link
+                                                className="text-secondary flex flex-grow items-center text-sm hover:text-dark-primary dark:hover:text-light-primary"
+                                                to={item.url}>
+                                                {item.name}
+                                            </Link>
+                                        </div>
+                                    ))}
+                                </div>
+                            ))}
                     </div>
                 </div>
             </aside>
