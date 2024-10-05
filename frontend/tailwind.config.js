@@ -9,6 +9,8 @@ export default {
                 pulse: 'pulse 1s infinite',
                 'puff-in': 'puff-in 0.3s forwards',
                 'scale-up': 'scale-up 0.3s cubic-bezier(0.6, -0.28, 0.74, 0.05) forwards',
+                'slide-left-return': 'slide-left-return 0.3s forwards',
+                'slide-left': 'slide-left 0.3s forwards',
             },
             keyframes: {
                 'anti-rotate': {
@@ -30,6 +32,14 @@ export default {
                 'scale-up': {
                     '0%': { transform: 'scale(0)', opacity: '0', visibility: 'hidden' },
                     '100%': { transform: 'scale(1)', opacity: '1', visibility: 'visible' },
+                },
+                'slide-left-return': {
+                    '0%': { transformOrigin: '0 0', transform: 'translate(-100%)' },
+                    '100%': { transformOrigin: '0 0', transform: 'translate(0)' },
+                },
+                'slide-left': {
+                    '0%': { transformOrigin: '0 0', transform: 'translate(0)' },
+                    '100%': { transformOrigin: '0 0', transform: 'translate(-100%)' },
                 },
             },
             colors: {

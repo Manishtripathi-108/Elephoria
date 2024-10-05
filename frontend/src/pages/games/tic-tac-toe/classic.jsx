@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import { Icon } from '@iconify/react'
 
@@ -70,6 +70,14 @@ export function TicTacToe() {
 
     const { boardSize, board, isXNext, isGameOver, isDraw, winner } = gameState
     const { playerX, playerO } = players
+
+    // Focus on the game board when it is rendered
+    useEffect(() => {
+        const GameBoard = document.getElementById('game-board')
+        if (GameBoard) {
+            GameBoard.focus()
+        }
+    }, [boardSize])
 
     // Change board size and reset the board
     const changeBoardSize = useCallback((size) => {
@@ -151,7 +159,6 @@ export function TicTacToe() {
 
             return (
                 <button
-                    tabIndex="10"
                     key={index}
                     className={`flex-center text-secondary bg-primary p-3 shadow-neu-inset-light-md dark:shadow-neu-inset-dark-md 
                     ${boardSize === 9 ? 'size-28 md:size-40' : boardSize === 16 ? 'size-20 md:size-36' : 'size-16 md:size-28'} 
@@ -222,9 +229,10 @@ export function TicTacToe() {
                 </div>
 
                 {/* Game Board */}
-                <div className="relative w-fit p-2 shadow-neu-light-md dark:shadow-neu-dark-md">
+                <div className="relative w-fit p-2 shadow-neu-light-md dark:shadow-neu-dark-md z-0">
                     <div
-                        className={`grid ${boardSize === 9 ? 'grid-cols-3' : boardSize === 16 ? 'grid-cols-4' : 'grid-cols-5'} gap-1`}
+                        tabIndex={0}
+                        className={`grid ${boardSize === 9 ? 'grid-cols-3' : boardSize === 16 ? 'grid-cols-4' : 'grid-cols-5'} gap-1 outline-none`}
                         id="game-board">
                         {board.map((value, index) => renderSquare(value, index))}
                     </div>

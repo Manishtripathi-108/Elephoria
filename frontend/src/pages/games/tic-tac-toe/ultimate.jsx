@@ -47,6 +47,15 @@ const Ultimate = () => {
         [2, 4, 6],
     ]
 
+    useEffect(() => {
+        const GameBoard = document.getElementById('game-board')
+        if (GameBoard) {
+            console.log('Game Board:', GameBoard)
+
+            GameBoard.focus()
+        }
+    }, [])
+
     // Render Square Component
     const renderSquare = (value, macroIndex, microIndex) => {
         const squareClasses =
@@ -60,7 +69,6 @@ const Ultimate = () => {
 
         return (
             <button
-                tabIndex="10"
                 key={`${macroIndex}-${microIndex}`}
                 className={`flex-center bg-primary p-1 md:p-2 size-7 md:size-12 rounded-md transition-all duration-300 ${squareClasses}`}
                 onClick={() => handleSquareClick(macroIndex, microIndex)}>
@@ -225,7 +233,7 @@ const Ultimate = () => {
 
                 {/* Game Board */}
                 <div className="relative w-fit p-2 shadow-neu-light-md dark:shadow-neu-dark-md rounded-lg">
-                    <div className="grid grid-cols-3 gap-2">
+                    <div id="game-board" tabIndex={0} className="grid grid-cols-3 gap-2 outline-none">
                         {miniBoard.map((macroBoard, macroIndex) => (
                             <div
                                 key={macroIndex}
