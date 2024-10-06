@@ -160,9 +160,7 @@ export function TicTacToe() {
             return (
                 <button
                     key={index}
-                    className={`flex-center text-secondary bg-primary p-3 shadow-neu-inset-light-md dark:shadow-neu-inset-dark-md 
-                    ${boardSize === 9 ? 'size-28 md:size-40' : boardSize === 16 ? 'size-20 md:size-36' : 'size-16 md:size-28'} 
-                    ${winningSquareClass}`}
+                    className={`flex-center text-secondary bg-primary p-3 shadow-neu-inset-light-md dark:shadow-neu-inset-dark-md ${boardSize === 9 ? 'size-28 md:size-40' : boardSize === 16 ? 'size-20 md:size-36' : 'size-16 md:size-28'} ${winningSquareClass}`}
                     onClick={() => handleClick(index)}>
                     {value === 'X' ? (
                         <Close className="svg-shadow-light-xs dark:svg-shadow-dark-xs size-full" />
@@ -205,7 +203,7 @@ export function TicTacToe() {
 
             <div className="grid place-items-center gap-5 py-5">
                 {/* Player Names and Reset Button */}
-                <div className="flex items-center justify-evenly w-full text-primary">
+                <div className="text-primary flex w-full items-center justify-evenly">
                     <Icon icon="game-icons:tic-tac-toe" className="size-7" />
 
                     <h2 className="font-indie-flower text-2xl font-bold tracking-wider">
@@ -229,7 +227,7 @@ export function TicTacToe() {
                 </div>
 
                 {/* Game Board */}
-                <div className="relative w-fit p-2 shadow-neu-light-md dark:shadow-neu-dark-md z-0">
+                <div className="relative z-0 w-fit p-2 shadow-neu-light-md dark:shadow-neu-dark-md">
                     <div
                         tabIndex={0}
                         className={`grid ${boardSize === 9 ? 'grid-cols-3' : boardSize === 16 ? 'grid-cols-4' : 'grid-cols-5'} gap-1 outline-none`}
@@ -265,13 +263,13 @@ export function TicTacToe() {
                 </div>
 
                 {/* Score Board */}
-                <div className="grid w-10/12 grid-cols-2 md:text-2xl text-primary place-items-center justify-between gap-10 px-4 font-indie-flower tracking-wider">
-                    <div className="rounded-lg text-nowrap text-center p-3 shadow-neu-inset-light-sm dark:shadow-neu-inset-dark-sm">
-                        <div className="mb-3 rounded-lg p-4 shadow-neu-light-xs dark:shadow-neu-dark-xs font-bold">{playerX.name} (X)</div>
+                <div className="text-primary grid w-10/12 grid-cols-2 place-items-center justify-between gap-10 px-4 font-indie-flower tracking-wider md:text-2xl">
+                    <div className="text-nowrap rounded-lg p-3 text-center shadow-neu-inset-light-sm dark:shadow-neu-inset-dark-sm">
+                        <div className="mb-3 rounded-lg p-4 font-bold shadow-neu-light-xs dark:shadow-neu-dark-xs">{playerX.name} (X)</div>
                         <div className="rounded-lg p-1 shadow-neu-light-xs dark:shadow-neu-dark-xs">{playerX.score}</div>
                     </div>
-                    <div className="rounded-lg text-nowrap text-center p-3 shadow-neu-inset-light-sm dark:shadow-neu-inset-dark-sm">
-                        <div className="mb-3 rounded-lg p-4 shadow-neu-light-xs dark:shadow-neu-dark-xs font-bold">{playerO.name} (X)</div>
+                    <div className="text-nowrap rounded-lg p-3 text-center shadow-neu-inset-light-sm dark:shadow-neu-inset-dark-sm">
+                        <div className="mb-3 rounded-lg p-4 font-bold shadow-neu-light-xs dark:shadow-neu-dark-xs">{playerO.name} (X)</div>
                         <div className="rounded-lg p-1 shadow-neu-light-xs dark:shadow-neu-dark-xs">{playerO.score}</div>
                     </div>
                 </div>

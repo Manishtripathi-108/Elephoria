@@ -1,12 +1,15 @@
 import React from 'react'
 
-import Header from '../../components/layout/header'
+import avatarImage from '../../assets/images/square/logo.png'
 
 function Anime() {
     return (
         <div>
-            {/* <Header /> */}
-            <h1 className="text-center text-4xl font-bold text-primary mt-20">Anime Page</h1>
+            <header className="flex h-40 items-end justify-center border border-white">
+                <div className="container">
+                    <img src={avatarImage} alt="User Avatar" className="size-32" />
+                </div>
+            </header>
         </div>
     )
 }

@@ -50,8 +50,6 @@ const Ultimate = () => {
     useEffect(() => {
         const GameBoard = document.getElementById('game-board')
         if (GameBoard) {
-            console.log('Game Board:', GameBoard)
-
             GameBoard.focus()
         }
     }, [])
@@ -70,7 +68,7 @@ const Ultimate = () => {
         return (
             <button
                 key={`${macroIndex}-${microIndex}`}
-                className={`flex-center bg-primary p-1 md:p-2 size-7 md:size-12 rounded-md transition-all duration-300 ${squareClasses}`}
+                className={`flex-center bg-primary size-7 rounded-md p-1 transition-all duration-300 md:size-12 md:p-2 ${squareClasses}`}
                 onClick={() => handleSquareClick(macroIndex, microIndex)}>
                 {value === 'X' ? <Close className="size-full" /> : value === 'O' ? <Circle className="size-full" /> : null}
             </button>
@@ -208,7 +206,7 @@ const Ultimate = () => {
 
             <div className="grid place-items-center gap-5 py-5">
                 {/* Player Names and Reset Button */}
-                <div className="flex items-center justify-evenly w-full text-primary">
+                <div className="text-primary flex w-full items-center justify-evenly">
                     <Icon icon="game-icons:tic-tac-toe" className="size-7" />
 
                     <h2 className="font-indie-flower text-2xl font-bold tracking-wider">
@@ -232,21 +230,21 @@ const Ultimate = () => {
                 </div>
 
                 {/* Game Board */}
-                <div className="relative w-fit p-2 shadow-neu-light-md dark:shadow-neu-dark-md rounded-lg">
+                <div className="relative w-fit rounded-lg p-2 shadow-neu-light-md dark:shadow-neu-dark-md">
                     <div id="game-board" tabIndex={0} className="grid grid-cols-3 gap-2 outline-none">
                         {miniBoard.map((macroBoard, macroIndex) => (
                             <div
                                 key={macroIndex}
-                                className={`${macroIndex === activeMacroIndex && 'bg-highlight-primary *:bg-highlight-primary'} relative grid grid-cols-3 md:gap-3 md:p-3 p-2 gap-2 shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs rounded-md`}>
+                                className={`${macroIndex === activeMacroIndex && 'bg-highlight-primary *:bg-highlight-primary'} relative grid grid-cols-3 gap-2 rounded-md p-2 shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs md:gap-3 md:p-3`}>
                                 {macroBoard.map((cell, microIndex) => renderSquare(cell, macroIndex, microIndex))}
 
                                 {largeBoard[macroIndex] && (
-                                    <div className="absolute inset-0 z-10 flex-center invisible animate-puff-in">
-                                        <div className="bg-secondary opacity-70 blur-sm saturate-150 absolute inset-0"></div>
+                                    <div className="flex-center invisible absolute inset-0 z-10 animate-puff-in">
+                                        <div className="bg-secondary absolute inset-0 opacity-70 blur-sm saturate-150"></div>
                                         <span
-                                            className={`text-primary z-20 text-5xl font-bold tracking-wider font-indie-flower text-center ${
+                                            className={`text-primary z-20 text-center font-indie-flower text-5xl font-bold tracking-wider ${
                                                 winingLine.includes(macroIndex)
-                                                    ? 'text-light-text-primary dark:text-dark-text-primary *:animate-pulse'
+                                                    ? 'text-light-text-primary *:animate-pulse dark:text-dark-text-primary'
                                                     : ''
                                             }`}>
                                             {largeBoard[macroIndex] === 'X' ? (
@@ -276,13 +274,13 @@ const Ultimate = () => {
                 </div>
 
                 {/* Score Board */}
-                <div className="grid w-10/12 grid-cols-2 md:text-2xl text-primary place-items-center justify-between gap-10 px-4 font-indie-flower tracking-wider">
-                    <div className="rounded-lg text-nowrap text-center p-3 shadow-neu-inset-light-sm dark:shadow-neu-inset-dark-sm">
-                        <div className="mb-3 rounded-lg p-4 shadow-neu-light-xs dark:shadow-neu-dark-xs font-bold">{playerX.name} (X)</div>
+                <div className="text-primary grid w-10/12 grid-cols-2 place-items-center justify-between gap-10 px-4 font-indie-flower tracking-wider md:text-2xl">
+                    <div className="text-nowrap rounded-lg p-3 text-center shadow-neu-inset-light-sm dark:shadow-neu-inset-dark-sm">
+                        <div className="mb-3 rounded-lg p-4 font-bold shadow-neu-light-xs dark:shadow-neu-dark-xs">{playerX.name} (X)</div>
                         <div className="rounded-lg p-1 shadow-neu-light-xs dark:shadow-neu-dark-xs">{playerX.score}</div>
                     </div>
-                    <div className="rounded-lg text-nowrap text-center p-3 shadow-neu-inset-light-sm dark:shadow-neu-inset-dark-sm">
-                        <div className="mb-3 rounded-lg p-4 shadow-neu-light-xs dark:shadow-neu-dark-xs font-bold">{playerO.name} (X)</div>
+                    <div className="text-nowrap rounded-lg p-3 text-center shadow-neu-inset-light-sm dark:shadow-neu-inset-dark-sm">
+                        <div className="mb-3 rounded-lg p-4 font-bold shadow-neu-light-xs dark:shadow-neu-dark-xs">{playerO.name} (X)</div>
                         <div className="rounded-lg p-1 shadow-neu-light-xs dark:shadow-neu-dark-xs">{playerO.score}</div>
                     </div>
                 </div>

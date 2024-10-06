@@ -2,10 +2,8 @@ import { React, useEffect, useState } from 'react'
 
 import { Link } from 'react-router-dom'
 
-import { Icon } from '@iconify/react'
-
 import warriorImage from '../../assets/images/landscape/man-warrior.png'
-import avatarImage from '../../assets/images/square/animal-orange-bird.png'
+import avatarImage from '../../assets/images/square/logo.png'
 
 const menuItems = [
     {
@@ -76,24 +74,31 @@ const Sidenav = ({ onDismiss }) => {
     }, [isSidenavOpen, onDismiss])
 
     return (
-        <div className="fixed inset-0 top-0 left-0 z-50">
-            {isSidenavOpen && <div className="size-full bg-primary opacity-80"></div>}
+        <div className="fixed inset-0 left-0 top-0 z-50">
+            {isSidenavOpen && <div className="bg-primary size-full opacity-80"></div>}
             <nav
                 id="sidenav"
                 role="dialog"
                 aria-labelledby="sidenav-heading"
                 aria-modal="true"
                 tabIndex="-1"
-                className={`${isSidenavOpen ? 'animate-slide-left-return' : 'animate-slide-left'}
-                group/sidebar h-dvh bg-secondary fixed inset-y-0 left-0 z-50 m-0 flex w-60 shrink-0 flex-col overflow-hidden rounded-lg border-l border-dashed border-l-light-primary transition-all duration-300 ease-in-out lg:w-80 dark:border-dark-primary`}>
+                className={`${isSidenavOpen ? 'animate-slide-left-return' : 'animate-slide-left'} group/sidebar bg-secondary fixed inset-y-0 left-0 z-50 m-0 flex h-dvh w-72 shrink-0 flex-col overflow-hidden rounded-lg border-l border-dashed border-l-light-primary transition-all duration-300 ease-in-out dark:border-dark-primary`}>
                 {/* Close Button for accessibility */}
                 <button
                     aria-label="Close navigation"
-                    className="absolute right-2 top-2 text-secondary rounded-full p-1 border border-light-primary hover:text-primary dark:border-dark-primary bg-secondary dark:bg-secondary-dark"
+                    className="text-secondary hover:text-primary bg-secondary dark:bg-secondary-dark absolute right-2 top-2 rounded-full border border-light-primary p-1 dark:border-dark-primary"
                     title="Close navigation"
                     onClick={closeSidenav}>
                     <span aria-hidden="true">
-                        <Icon icon="line-md:close-small" className="size-6" />
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="size-7">
+                            <path
+                                fill="none"
+                                stroke="currentColor"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 12L7 7m5 5l5 5m-5-5l5-5m-5 5l-5 5"></path>
+                        </svg>
                     </span>
                 </button>
 
@@ -104,15 +109,15 @@ const Sidenav = ({ onDismiss }) => {
                 {/* Warrior Image */}
                 <div className="flex h-28 w-full shrink-0 items-center justify-between">
                     <a className="h-full w-full transition-colors duration-200 ease-in-out" href="#">
-                        <img className="size-full overflow-hidden object-cover object-center" src={warriorImage} alt="Warrior" />
+                        <img className="size-full overflow-hidden object-cover object-center" src={warriorImage} alt="Warrior" loading="lazy" />
                     </a>
                 </div>
 
-                <div className="border-b border-dashed border-light-primary lg:block dark:border-dark-primary"></div>
+                <div className="border-b border-dashed border-light-primary dark:border-dark-primary lg:block"></div>
 
                 {/* User Info */}
-                <div className="flex items-center justify-between gap-2 px-4 py-5 md:gap-5 md:px-6">
-                    <div className="inline-flex items-start gap-2 md:gap-5">
+                <div className="flex items-center justify-between gap-x-4 p-4">
+                    <div className="inline-flex items-start gap-x-4">
                         <div className="block shrink-0">
                             <div className="cursor-pointer">
                                 <img className="size-11 rounded-lg" src={avatarImage} alt="Avatar Image" />
@@ -126,13 +131,13 @@ const Sidenav = ({ onDismiss }) => {
                         </div>
                     </div>
                     <a
-                        className="text-secondary relative inline-flex cursor-pointer items-center justify-end border-0 text-center align-middle text-base font-medium transition-colors duration-150 ease-in-out"
+                        className="hover:text-primary mr-2 cursor-pointer border-0 text-center align-middle text-sm font-medium text-red-500 transition-colors duration-150 ease-in-out"
                         href="">
-                        <span className="mr-2 inline-block text-sm">Logout</span>
+                        Logout
                     </a>
                 </div>
 
-                <div className="border-b border-dashed border-light-primary lg:block dark:border-dark-primary"></div>
+                <div className="border-b border-dashed border-light-primary dark:border-dark-primary lg:block"></div>
 
                 {/* Menu Items */}
                 <div className="scrollbar-thin relative my-5 overflow-y-scroll md:pl-3">

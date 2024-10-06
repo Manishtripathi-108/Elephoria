@@ -56,7 +56,7 @@ const PlayerNameModal = ({ setPlayerName, playerXName, playerOName, closeModal }
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-            <div id="player-form-modal" className="bg-primary rounded-lg p-3 w-[23rem] -mt-48 sm:mt-0">
+            <div id="player-form-modal" className="bg-primary -mt-48 w-[23rem] rounded-lg p-3 sm:mt-0">
                 <div className="bg-primary grid grid-rows-2 gap-4 rounded-lg p-8 shadow-neu-light-sm dark:shadow-neu-dark-sm">
                     <h2 className="text-primary m-0 flex items-center justify-center font-indie-flower text-xl font-bold leading-none">
                         Set Player Names
@@ -95,7 +95,7 @@ const PlayerNameModal = ({ setPlayerName, playerXName, playerOName, closeModal }
                     </NeuButton>
 
                     {error && (
-                        <div className="flex items-center justify-start bg-red-500 gap-2 rounded-xl border border-light-secondary px-2 py-2 font-indie-flower tracking-wider text-primary shadow-neu-light-md dark:border-dark-secondary dark:shadow-neu-dark-md">
+                        <div className="text-primary flex items-center justify-start gap-2 rounded-xl border border-light-secondary bg-red-500 px-2 py-2 font-indie-flower tracking-wider shadow-neu-light-md dark:border-dark-secondary dark:shadow-neu-dark-md">
                             <Icon icon="meteocons:code-yellow-fill" className="size-10 shrink-0" />
                             <span className="text-xs">{message}</span>
                         </div>

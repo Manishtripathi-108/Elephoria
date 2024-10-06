@@ -15,43 +15,43 @@ import NeuButton from './buttons/neu-button'
 
 function Table({ heading, columns, rows }) {
     return (
-        <div className="w-full max-w-2xl bg-primary shadow-xl rounded-2xl">
+        <div className="bg-primary w-full max-w-2xl rounded-2xl shadow-xl">
             {/* Table heading */}
-            <header className="px-4 py-3 border-b border-slate-200">
-                <h2 className="font-semibold text-primary">{heading}</h2>
+            <header className="border-b border-slate-200 px-4 py-3">
+                <h2 className="text-primary font-semibold">{heading}</h2>
             </header>
 
             {/* Table structure */}
             <div className="p-3">
-                <div className="overflow-x-auto scrollbar-thin">
-                    <table className="table-auto w-full">
+                <div className="scrollbar-thin overflow-x-auto">
+                    <table className="w-full table-auto">
                         {/* Table header */}
-                        <thead className="text-[13px] text-secondary">
+                        <thead className="text-secondary text-[13px]">
                             <tr>
                                 {columns.map((column, index) => (
                                     <th
                                         key={index}
-                                        className="px-5 py-2 first:pl-3 last:pr-3 bg-secondary first:rounded-l last:rounded-r last:pl-5 last:sticky last:right-0">
-                                        <div className="font-medium text-left">{column}</div>
+                                        className="bg-secondary px-5 py-2 first:rounded-l first:pl-3 last:sticky last:right-0 last:rounded-r last:pl-5 last:pr-3">
+                                        <div className="text-left font-medium">{column}</div>
                                     </th>
                                 ))}
-                                <th className="px-5 py-2 first:pl-3 last:pr-3 bg-secondary first:rounded-l last:rounded-r last:pl-5 last:sticky last:right-0">
-                                    <div className="font-medium text-left sr-only">Action</div>
+                                <th className="bg-secondary px-5 py-2 first:rounded-l first:pl-3 last:sticky last:right-0 last:rounded-r last:pl-5 last:pr-3">
+                                    <div className="sr-only text-left font-medium">Action</div>
                                 </th>
                             </tr>
                         </thead>
 
-                        <tbody className="text-sm font-medium text-primary">
+                        <tbody className="text-primary text-sm font-medium">
                             {rows.map((row, rowIndex) => (
                                 <tr key={rowIndex}>
                                     {row.map((cell, cellIndex) => (
                                         <td
                                             key={cellIndex}
-                                            className="px-5 py-3 border-b border-slate-200 last:border-none first:pl-3 last:pr-3 last:bg-gradient-to-r last:from-transparent last:to-light-primary dark:last:to-dark-primary last:to-[12px] last:pl-5 last:sticky last:right-0">
+                                            className="border-b border-slate-200 px-5 py-3 first:pl-3 last:sticky last:right-0 last:border-none last:bg-gradient-to-r last:from-transparent last:to-light-primary last:to-[12px] last:pl-5 last:pr-3 dark:last:to-dark-primary">
                                             {cell}
                                         </td>
                                     ))}
-                                    <td className="px-5 py-3 border-b border-slate-200 last:border-none first:pl-3 last:pr-3 last:bg-gradient-to-r last:from-transparent last:to-light-primary dark:last:to-dark-primary last:to-[12px] last:pl-5 last:sticky last:right-0">
+                                    <td className="border-b border-slate-200 px-5 py-3 first:pl-3 last:sticky last:right-0 last:border-none last:bg-gradient-to-r last:from-transparent last:to-light-primary last:to-[12px] last:pl-5 last:pr-3 dark:last:to-dark-primary">
                                         <NeuButton>Edit</NeuButton>
                                     </td>
                                 </tr>

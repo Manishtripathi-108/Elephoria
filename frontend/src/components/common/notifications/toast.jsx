@@ -33,16 +33,16 @@ const Toast = ({ message, duration = 3000, type = 'success', onDismiss }) => {
 
     return (
         <div
-            className={`fixed bottom-5 right-5 flex items-center max-w-xs w-full p-4 rounded-md shadow-lg transition-opacity duration-300 ${toastStyles[type]}`}
+            className={`fixed bottom-5 right-5 flex w-full max-w-xs items-center rounded-md p-4 shadow-lg transition-opacity duration-300 ${toastStyles[type]}`}
             role="alert">
-            <Icon icon={iconNames[type]} className="size-7 mr-2" />
-            <span className="flex-1 text-sm text-primary mt-2 font-indie-flower">{message}</span>
+            <Icon icon={iconNames[type]} className="mr-2 size-7" />
+            <span className="text-primary mt-2 flex-1 font-indie-flower text-sm">{message}</span>
             <button
                 onClick={() => {
                     setVisible(false)
                     if (onDismiss) onDismiss()
                 }}
-                className="ml-3 text-white focus:outline-none text-4xl">
+                className="ml-3 text-4xl text-white focus:outline-none">
                 &times;
             </button>
         </div>

@@ -51,7 +51,7 @@ function AuthComponent() {
     }
 
     return (
-        <div className="grid place-items-center h-dvh w-dvw">
+        <div className="grid h-dvh w-dvw place-items-center">
             <div className="bg-primary relative h-[600px] w-[70%] overflow-hidden rounded-xl p-6 shadow-neu-light-lg dark:shadow-neu-dark-lg">
                 {/* Register Form with Formik */}
                 <div
@@ -167,7 +167,7 @@ function AuthComponent() {
                                 </Field>
 
                                 <a
-                                    className="text-secondary text-right ml-auto hover:text-highlight-primary transition-colors duration-300 mb-8 mt-2 border-b border-transparent border-solid hover:border-b-light-highlight-primary dark:hover:border-b-dark-highlight-primary text-sm"
+                                    className="text-secondary hover:text-highlight-primary mb-8 ml-auto mt-2 border-b border-solid border-transparent text-right text-sm transition-colors duration-300 hover:border-b-light-highlight-primary dark:hover:border-b-dark-highlight-primary"
                                     href="#">
                                     Forgot your password?
                                 </a>
@@ -185,8 +185,8 @@ function AuthComponent() {
                     className="bg-primary absolute left-0 top-0 z-[200] flex h-full w-2/5 items-center justify-center overflow-hidden p-[50px] shadow-neu-light-md transition-all duration-[1.25s] dark:shadow-neu-dark-md"
                     ref={switchContainerRef}>
                     {/* Background Circles for Animation */}
-                    <div className="switch-circles bg-primary size-[500px] absolute bottom-[-60%] left-[-60%] rounded-full shadow-neu-inset-light-sm transition-all duration-[1.25s] dark:shadow-neu-inset-dark-sm"></div>
-                    <div className="switch-circles bg-primary size-[350px] absolute bottom-[-60%] left-[-60%] top-[-30%] rounded-full shadow-neu-inset-light-sm transition-all duration-[1.25s] dark:shadow-neu-inset-dark-sm"></div>
+                    <div className="switch-circles bg-primary absolute bottom-[-60%] left-[-60%] size-[500px] rounded-full shadow-neu-inset-light-sm transition-all duration-[1.25s] dark:shadow-neu-inset-dark-sm"></div>
+                    <div className="switch-circles bg-primary absolute bottom-[-60%] left-[-60%] top-[-30%] size-[350px] rounded-full shadow-neu-inset-light-sm transition-all duration-[1.25s] dark:shadow-neu-inset-dark-sm"></div>
 
                     {/* Login Switch */}
                     <div

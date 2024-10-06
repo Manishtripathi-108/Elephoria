@@ -89,20 +89,20 @@ const AudioEditor = () => {
     }
 
     return (
-        <div className="m-6 flex-center gap-6 flex-col">
+        <div className="flex-center m-6 flex-col gap-6">
             {/* Logo and app name */}
-            <div className="flex-center gap-2 text-primary">
-                <Logo className="w-12 h-12" />
-                <AppName className="w-24 h-12" />
+            <div className="flex-center text-primary gap-2">
+                <Logo className="h-12 w-12" />
+                <AppName className="h-12 w-24" />
             </div>
 
             {/* Upload audio form */}
             <form
                 id="upload-audio"
                 onSubmit={handleFileUpload}
-                className="w-full max-w-2xl flex-center flex-col rounded-lg p-6 shadow-neu-light-md dark:shadow-neu-dark-md">
-                <h2 className="text-primary font-aladin tracking-wider text-2xl mb-2">Upload Audio</h2>
-                <p className="text-primary text-center mb-6">Upload an audio file to edit metadata, convert format, and more!</p>
+                className="flex-center w-full max-w-2xl flex-col rounded-lg p-6 shadow-neu-light-md dark:shadow-neu-dark-md">
+                <h2 className="text-primary mb-2 font-aladin text-2xl tracking-wider">Upload Audio</h2>
+                <p className="text-primary mb-6 text-center">Upload an audio file to edit metadata, convert format, and more!</p>
 
                 <UploadInput id="upload_audio" file={file} setFile={setFile} fileName={fileName} setFileName={setFileName} />
 
@@ -114,21 +114,21 @@ const AudioEditor = () => {
             {/* Edit metadata form */}
             <form
                 id="edit-metadata"
-                className="w-full max-w-2xl flex-center flex-col rounded-lg gap-6 p-6 shadow-neu-light-md dark:shadow-neu-dark-md"
+                className="flex-center w-full max-w-2xl flex-col gap-6 rounded-lg p-6 shadow-neu-light-md dark:shadow-neu-dark-md"
                 onSubmit={handleEditMetadata}>
-                <h2 className="text-primary font-aladin tracking-wider text-2xl">Edit Metadata</h2>
+                <h2 className="text-primary font-aladin text-2xl tracking-wider">Edit Metadata</h2>
 
                 {/* Display cover image if available */}
                 {coverImage && (
-                    <div className="size-72 dark:shadow-neu-inset-dark-sm p-3 shadow-neu-inset-light-sm rounded-lg overflow-hidden">
-                        <div className="rounded-md overflow-hidden w-full">
-                            <img src={coverImage} alt="Cover Image" className="w-full h-full object-cover" />
+                    <div className="size-72 overflow-hidden rounded-lg p-3 shadow-neu-inset-light-sm dark:shadow-neu-inset-dark-sm">
+                        <div className="w-full overflow-hidden rounded-md">
+                            <img src={coverImage} alt="Cover Image" className="h-full w-full object-cover" />
                         </div>
                     </div>
                 )}
 
                 {metaData && (
-                    <div className="w-full flex flex-wrap gap-x-5">
+                    <div className="flex w-full flex-wrap gap-x-5">
                         {Object.entries(metaData)
                             .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
                             .map(([key, value]) => (
