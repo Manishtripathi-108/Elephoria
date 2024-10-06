@@ -121,7 +121,7 @@ const Header = () => {
                 </Link>
 
                 {/* Dark Mode Toggle */}
-                <button className="neu-btn neu-icon-only-btn ml-auto" onClick={toggleDarkMode} aria-label="Toggle dark mode">
+                <button className="neu-btn neu-icon-only-btn ml-auto" onClick={toggleDarkMode} aria-label="Toggle dark mode" title="Toggle dark mode">
                     {isDarkMode ? (
                         <Icon icon="meteocons:clear-day-fill" className="size-6" />
                     ) : (
