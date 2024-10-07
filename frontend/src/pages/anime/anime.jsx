@@ -19,7 +19,7 @@ function Anime() {
             </header>
 
             <nav className="bg-primary mx-auto block w-full max-w-screen-lg rounded-md px-4 py-2 lg:px-8 lg:py-3">
-                <div className="text-secondary container mx-auto flex flex-wrap items-center justify-center gap-x-5">
+                <div className="text-secondary container mx-auto flex flex-wrap items-center justify-center gap-5">
                     <button type="button" title="Anime List" className="neu-btn neu-icon-btn text-nowrap text-base">
                         <svg fill="currentColor" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" className="size-5 shrink-0">
                             <path

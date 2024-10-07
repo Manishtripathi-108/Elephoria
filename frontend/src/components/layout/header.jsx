@@ -6,44 +6,8 @@ import { Icon } from '@iconify/react'
 
 import AppName from '../../assets/svg/app-name'
 import Logo from '../../assets/svg/logo'
+import useDarkMode from '../../hooks/useDark'
 import Sidenav from './sidenav'
-
-const useDarkMode = () => {
-    // State to track whether dark mode is enabled
-    const [isDarkMode, setIsDarkMode] = useState(false)
-
-    useEffect(() => {
-        // Check localStorage and system preferences for dark mode
-        const darkTheme = localStorage.getItem('dark')
-        const userDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
-
-        const initialDarkMode = darkTheme === 'true' || (!darkTheme && userDarkMode)
-        setIsDarkMode(initialDarkMode) // Set the initial dark mode state
-
-        if (initialDarkMode) {
-            document.documentElement.classList.add('dark')
-        } else {
-            document.documentElement.classList.remove('dark')
-        }
-    }, [])
-
-    // Function to toggle dark mode
-    const toggleDarkMode = () => {
-        const newDarkMode = !isDarkMode
-        setIsDarkMode(newDarkMode)
-
-        if (newDarkMode) {
-            document.documentElement.classList.add('dark')
-        } else {
-            document.documentElement.classList.remove('dark')
-        }
-
-        // Save the user's preference in localStorage
-        localStorage.setItem('dark', newDarkMode)
-    }
-
-    return { isDarkMode, toggleDarkMode }
-}
 
 const Header = () => {
     const [isSidenavOpen, setIsSidenavOpen] = useState(false)
