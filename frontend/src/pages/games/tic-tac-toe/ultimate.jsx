@@ -26,12 +26,12 @@ const Ultimate = () => {
         isXNext: true,
         isGameOver: false,
         isDraw: false,
-        activeMacroIndex: null,
+        activeCurrentIndex: null,
         winner: null,
         winingLine: [],
     })
 
-    const { miniBoard, largeBoard, isXNext, isGameOver, isDraw, activeMacroIndex, winner, winingLine } = gameState
+    const { miniBoard, largeBoard, isXNext, isGameOver, isDraw, activeCurrentIndex, winner, winingLine } = gameState
     const { playerX, playerO } = players
 
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -58,10 +58,10 @@ const Ultimate = () => {
     const renderSquare = (value, macroIndex, microIndex) => {
         const squareClasses =
             value === null
-                ? macroIndex === activeMacroIndex
+                ? macroIndex === activeCurrentIndex
                     ? 'hover:bg-secondary active:shadow-neu-inset-light-secondary-xs dark:active:shadow-neu-inset-dark-secondary-xs active:bg-highlight-primary shadow-neu-light-secondary-xs dark:shadow-neu-dark-secondary-xs'
                     : 'shadow-neu-light-xs dark:shadow-neu-dark-xs'
-                : macroIndex === activeMacroIndex
+                : macroIndex === activeCurrentIndex
                   ? 'shadow-neu-inset-light-secondary-xs dark:shadow-neu-inset-dark-secondary-xs text-white dark:text-black'
                   : 'shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs text-secondary'
 
@@ -93,25 +93,25 @@ const Ultimate = () => {
     }, [])
 
     const handleSquareClick = useCallback(
-        (macroIndex, microIndex) => {
+        (currentIndex, nextIndex) => {
             // Early exit if the game is over, the square is filled, or the board is inactive/won
             if (
                 isGameOver ||
-                miniBoard[macroIndex][microIndex] ||
-                (activeMacroIndex !== null && activeMacroIndex !== macroIndex) ||
-                largeBoard[macroIndex]
+                miniBoard[currentIndex][nextIndex] ||
+                (activeCurrentIndex !== null && activeCurrentIndex !== currentIndex) ||
+                largeBoard[currentIndex]
             ) {
                 return
             }
 
             // Update the mini board with the new move
             const updatedBoard = miniBoard.map((macroBoard, i) =>
-                i === macroIndex ? macroBoard.map((cell, j) => (j === microIndex ? (isXNext ? 'X' : 'O') : cell)) : macroBoard
+                i === currentIndex ? macroBoard.map((cell, j) => (j === nextIndex ? (isXNext ? 'X' : 'O') : cell)) : macroBoard
             )
 
             // Memoize results for better readability and optimization
-            const miniBoardWinner = checkWinner(updatedBoard[macroIndex])
-            const isMiniBoardFull = updatedBoard[macroIndex].every((cell) => cell)
+            const miniBoardWinner = checkWinner(updatedBoard[currentIndex])
+            const isMiniBoardFull = updatedBoard[currentIndex].every((cell) => cell)
             const isLargeBoardFull = updatedBoard.every((macroBoard) => macroBoard.every((cell) => cell))
 
             // Helper to update game state with overrides
@@ -120,7 +120,7 @@ const Ultimate = () => {
                     ...prevState,
                     miniBoard: updatedBoard,
                     isXNext: !isXNext,
-                    activeMacroIndex: microIndex,
+                    activeCurrentIndex: nextIndex,
                     ...overrides,
                 }))
 
@@ -128,12 +128,12 @@ const Ultimate = () => {
 
             // Handle mini-board winner
             if (miniBoardWinner) {
-                updatedLargeBoard = largeBoard.map((cell, i) => (i === macroIndex ? miniBoardWinner : cell))
+                updatedLargeBoard = largeBoard.map((cell, i) => (i === currentIndex ? miniBoardWinner : cell))
                 updateGameState({ largeBoard: updatedLargeBoard })
 
-                // If the large board is already won, and next index is won, reset the activeMacroIndex
-                if (updatedLargeBoard[microIndex]) {
-                    updateGameState({ activeMacroIndex: null })
+                // If the large board is already won, and next index is won, reset the activeCurrentIndex
+                if (updatedLargeBoard[nextIndex]) {
+                    updateGameState({ activeCurrentIndex: null })
                 }
 
                 const largeBoardWinner = checkWinner(updatedLargeBoard, true)
@@ -164,17 +164,17 @@ const Ultimate = () => {
                 return
             } else if (isMiniBoardFull) {
                 // Handle mini-board draw
-                updatedLargeBoard = largeBoard.map((cell, i) => (i === macroIndex ? 'D' : cell))
+                updatedLargeBoard = largeBoard.map((cell, i) => (i === currentIndex ? 'D' : cell))
                 updateGameState({ largeBoard: updatedLargeBoard })
-            } else if (largeBoard[microIndex]) {
-                // If the large board is already won, and next index is won, reset the activeMacroIndex
-                updateGameState({ activeMacroIndex: null })
+            } else if (largeBoard[nextIndex]) {
+                // If the large board is already won, and next index is won, reset the activeCurrentIndex
+                updateGameState({ activeCurrentIndex: null })
             } else {
                 // Normal case: update game state with just the move
                 updateGameState()
             }
         },
-        [miniBoard, largeBoard, isXNext, isGameOver, checkWinner, activeMacroIndex]
+        [miniBoard, largeBoard, isXNext, isGameOver, checkWinner, activeCurrentIndex]
     )
 
     // Initialize Game
@@ -186,7 +186,7 @@ const Ultimate = () => {
             isGameOver: false,
             isDraw: false,
             winner: null,
-            activeMacroIndex: null,
+            activeCurrentIndex: null,
             winingLine: [],
         })
 
@@ -235,7 +235,7 @@ const Ultimate = () => {
                         {miniBoard.map((macroBoard, macroIndex) => (
                             <div
                                 key={macroIndex}
-                                className={`${macroIndex === activeMacroIndex && 'bg-highlight-primary *:bg-highlight-primary'} relative grid grid-cols-3 gap-2 rounded-md p-2 shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs md:gap-3 md:p-3`}>
+                                className={`${macroIndex === activeCurrentIndex && 'bg-highlight-primary *:bg-highlight-primary'} relative grid grid-cols-3 gap-2 rounded-md p-2 shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs md:gap-3 md:p-3`}>
                                 {macroBoard.map((cell, microIndex) => renderSquare(cell, macroIndex, microIndex))}
 
                                 {largeBoard[macroIndex] && (
