@@ -241,11 +241,11 @@
     }
 
     .neu-form-range::-webkit-slider-thumb {
-        @apply bg-accent h-6 w-6 cursor-pointer appearance-none rounded-full shadow-neu-light-xs transition duration-300 ease-in-out dark:shadow-neu-dark-xs;
+        @apply bg-accent-primary h-6 w-6 cursor-pointer appearance-none rounded-full shadow-neu-light-xs transition duration-300 ease-in-out dark:shadow-neu-dark-xs;
     }
 
     .neu-form-range::-moz-range-thumb {
-        @apply bg-accent relative h-6 w-6 cursor-pointer appearance-none rounded-full shadow-neu-light-xs transition duration-300 ease-in-out;
+        @apply bg-accent-primary relative h-6 w-6 cursor-pointer appearance-none rounded-full shadow-neu-light-xs transition duration-300 ease-in-out;
     }
 
     .neu-form-double-range-group {
@@ -491,16 +491,17 @@
             /* Set the height of the scrollbar for vertical scrollbar */
         }
 
+        /* Set the color of the scrollbar thumb */
         &::-webkit-scrollbar-thumb {
-            @apply bg-dark-secondary dark:bg-light-secondary;
-            /* Set the color of the scrollbar thumb */
-            border-radius: 10px;
-            /* Set the border radius of the scrollbar thumb */
+            @apply rounded-lg bg-dark-secondary dark:bg-light-secondary;
         }
 
+        /* Set the color of the scrollbar thumb on hover */
         &::-webkit-scrollbar-thumb:hover {
             @apply bg-dark-primary dark:bg-light-primary;
-            /* Set the color of the scrollbar thumb on hover */
+        }
+        &::-webkit-scrollbar-track {
+            @apply bg-gray-50 dark:bg-gray-500;
         }
     }
 }

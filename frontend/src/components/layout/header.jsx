@@ -7,6 +7,7 @@ import { Icon } from '@iconify/react'
 import AppName from '../../assets/svg/app-name'
 import Logo from '../../assets/svg/logo'
 import useDarkMode from '../../hooks/useDark'
+import NeuHamburgerBtn from '../common/buttons/NeuHamburgerBtn'
 import Sidenav from './sidenav'
 
 const Header = () => {
@@ -48,35 +49,16 @@ const Header = () => {
         <>
             <header className="bg-primary flex items-center justify-between p-2 shadow-neu-light-xs dark:shadow-neu-dark-xs">
                 {/* Hamburger button */}
-                <button
+                <NeuHamburgerBtn
                     id="sidenav-toggle"
                     aria-controls="sidenav"
                     aria-expanded={isSidenavOpen}
                     aria-label={isSidenavOpen ? 'Close menu' : 'Open menu'}
                     title={isSidenavOpen ? 'Close Sidenav' : 'Open Sidenav'}
                     type="button"
-                    className="flex-center group size-10 cursor-pointer flex-col rounded-lg border border-light-secondary shadow-neu-light-xs transition-shadow duration-300 active:shadow-neu-inset-light-md dark:border-dark-secondary dark:shadow-neu-dark-md dark:active:shadow-neu-inset-dark-sm"
-                    onClick={toggleSidenav}>
-                    {/* Hamburger lines */}
-                    <span
-                        className={`h-[3px] w-1/2 rounded-md transition-all duration-300 ease-in-out ${
-                            isSidenavOpen
-                                ? 'group-active:bg-highlight-primary bg-accent-primary -m-[1.5px] origin-center first:-rotate-45 last:rotate-45 group-active:my-0.5 group-active:rotate-0'
-                                : 'bg-highlight-primary group-active:bg-accent-primary my-0.5 origin-center group-active:-m-[1.5px] group-active:first:-rotate-45 group-active:last:rotate-45'
-                        }`}></span>
-                    <span
-                        className={`h-[3px] w-1/2 rounded-md transition-all duration-300 ease-in-out ${
-                            isSidenavOpen
-                                ? 'group-active:bg-highlight-primary bg-accent-primary -m-[1.5px] scale-0 group-active:my-0.5 group-active:rotate-0 group-active:scale-100'
-                                : 'bg-highlight-primary group-active:bg-accent-primary my-0.5 group-active:-m-[1.5px] group-active:scale-0'
-                        }`}></span>
-                    <span
-                        className={`h-[3px] w-1/2 rounded-md transition-all duration-300 ease-in-out ${
-                            isSidenavOpen
-                                ? 'group-active:bg-highlight-primary bg-accent-primary -m-[1.5px] origin-center first:-rotate-45 last:rotate-45 group-active:my-0.5 group-active:rotate-0'
-                                : 'bg-highlight-primary group-active:bg-accent-primary my-0.5 origin-center group-active:-m-[1.5px] group-active:first:-rotate-45 group-active:last:rotate-45'
-                        }`}></span>
-                </button>
+                    onClick={toggleSidenav}
+                    isActive={isSidenavOpen}
+                />
 
                 {/* Logo */}
                 <Link to="/" aria-current={window.location.pathname === '/' ? 'page' : undefined} className="flex-center text-primary ml-5 gap-2">
