@@ -2,8 +2,8 @@ import React from 'react'
 
 function AnimeList({ currentList }) {
     return (
-        <div className="bg-primary mx-auto grid place-items-center gap-y-4 rounded-lg p-4 shadow-neu-inset-light-sm dark:shadow-neu-inset-dark-sm">
-            <div className="overflow-hidden rounded-xl shadow-neu-light-sm dark:shadow-neu-dark-sm">
+        <div className="bg-primary mx-auto grid w-full place-items-center gap-y-4 rounded-lg border border-light-secondary p-4 shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-sm">
+            <div className="w-full overflow-hidden rounded-xl shadow-neu-light-sm dark:shadow-neu-dark-sm">
                 <div className="bg-secondary rounded-t-xl border border-light-secondary dark:border-dark-secondary">
                     <h2 className="text-primary p-4 font-aladin text-lg tracking-widest">Planing</h2>
                 </div>

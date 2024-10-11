@@ -70,7 +70,7 @@ const AnimeFilter = () => {
     return (
         <div className="bg-primary text-primary h-full w-full md:max-w-64">
             {/* Search */}
-            <div className="flex items-center justify-between gap-5 md:mb-4">
+            <div className="flex items-center justify-between gap-3 md:mb-4">
                 <div className="neu-input-group neu-input-group-append">
                     <label htmlFor="anime-search" className="sr-only">
                         Search Anime
