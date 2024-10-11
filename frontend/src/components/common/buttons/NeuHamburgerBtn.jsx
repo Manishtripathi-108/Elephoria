@@ -4,7 +4,7 @@ function NeuHamburgerBtn({ onClick, isActive, className, ...props }) {
     return (
         <button
             className={
-                'flex-center group size-10 cursor-pointer flex-col rounded-lg border border-light-secondary shadow-neu-light-xs transition-shadow duration-300 active:shadow-neu-inset-light-md dark:border-dark-secondary dark:shadow-neu-dark-md dark:active:shadow-neu-inset-dark-sm' +
+                'flex-center group size-10 shrink-0 flex-grow-0 cursor-pointer flex-col rounded-lg border border-light-secondary shadow-neu-light-xs transition-shadow duration-300 active:shadow-neu-inset-light-md dark:border-dark-secondary dark:shadow-neu-dark-md dark:active:shadow-neu-inset-dark-sm' +
                 (className ? ` ${className}` : '')
             }
             onClick={onClick}

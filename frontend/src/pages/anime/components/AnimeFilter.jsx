@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import { Icon } from '@iconify/react'
 
@@ -17,6 +17,29 @@ const AnimeFilter = () => {
         year: 2024,
         sort: 'Score',
     })
+    const [isFiltersOpen, setIsFiltersOpen] = useState(window.innerWidth >= 768)
+
+    // Handle window resize to auto-close or open filters based on screen size
+    const handleResize = () => {
+        if (window.innerWidth >= 768) {
+            setIsFiltersOpen(true)
+        }
+    }
+
+    // Toggle the filters panel
+    const toggleFilters = () => {
+        setIsFiltersOpen((prev) => !prev)
+    }
+
+    // Event listener for window resize
+    useEffect(() => {
+        handleResize()
+        window.addEventListener('resize', handleResize)
+
+        return () => {
+            window.removeEventListener('resize', handleResize)
+        }
+    }, [])
 
     // Handlers for input changes (memoized to avoid unnecessary re-renders)
     const handleFilterChange = useCallback((filterType, value) => {
@@ -47,8 +70,8 @@ const AnimeFilter = () => {
     return (
         <div className="bg-primary text-primary h-full w-full md:max-w-64">
             {/* Search */}
-            <div className="flex items-center justify-between gap-5">
-                <div className="neu-input-group neu-input-group-append md:mb-4">
+            <div className="flex items-center justify-between gap-5 md:mb-4">
+                <div className="neu-input-group neu-input-group-append">
                     <label htmlFor="anime-search" className="sr-only">
                         Search Anime
                     </label>
@@ -56,10 +79,16 @@ const AnimeFilter = () => {
                     <Icon icon="mingcute:search-fill" className="neu-input-icon" aria-hidden="true" />
                 </div>
 
-                <NeuHamburgerBtn onClick={() => {}} isActive={false} aria-label="Toggle Filters" title="Toggle Filters" className="md:hidden" />
+                <NeuHamburgerBtn
+                    onClick={toggleFilters}
+                    isActive={isFiltersOpen}
+                    aria-label="Toggle Filters"
+                    title="Toggle Filters"
+                    className="md:hidden"
+                />
             </div>
 
-            <div className="hidden md:block">
+            <div className={`${!isFiltersOpen ? 'animate-wipe-out-down' : 'animate-wipe-in-down'} overflow-clip px-2`}>
                 {/* Lists */}
                 <div className="mt-4">
                     <h3 className="neu-form-label mb-2 text-base">Lists:</h3>
