@@ -14,7 +14,8 @@ const validationSchema = Yup.object().shape({
 })
 
 function AnimeAuth() {
-    const [toast, setToast] = useState({ show: false, message: '', type: 'success' })
+    const [accessToken, setAccessToken] = useState(null) // State to store access token
+    const [toast, setToast] = useState({ show: false, message: '', type: '' }) // State for toast messages
 
     const handleSubmit = async (values, { setSubmitting }) => {
         try {
@@ -29,16 +30,15 @@ function AnimeAuth() {
             const data = await response.json()
             if (response.ok) {
                 console.log('Access Token:', data.accessToken)
-                // Show success toast
+                setAccessToken(data.accessToken) // Save the access token in state
+                localStorage.setItem('accessToken', data.accessToken) // Store in local storage
                 setToast({ show: true, message: 'Successfully signed in!', type: 'success' })
             } else {
                 console.error('Error:', data.message)
-                // Show error toast
-                setToast({ show: true, message: data.message || 'An error occurred.', type: 'error' })
+                setToast({ show: true, message: data.message || 'An error occurred. Try Again!', type: 'error' })
             }
         } catch (error) {
             console.error('Error submitting pin:', error)
-            // Show error toast
             setToast({ show: true, message: 'Failed to sign in. Please try again.', type: 'error' })
         } finally {
             setSubmitting(false) // Stop the loading state
