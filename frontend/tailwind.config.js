@@ -6,7 +6,7 @@ export default {
             animation: {
                 'anti-rotate': 'anti-rotate 5s linear infinite',
                 'close-n-zero': 'close-n-zero 0.2s forwards',
-                pulse: 'pulse 1s infinite',
+                pulsate: 'pulsate 1s infinite',
                 'puff-in': 'puff-in 0.3s forwards',
                 'scale-up': 'scale-up 0.3s cubic-bezier(0.6, -0.28, 0.74, 0.05) forwards',
                 'slide-left-return': 'slide-left-return 0.3s forwards',
@@ -25,7 +25,7 @@ export default {
                     from: { 'stroke-dashoffset': '50' },
                     to: { 'stroke-dashoffset': '0' },
                 },
-                pulse: {
+                pulsate: {
                     '0%, 100%': { opacity: '1', transform: 'scale(1, 1)', transformOrigin: '50% 50%' },
                     '50%': { opacity: '1', transform: 'scale(0.9, 0.9)', transformOrigin: '50% 50%' },
                 },

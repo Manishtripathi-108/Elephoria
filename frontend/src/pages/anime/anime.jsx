@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { Icon } from '@iconify/react'
 
@@ -8,15 +8,26 @@ import AnimeHeader from './components/AnimeHeader'
 import AnimeList from './components/AnimeList'
 import AnimeNav from './components/AnimeNav'
 import { TabEnum } from './components/constants'
+import fetchAnimeList from './queries/fetchAnimeList'
 
-function Anime() {
-    const [currentTab, setCurrentTab] = useState(TabEnum.ANIME)
-    const [isListView, setIsListView] = useState(true) // true for list view, false for card view
+function AnimePage() {
+    const [activeTab, setActiveTab] = useState(TabEnum.ANIME)
+    const [isListView, setIsListView] = useState(true)
+    const [animeDataList, setAnimeDataList] = useState([])
+
+    useEffect(() => {
+        const loadAnimeData = async () => {
+            const fetchedData = await fetchAnimeList(1)
+            setAnimeDataList(fetchedData?.data?.Page?.media || [])
+        }
+
+        loadAnimeData()
+    }, [])
 
     return (
         <div>
             <AnimeHeader />
-            <AnimeNav currentTab={setCurrentTab} />
+            <AnimeNav currentTab={setActiveTab} />
 
             {/* Toggle Buttons for List and Card View */}
             <div className="flex items-center justify-end px-4">
@@ -40,15 +51,15 @@ function Anime() {
             </div>
 
             {/* Main Content Area */}
-            <div className="container mx-auto flex flex-col items-start justify-center gap-5 p-5 md:flex-row">
+            <div className="container mx-auto flex flex-col items-start justify-center gap-2 p-2 md:flex-row md:gap-5 md:p-5">
                 {/* Anime Filter */}
-                <AnimeFilter currentList={currentTab} />
+                <AnimeFilter currentList={activeTab} />
 
                 {/* Conditional rendering based on view type */}
-                {isListView ? <AnimeList currentList={currentTab} /> : <AnimeCardList />}
+                {isListView ? <AnimeList dataList={animeDataList} /> : <AnimeCardList dataList={animeDataList} />}
             </div>
         </div>
     )
 }
 
-export default Anime
+export default AnimePage

@@ -155,7 +155,7 @@ export function TicTacToe() {
     const renderSquare = useCallback(
         (value, index) => {
             const winnerInfo = checkWinner(board)
-            const winningSquareClass = winnerInfo?.line.includes(index) ? 'text-accent-primary *:animate-pulse' : ''
+            const winningSquareClass = winnerInfo?.line.includes(index) ? 'text-accent-primary *:animate-pulsate' : ''
 
             return (
                 <button

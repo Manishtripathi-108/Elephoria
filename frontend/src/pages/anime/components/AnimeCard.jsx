@@ -2,33 +2,42 @@ import React from 'react'
 
 import { Icon } from '@iconify/react'
 
+const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+
+const convertMonthNumberToName = (monthNumber) => {
+    if (monthNumber >= 1 && monthNumber <= 12) {
+        return monthNames[monthNumber - 1]
+    }
+    return '...'
+}
+
 function AnimeCards({ anime }) {
     return (
         <div className="group relative rounded-xl border border-light-secondary shadow-neu-light-sm dark:border-dark-secondary dark:shadow-neu-dark-sm">
             <img
-                className="text-secondary h-56 w-full rounded-t-xl border-b border-light-secondary object-cover dark:border-dark-secondary md:h-64"
-                src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx131680-gjs8mMQPmkOQ.png"
-                alt="Naruto"
+                className="text-secondary h-40 w-full rounded-t-xl border-b border-light-secondary object-cover dark:border-dark-secondary md:h-64"
+                src={anime.coverImage.large}
+                alt={anime.title.english}
             />
 
             <div className="p-2">
-                <p className="text-primary line-clamp-1 font-aladin text-sm font-normal capitalize leading-none tracking-widest">
-                    The Misfit of Demon King Academy Ⅱ: History's Strongest Demon King Reincarnates and Goes to School with His Descendants
-                </p>
-                <span className="text-secondary text-xs">Movie</span>
+                <h2 className="text-primary line-clamp-1 font-aladin text-sm font-normal capitalize leading-none tracking-widest">
+                    {anime.title.english}
+                </h2>
+                <span className="text-secondary text-xs">{anime.format}</span>
                 <span className="text-secondary ml-2 text-xs">&#9679;</span>
-                <span className="text-secondary ml-2 text-xs">1/24</span>
+                <span className="text-secondary ml-2 text-xs">{anime.episodes}</span>
             </div>
 
             {/* Description Popup: */}
             <div
-                className="absolute inset-x-1/2 top-1/3 hidden w-72 rounded-xl border border-light-secondary bg-light-primary/60 p-3 opacity-0 backdrop-blur-md backdrop-saturate-150 transition-opacity duration-300 ease-in-out group-hover:block group-hover:opacity-100 dark:border-dark-secondary dark:bg-dark-primary/50"
+                className="absolute inset-x-1/2 top-1/3 z-10 hidden w-72 rounded-xl border border-light-secondary bg-light-primary/60 p-3 opacity-0 backdrop-blur-md backdrop-saturate-150 transition-opacity duration-300 ease-in-out group-hover:block group-hover:opacity-100 dark:border-dark-secondary dark:bg-dark-primary/50"
                 aria-hidden="true"
                 aria-label="Anime Description Popup">
                 {/* Title Section */}
                 <div className="mb-2">
                     <h3 className="text-primary font-aladin text-xl font-bold tracking-widest" aria-live="polite">
-                        Zom:100
+                        {anime.title.english}
                     </h3>
                 </div>
 
@@ -47,16 +56,17 @@ function AnimeCards({ anime }) {
                 {/* Additional Info */}
                 <div className="text-secondary mb-4 space-y-1 font-indie-flower text-xs">
                     <p>
-                        <strong className="text-primary">Japanese:</strong> リック・アンド・モーティ ザ・アニメ
+                        <strong className="text-primary">Japanese: </strong> {anime.title.native}
                     </p>
                     <p>
-                        <strong className="text-primary">Aired:</strong> Aug 16, 2024
+                        <strong className="text-primary">Aired: </strong>
+                        {anime.startDate.day + ' ' + convertMonthNumberToName(anime.startDate.month) + ' ' + anime.startDate.year}
                     </p>
                     <p>
-                        <strong className="text-primary">Status:</strong> Currently Airing
+                        <strong className="text-primary">Status: </strong> {anime.status}
                     </p>
                     <p>
-                        <strong className="text-primary">Genres:</strong> Adventure, Comedy, Sci-Fi
+                        <strong className="text-primary">Genres: </strong> {anime.genres.join(', ')}
                     </p>
                 </div>
             </div>
