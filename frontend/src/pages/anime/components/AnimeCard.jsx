@@ -12,7 +12,7 @@ function AnimeCards({ anime }) {
             />
 
             <div className="p-2">
-                <p className="text-primary line-clamp-1 font-aladin text-sm font-normal capitalize tracking-widest">
+                <p className="text-primary line-clamp-1 font-aladin text-sm font-normal capitalize leading-none tracking-widest">
                     The Misfit of Demon King Academy Ⅱ: History's Strongest Demon King Reincarnates and Goes to School with His Descendants
                 </p>
                 <span className="text-secondary text-xs">Movie</span>
@@ -62,9 +62,9 @@ function AnimeCards({ anime }) {
             </div>
 
             {/* Dots Menu */}
-            <div className="bg-secondary text-secondary absolute right-1 top-1 hidden items-center justify-center rounded-lg p-0.5 group-hover:flex">
+            <button type="button" className="bg-secondary text-secondary absolute right-1 top-1 flex items-center justify-center rounded-lg p-0.5">
                 <Icon icon="pepicons-pop:dots-y" className="size-6" />
-            </div>
+            </button>
         </div>
     )
 }

@@ -40,7 +40,7 @@
 
     /* ------------------------- neu-input-group & Icon ------------------------- */
     .neu-input-group {
-        @apply flex w-full items-center rounded-lg border border-light-secondary shadow-neu-light-xs focus-within:shadow-none dark:border-dark-secondary dark:shadow-neu-dark-xs dark:focus-within:shadow-none;
+        @apply flex w-full items-center rounded-lg border border-light-secondary shadow-neu-light-xs dark:border-dark-secondary dark:shadow-neu-dark-xs;
     }
 
     .neu-input-icon {
@@ -64,7 +64,7 @@
     }
 
     .neu-input-group .neu-form-input {
-        @apply border-none;
+        @apply my-1 ml-1 rounded-s-md border-none py-1;
     }
 
     .neu-input-group:hover .neu-form-input,
@@ -72,10 +72,6 @@
     .neu-input-group:hover .neu-input-icon,
     .neu-input-group:focus-within .neu-input-icon {
         @apply placeholder:text-primary text-primary;
-    }
-
-    .neu-input-group:focus-within .neu-input-icon {
-        @apply border border-light-secondary shadow-neu-light-xs dark:border-dark-secondary dark:shadow-neu-dark-xs;
     }
 
     .neu-input-group:focus-within .neu-input-icon.error {
