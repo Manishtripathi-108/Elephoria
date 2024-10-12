@@ -56,10 +56,12 @@ app.get("/api/json", getJson);
 
 /* ------------------------------- Anilist API ------------------------------ */
 // Import Anilist API handler
-const { getAnimeList } = require("./anime/anilist");
+const { getAnimeList, exchangePinForToken } = require("./anime/anilist");
 
 // Route to fetch anime list from Anilist API
 app.post("/api/anime", getAnimeList);
+
+app.post("/api/exchange-pin", exchangePinForToken);
 
 // Set PORT from environment or default to 3000
 const PORT = process.env.PORT || 3000;

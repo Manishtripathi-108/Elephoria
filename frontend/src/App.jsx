@@ -6,6 +6,7 @@ import PrivateRoute from './components/PrivateRoute'
 import Header from './components/layout/header'
 import NotFound from './pages/404-page'
 import Shadows from './pages/ShadowsGrid'
+import AnimeAuth from './pages/anime/AnimeAuth'
 import Anime from './pages/anime/anime'
 import MusicEditor from './pages/audio/AudioEditor'
 // import AuthPage from './pages/auth/AuthState'
@@ -46,7 +47,10 @@ function App() {
                 <Route path="/shadows" element={<Shadows />} />
                 {/* <Route path="/auth" element={<AuthPage />} /> */}
                 <Route path="/audio" element={<MusicEditor />} />
-                <Route path="/anime" element={<Anime />} />
+                <Route path="/anime">
+                    <Route index element={<Anime />} />
+                    <Route path="auth" element={<AnimeAuth />} />
+                </Route>
 
                 {/* Tic-Tac-Toe Routes */}
                 <Route path="/games/tic-tac-toe">
