@@ -19,7 +19,7 @@ function AnimeAuth() {
 
     const handleSubmit = async (values, { setSubmitting }) => {
         try {
-            const response = await fetch('/api/exchange-pin', {
+            const response = await fetch('/api/anime/exchange-pin', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

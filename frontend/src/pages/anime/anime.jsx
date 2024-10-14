@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import { Icon } from '@iconify/react'
+import axios from 'axios'
 
 import AnimeCardList from './components/AnimeCardList'
 import AnimeFilter from './components/AnimeFilter'
@@ -8,17 +9,25 @@ import AnimeHeader from './components/AnimeHeader'
 import AnimeList from './components/AnimeList'
 import AnimeNav from './components/AnimeNav'
 import { TabEnum } from './components/constants'
-import fetchAnimeList from './queries/fetchAnimeList'
 
 function AnimePage() {
     const [activeTab, setActiveTab] = useState(TabEnum.ANIME)
     const [isListView, setIsListView] = useState(true)
     const [animeDataList, setAnimeDataList] = useState([])
 
+    const accessToken = localStorage.getItem('accessToken')
+
     useEffect(() => {
         const loadAnimeData = async () => {
-            const fetchedData = await fetchAnimeList(1)
-            setAnimeDataList(fetchedData?.data?.Page?.media || [])
+            try {
+                const response = await axios.post('/api/anime/user-all-media', {
+                    accessToken,
+                })
+
+                setAnimeDataList(response.data.animeList.lists)
+            } catch (error) {
+                console.error('Error fetching anime data:', error)
+            }
         }
 
         loadAnimeData()
