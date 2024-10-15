@@ -68,7 +68,7 @@ const AnimeFilter = () => {
     }
 
     return (
-        <div className="bg-primary text-primary h-full w-full md:max-w-64">
+        <div className="bg-primary text-primary h-full w-full p-2 md:max-w-64">
             {/* Search */}
             <div className="flex items-center justify-between gap-3 md:mb-4">
                 <div className="neu-input-group neu-input-group-append">

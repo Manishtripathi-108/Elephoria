@@ -33,7 +33,6 @@ const getAnimeList = async (req, res) => {
 			},
 			axiosConfig
 		);
-
 		res.json(response.data);
 	} catch (error) {
 		handleError(res, "Error fetching data from AniList", error);
@@ -64,7 +63,6 @@ const exchangePinForToken = async (req, res) => {
 // Function to fetch user data
 const fetchUserData = async (req, res) => {
 	const { accessToken } = req.body;
-
 	const query = `
         query {
             Viewer {
@@ -90,7 +88,6 @@ const fetchUserData = async (req, res) => {
 				},
 			}
 		);
-
 		res.json(response.data.data.Viewer);
 	} catch (error) {
 		handleError(res, "Error fetching user data", error);
@@ -115,7 +112,7 @@ const fetchUserId = async (accessToken) => {
 				...axiosConfig,
 				headers: {
 					...axiosConfig.headers,
-					Authorization: `Bearer ${accessToken}`, // Fixed template literal
+					Authorization: `Bearer ${accessToken}`,
 				},
 			}
 		);
@@ -127,10 +124,84 @@ const fetchUserId = async (accessToken) => {
 	}
 };
 
-// Function to fetch user's anime, manga, and favorite lists by userId
-const fetchUserMediaAndFavorites = async (req, res) => {
+// Function to fetch user's anime/manga list by userId
+const fetchUserMedia = async (req, res) => {
 	const { accessToken } = req.body;
+	const userId = await fetchUserId(accessToken);
 
+	if (!userId) {
+		return res.status(500).json({ message: "Error fetching user ID" });
+	}
+
+	const query = `
+        query ($userId: Int, $type: MediaType) {
+            MediaListCollection(userId: $userId, type: $type) {
+                lists {
+                    name
+                    entries {
+                        progress
+                        status
+                        media {
+                            id
+                            type
+                            format
+                            chapters
+                            status
+                            description
+                            duration
+                            episodes
+                            genres
+                            isFavourite
+                            title {
+                                romaji
+                                english
+                                native
+                            }
+                            coverImage {
+                                large
+                            }
+                            startDate {
+                                day
+                                month
+                                year
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    `;
+
+	try {
+		const response = await axios.post(
+			"/",
+			{
+				query,
+				variables: {
+					userId: userId,
+					type: String(req.body.type || "ANIME").toUpperCase(),
+				},
+			},
+			{
+				...axiosConfig,
+				headers: {
+					...axiosConfig.headers,
+					Authorization: `Bearer ${accessToken}`,
+				},
+			}
+		);
+
+		res.json({
+			mediaList: response.data.data.MediaListCollection,
+		});
+	} catch (error) {
+		handleError(res, "Error fetching user media list", error);
+	}
+};
+
+// Function to fetch user's favorites by userId
+const fetchUserFavorites = async (req, res) => {
+	const { accessToken } = req.body;
 	const userId = await fetchUserId(accessToken);
 
 	if (!userId) {
@@ -139,14 +210,10 @@ const fetchUserMediaAndFavorites = async (req, res) => {
 
 	const query = `
         query ($userId: Int) {
-            MediaListCollection(userId: $userId, type: ANIME) {
-                lists {
-                    name
-                    entries {
-                        score
-                        progress
-                        status
-                        media {
+            User(id: $userId) {
+                favourites {
+                    anime {
+                        nodes {
                             id
                             type
                             format
@@ -154,6 +221,30 @@ const fetchUserMediaAndFavorites = async (req, res) => {
                             description
                             duration
                             episodes
+                            genres
+                            title {
+                                romaji
+                                english
+                                native
+                            }
+                            coverImage {
+                                large
+                            }
+                            startDate {
+                                day
+                                month
+                                year
+                            }
+                        }
+                    }
+                    manga {
+                        nodes {
+                            id
+                            type
+                            format
+                            status
+                            chapters
+                            description
                             genres
                             title {
                                 romaji
@@ -188,14 +279,22 @@ const fetchUserMediaAndFavorites = async (req, res) => {
 			}
 		);
 
+		const favorites = response.data?.data?.User?.favourites;
+
+		if (!favorites) {
+			return res
+				.status(404)
+				.json({ message: "Favorites data not found" });
+		}
+
 		res.json({
-			animeList: response.data.data.MediaListCollection,
+			favorites: {
+				anime: favorites.anime?.nodes || [],
+				manga: favorites.manga?.nodes || [],
+			},
 		});
 	} catch (error) {
-		console.error("Error fetching user anime list:", error.message);
-		res.status(500).json({
-			message: "Error fetching user anime list",
-		});
+		handleError(res, "Error fetching user favorites", error);
 	}
 };
 
@@ -203,5 +302,6 @@ module.exports = {
 	getAnimeList,
 	exchangePinForToken,
 	fetchUserData,
-	fetchUserMediaAndFavorites,
+	fetchUserMedia,
+	fetchUserFavorites,
 };

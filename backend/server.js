@@ -60,7 +60,8 @@ const {
 	getAnimeList,
 	exchangePinForToken,
 	fetchUserData,
-	fetchUserMediaAndFavorites,
+	fetchUserMedia,
+	fetchUserFavorites,
 } = require("./anime/anilist");
 
 // Route to fetch anime list from Anilist API
@@ -70,7 +71,9 @@ app.post("/api/anime/exchange-pin", exchangePinForToken);
 
 app.post("/api/anime/user-data", fetchUserData);
 
-app.post("/api/anime/user-all-media", fetchUserMediaAndFavorites);
+app.post("/api/anime/user-media", fetchUserMedia);
+
+app.post("/api/anime/user-favorites", fetchUserFavorites);
 
 // Set PORT from environment or default to 3000
 const PORT = process.env.PORT || 3000;

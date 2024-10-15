@@ -1,37 +1,99 @@
 import React, { useEffect, useState } from 'react'
 
+import { Link } from 'react-router-dom'
+
 import { Icon } from '@iconify/react'
 import axios from 'axios'
 
-import AnimeCardList from './components/AnimeCardList'
 import AnimeFilter from './components/AnimeFilter'
 import AnimeHeader from './components/AnimeHeader'
-import AnimeList from './components/AnimeList'
 import AnimeNav from './components/AnimeNav'
-import { TabEnum } from './components/constants'
+import MediaCardList from './components/MediaCardList'
+import MediaList from './components/MediaList'
 
 function AnimePage() {
-    const [activeTab, setActiveTab] = useState(TabEnum.ANIME)
+    const [activeTab, setActiveTab] = useState('ANIME')
     const [isListView, setIsListView] = useState(true)
-    const [animeDataList, setAnimeDataList] = useState([])
-
-    const accessToken = localStorage.getItem('accessToken')
+    const [animeList, setAnimeList] = useState([])
+    const [mangaList, setMangaList] = useState([])
+    const [favoritesList, setFavoritesList] = useState([])
+    const [error, setError] = useState(null)
 
     useEffect(() => {
+        const accessToken = localStorage.getItem('accessToken')
+
+        if (!accessToken) {
+            setError('Access token not found. Please log in again.')
+            return
+        }
+
+        // Fetch Anime Data
         const loadAnimeData = async () => {
+            setError(null)
             try {
-                const response = await axios.post('/api/anime/user-all-media', {
+                const response = await axios.post('/api/anime/user-media', {
                     accessToken,
                 })
-
-                setAnimeDataList(response.data.animeList.lists)
+                setAnimeList(response.data.mediaList.lists || []) // Handle empty lists
             } catch (error) {
+                setError('Error fetching anime data.')
                 console.error('Error fetching anime data:', error)
+            } finally {
             }
         }
 
-        loadAnimeData()
-    }, [])
+        // Fetch Manga Data
+        const loadMangaData = async () => {
+            setError(null)
+            try {
+                const response = await axios.post('/api/anime/user-media', {
+                    accessToken,
+                    type: 'Manga',
+                })
+                setMangaList(response.data.mediaList.lists || []) // Handle empty lists
+            } catch (error) {
+                setError('Error fetching manga data.')
+                console.error('Error fetching manga data:', error)
+            } finally {
+            }
+        }
+
+        // Fetch Favorites Data
+        const loadFavoritesData = async () => {
+            setError(null)
+            try {
+                const response = await axios.post('/api/anime/user-favorites', {
+                    accessToken,
+                })
+                setFavoritesList(response.data.favorites || [])
+            } catch (error) {
+                setError('Error fetching favorites data.')
+                console.error('Error fetching favorites data:', error)
+            } finally {
+            }
+        }
+
+        if (activeTab === 'ANIME') {
+            loadAnimeData()
+        } else if (activeTab === 'MANGA') {
+            loadMangaData()
+        } else if (activeTab === 'FAVORITES') {
+            loadFavoritesData()
+        }
+    }, [activeTab])
+
+    if (error) {
+        return (
+            <div className="container mx-auto text-center">
+                <h1 className="text-2xl text-red-500 dark:text-red-400">{error}</h1>
+                <div className="flex-center mt-5">
+                    <Link to="auth" className="neu-btn">
+                        Go back to login
+                    </Link>
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div>
@@ -39,7 +101,7 @@ function AnimePage() {
             <AnimeNav currentTab={setActiveTab} />
 
             {/* Toggle Buttons for List and Card View */}
-            <div className="flex items-center justify-end px-4">
+            <div className="container mx-auto flex items-center justify-end px-4">
                 {/* Display List Button */}
                 <button
                     className={`text-primary neu-btn ${isListView ? 'active' : ''} rounded-lg rounded-e-none p-2 shadow-none dark:shadow-none`}
@@ -60,12 +122,17 @@ function AnimePage() {
             </div>
 
             {/* Main Content Area */}
-            <div className="container mx-auto flex flex-col items-start justify-center gap-2 p-2 md:flex-row md:gap-5 md:p-5">
+            <div className="container mx-auto flex flex-col items-start justify-center gap-2 md:flex-row md:gap-5 md:p-5">
                 {/* Anime Filter */}
                 <AnimeFilter currentList={activeTab} />
 
-                {/* Conditional rendering based on view type */}
-                {isListView ? <AnimeList dataList={animeDataList} /> : <AnimeCardList dataList={animeDataList} />}
+                {/* Conditional rendering based on the active tab and view type */}
+                {activeTab === 'ANIME' && (isListView ? <MediaList data={animeList} /> : <MediaCardList data={animeList} />)}
+
+                {activeTab === 'MANGA' && (isListView ? <MediaList data={mangaList} /> : <MediaCardList data={mangaList} />)}
+
+                {activeTab === 'FAVORITES' &&
+                    (isListView ? <MediaList data={favoritesList} isFavorite={true} /> : <MediaCardList data={favoritesList} isFavorite={true} />)}
             </div>
         </div>
     )
