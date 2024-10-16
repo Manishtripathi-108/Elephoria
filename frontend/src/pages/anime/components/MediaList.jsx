@@ -1,10 +1,11 @@
 import React from 'react'
 
 import MediaRow from './MediaRow'
+import NoDataCard from './NoDataCard'
 import SkeletonList from './loading/SkeletonList'
 
-function MediaList({ data = [], isFavorite = false }) {
-    // Render Table Header
+function MediaList({ data = [], isFavorite = false, loading = false }) {
+    // Render Table Header for media list
     const renderTableHeader = () => (
         <thead className="bg-primary text-secondary border-x border-b border-light-secondary dark:border-dark-secondary">
             <tr className="hidden sm:table-row">
@@ -16,8 +17,8 @@ function MediaList({ data = [], isFavorite = false }) {
         </thead>
     )
 
-    // Render Media List Table (Anime/Manga)
-    const renderMediaTable = (list) => (
+    // Render a regular media table (for Anime/Manga)
+    const MediaTable = ({ list }) => (
         <div key={list.name} className="w-full overflow-hidden rounded-xl shadow-neu-light-sm dark:shadow-neu-dark-sm">
             <div className="bg-secondary rounded-t-xl border border-light-secondary dark:border-dark-secondary">
                 <h2 className="text-primary p-3 font-aladin text-lg tracking-widest">{list.name}</h2>
@@ -29,7 +30,7 @@ function MediaList({ data = [], isFavorite = false }) {
                         list.entries.map((mediaItem) => <MediaRow key={mediaItem.media?.id} mediaItem={mediaItem} />)
                     ) : (
                         <tr>
-                            <td className="p-4 text-center" colSpan="4">
+                            <td className="p-4 text-center font-indie-flower tracking-wider text-red-500" colSpan="4">
                                 No data available
                             </td>
                         </tr>
@@ -39,62 +40,71 @@ function MediaList({ data = [], isFavorite = false }) {
         </div>
     )
 
-    // Render Favorite List (Anime and Manga)
-    if (isFavorite) {
-        return data['anime'] && data['manga'] ? (
-            <div className="bg-primary mx-auto grid w-full place-items-center gap-y-5 rounded-lg border border-light-secondary p-3 shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-sm md:p-5">
-                {/* Render Anime Favorites */}
-                <div className="w-full overflow-hidden rounded-xl shadow-neu-light-sm dark:shadow-neu-dark-sm">
-                    <div className="bg-secondary rounded-t-xl border border-light-secondary dark:border-dark-secondary">
-                        <h2 className="text-primary p-3 font-aladin text-lg tracking-widest">Favorite Anime</h2>
-                    </div>
-                    <table className="w-full table-auto">
-                        {renderTableHeader()}
-                        <tbody className="bg-primary">
-                            {data.anime.length > 0 ? (
-                                data.anime.map((mediaItem) => <MediaRow key={mediaItem.id} mediaItem={mediaItem} isFavorite={true} />)
-                            ) : (
-                                <tr>
-                                    <td className="p-4 text-center" colSpan="4">
-                                        No anime favorites available
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
+    // Render a favorite media table (for Anime/Manga)
+    const FavoriteTable = ({ type, media }) => (
+        <div className="w-full overflow-hidden rounded-xl shadow-neu-light-sm dark:shadow-neu-dark-sm">
+            <div className="bg-secondary rounded-t-xl border border-light-secondary dark:border-dark-secondary">
+                <h2 className="text-primary p-3 font-aladin text-lg tracking-widest">Favorite {type}</h2>
+            </div>
+            <table className="w-full table-auto">
+                {renderTableHeader()}
+                <tbody className="bg-primary">
+                    {media.length > 0 ? (
+                        media.map((mediaItem) => <MediaRow key={mediaItem.id} mediaItem={mediaItem} isFavorite={true} />)
+                    ) : (
+                        <tr>
+                            <td className="p-4 text-center font-indie-flower tracking-wider text-red-500" colSpan="4">
+                                No {type.toLowerCase()} favorites available
+                            </td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
+        </div>
+    )
 
-                {/* Render Manga Favorites */}
-                <div className="w-full overflow-hidden rounded-xl shadow-neu-light-sm dark:shadow-neu-dark-sm">
-                    <div className="bg-secondary rounded-t-xl border border-light-secondary dark:border-dark-secondary">
-                        <h2 className="text-primary p-3 font-aladin text-lg tracking-widest">Favorite Manga</h2>
-                    </div>
-                    <table className="w-full table-auto">
-                        {renderTableHeader()}
-                        <tbody className="bg-primary">
-                            {data.manga.length > 0 ? (
-                                data.manga.map((mediaItem) => <MediaRow key={mediaItem.id} mediaItem={mediaItem} isFavorite={true} />)
-                            ) : (
-                                <tr>
-                                    <td className="p-4 text-center" colSpan="4">
-                                        No manga favorites available
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
+    // Render loading skeleton when data is being fetched
+    const LoadingSkeleton = () => (
+        <div className="bg-primary mx-auto grid w-full place-items-center gap-y-5 rounded-lg border border-light-secondary p-3 shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-sm md:p-5">
+            {Array.from({ length: 2 }).map((_, index) => (
+                <SkeletonList key={index} />
+            ))}
+        </div>
+    )
+
+    // Render NoDataCard when no data is available
+    const NoDataFound = ({ name }) => (
+        <div className="bg-primary mx-auto grid w-full place-items-center rounded-lg border border-light-secondary p-3 shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-sm md:p-5">
+            <NoDataCard name={name} />
+        </div>
+    )
+
+    // Handle loading state
+    if (loading) {
+        return <LoadingSkeleton />
+    }
+
+    // Handle favorite list rendering
+    if (isFavorite) {
+        return data?.anime?.length > 0 || data?.manga?.length > 0 ? (
+            <div className="bg-primary mx-auto grid w-full place-items-center gap-y-5 rounded-lg border border-light-secondary p-3 shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-sm md:p-5">
+                {data?.anime?.length > 0 && <FavoriteTable type="Anime" media={data.anime} />}
+                {data?.manga?.length > 0 && <FavoriteTable type="Manga" media={data.manga} />}
             </div>
         ) : (
-            <SkeletonList />
+            NoDataFound({ name: 'favorites' })
         )
     }
 
-    // Render Regular Media List (Anime/Manga)
-    return (
+    // Render regular media list (Anime/Manga)
+    return data.length > 0 ? (
         <div className="bg-primary mx-auto grid w-full place-items-center gap-y-5 rounded-lg border border-light-secondary p-3 shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-sm md:p-5">
-            {data.length > 0 ? data.map(renderMediaTable) : Array.from({ length: 2 }).map((_, index) => <SkeletonList key={index} />)}
+            {data.map((list) => (
+                <MediaTable key={list.name} list={list} />
+            ))}
         </div>
+    ) : (
+        NoDataFound({ name: 'media' })
     )
 }
 

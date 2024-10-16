@@ -4,3 +4,49 @@ export const TabEnum = {
     FAVORITES: 'favorites',
     LOGOUT: 'logout',
 }
+
+export const filterOptions = [
+    {
+        name: 'format',
+        options: ['TV', 'Short', 'Movie', 'Special', 'OVA', 'ONA', 'Music'],
+    },
+    {
+        name: 'genres',
+        options: [
+            'Action',
+            'Adventure',
+            'Comedy',
+            'Drama',
+            'Ecchi',
+            'Fantasy',
+            'Horror',
+            'Mahou Shoujo',
+            'Mecha',
+            'Music',
+            'Mystery',
+            'Psychological',
+            'Romance',
+            'Slice of Life',
+            'Sports',
+            'Supernatural',
+            'Thriller',
+        ],
+    },
+    {
+        name: 'status',
+        options: ['Finished', 'Releasing', 'Not Yet Released', 'Cancelled'],
+    },
+]
+
+export const sortOptions = [
+    'Average Score',
+    'Completed Date',
+    'Last Added',
+    'Last Updated',
+    'Popularity',
+    'Progress',
+    'Release Date',
+    'Score',
+    'Start Date',
+    'Title',
+]

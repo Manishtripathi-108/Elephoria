@@ -11,10 +11,10 @@ export default {
                 'scale-up': 'scale-up 0.3s cubic-bezier(0.6, -0.28, 0.74, 0.05) forwards',
                 'slide-left-return': 'slide-left-return 0.3s forwards',
                 'slide-left': 'slide-left 0.3s forwards',
-                'wipe-in-down': 'wipe-in-down 0.3s cubic-bezier(0.6, -0.28, 0.74, 0.05) forwards',
-                'wipe-in-up': 'wipe-in-up 0.3s cubic-bezier(0.6, -0.28, 0.74, 0.05) forwards',
-                'wipe-out-down': 'wipe-out-down 0.3s cubic-bezier(0.6, -0.28, 0.74, 0.05) forwards',
-                'wipe-out-up': 'wipe-out-up 0.3s cubic-bezier(0.6, -0.28, 0.74, 0.05) forwards',
+                'wipe-in-down': 'wipe-in-down 0.5s cubic-bezier(0.6, -0.28, 0.74, 0.05) forwards',
+                'wipe-in-up': 'wipe-in-up 0.5s cubic-bezier(0.6, -0.28, 0.74, 0.05) forwards',
+                'wipe-out-down': 'wipe-out-down 0.5s cubic-bezier(0.6, -0.28, 0.74, 0.05) forwards',
+                'wipe-out-up': 'wipe-out-up 0.5s cubic-bezier(0.6, -0.28, 0.74, 0.05) forwards',
             },
             keyframes: {
                 'anti-rotate': {

@@ -14,10 +14,16 @@ import MediaList from './components/MediaList'
 function AnimePage() {
     const [activeTab, setActiveTab] = useState('ANIME')
     const [isListView, setIsListView] = useState(true)
-    const [animeList, setAnimeList] = useState([])
-    const [mangaList, setMangaList] = useState([])
-    const [favoritesList, setFavoritesList] = useState([])
+    const [dataList, setDataList] = useState({
+        anime: [],
+        manga: [],
+        favorites: [],
+    })
+    const [currentList, setCurrentList] = useState([])
     const [error, setError] = useState(null)
+    const [filteredData, setFilteredData] = useState([])
+
+    console.log(filteredData)
 
     useEffect(() => {
         const accessToken = localStorage.getItem('accessToken')
@@ -34,7 +40,7 @@ function AnimePage() {
                 const response = await axios.post('/api/anime/user-media', {
                     accessToken,
                 })
-                setAnimeList(response.data.mediaList.lists || []) // Handle empty lists
+                setDataList({ ...dataList, anime: response.data.mediaList.lists || [] }) // Handle empty lists
             } catch (error) {
                 setError('Error fetching anime data.')
                 console.error('Error fetching anime data:', error)
@@ -50,7 +56,7 @@ function AnimePage() {
                     accessToken,
                     type: 'Manga',
                 })
-                setMangaList(response.data.mediaList.lists || []) // Handle empty lists
+                setDataList({ ...dataList, manga: response.data.mediaList.lists || [] }) // Handle empty lists
             } catch (error) {
                 setError('Error fetching manga data.')
                 console.error('Error fetching manga data:', error)
@@ -65,7 +71,7 @@ function AnimePage() {
                 const response = await axios.post('/api/anime/user-favorites', {
                     accessToken,
                 })
-                setFavoritesList(response.data.favorites || [])
+                setDataList({ ...dataList, favorites: response.data.favorites || [] }) // Handle empty lists
             } catch (error) {
                 setError('Error fetching favorites data.')
                 console.error('Error fetching favorites data:', error)
@@ -75,10 +81,13 @@ function AnimePage() {
 
         if (activeTab === 'ANIME') {
             loadAnimeData()
+            setCurrentList(() => dataList.anime)
         } else if (activeTab === 'MANGA') {
             loadMangaData()
+            setCurrentList(() => dataList.manga)
         } else if (activeTab === 'FAVORITES') {
             loadFavoritesData()
+            setCurrentList(() => dataList.favorites)
         }
     }, [activeTab])
 
@@ -124,15 +133,37 @@ function AnimePage() {
             {/* Main Content Area */}
             <div className="container mx-auto flex flex-col items-start justify-center gap-2 md:flex-row md:gap-5 md:p-5">
                 {/* Anime Filter */}
-                <AnimeFilter currentList={activeTab} />
+                <AnimeFilter data={currentList} filteredData={setFilteredData} />
 
-                {/* Conditional rendering based on the active tab and view type */}
-                {activeTab === 'ANIME' && (isListView ? <MediaList data={animeList} /> : <MediaCardList data={animeList} />)}
+                {filteredData.length > 0 ? (
+                    <>
+                        {/* Conditional rendering based on the active tab and view type */}
+                        {activeTab === 'ANIME' && (isListView ? <MediaList data={filteredData} /> : <MediaCardList data={filteredData} />)}
 
-                {activeTab === 'MANGA' && (isListView ? <MediaList data={mangaList} /> : <MediaCardList data={mangaList} />)}
+                        {activeTab === 'MANGA' && (isListView ? <MediaList data={filteredData} /> : <MediaCardList data={filteredData} />)}
 
-                {activeTab === 'FAVORITES' &&
-                    (isListView ? <MediaList data={favoritesList} isFavorite={true} /> : <MediaCardList data={favoritesList} isFavorite={true} />)}
+                        {activeTab === 'FAVORITES' &&
+                            (isListView ? (
+                                <MediaList data={filteredData} isFavorite={true} />
+                            ) : (
+                                <MediaCardList data={filteredData} isFavorite={true} />
+                            ))}
+                    </>
+                ) : (
+                    <>
+                        {/* Conditional rendering based on the active tab and view type */}
+                        {activeTab === 'ANIME' && (isListView ? <MediaList data={currentList} /> : <MediaCardList data={currentList} />)}
+
+                        {activeTab === 'MANGA' && (isListView ? <MediaList data={currentList} /> : <MediaCardList data={currentList} />)}
+
+                        {activeTab === 'FAVORITES' &&
+                            (isListView ? (
+                                <MediaList data={currentList} isFavorite={true} />
+                            ) : (
+                                <MediaCardList data={currentList} isFavorite={true} />
+                            ))}
+                    </>
+                )}
             </div>
         </div>
     )
