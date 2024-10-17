@@ -3,45 +3,80 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Icon } from '@iconify/react'
 
 import NeuHamburgerBtn from '../../../components/common/buttons/NeuHamburgerBtn'
+import { filterOptions, sortOptions } from './constants'
 
 const currentYear = new Date().getFullYear()
 
-const AnimeFilter = () => {
-    // State for each filter
+const AnimeFilter = ({ data = [], setFilteredData, setIsFilterActive }) => {
+    // Search input and filter state
+    const [searchQuery, setSearchQuery] = useState('')
     const [selectedList, setSelectedList] = useState('All')
     const [filters, setFilters] = useState({
         format: '',
         status: '',
-        genre: '',
-        country: '',
-        year: 2024,
-        sort: 'Score',
+        genres: '',
+        year: '',
+        sort: '',
     })
     const [isFiltersOpen, setIsFiltersOpen] = useState(window.innerWidth >= 768)
 
-    // Handle window resize to auto-close or open filters based on screen size
-    const handleResize = () => {
-        if (window.innerWidth >= 768) {
-            setIsFiltersOpen(true)
-        }
-    }
-
-    // Toggle the filters panel
-    const toggleFilters = () => {
-        setIsFiltersOpen((prev) => !prev)
-    }
-
-    // Event listener for window resize
+    // Apply filters and update filtered data
     useEffect(() => {
-        handleResize()
-        window.addEventListener('resize', handleResize)
-
-        return () => {
-            window.removeEventListener('resize', handleResize)
+        if (!Array.isArray(data)) {
+            return
         }
-    }, [])
 
-    // Handlers for input changes (memoized to avoid unnecessary re-renders)
+        let filteredList = data
+
+        // Filter by selected list (if not "All")
+        if (selectedList !== 'All') {
+            filteredList = filteredList.filter((item) => item.name === selectedList)
+        }
+
+        // Apply search query to filter by titles
+        if (searchQuery) {
+            filteredList = filteredList
+                .map((list) => ({
+                    ...list,
+                    entries: list.entries.filter(
+                        (entry) =>
+                            entry.media.title.english.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                            entry.media.title.romaji.toLowerCase().includes(searchQuery.toLowerCase())
+                    ),
+                }))
+                .filter((list) => list.entries.length > 0)
+        }
+
+        // Apply additional filters (format, status, genres, year)
+        filteredList = filteredList
+            .map((list) => ({
+                ...list,
+                entries: list.entries.filter((entry) => {
+                    const matchFormat = filters.format ? entry.media.format === filters.format : true
+                    const matchStatus = filters.status ? entry.media.status === filters.status : true
+                    const matchGenres = filters.genres ? entry.media.genres.includes(filters.genres) : true
+                    const matchYear = filters.year ? entry.media.startDate.year === filters.year : true
+                    return matchFormat && matchStatus && matchGenres && matchYear
+                }),
+            }))
+            .filter((list) => list.entries.length > 0)
+
+        // Determine if any filter is active
+        const allFiltersReset =
+            filters.format === '' &&
+            filters.genres === '' &&
+            filters.status === '' &&
+            filters.year === '' &&
+            filters.sort === '' &&
+            searchQuery === '' &&
+            selectedList === 'All'
+
+        // Set active filter state and filtered data
+        setIsFilterActive(!allFiltersReset)
+        setFilteredData(filteredList)
+    }, [data, filters, searchQuery, selectedList, setFilteredData, setIsFilterActive])
+
+    // Handle filter input change
     const handleFilterChange = useCallback((filterType, value) => {
         setFilters((prevFilters) => ({
             ...prevFilters,
@@ -49,38 +84,46 @@ const AnimeFilter = () => {
         }))
     }, [])
 
-    // Reset filters to default values
+    // Reset all filters to their default state
     const resetFilters = useCallback(() => {
         setFilters({
             format: '',
             status: '',
-            genre: '',
-            country: '',
-            year: 2024,
-            sort: 'Name',
+            genres: '',
+            year: '',
+            sort: '',
         })
+        setSearchQuery('')
         setSelectedList('All')
-    }, [])
+        setFilteredData([])
+        setIsFilterActive(false)
+    }, [setFilteredData, setIsFilterActive])
 
-    // Range input style for dynamic background based on the value
-    const rangeStyle = {
-        background: `linear-gradient(to right, #334155 ${((filters.year - 1985) / (currentYear - 1985)) * 100}%, #00000000 ${((filters.year - 1985) / (currentYear - 1985)) * 100}%)`,
-    }
+    // Generate list options with "All" option included
+    const listOptions = ['All', ...(Array.isArray(data) ? data.map((list) => list.name) : [])]
 
     return (
         <div className="bg-primary text-primary h-full w-full p-2 md:max-w-64">
-            {/* Search */}
+            {/* Search Input */}
             <div className="flex items-center justify-between gap-3 md:mb-4">
                 <div className="neu-input-group neu-input-group-append">
                     <label htmlFor="anime-search" className="sr-only">
                         Search Anime
                     </label>
-                    <input id="anime-search" className="neu-form-input" type="text" placeholder="Filter" aria-label="Search anime" />
+                    <input
+                        id="anime-search"
+                        className="neu-form-input"
+                        type="text"
+                        placeholder="Search"
+                        aria-label="Search anime"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
                     <Icon icon="mingcute:search-fill" className="neu-input-icon" aria-hidden="true" />
                 </div>
 
                 <NeuHamburgerBtn
-                    onClick={toggleFilters}
+                    onClick={() => setIsFiltersOpen((prev) => !prev)}
                     isActive={isFiltersOpen}
                     aria-label="Toggle Filters"
                     title="Toggle Filters"
@@ -88,16 +131,17 @@ const AnimeFilter = () => {
                 />
             </div>
 
-            <div className={`${!isFiltersOpen ? 'animate-wipe-out-down' : 'animate-wipe-in-down'} overflow-clip px-2`}>
-                {/* Lists */}
+            {/* Filter Panel */}
+            <div className={`${!isFiltersOpen ? 'animate-wipe-out-down' : 'animate-wipe-in-down'} p-2`}>
+                {/* List Filter */}
                 <div className="mt-4">
                     <h3 className="neu-form-label mb-2 text-base">Lists:</h3>
                     <div className="space-y-2" role="listbox" aria-label="Filter by list">
-                        {['All', 'Watching', 'Planning'].map((list) => (
+                        {listOptions.map((list) => (
                             <button
                                 key={list}
                                 onClick={() => setSelectedList(list)}
-                                className={`neu-btn w-full text-left ${selectedList === list && 'active'}`}
+                                className={`neu-btn w-full text-left ${selectedList === list ? 'active' : ''}`}
                                 role="option"
                                 aria-selected={selectedList === list}>
                                 {list}
@@ -106,27 +150,29 @@ const AnimeFilter = () => {
                     </div>
                 </div>
 
-                {/* Filters */}
+                {/* Other Filters */}
                 <div className="mt-4">
                     <h3 className="neu-form-label mb-2 text-base">Filters:</h3>
 
-                    {['Format', 'Status', 'Genre', 'Country'].map((filterType) => (
-                        <div className="mb-2" key={filterType}>
-                            <label htmlFor={`${filterType.toLowerCase()}-filter`} className="sr-only">
-                                {filterType}
+                    {filterOptions.map((item) => (
+                        <div className="mb-2" key={item.name}>
+                            <label htmlFor={`${item.name.toLowerCase()}-filter`} className="sr-only">
+                                {item.name}
                             </label>
                             <select
-                                className="neu-form-select"
-                                id={`${filterType.toLowerCase()}-filter`}
-                                onChange={(e) => handleFilterChange(filterType.toLowerCase(), e.target.value)}
-                                value={filters[filterType.toLowerCase()]}
-                                aria-label={`Filter by ${filterType}`}>
+                                className="neu-form-select capitalize"
+                                id={`${item.name.toLowerCase()}-filter`}
+                                onChange={(e) => handleFilterChange(item.name.toLowerCase(), e.target.value)}
+                                value={filters[item.name.toLowerCase()]}
+                                aria-label={`Filter by ${item.name}`}>
                                 <option value="" disabled>
-                                    {filterType}
+                                    {item.name}
                                 </option>
-                                <option value="1">Option 1</option>
-                                <option value="2">Option 2</option>
-                                <option value="3">Option 3</option>
+                                {item.options.map((option) => (
+                                    <option key={option} value={option}>
+                                        {option}
+                                    </option>
+                                ))}
                             </select>
                         </div>
                     ))}
@@ -138,7 +184,7 @@ const AnimeFilter = () => {
                         <span>Year: {filters.year}</span>
                         <button
                             type="button"
-                            onClick={() => handleFilterChange('year', currentYear)}
+                            onClick={() => handleFilterChange('year', '')}
                             className="text-secondary text-sm"
                             aria-label="Reset Year Filter">
                             ✕
@@ -154,8 +200,6 @@ const AnimeFilter = () => {
                         step="1"
                         value={filters.year}
                         onChange={(e) => handleFilterChange('year', parseInt(e.target.value, 10))}
-                        style={rangeStyle}
-                        aria-label="Filter by year"
                     />
                 </div>
 
@@ -170,8 +214,12 @@ const AnimeFilter = () => {
                         onChange={(e) => handleFilterChange('sort', e.target.value)}
                         className="neu-form-select"
                         aria-label="Sort anime by">
-                        <option value="Name">Name</option>
-                        <option value="Name">Option 2</option>
+                        <option value="">Sort By</option>
+                        {sortOptions.map((option) => (
+                            <option key={option} value={option}>
+                                {option}
+                            </option>
+                        ))}
                     </select>
                 </div>
 

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import NoDataSvg from '../../../assets/svg/NoDataSvg'
+import NoDataSvg from '../../assets/svg/NoDataSvg'
 
 function NoDataCard({ name, message, className }) {
     return (

@@ -1,10 +1,9 @@
 import React from 'react'
 
 import MediaRow from './MediaRow'
-import NoDataCard from './NoDataCard'
-import SkeletonList from './loading/SkeletonList'
+import NoDataFound from './NoDataFound'
 
-function MediaList({ data = [], isFavorite = false, loading = false }) {
+function MediaList({ data = [], isFavorite = false }) {
     // Render Table Header for media list
     const renderTableHeader = () => (
         <thead className="bg-primary text-secondary border-x border-b border-light-secondary dark:border-dark-secondary">
@@ -63,27 +62,6 @@ function MediaList({ data = [], isFavorite = false, loading = false }) {
         </div>
     )
 
-    // Render loading skeleton when data is being fetched
-    const LoadingSkeleton = () => (
-        <div className="bg-primary mx-auto grid w-full place-items-center gap-y-5 rounded-lg border border-light-secondary p-3 shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-sm md:p-5">
-            {Array.from({ length: 2 }).map((_, index) => (
-                <SkeletonList key={index} />
-            ))}
-        </div>
-    )
-
-    // Render NoDataCard when no data is available
-    const NoDataFound = ({ name }) => (
-        <div className="bg-primary mx-auto grid w-full place-items-center rounded-lg border border-light-secondary p-3 shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-sm md:p-5">
-            <NoDataCard name={name} />
-        </div>
-    )
-
-    // Handle loading state
-    if (loading) {
-        return <LoadingSkeleton />
-    }
-
     // Handle favorite list rendering
     if (isFavorite) {
         return data?.anime?.length > 0 || data?.manga?.length > 0 ? (
@@ -92,7 +70,7 @@ function MediaList({ data = [], isFavorite = false, loading = false }) {
                 {data?.manga?.length > 0 && <FavoriteTable type="Manga" media={data.manga} />}
             </div>
         ) : (
-            NoDataFound({ name: 'favorites' })
+            <NoDataFound name="favorites" />
         )
     }
 
@@ -104,7 +82,7 @@ function MediaList({ data = [], isFavorite = false, loading = false }) {
             ))}
         </div>
     ) : (
-        NoDataFound({ name: 'media' })
+        <NoDataFound name="media" />
     )
 }
 

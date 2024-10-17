@@ -19,7 +19,8 @@ function MediaRow({ mediaItem, isFavorite = false }) {
             {/* Title and Progress (for small screens) */}
             <td className="text-primary p-3 align-middle font-indie-flower tracking-wide">
                 <div className="line-clamp-3 leading-5">
-                    {media?.title?.english || media?.title?.romaji || 'Unknown Title'}({media?.title?.native || 'Unknown Native Title'})
+                    {media?.title?.english || media?.title?.native || 'Unknown Title'} (
+                    <span className="text-secondary text-sm">{media?.title?.romaji || 'Unknown romaji Title'}</span>)
                 </div>
                 {/* Display progress on small screens */}
                 <p className="text-secondary mt-1 text-sm sm:hidden">

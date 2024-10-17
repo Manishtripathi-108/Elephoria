@@ -10,6 +10,12 @@ function AnimeNav({ currentTab }) {
         currentTab(tab)
     }
 
+    const handleLogOut = () => {
+        if (localStorage.getItem('accessToken')) {
+            localStorage.removeItem('accessToken')
+        }
+    }
+
     return (
         <nav className="bg-primary mx-auto block w-full max-w-screen-lg px-4 py-2 lg:px-8 lg:py-3">
             <div className="container mx-auto flex flex-wrap items-center justify-center gap-3 md:gap-5">
@@ -51,7 +57,7 @@ function AnimeNav({ currentTab }) {
                 <button
                     type="button"
                     title="Log Out"
-                    onClick={() => handleTabChange('LOGOUT')}
+                    onClick={() => handleLogOut()}
                     className="neu-btn neu-icon-btn gap-1 text-nowrap px-2 py-2 text-red-500 dark:text-red-500 md:gap-2 md:px-4 md:py-2 md:text-base">
                     <Icon icon="majesticons:logout" className="size-4 shrink-0 md:size-5" />
                     Log Out

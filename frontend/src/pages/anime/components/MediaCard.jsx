@@ -18,7 +18,7 @@ function MediaCard({ mediaItem, isFavorite = false }) {
     return (
         <div className="group relative rounded-lg border border-light-secondary shadow-neu-light-sm dark:border-dark-secondary dark:shadow-neu-dark-sm">
             <img
-                className="text-secondary h-full max-h-56 w-full rounded-t-lg border-b border-light-secondary object-cover dark:border-dark-secondary sm:max-h-72"
+                className="text-secondary max-h-56 w-full rounded-t-lg border-b border-light-secondary object-cover dark:border-dark-secondary sm:max-h-72"
                 src={media?.coverImage?.large}
                 alt={media?.title?.english || media?.title?.native}
             />

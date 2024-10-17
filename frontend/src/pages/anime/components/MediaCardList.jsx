@@ -1,28 +1,9 @@
 import React from 'react'
 
 import MediaCard from './MediaCard'
-import NoDataCard from './NoDataCard'
-import SkeletonCard from './loading/SkeletonCard'
+import NoDataFound from './NoDataFound'
 
-function MediaCardList({ data = [], isFavorite = false, loading = false }) {
-    // Render NoDataCard if no data is found
-    const noDataFound = (name) => (
-        <div className="bg-primary mx-auto grid w-full place-items-center rounded-lg border border-light-secondary p-3 shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-sm md:p-5">
-            <NoDataCard name={name} />
-        </div>
-    )
-
-    // Render loading skeletons while data is being fetched
-    if (loading) {
-        return (
-            <div className="bg-primary mx-auto w-full rounded-lg border border-light-secondary p-2 shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-sm md:p-5">
-                {Array.from({ length: 5 }).map((_, index) => (
-                    <SkeletonCard key={index} />
-                ))}
-            </div>
-        )
-    }
-
+function MediaCardList({ data = [], isFavorite = false }) {
     // Render Favorite List (Anime and Manga)
     if (isFavorite) {
         return data?.anime?.length > 0 || data?.manga?.length > 0 ? (
@@ -56,7 +37,7 @@ function MediaCardList({ data = [], isFavorite = false, loading = false }) {
                 )}
             </div>
         ) : (
-            noDataFound('favorites')
+            <NoDataFound name="favorites" />
         )
     }
 
@@ -71,16 +52,18 @@ function MediaCardList({ data = [], isFavorite = false, loading = false }) {
                     </h2>
 
                     {/* Media Grid */}
-                    <div className="grid grid-cols-2 gap-1 sm:grid-cols-3 sm:gap-3 lg:grid-cols-5">
-                        {list.entries.length > 0
-                            ? list.entries.map((media) => <MediaCard key={media.media?.id} mediaItem={media} />)
-                            : noDataFound(list.name)}
+                    <div className="grid grid-cols-2 gap-1 sm:grid-cols-3 sm:gap-3 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
+                        {list.entries.length > 0 ? (
+                            list.entries.map((media) => <MediaCard key={media.media?.id} mediaItem={media} />)
+                        ) : (
+                            <NoDataFound name={list.name} />
+                        )}
                     </div>
                 </div>
             ))}
         </div>
     ) : (
-        noDataFound('media')
+        <NoDataFound name="media" />
     )
 }
 
