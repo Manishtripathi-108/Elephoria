@@ -38,15 +38,4 @@ export const filterOptions = [
     },
 ]
 
-export const sortOptions = [
-    'Average Score',
-    'Completed Date',
-    'Last Added',
-    'Last Updated',
-    'Popularity',
-    'Progress',
-    'Release Date',
-    'Score',
-    'Start Date',
-    'Title',
-]
+export const sortOptions = ['Average Score', 'Last Added', 'Last Updated', 'Popularity', 'Progress', 'Score', 'Title']

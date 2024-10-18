@@ -61,6 +61,39 @@ const AnimeFilter = ({ data = [], setFilteredData, setIsFilterActive }) => {
             }))
             .filter((list) => list.entries.length > 0)
 
+        if (filteredList.length > 0) {
+            // Apply sort filter
+            if (filters.sort !== '') {
+                filteredList = filteredList.map((list) => ({
+                    ...list,
+                    entries: list.entries.sort((a, b) => {
+                        if (filters.sort === 'Title') {
+                            return a.media.title.english.localeCompare(b.media.title.english)
+                        }
+                        if (filters.sort === 'Year') {
+                            return a.media.startDate.year - b.media.startDate.year
+                        }
+                        if (filters.sort === 'Average Score') {
+                            return b.media.averageScore - a.media.averageScore
+                        }
+                        if (filters.sort === 'Popularity') {
+                            return b.media.popularity - a.media.popularity
+                        }
+                        if (filters.sort === 'Progress') {
+                            return b.progress - a.progress
+                        }
+                        if (filters.sort === 'Last Updated') {
+                            return new Date(b.updatedAt) - new Date(a.updatedAt)
+                        }
+                        if (filters.sort === 'Last Added') {
+                            return new Date(b.createdAt) - new Date(a.createdAt)
+                        }
+                        return 0 // No sorting
+                    }),
+                }))
+            }
+        }
+
         // Determine if any filter is active
         const allFiltersReset =
             filters.format === '' &&

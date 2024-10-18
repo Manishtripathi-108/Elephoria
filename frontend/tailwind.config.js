@@ -99,21 +99,21 @@ export default {
                 'neu-inset-light-secondary-xs': 'inset 3px 3px 5px #29428e, inset -3px -3px 5px #5990ff',
 
                 // Dark Mode Shadows
-                'neu-dark-xs': '3px 3px 5px #11171e, -3px -3px 5px #2d3b50',
-                'neu-dark-sm': '5px 5px 10px #11171e, -5px -5px 10px #2d3b50',
-                'neu-dark-md': '6px 6px 12px #11171e, -6px -6px 12px #2d3b50',
-                'neu-dark-lg': '10px 10px 20px #11171e, -10px -10px 20px #2d3b50',
-                'neu-dark-xl': '20px 20px 40px #11171e, -20px -20px 40px #2d3b50;',
+                'neu-dark-xs': '3px 3px 5px #0c1016, -3px -3px 5px #324258',
+                'neu-dark-sm': '5px 5px 10px #0c1016, -5px -5px 10px #324258',
+                'neu-dark-md': '6px 6px 12px #0c1016, -6px -6px 12px #324258',
+                'neu-dark-lg': '10px 10px 20px #0c1016, -10px -10px 20px #324258',
+                'neu-dark-xl': '20px 20px 40px #0c1016, -20px -20px 40px #324258;',
 
                 'neu-dark-secondary-xs': '3px 3px 5px #135ba1, -3px -3px 5px #29c5ff',
                 'neu-inset-dark-secondary-xs': 'inset 3px 3px 5px #135ba1, inset -3px -3px 5px #29c5ff',
 
                 // Dark Mode Inset Shadows
-                'neu-inset-dark-xs': 'inset 3px 3px 7px #11171e, inset -3px -3px 7px #2d3b50',
-                'neu-inset-dark-sm': 'inset 5px 5px 10px #11171e, inset -5px -5px 10px #2d3b50',
-                'neu-inset-dark-md': 'inset 6px 6px 12px #11171e, inset -6px -6px 12px #2d3b50',
-                'neu-inset-dark-lg': 'inset 10px 10px 20px #11171e, inset -10px -10px 20px #2d3b50',
-                'neu-inset-dark-xl': 'inset 20px 20px 40px #171614, inset -20px -20px 40px #2d3b50',
+                'neu-inset-dark-xs': 'inset 3px 3px 5px #0c1016, inset -3px -3px 5px #324258',
+                'neu-inset-dark-sm': 'inset 5px 5px 10px #0c1016, inset -5px -5px 10px #324258',
+                'neu-inset-dark-md': 'inset 6px 6px 12px #0c1016, inset -6px -6px 12px #324258',
+                'neu-inset-dark-lg': 'inset 10px 10px 20px #0c1016, inset -10px -10px 20px #324258',
+                'neu-inset-dark-xl': 'inset 20px 20px 40px #0c1016, inset -20px -20px 40px #324258',
             },
             fontFamily: {
                 'indie-flower': ['"Indie Flower"', 'cursive', 'serif'],

@@ -32,10 +32,7 @@
     .neu-form-select,
     .neu-form-textarea,
     .neu-form-input {
-        @apply bg-primary text-primary active:placeholder:text-primary focus:placeholder:text-primary placeholder:text-secondary w-full appearance-none rounded-lg border border-light-secondary px-3 py-2 font-indie-flower shadow-neu-light-xs outline-none transition duration-300 placeholder:tracking-wide focus:shadow-neu-inset-light-xs;
-
-        /* dark mode */
-        @apply dark:border-dark-secondary dark:shadow-neu-dark-xs dark:focus:shadow-neu-inset-dark-xs;
+        @apply bg-primary text-primary active:placeholder:text-primary focus:placeholder:text-primary placeholder:text-secondary w-full appearance-none rounded-lg border border-light-secondary px-3 py-2 font-indie-flower shadow-neu-light-xs outline-none transition duration-300 placeholder:tracking-wide focus:shadow-neu-inset-light-xs dark:border-dark-secondary dark:shadow-neu-dark-xs dark:focus:shadow-neu-inset-dark-xs;
     }
 
     /* ------------------------- neu-input-group & Icon ------------------------- */
@@ -80,19 +77,13 @@
 
     /* ------------------------- neu-inset-outset-input ------------------------- */
     .neu-inset-outset-input {
-        @apply bg-primary appearance-none rounded-xl border-none shadow-neu-inset-light-sm outline-none placeholder:tracking-wide;
-
-        /* dark mode */
-        @apply dark:shadow-neu-inset-dark-sm;
+        @apply bg-primary appearance-none rounded-xl border-none shadow-neu-inset-light-sm outline-none placeholder:tracking-wide dark:shadow-neu-inset-dark-sm;
     }
 
     .neu-inset-outset-input:focus,
     .neu-inset-outset-input:hover,
     .neu-inset-outset-input:active {
-        @apply placeholder:text-primary shadow-neu-light-md;
-
-        /* dark mode */
-        @apply dark:shadow-neu-dark-md;
+        @apply placeholder:text-primary shadow-neu-light-md dark:shadow-neu-dark-md;
     }
 
     /* ---------------------------- neu-form-textarea --------------------------- */
@@ -115,9 +106,7 @@
     }
 
     .neu-form-file-group label {
-        @apply bg-primary text-secondary hover:text-primary relative cursor-pointer overflow-hidden rounded-lg border border-light-secondary px-4 py-2 font-indie-flower shadow-neu-light-xs transition duration-300 ease-in-out active:shadow-neu-inset-light-sm;
-        /* dark mode */
-        @apply dark:border-dark-secondary dark:shadow-neu-dark-xs dark:active:shadow-neu-inset-dark-sm;
+        @apply bg-primary text-secondary hover:text-primary relative cursor-pointer overflow-hidden rounded-lg border border-light-secondary px-4 py-2 font-indie-flower shadow-neu-light-xs transition duration-300 ease-in-out active:shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-dark-xs dark:active:shadow-neu-inset-dark-sm;
     }
 
     .neu-form-file-group label:after {
@@ -126,9 +115,7 @@
     }
 
     .neu-form-file-preview {
-        @apply bg-primary mx-auto size-fit rounded-lg border border-light-secondary p-3 shadow-neu-inset-light-sm;
-        /* dark mode */
-        @apply dark:border-dark-secondary dark:shadow-neu-inset-dark-sm;
+        @apply bg-primary mx-auto size-fit rounded-lg border border-light-secondary p-3 shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-sm;
     }
 
     /* ----------------------------- neu-form-checkbox -------------------------- */
@@ -141,10 +128,7 @@
     }
 
     .neu-form-checkbox {
-        @apply bg-primary flex-center disabled:text-secondary size-4 appearance-none rounded border border-light-secondary shadow-neu-inset-light-xs outline-none transition-all duration-300 ease-in-out placeholder:tracking-wide;
-
-        /* dark mode */
-        @apply dark:border-dark-secondary dark:shadow-neu-inset-dark-xs;
+        @apply bg-primary flex-center disabled:text-secondary size-4 appearance-none rounded border border-light-secondary shadow-neu-inset-light-xs outline-none transition-all duration-300 ease-in-out placeholder:tracking-wide dark:border-dark-secondary dark:shadow-neu-inset-dark-xs;
     }
 
     .neu-form-checkbox:checked {
@@ -302,10 +286,7 @@
     /*                                  neu-badge                                 */
     /* -------------------------------------------------------------------------- */
     .neu-badge {
-        @apply text-secondary rounded-full border border-light-secondary px-2 py-1 text-center font-indie-flower text-sm shadow-neu-inset-light-sm;
-
-        /* dark mode */
-        @apply dark:border-dark-secondary dark:shadow-neu-inset-dark-xs;
+        @apply text-secondary rounded-full border border-light-secondary px-2 py-1 text-center font-indie-flower text-sm shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-xs;
     }
 
     .neu-badge-primary {
@@ -341,17 +322,12 @@
     /* -------------------------------------------------------------------------- */
 
     .neu-btn {
-        @apply text-secondary bg-primary rounded-lg border border-light-secondary px-4 py-2 text-center font-indie-flower tracking-wider shadow-neu-light-xs transition-all duration-300;
-
-        /* dark mode */
-        @apply dark:border-dark-secondary dark:shadow-neu-dark-xs;
+        @apply text-secondary bg-primary rounded-lg border border-light-secondary px-4 py-2 text-center font-indie-flower tracking-wider shadow-neu-light-xs transition-all duration-300 dark:border-dark-secondary dark:shadow-neu-dark-xs;
     }
 
     .neu-btn.active,
     .neu-btn:active {
-        @apply text-primary shadow-neu-inset-light-sm;
-        /* dark mode*/
-        @apply dark:shadow-neu-inset-dark-sm;
+        @apply text-primary shadow-neu-inset-light-sm dark:shadow-neu-inset-dark-sm;
     }
 
     .neu-btn:hover:not(.active),
@@ -371,10 +347,7 @@
 
     /*-- -------------------------------- neu-icon-only-btn ------------------------------*/
     .neu-icon-only-btn {
-        @apply rounded-full p-2 shadow-neu-light-md;
-
-        /* dark mode */
-        @apply dark:bg-none dark:shadow-neu-dark-md;
+        @apply rounded-full p-2 shadow-neu-light-md dark:bg-none dark:shadow-neu-dark-md;
     }
 
     .neu-icon-only-square-btn {

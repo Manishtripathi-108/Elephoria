@@ -141,6 +141,8 @@ const fetchUserMedia = async (req, res) => {
                     entries {
                         progress
                         status
+						updatedAt
+						createdAt
                         media {
                             id
                             type
@@ -151,6 +153,8 @@ const fetchUserMedia = async (req, res) => {
                             duration
                             episodes
                             genres
+							averageScore
+							popularity
                             isFavourite
                             title {
                                 romaji

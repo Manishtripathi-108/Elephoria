@@ -65,7 +65,7 @@ function AnimePage() {
 
     // Fetch media data when the active tab changes
     useEffect(() => {
-        fetchMediaData()
+        if (['ANIME', 'MANGA', 'FAVORITES'].includes(activeTab)) fetchMediaData()
     }, [activeTab, fetchMediaData])
 
     // Decide whether to show filtered data or all media data
