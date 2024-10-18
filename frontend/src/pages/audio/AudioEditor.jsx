@@ -12,7 +12,6 @@ const AudioEditor = () => {
     const [metaData, setMetadata] = useState(null)
     const [coverImage, setCoverImage] = useState(null)
 
-    const [fileName, setFileName] = useState('Upload File')
     const [toast, setToast] = useState(null)
 
     const showToast = (message, type) => {
@@ -104,7 +103,7 @@ const AudioEditor = () => {
                 <h2 className="text-primary mb-2 font-aladin text-2xl tracking-wider">Upload Audio</h2>
                 <p className="text-primary mb-6 text-center">Upload an audio file to edit metadata, convert format, and more!</p>
 
-                <UploadInput id="upload_audio" file={file} setFile={setFile} fileName={fileName} setFileName={setFileName} />
+                <UploadInput id="upload_audio" file={file} setFile={setFile} />
 
                 <button type="submit" title="Upload Audio" className="neu-btn flex-shrink-0" onClick={handleFileUpload}>
                     Upload Audio

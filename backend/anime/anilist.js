@@ -15,10 +15,16 @@ const axiosConfig = {
 
 // Unified error handler
 const handleError = (res, message, error) => {
-	console.error(message, error.message || error);
+	console.error(message, error?.message || error);
+	if (error.response?.status === 401) {
+		return res.status(401).json({
+			message: "Unauthorized. Please log in again.",
+			error: error.response.data || "Token expired or invalid.",
+		});
+	}
 	res.status(500).json({
 		message,
-		error: error.message || "Internal Server Error",
+		error: error?.message || "Internal Server Error",
 	});
 };
 
@@ -302,10 +308,94 @@ const fetchUserFavorites = async (req, res) => {
 	}
 };
 
+// Function to map multiple MAL IDs to AniList IDs
+const getAniListIds = async (req, res) => {
+	const { malIds, mediaType } = req.body;
+
+	// Construct a GraphQL query that fetches AniList IDs for multiple MAL IDs
+	const query = `
+        query ($idMals: [Int], $type: MediaType) {
+            Page {
+                media(idMal_in: $idMals, type: $type) {
+                    id
+                    idMal
+                }
+            }
+        }
+    `;
+
+	try {
+		const response = await axios.post(
+			"/",
+			{
+				query,
+				variables: { idMals: malIds, type: mediaType.toUpperCase() },
+			},
+			axiosConfig
+		);
+
+		// Map of MAL ID to AniList ID
+		const aniListIds = response.data.data.Page.media.reduce(
+			(acc, mediaItem) => {
+				acc[mediaItem.idMal] = mediaItem.id;
+				return acc;
+			},
+			{}
+		);
+
+		res.json({
+			aniListIds,
+		});
+	} catch (error) {
+		handleError(res, "Error fetching AniList IDs for MAL IDs:", error);
+	}
+};
+
+// Function to add media to AniList user list
+const addToAniList = async (req, res) => {
+	const { accessToken, mediaId, status } = req.body;
+
+	const mutation = `
+            mutation($mediaId: Int, $status: MediaListStatus) {
+                SaveMediaListEntry(mediaId: $mediaId, status: $status) {
+                    id
+					status
+				}
+			}
+    `;
+
+	try {
+		const response = await axios.post(
+			"/",
+			{
+				query: mutation,
+				variables: { mediaId, status },
+			},
+			{
+				...axiosConfig,
+				headers: {
+					...axiosConfig.headers,
+					Authorization: `Bearer ${accessToken}`,
+				},
+			}
+		);
+
+		res.json(response.data.data.SaveMediaListEntry);
+	} catch (error) {
+		handleError(
+			res,
+			`Error adding media to AniList for Media ID ${mediaId}:`,
+			error
+		);
+	}
+};
+
 module.exports = {
 	getAnimeList,
 	exchangePinForToken,
 	fetchUserData,
 	fetchUserMedia,
 	fetchUserFavorites,
+	getAniListIds,
+	addToAniList,
 };

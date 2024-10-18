@@ -56,6 +56,14 @@ function AnimeNav({ currentTab }) {
                 </button>
                 <button
                     type="button"
+                    title="Favorite List"
+                    onClick={() => handleTabChange('IMPORT')}
+                    className={`neu-btn ${activeTab === 'IMPORT' ? 'active' : ''} neu-icon-btn gap-1 text-nowrap px-2 py-2 md:gap-2 md:px-4 md:py-2 md:text-base`}>
+                    <Icon icon="icomoon-free:heart" className="size-4 shrink-0 md:size-5" />
+                    Import List
+                </button>
+                <button
+                    type="button"
                     title="Log Out"
                     onClick={() => handleLogOut()}
                     className="neu-btn neu-icon-btn gap-1 text-nowrap px-2 py-2 text-red-500 dark:text-red-500 md:gap-2 md:px-4 md:py-2 md:text-base">

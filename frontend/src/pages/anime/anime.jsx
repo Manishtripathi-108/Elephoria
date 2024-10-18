@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Icon } from '@iconify/react'
 import axios from 'axios'
 
+import ImportAnime from './ImportAnime'
 // Import components
 import AnimeFilter from './components/AnimeFilter'
 import AnimeHeader from './components/AnimeHeader'
@@ -92,7 +93,7 @@ function AnimePage() {
             {isLoading ? (
                 // Show loading skeleton while data is being fetched
                 <AnimeSkeleton isList={isListView} />
-            ) : (
+            ) : activeTab !== 'IMPORT' ? (
                 <>
                     {/* Toggle between List and Card views */}
                     <div className="container mx-auto flex items-center justify-end px-4">
@@ -133,6 +134,10 @@ function AnimePage() {
                         )}
                     </div>
                 </>
+            ) : (
+                <div className="md:p-5">
+                    <ImportAnime />
+                </div>
             )}
         </div>
     )

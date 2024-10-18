@@ -1,9 +1,10 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 
 import { Icon } from '@iconify/react'
 
-const UploadInput = ({ id, file, setFile, fileName, setFileName }) => {
+const UploadInput = ({ id, file, setFile }) => {
     const fileInputRef = useRef(null)
+    const [fileName, setFileName] = useState('Upload File')
 
     const handleFileChange = (e) => {
         const file = e.target.files[0]

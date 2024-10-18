@@ -39,3 +39,5 @@ export const filterOptions = [
 ]
 
 export const sortOptions = ['Average Score', 'Last Added', 'Last Updated', 'Popularity', 'Progress', 'Score', 'Title']
+
+export const validStatus = ['COMPLETED', 'CURRENT', 'DROPPED', 'PAUSED', 'PLANNING', 'REPEATING']
