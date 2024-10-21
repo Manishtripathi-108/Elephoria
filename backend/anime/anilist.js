@@ -15,16 +15,28 @@ const axiosConfig = {
 
 // Unified error handler
 const handleError = (res, message, error) => {
-	console.error(message, error?.message || error);
+	console.error(message, error);
+
+	const retryAfter = error.response?.headers["retry-after"];
+
+	// Handling unauthorized errors separately
 	if (error.response?.status === 401) {
 		return res.status(401).json({
 			message: "Unauthorized. Please log in again.",
 			error: error.response.data || "Token expired or invalid.",
+			retryAfter,
 		});
 	}
+
+	// General error response
 	res.status(500).json({
 		message,
-		error: error?.message || "Internal Server Error",
+		error:
+			error?.response?.data ||
+			error?.message ||
+			error ||
+			"Internal Server Error",
+		retryAfter,
 	});
 };
 
@@ -380,7 +392,11 @@ const addToAniList = async (req, res) => {
 			}
 		);
 
-		res.json(response.data.data.SaveMediaListEntry);
+		res.json({
+			SaveMediaListEntry: response.data.data.SaveMediaListEntry,
+			retryAfter: response.headers["retry-after"],
+			rateRemaining: response.headers["x-ratelimit-remaining"],
+		});
 	} catch (error) {
 		handleError(
 			res,

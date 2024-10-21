@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Icon } from '@iconify/react'
 
 import NeuHamburgerBtn from '../../../components/common/buttons/NeuHamburgerBtn'
-import { filterOptions, sortOptions } from './constants'
+import { filterOptions, sortOptions } from '../constants'
 
 const currentYear = new Date().getFullYear()
 
