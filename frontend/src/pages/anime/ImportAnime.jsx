@@ -168,6 +168,8 @@ const ImportAnime = () => {
 
             try {
                 for (const batch of malIdBatches) {
+                    setProgressData((prev) => ({ ...prev, currentMedia: 'Fetching AniList IDs' }))
+
                     const result = await getAniListIds(batch, mediaType, abortControllerRef.current.signal)
 
                     if (abortControllerRef.current.signal.aborted) {
@@ -179,6 +181,7 @@ const ImportAnime = () => {
                         aniListIdMap.push(result.aniListIds)
                     } else if (result.retryAfter) {
                         window.addToast(`Rate limit exceeded. Try again after ${result.retryAfter} seconds.`, 'error')
+                        handleCancel()
                         return
                     }
                 }

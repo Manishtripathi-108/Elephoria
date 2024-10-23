@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { Icon } from '@iconify/react'
 
@@ -22,6 +22,15 @@ const UploadInput = ({ id, file, setFile }) => {
         }
         setFile(null)
     }
+
+    useEffect(() => {
+        // Reset file input value on unmount
+        return () => {
+            if (fileInputRef.current) {
+                fileInputRef.current.value = ''
+            }
+        }
+    }, [])
 
     return (
         <div className="bg-primary mb-6 flex size-80 flex-col items-center justify-between gap-2 rounded-lg p-2.5 font-indie-flower shadow-neu-light-sm dark:shadow-neu-dark-sm">
