@@ -3,6 +3,7 @@ import React, { Suspense, lazy } from 'react'
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 
 import PrivateRoute from './components/PrivateRoute'
+import ToastStack from './components/common/notifications/ToastStack'
 import Header from './components/layout/header'
 import NotFound from './pages/404-page'
 import Shadows from './pages/ShadowsGrid'
@@ -63,6 +64,8 @@ function App() {
                 <Route path="*" element={<NotFound />} />
             </Routes>
             {/* </Suspense> */}
+
+            <ToastStack />
         </Router>
     )
 }

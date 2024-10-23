@@ -5,14 +5,16 @@ import { Icon } from '@iconify/react'
 const Toast = ({ message, duration = 3000, type = 'success', onDismiss }) => {
     const [visible, setVisible] = useState(true)
 
-    // Automatically hide the toast after a specific duration
+    // Automatically hide the toast after the specified duration
     useEffect(() => {
         const timer = setTimeout(() => {
             setVisible(false)
-            if (onDismiss) onDismiss() // Notify parent component when toast is dismissed
+            setTimeout(() => {
+                onDismiss() // Remove the toast after fade-out animation
+            }, 300) // 300ms for fade-out duration
         }, duration)
 
-        return () => clearTimeout(timer)
+        return () => clearTimeout(timer) // Cleanup the timer on unmount
     }, [duration, onDismiss])
 
     if (!visible) return null
@@ -33,16 +35,16 @@ const Toast = ({ message, duration = 3000, type = 'success', onDismiss }) => {
 
     return (
         <div
-            className={`fixed bottom-5 right-5 flex w-full max-w-xs items-center rounded-md p-4 shadow-lg transition-opacity duration-300 ${toastStyles[type]}`}
+            className={`flex max-w-xs transform items-center rounded-md p-4 shadow-lg transition-all duration-300 ease-in-out ${visible ? 'opacity-100' : 'opacity-0'} ${toastStyles[type]}`}
             role="alert">
             <Icon icon={iconNames[type]} className="mr-2 size-7" />
-            <span className="text-primary mt-2 flex-1 font-indie-flower text-sm">{message}</span>
+            <span className="flex-1 text-sm">{message}</span>
             <button
                 onClick={() => {
                     setVisible(false)
-                    if (onDismiss) onDismiss()
+                    setTimeout(() => onDismiss(), 300) // Allow fade-out before removing
                 }}
-                className="ml-3 text-4xl text-white focus:outline-none">
+                className="ml-3 text-2xl text-white focus:outline-none">
                 &times;
             </button>
         </div>

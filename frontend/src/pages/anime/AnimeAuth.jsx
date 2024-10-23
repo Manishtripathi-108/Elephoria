@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+
+import { useNavigate } from 'react-router-dom'
 
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
-import Toast from '../../components/common/notifications/toast'
-
-// Import the Toast component
+import { exchangePin } from '../../api/animeApi'
 
 const validationSchema = Yup.object().shape({
     pin: Yup.string()
@@ -15,34 +15,29 @@ const validationSchema = Yup.object().shape({
 
 function AnimeAuth() {
     const [accessToken, setAccessToken] = useState(null) // State to store access token
-    const [toast, setToast] = useState({ show: false, message: '', type: '' }) // State for toast messages
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (window.localStorage.getItem('accessToken')) {
+            navigate('/anime')
+        }
+    }, [accessToken, navigate])
 
     const handleSubmit = async (values, { setSubmitting }) => {
-        try {
-            const response = await fetch('/api/anime/exchange-pin', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ pin: values.pin }),
-            })
-
-            const data = await response.json()
-            if (response.ok) {
-                console.log('Access Token:', data.accessToken)
-                setAccessToken(data.accessToken) // Save the access token in state
-                localStorage.setItem('accessToken', data.accessToken) // Store in local storage
-                setToast({ show: true, message: 'Successfully signed in!', type: 'success' })
+        const result = await exchangePin(values.pin)
+        if (result.success) {
+            setAccessToken(result.token)
+            window.localStorage.setItem('accessToken', result.token)
+            window.addToast('Authorization successful', 'success')
+            navigate('/anime')
+        } else {
+            if (result.retryAfter) {
+                window.addToast(`${result.message} Try Again After ${result.retryAfter}Seconds`, 'error')
             } else {
-                console.error('Error:', data.message)
-                setToast({ show: true, message: data.message || 'An error occurred. Try Again!', type: 'error' })
+                window.addToast(result.message, 'error')
             }
-        } catch (error) {
-            console.error('Error submitting pin:', error)
-            setToast({ show: true, message: 'Failed to sign in. Please try again.', type: 'error' })
-        } finally {
-            setSubmitting(false) // Stop the loading state
         }
+        setSubmitting(false)
     }
 
     return (
@@ -80,11 +75,6 @@ function AnimeAuth() {
                         </Form>
                     )}
                 </Formik>
-
-                {/* Toast notification */}
-                {toast.show && (
-                    <Toast message={toast.message} type={toast.type} onDismiss={() => setToast({ show: false, message: '', type: 'success' })} />
-                )}
             </div>
         </div>
     )

@@ -5,14 +5,13 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Icon } from '@iconify/react'
 import axios from 'axios'
 
+import NoDataCard from '../../components/common/NoDataCard'
 import ImportAnime from './ImportAnime'
-// Import components
 import AnimeFilter from './components/AnimeFilter'
 import AnimeHeader from './components/AnimeHeader'
 import AnimeNav from './components/AnimeNav'
 import MediaCardList from './components/MediaCardList'
 import MediaList from './components/MediaList'
-import NoDataFound from './components/NoDataFound'
 import AnimeSkeleton from './components/loading/AnimeSkeleton'
 
 function AnimePage() {
@@ -124,14 +123,16 @@ function AnimePage() {
                             />
                         )}
 
-                        {/* Show NoDataFound component if no filtered data is found */}
-                        {isFilterActive && filteredMediaData.length === 0 ? (
-                            <NoDataFound name="Filtered Results" message="No media matches your filter criteria. Please adjust the filters." />
-                        ) : isListView ? (
-                            <MediaList data={displayMediaData} isFavorite={activeTab === 'FAVORITES'} />
-                        ) : (
-                            <MediaCardList data={displayMediaData} isFavorite={activeTab === 'FAVORITES'} />
-                        )}
+                        {/* Show NoDataCard component if no filtered data is found */}
+                        <div className="bg-primary mx-auto w-full rounded-lg border border-light-secondary p-2 shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-sm md:p-5">
+                            {isFilterActive && filteredMediaData.length === 0 ? (
+                                <NoDataCard name="Filtered Results" message="No media matches your filter criteria. Please adjust the filters." />
+                            ) : isListView ? (
+                                <MediaList data={displayMediaData} isFavorite={activeTab === 'FAVORITES'} />
+                            ) : (
+                                <MediaCardList data={displayMediaData} isFavorite={activeTab === 'FAVORITES'} />
+                            )}
+                        </div>
                     </div>
                 </>
             ) : (

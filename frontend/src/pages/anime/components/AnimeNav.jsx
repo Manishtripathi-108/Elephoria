@@ -1,9 +1,13 @@
 import React, { useState } from 'react'
 
+import { useNavigate } from 'react-router-dom'
+
 import { Icon } from '@iconify/react'
 
 function AnimeNav({ currentTab }) {
     const [activeTab, setActiveTab] = useState('ANIME')
+
+    const navigate = useNavigate()
 
     const handleTabChange = (tab) => {
         setActiveTab(tab)
@@ -13,6 +17,11 @@ function AnimeNav({ currentTab }) {
     const handleLogOut = () => {
         if (localStorage.getItem('accessToken')) {
             localStorage.removeItem('accessToken')
+            window.addToast('Logged out successfully', 'success')
+            navigate('/anime/auth')
+        } else {
+            // If there's no accessToken in localStorage
+            window.addToast('Error logging out', 'error')
         }
     }
 

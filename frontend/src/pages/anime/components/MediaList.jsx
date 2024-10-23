@@ -1,7 +1,7 @@
 import React from 'react'
 
+import NoDataCard from '../../../components/common/NoDataCard'
 import MediaRow from './MediaRow'
-import NoDataFound from './NoDataFound'
 
 function MediaList({ data = [], isFavorite = false }) {
     // Render Table Header for media list
@@ -18,7 +18,7 @@ function MediaList({ data = [], isFavorite = false }) {
 
     // Render a regular media table (for Anime/Manga)
     const MediaTable = ({ list }) => (
-        <div key={list.name} className="w-full overflow-hidden rounded-xl shadow-neu-light-sm dark:shadow-neu-dark-sm">
+        <div key={list.name} className="mb-5 w-full overflow-hidden rounded-xl shadow-neu-light-sm dark:shadow-neu-dark-sm">
             <div className="bg-secondary rounded-t-xl border border-light-secondary dark:border-dark-secondary">
                 <h2 className="text-primary p-3 font-aladin text-lg tracking-widest">{list.name}</h2>
             </div>
@@ -70,19 +70,15 @@ function MediaList({ data = [], isFavorite = false }) {
                 {data?.manga?.length > 0 && <FavoriteTable type="Manga" media={data.manga} />}
             </div>
         ) : (
-            <NoDataFound name="favorites" />
+            <NoDataCard name="favorites" message={`Add some favorite anime or manga to your list to see them here.`} />
         )
     }
 
     // Render regular media list (Anime/Manga)
     return data.length > 0 ? (
-        <div className="bg-primary mx-auto grid w-full place-items-center gap-y-5 rounded-lg border border-light-secondary p-3 shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-sm md:p-5">
-            {data.map((list) => (
-                <MediaTable key={list.name} list={list} />
-            ))}
-        </div>
+        data.map((list) => <MediaTable key={list.name} list={list} />)
     ) : (
-        <NoDataFound name="media" />
+        <NoDataCard name="media" message={`Add some media to your list to see them here.`} />
     )
 }
 

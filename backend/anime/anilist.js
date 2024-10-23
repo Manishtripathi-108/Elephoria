@@ -18,24 +18,22 @@ const handleError = (res, message, error) => {
 	console.error(message, error);
 
 	const retryAfter = error.response?.headers["retry-after"];
+	const rateRemaining = error.response?.headers["x-ratelimit-remaining"];
 
-	// Handling unauthorized errors separately
+	// Handle Unauthorized errors separately
 	if (error.response?.status === 401) {
 		return res.status(401).json({
 			message: "Unauthorized. Please log in again.",
-			error: error.response.data || "Token expired or invalid.",
+			error: error?.response?.data || "Token expired or invalid.",
 			retryAfter,
+			rateRemaining,
 		});
 	}
 
 	// General error response
 	res.status(500).json({
 		message,
-		error:
-			error?.response?.data ||
-			error?.message ||
-			error ||
-			"Internal Server Error",
+		error: error?.response?.data || error || "Internal Server Error",
 		retryAfter,
 	});
 };
@@ -74,7 +72,11 @@ const exchangePinForToken = async (req, res) => {
 
 		res.json({ accessToken: response.data.access_token });
 	} catch (error) {
-		handleError(res, "Error exchanging pin for token", error);
+		const message =
+			error.response?.data?.hint ||
+			error?.message ||
+			"Error exchanging pin for token";
+		handleError(res, message, error);
 	}
 };
 
@@ -134,7 +136,6 @@ const fetchUserId = async (accessToken) => {
 				},
 			}
 		);
-
 		return response.data.data.Viewer.id;
 	} catch (error) {
 		console.error("Error fetching user ID:", error.message);
@@ -357,6 +358,8 @@ const getAniListIds = async (req, res) => {
 
 		res.json({
 			aniListIds,
+			retryAfter: response.headers["retry-after"],
+			rateRemaining: response.headers["x-ratelimit-remaining"],
 		});
 	} catch (error) {
 		handleError(res, "Error fetching AniList IDs for MAL IDs:", error);

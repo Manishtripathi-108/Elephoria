@@ -18,7 +18,7 @@ function MediaCard({ mediaItem, isFavorite = false }) {
     return (
         <div className="group relative rounded-lg border border-light-secondary shadow-neu-light-sm dark:border-dark-secondary dark:shadow-neu-dark-sm">
             <img
-                className="text-secondary max-h-56 w-full rounded-t-lg border-b border-light-secondary object-cover dark:border-dark-secondary sm:max-h-72"
+                className="text-secondary h-4/5 max-h-56 w-full rounded-t-lg border-b border-light-secondary object-cover dark:border-dark-secondary sm:max-h-72"
                 src={media?.coverImage?.large}
                 alt={media?.title?.english || media?.title?.native}
             />
@@ -26,7 +26,7 @@ function MediaCard({ mediaItem, isFavorite = false }) {
             <div className="p-2">
                 <h2
                     className={`text-primary line-clamp-1 font-aladin text-sm font-normal capitalize leading-none tracking-widest ${isFavorite && 'my-2'}`}>
-                    {media?.title?.english || 'Untitled'}
+                    {media?.title?.english || media?.title?.native || media?.title?.romaji || 'Unknown Title'}
                 </h2>
                 {!isFavorite && (
                     <span className="text-secondary font-indie-flower text-xs tracking-wider">
