@@ -1,26 +1,28 @@
 const dotenv = require("dotenv");
 const axios = require("axios");
 
-// Load environment variables from the root .env file
+// Load environment variables from the .env file
+// This includes API URLs, client IDs, secrets, etc.
 dotenv.config({ path: "../.env" });
 
-// Default configuration for Axios
+// Default configuration for Axios requests
 const axiosConfig = {
 	headers: {
 		"Content-Type": "application/json",
 		Accept: "application/json",
 	},
-	baseURL: process.env.ANILIST_API_URL || "https://graphql.anilist.co",
+	baseURL: process.env.ANILIST_API_URL || "https://graphql.anilist.co", // Fallback to AniList's API
 };
 
-// Unified error handler
+// Unified error handler function
+// Logs the error, extracts rate limit info, and sends a formatted response back
 const handleError = (res, message, error) => {
-	console.error(message, error);
+	console.error(message, error); // Log the error details
 
-	const retryAfter = error.response?.headers["retry-after"];
-	const rateRemaining = error.response?.headers["x-ratelimit-remaining"];
+	const retryAfter = error.response?.headers["retry-after"]; // Time to wait before retrying
+	const rateRemaining = error.response?.headers["x-ratelimit-remaining"]; // Remaining requests in the rate limit
 
-	// Handle Unauthorized errors separately
+	// Handle Unauthorized (401) errors separately
 	if (error.response?.status === 401) {
 		return res.status(401).json({
 			message: "Unauthorized. Please log in again.",
@@ -30,15 +32,58 @@ const handleError = (res, message, error) => {
 		});
 	}
 
-	// General error response
+	// Generic error response for other types of errors
 	res.status(500).json({
 		message,
-		error: error?.response?.data || error || "Internal Server Error",
+		error: error || "Internal Server Error",
 		retryAfter,
+		rateRemaining,
 	});
 };
 
-// Function to fetch anime list from AniList API
+/**
+ * Fetches the logged-in user's ID from AniList.
+ *
+ * @param {String} accessToken - Access token of the authenticated user.
+ *
+ * @returns {Number|null} Returns the user ID or null if the request fails.
+ */
+const fetchUserId = async (accessToken) => {
+	const query = `
+        query {
+            Viewer {
+                id
+            }
+        }
+    `;
+
+	try {
+		const response = await axios.post(
+			"/",
+			{ query },
+			{
+				...axiosConfig,
+				headers: {
+					...axiosConfig.headers,
+					Authorization: `Bearer ${accessToken}`, // Auth header with access token
+				},
+			}
+		);
+		return response.data.data.Viewer.id; // Return the user's ID
+	} catch (error) {
+		console.error("Error fetching user ID:", error.message);
+		return null; // Return null in case of error
+	}
+};
+
+/**
+ * Fetches a list of anime from AniList API.
+ *
+ * @param {Object} req - Express request object, expects `query` and `variables` in body.
+ * @param {Object} res - Express response object.
+ *
+ * @returns {void} Sends JSON response with data or error message.
+ */
 const getAnimeList = async (req, res) => {
 	try {
 		const response = await axios.post(
@@ -49,13 +94,20 @@ const getAnimeList = async (req, res) => {
 			},
 			axiosConfig
 		);
-		res.json(response.data);
+		res.json(response.data); // Send fetched data back to the client
 	} catch (error) {
 		handleError(res, "Error fetching data from AniList", error);
 	}
 };
 
-// Function to exchange the pin for an access token
+/**
+ * Exchanges a pin (authorization code) for an access token with AniList's OAuth.
+ *
+ * @param {Object} req - Express request object, expects `pin` in body.
+ * @param {Object} res - Express response object.
+ *
+ * @returns {void} Sends the access token as JSON or an error message.
+ */
 const exchangePinForToken = async (req, res) => {
 	try {
 		const response = await axios.post(
@@ -65,12 +117,12 @@ const exchangePinForToken = async (req, res) => {
 				client_id: process.env.ANILIST_CLIENT_ID,
 				client_secret: process.env.ANILIST_CLIENT_SECRET,
 				redirect_uri: process.env.ANILIST_REDIRECT_URI,
-				code: req.body.pin,
+				code: req.body.pin, // Authorization code provided by the user
 			},
 			axiosConfig
 		);
 
-		res.json({ accessToken: response.data.access_token });
+		res.json({ accessToken: response.data.access_token }); // Return the access token to the user
 	} catch (error) {
 		const message =
 			error.response?.data?.hint ||
@@ -80,7 +132,14 @@ const exchangePinForToken = async (req, res) => {
 	}
 };
 
-// Function to fetch user data
+/**
+ * Fetches the currently logged-in user's data from AniList.
+ *
+ * @param {Object} req - Express request object, expects `accessToken` in body.
+ * @param {Object} res - Express response object.
+ *
+ * @returns {void} Sends JSON response with user data or an error message.
+ */
 const fetchUserData = async (req, res) => {
 	const { accessToken } = req.body;
 	const query = `
@@ -104,54 +163,35 @@ const fetchUserData = async (req, res) => {
 				...axiosConfig,
 				headers: {
 					...axiosConfig.headers,
-					Authorization: `Bearer ${accessToken}`,
+					Authorization: `Bearer ${accessToken}`, // Auth header with access token
 				},
 			}
 		);
-		res.json(response.data.data.Viewer);
+		res.json(response.data.data.Viewer); // Send user data back to the client
 	} catch (error) {
 		handleError(res, "Error fetching user data", error);
 	}
 };
 
-// Function to fetch the current logged-in user's ID
-const fetchUserId = async (accessToken) => {
-	const query = `
-        query {
-            Viewer {
-                id
-            }
-        }
-    `;
-
-	try {
-		const response = await axios.post(
-			"/",
-			{ query },
-			{
-				...axiosConfig,
-				headers: {
-					...axiosConfig.headers,
-					Authorization: `Bearer ${accessToken}`,
-				},
-			}
-		);
-		return response.data.data.Viewer.id;
-	} catch (error) {
-		console.error("Error fetching user ID:", error.message);
-		return null;
-	}
-};
-
-// Function to fetch user's anime/manga list by userId
-const fetchUserMedia = async (req, res) => {
-	const { accessToken } = req.body;
-	const userId = await fetchUserId(accessToken);
+/**
+ * Fetches the user's detailed anime/manga list from AniList, including media information like title, score, and genre.
+ *
+ * @param {Object} req - Express request object. Expects:
+ *                       - `accessToken` (String) in the body, which is required for authentication.
+ *                       - `mediaType` (optional, String: "ANIME" or "MANGA"), specifying the media type.
+ * @param {Object} res - Express response object for sending back the result or error message.
+ *
+ * @returns {void} Sends a JSON response containing the user's media list with detailed media info or an error message.
+ */
+const fetchUserMediaDetails = async (req, res) => {
+	const { accessToken, mediaType } = req.body; // Retrieve access token from request body
+	const userId = await fetchUserId(accessToken); // Fetch the user's AniList ID based on accessToken
 
 	if (!userId) {
 		return res.status(500).json({ message: "Error fetching user ID" });
 	}
 
+	// GraphQL query to fetch user's media list with detailed information
 	const query = `
         query ($userId: Int, $type: MediaType) {
             MediaListCollection(userId: $userId, type: $type) {
@@ -160,8 +200,8 @@ const fetchUserMedia = async (req, res) => {
                     entries {
                         progress
                         status
-						updatedAt
-						createdAt
+                        updatedAt
+                        createdAt
                         media {
                             id
                             type
@@ -172,8 +212,8 @@ const fetchUserMedia = async (req, res) => {
                             duration
                             episodes
                             genres
-							averageScore
-							popularity
+                            averageScore
+                            popularity
                             isFavourite
                             title {
                                 romaji
@@ -201,8 +241,71 @@ const fetchUserMedia = async (req, res) => {
 			{
 				query,
 				variables: {
-					userId: userId,
-					type: String(req.body.type || "ANIME").toUpperCase(),
+					userId,
+					type: String(mediaType || "ANIME").toUpperCase(),
+				},
+			},
+			{
+				...axiosConfig,
+				headers: {
+					...axiosConfig.headers,
+					Authorization: `Bearer ${accessToken}`, // Auth header with access token
+				},
+			}
+		);
+
+		// Send back the media list details in the response
+		res.json({
+			mediaList: response.data.data.MediaListCollection,
+		});
+	} catch (error) {
+		handleError(res, "Error fetching user media list details", error);
+	}
+};
+
+/**
+ * Fetches the user's anime/manga list from AniList, but only retrieves the AniList and MAL IDs for each media.
+ *
+ * @param {Object} req - Express request object. Expects:
+ *                       - `accessToken` (String) in the body, required for authentication.
+ *                       - `mediaType` (optional, String: "ANIME" or "MANGA"), specifying the media type.
+ * @param {Object} res - Express response object for sending back the result or error message.
+ *
+ * @returns {void} Sends a JSON response containing the user's media list with AniList and MAL IDs or an error message.
+ */
+const fetchUserMediaIDs = async (req, res) => {
+	const { accessToken, mediaType } = req.body;
+	const userId = await fetchUserId(accessToken);
+
+	if (!userId) {
+		return res.status(500).json({ message: "Error fetching user ID" });
+	}
+
+	// GraphQL query to fetch only AniList ID and MAL ID for each media in the user's list
+	const query = `
+        query ($userId: Int, $type: MediaType) {
+            MediaListCollection(userId: $userId, type: $type) {
+                lists {
+                    name
+                    entries {
+                        media {
+                            id
+                            idMal
+                        }
+                    }
+                }
+            }
+        }
+    `;
+
+	try {
+		const response = await axios.post(
+			"/",
+			{
+				query,
+				variables: {
+					userId,
+					type: String(mediaType || "ANIME").toUpperCase(),
 				},
 			},
 			{
@@ -214,18 +317,26 @@ const fetchUserMedia = async (req, res) => {
 			}
 		);
 
+		// Send back the media list IDs in the response
 		res.json({
-			mediaList: response.data.data.MediaListCollection,
+			mediaListIDs: response.data.data.MediaListCollection,
 		});
 	} catch (error) {
-		handleError(res, "Error fetching user media list", error);
+		handleError(res, "Error fetching user media list IDs", error);
 	}
 };
 
-// Function to fetch user's favorites by userId
+/**
+ * Fetches the user's favorite anime/manga from AniList based on userId.
+ *
+ * @param {Object} req - Express request object, expects `accessToken` in body.
+ * @param {Object} res - Express response object.
+ *
+ * @returns {void} Sends JSON response with user's favorites or error message.
+ */
 const fetchUserFavorites = async (req, res) => {
 	const { accessToken } = req.body;
-	const userId = await fetchUserId(accessToken);
+	const userId = await fetchUserId(accessToken); // Fetch the user's ID
 
 	if (!userId) {
 		return res.status(500).json({ message: "Error fetching user ID" });
@@ -297,7 +408,7 @@ const fetchUserFavorites = async (req, res) => {
 				...axiosConfig,
 				headers: {
 					...axiosConfig.headers,
-					Authorization: `Bearer ${accessToken}`,
+					Authorization: `Bearer ${accessToken}`, // Auth header with access token
 				},
 			}
 		);
@@ -321,11 +432,17 @@ const fetchUserFavorites = async (req, res) => {
 	}
 };
 
-// Function to map multiple MAL IDs to AniList IDs
+/**
+ * Maps multiple MAL IDs to AniList IDs in bulk.
+ *
+ * @param {Object} req - Express request object, expects `malIds` and `mediaType('ANIME'/'MANGA')` in body.
+ * @param {Object} res - Express response object.
+ *
+ * @returns {void} Sends JSON response with mapped AniList IDs or error message.
+ */
 const getAniListIds = async (req, res) => {
 	const { malIds, mediaType } = req.body;
 
-	// Construct a GraphQL query that fetches AniList IDs for multiple MAL IDs
 	const query = `
         query ($idMals: [Int], $type: MediaType) {
             Page {
@@ -342,12 +459,14 @@ const getAniListIds = async (req, res) => {
 			"/",
 			{
 				query,
-				variables: { idMals: malIds, type: mediaType.toUpperCase() },
+				variables: {
+					idMals: malIds,
+					type: String(mediaType || "ANIME").toUpperCase(),
+				},
 			},
 			axiosConfig
 		);
 
-		// Map of MAL ID to AniList ID
 		const aniListIds = response.data.data.Page.media.reduce(
 			(acc, mediaItem) => {
 				acc[mediaItem.idMal] = mediaItem.id;
@@ -366,17 +485,24 @@ const getAniListIds = async (req, res) => {
 	}
 };
 
-// Function to add media to AniList user list
+/**
+ * Adds media to the user's AniList list.
+ *
+ * @param {Object} req - Express request object, expects `accessToken`, `mediaId`, and `status` in body.
+ * @param {Object} res - Express response object.
+ *
+ * @returns {void} Sends JSON response with the media list entry or error message.
+ */
 const addToAniList = async (req, res) => {
 	const { accessToken, mediaId, status } = req.body;
 
 	const mutation = `
-            mutation($mediaId: Int, $status: MediaListStatus) {
-                SaveMediaListEntry(mediaId: $mediaId, status: $status) {
-                    id
-					status
-				}
+        mutation($mediaId: Int, $status: MediaListStatus) {
+            SaveMediaListEntry(mediaId: $mediaId, status: $status) {
+                id
+				status
 			}
+		}
     `;
 
 	try {
@@ -390,7 +516,7 @@ const addToAniList = async (req, res) => {
 				...axiosConfig,
 				headers: {
 					...axiosConfig.headers,
-					Authorization: `Bearer ${accessToken}`,
+					Authorization: `Bearer ${accessToken}`, // Auth header with access token
 				},
 			}
 		);
@@ -413,7 +539,8 @@ module.exports = {
 	getAnimeList,
 	exchangePinForToken,
 	fetchUserData,
-	fetchUserMedia,
+	fetchUserMediaDetails,
+	fetchUserMediaIDs,
 	fetchUserFavorites,
 	getAniListIds,
 	addToAniList,

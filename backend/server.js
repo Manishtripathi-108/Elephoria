@@ -60,7 +60,8 @@ const {
 	getAnimeList,
 	exchangePinForToken,
 	fetchUserData,
-	fetchUserMedia,
+	fetchUserMediaDetails,
+	fetchUserMediaIDs,
 	fetchUserFavorites,
 	getAniListIds,
 	addToAniList,
@@ -73,7 +74,9 @@ app.post("/api/anime/exchange-pin", exchangePinForToken);
 
 app.post("/api/anime/user-data", fetchUserData);
 
-app.post("/api/anime/user-media", fetchUserMedia);
+app.post("/api/anime/user-media", fetchUserMediaDetails);
+
+app.post("/api/anime/user-media-ids", fetchUserMediaIDs);
 
 app.post("/api/anime/user-favorites", fetchUserFavorites);
 

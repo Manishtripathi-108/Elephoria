@@ -1,16 +1,12 @@
 import axios from 'axios'
 
-// Helper to log errors more professionally
-const logError = (message, error) => {
-    const errorMessage = error.response?.data?.message || error.message || error.statusText
-    console.error(`${message}: ${errorMessage}`)
-}
-
 // Helper to create a standardized error response
-const getErrorResponse = (error) => {
+const handleError = (message, error) => {
+    console.error(error.response?.data)
+
     return {
         success: false,
-        message: error.response?.data?.message || error.message || error.statusText,
+        message: error.response?.data?.message || error.message,
         retryAfter: error?.response?.data?.retryAfter || 0,
         rateRemaining: error?.response?.data?.retryAfter ? 0 : error?.response?.data?.rateRemaining || 100,
     }
@@ -25,30 +21,38 @@ export const exchangePin = async (pin) => {
             token: response.data.accessToken,
         }
     } catch (error) {
-        logError('Error exchanging pin', error)
-        return getErrorResponse(error)
+        return handleError('Error exchanging pin', error)
     }
 }
 
 // Function to get AniList IDs from MAL IDs in bulk
 export const getAniListIds = async (malIds, mediaType) => {
     try {
-        const response = await axios.post('/api/anime/anilist-ids', {
-            malIds,
-            mediaType: mediaType.toUpperCase(),
-        })
+        const response = await axios.post('/api/anime/anilist-ids', { malIds, mediaType })
 
         const { aniListIds, rateRemaining, retryAfter } = response.data
 
         // Return AniList ID mapping and rate limit information
         return {
+            success: !!aniListIds,
             aniListIds,
             rateRemaining: rateRemaining || 100,
             retryAfter: retryAfter || 0,
         }
     } catch (error) {
-        logError('Error fetching AniList IDs', error)
-        return getErrorResponse(error)
+        return handleError('Error fetching AniList IDs', error)
+    }
+}
+
+export const getUserMediaListIDs = async (accessToken, mediaType) => {
+    try {
+        const response = await axios.post('/api/anime/user-media-ids', { accessToken, mediaType })
+        return {
+            success: !!response.data.mediaListIDs,
+            mediaListIDs: response.data.mediaListIDs,
+        }
+    } catch (error) {
+        return handleError('Error fetching user media IDs', error)
     }
 }
 
@@ -70,7 +74,6 @@ export const addToAniList = async (accessToken, aniListId, status) => {
             retryAfter: retryAfter || 0,
         }
     } catch (error) {
-        logError('Error adding media to AniList', error)
-        return getErrorResponse(error)
+        return handleError('Error adding media to AniList', error)
     }
 }
