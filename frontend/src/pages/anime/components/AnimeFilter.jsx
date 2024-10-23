@@ -38,11 +38,15 @@ const AnimeFilter = ({ data = [], setFilteredData, setIsFilterActive }) => {
             filteredList = filteredList
                 .map((list) => ({
                     ...list,
-                    entries: list.entries.filter(
-                        (entry) =>
-                            entry.media.title.english.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            entry.media.title.romaji.toLowerCase().includes(searchQuery.toLowerCase())
-                    ),
+                    entries: list.entries.filter((entry) => {
+                        const { english, romaji, native } = entry.media.title
+
+                        return (
+                            (english?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+                            (romaji?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+                            (native?.toLowerCase() || '').includes(searchQuery.toLowerCase())
+                        )
+                    }),
                 }))
                 .filter((list) => list.entries.length > 0)
         }
@@ -52,10 +56,15 @@ const AnimeFilter = ({ data = [], setFilteredData, setIsFilterActive }) => {
             .map((list) => ({
                 ...list,
                 entries: list.entries.filter((entry) => {
-                    const matchFormat = filters.format ? entry.media.format === filters.format : true
-                    const matchStatus = filters.status ? entry.media.status === filters.status : true
-                    const matchGenres = filters.genres ? entry.media.genres.includes(filters.genres) : true
-                    const matchYear = filters.year ? entry.media.startDate.year === filters.year : true
+                    const { format, status, genres, startDate } = entry.media
+
+                    // Convert to upper case and compare, using optional chaining to handle null or undefined
+                    const matchFormat = filters.format ? format?.toUpperCase() === filters.format.toUpperCase() : true
+                    const matchStatus = filters.status ? status?.toUpperCase() === filters.status.toUpperCase() : true
+                    const matchGenres = filters.genres ? genres?.map((genre) => genre.toUpperCase()).includes(filters.genres.toUpperCase()) : true
+                    const matchYear = filters.year ? startDate?.year === filters.year : true
+
+                    // Return true if all conditions match
                     return matchFormat && matchStatus && matchGenres && matchYear
                 }),
             }))
