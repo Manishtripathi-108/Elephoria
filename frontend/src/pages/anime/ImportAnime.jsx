@@ -1,10 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 
-import { Icon } from '@iconify/react/dist/iconify.js'
-
 import { addToAniList, getAniListIds, getUserMediaListIDs } from '../../api/animeApi'
 import ProgressBar from '../../components/common/ProgressBar'
 import UploadInput from '../../components/common/form/upload-input'
+import StatusTable from './components/statusTable'
 import { validStatus } from './constants'
 
 // Extract MAL ID from link
@@ -85,11 +84,11 @@ const ImportAnime = () => {
     }, [file])
 
     // Handle component unmount (cleanup)
-    useEffect(() => {
-        return () => {
-            if (abortControllerRef.current) abortControllerRef.current.abort()
-        }
-    }, [])
+    // useEffect(() => {
+    //     return () => {
+    //         if (abortControllerRef.current) abortControllerRef.current.abort()
+    //     }
+    // }, [])
 
     const handleStatusCorrection = (index, correctedStatus) => {
         correctedStatusRef.current[index] = { ...correctedStatusRef.current[index], corrected: correctedStatus }
@@ -326,6 +325,7 @@ const ImportAnime = () => {
             // Step 4: Import media in batches with rate limit handling
             await processMediaInBatches(malIds, malIdMap, aniListIdMap, accessToken, importList, failedList)
             handleCompletion(failedList, importList)
+            window.addToast('Import process completed.', 'success')
         },
         [jsonData, mediaType, correctingStatus]
     )
@@ -417,67 +417,15 @@ const ImportAnime = () => {
             {/* Progress Tables */}
             <div className="mt-5 flex w-full flex-col items-start justify-center gap-6 sm:flex-row">
                 {/* Successful Imports */}
-                {importProgress.length > 0 && (
-                    <div className="bg-primary w-full max-w-2xl rounded-2xl border border-light-secondary shadow-neu-light-sm dark:border-dark-secondary dark:shadow-neu-dark-sm">
-                        <header className="border-b border-light-secondary px-4 py-3 dark:border-dark-secondary">
-                            <h2 className="text-primary font-aladin text-xl font-semibold tracking-widest">Successful Imports</h2>
-                        </header>
-                        <div className="p-3">
-                            <div className="scrollbar-thin max-h-80 min-h-32 overflow-y-scroll">
-                                <table className="w-full table-auto">
-                                    <thead className="text-secondary text-left font-indie-flower tracking-wide">
-                                        <tr>
-                                            <th className="bg-secondary px-5 py-2 first:rounded-l-lg last:rounded-r-lg">Item</th>
-                                            <th className="bg-secondary px-5 py-2 first:rounded-l-lg last:rounded-r-lg">Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="text-primary font-indie-flower text-sm tracking-wide">
-                                        {importProgress.map((item, index) => (
-                                            <tr
-                                                key={index}
-                                                className="border-b border-light-secondary transition-all duration-300 ease-in-out first:rounded-t-lg last:rounded-b-lg hover:border-transparent hover:shadow-neu-light-md dark:border-dark-secondary dark:hover:border-transparent dark:hover:shadow-neu-dark-sm">
-                                                <td className="px-5 py-3">{item.name}</td>
-                                                <td className="px-5 py-3 text-green-500">{item.statusText}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                )}
+                {importProgress.length > 0 && <StatusTable data={importProgress} title="Successful Imports" />}
 
                 {/* Failed Imports */}
                 {failedImports.length > 0 && (
-                    <div className="bg-primary w-full max-w-2xl rounded-2xl border border-light-secondary shadow-neu-light-sm dark:border-dark-secondary dark:shadow-neu-dark-sm">
-                        <header className="border-b border-light-secondary px-4 py-3 dark:border-dark-secondary">
-                            <h2 className="text-primary font-aladin text-xl font-semibold tracking-widest">Failed Imports</h2>
-                        </header>
-                        <div className="p-3">
-                            <div className="scrollbar-thin h-80 overflow-y-scroll">
-                                <table className="w-full table-auto">
-                                    <thead className="text-secondary text-left font-indie-flower tracking-wide">
-                                        <tr>
-                                            <th className="bg-secondary px-5 py-2 first:rounded-l-lg last:rounded-r-lg">Item</th>
-                                            <th className="bg-secondary px-5 py-2 first:rounded-l-lg last:rounded-r-lg">Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="text-primary font-indie-flower text-sm tracking-wide">
-                                        {failedImports.map((item, index) => (
-                                            <tr
-                                                key={index}
-                                                className="border-b border-light-secondary transition-all duration-300 ease-in-out first:rounded-t-lg last:rounded-b-lg hover:border-transparent hover:shadow-neu-light-md dark:border-dark-secondary dark:hover:border-transparent dark:hover:shadow-neu-dark-sm">
-                                                <td className="px-5 py-3">{item.name}</td>
-                                                <td className="px-5 py-3 text-red-500">{item.statusText}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                            <button className="neu-btn mt-2 w-full" onClick={() => processMediaList(failedImports, true)}>
-                                Retry Failed Imports
-                            </button>
-                        </div>
+                    <div className="w-full max-w-2xl">
+                        <StatusTable data={failedImports} title="Failed Imports" failed />
+                        <button className="neu-btn mt-5 w-full" onClick={() => processMediaList(failedImports, true)}>
+                            Retry Failed Imports
+                        </button>
                     </div>
                 )}
             </div>
