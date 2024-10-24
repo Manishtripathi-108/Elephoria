@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 
+import { Icon } from '@iconify/react/dist/iconify.js'
+
 import { addToAniList, getAniListIds, getUserMediaListIDs } from '../../api/animeApi'
 import ProgressBar from '../../components/common/ProgressBar'
 import UploadInput from '../../components/common/form/upload-input'
@@ -30,10 +32,10 @@ const ImportAnime = () => {
     const [mediaType, setMediaType] = useState('ANIME')
     const [importProgress, setImportProgress] = useState([])
     const [failedImports, setFailedImports] = useState([])
-    const [invalidStatus, setInvalidStatus] = useState(null)
-    const [correctingStatus, setCorrectingStatus] = useState('')
+    const [correctingStatus, setCorrectingStatus] = useState(false)
     const correctedStatusRef = useRef([])
     const abortControllerRef = useRef(null)
+    const [render, setRender] = useState(false)
 
     const [progressData, setProgressData] = useState({
         currentMedia: '',
@@ -42,7 +44,7 @@ const ImportAnime = () => {
         currentProcessed: 0,
     })
 
-    // Reset all state
+    // Reset all states
     const resetState = () => {
         setProgressData({
             currentMedia: '',
@@ -54,20 +56,17 @@ const ImportAnime = () => {
         setJsonData(null)
         setFailedImports([])
         setFile(null)
-        setInvalidStatus(null)
-        setCorrectingStatus('')
+        setCorrectingStatus(false)
         correctedStatusRef.current = []
     }
 
     // Cancel ongoing import and reset
     const handleCancel = useCallback(() => {
-        if (abortControllerRef.current) {
-            abortControllerRef.current.abort()
-        }
+        if (abortControllerRef.current) abortControllerRef.current.abort()
         resetState()
     }, [])
 
-    // Parse the uploaded file
+    // Parse uploaded file and update state
     useEffect(() => {
         if (file) {
             const reader = new FileReader()
@@ -85,38 +84,178 @@ const ImportAnime = () => {
         }
     }, [file])
 
-    // Correct invalid status using user input or fallback
-    const correctStatus = (status) => {
-        const userCorrection = correctedStatusRef.current.find((entry) => entry.invalid === status)
-        const cleanedStatus = status.trim().toUpperCase()
-
-        if (userCorrection) return userCorrection.correct
-
-        const bestMatch = validStatus.find((valid) => valid.includes(cleanedStatus) || cleanedStatus.includes(valid))
-        return bestMatch || null
-    }
-
-    // Handle invalid status case
-    const handleInvalidStatus = useCallback((status, mediaName) => {
-        setInvalidStatus({ status, mediaName })
-        setProgressData((prev) => ({ ...prev, inProgress: false }))
-        setCorrectingStatus('')
+    // Handle component unmount (cleanup)
+    useEffect(() => {
+        return () => {
+            if (abortControllerRef.current) abortControllerRef.current.abort()
+        }
     }, [])
 
-    // Handle user correcting invalid status
-    const handleStatusCorrection = () => {
-        if (invalidStatus && correctingStatus) {
-            const newCorrection = { correct: correctingStatus, invalid: invalidStatus.status }
-            correctedStatusRef.current = [...correctedStatusRef.current, newCorrection]
-            setCorrectingStatus('')
-            setInvalidStatus(null)
-            processMediaList() // Resume processing
+    const handleStatusCorrection = (index, correctedStatus) => {
+        correctedStatusRef.current[index] = { ...correctedStatusRef.current[index], corrected: correctedStatus }
+        setRender((prev) => !prev) // Trigger re-render
+
+        // Auto-process if all statuses are corrected
+        if (correctedStatusRef.current.every((item) => item.corrected !== '')) {
+            setCorrectingStatus(false)
+            processMediaList()
+        }
+    }
+
+    const processMediaArray = (mediaList, mediaType, failedList) => {
+        const malIdMap = {}
+        const mediaStatus = Object.keys(mediaList)
+        const invalidStatus = [...new Set(mediaStatus.filter((status) => !validStatus.includes(status.toUpperCase())))]
+
+        if (invalidStatus.length > 0) {
+            if (correctedStatusRef.current.length === 0) {
+                invalidStatus.forEach((status) => {
+                    correctedStatusRef.current.push({ status, corrected: '' })
+                })
+                setCorrectingStatus(true)
+                return -1
+            }
+
+            correctedStatusRef.current.forEach((item) => {
+                if (item.corrected === '') {
+                    setCorrectingStatus(true)
+                    return -1
+                }
+            })
+        }
+
+        Object.entries(mediaList).forEach(([status, mediaArray]) => {
+            let correctStatus = status.toUpperCase()
+            if (!validStatus.includes(correctStatus)) {
+                correctStatus = correctedStatusRef.current.find((item) => item.status === status)?.corrected
+            }
+            if (!correctStatus) return
+
+            mediaArray.forEach((media) => {
+                const malId = extractMalId(media.link, mediaType)
+                if (malId) {
+                    malIdMap[malId] = { name: media.name, status: correctStatus }
+                } else {
+                    failedList.push({ name: media.name, status: 'Invalid MAL ID' })
+                }
+            })
+        })
+
+        return malIdMap
+    }
+
+    const filterExistingMalIds = (malIdMap, userMediaList) => {
+        const userMalIds = userMediaList.lists.flatMap((list) =>
+            list.entries.map((entry) => ({
+                idMal: entry.media.idMal,
+                status: list.name.toUpperCase(),
+            }))
+        )
+
+        return Object.keys(malIdMap).filter((malId) => {
+            const malData = malIdMap[malId]
+            return !userMalIds.some(
+                (userMal) =>
+                    parseInt(malId) === parseInt(userMal.idMal) &&
+                    (malData.status.toUpperCase() === 'CURRENT' ? 'WATCHING' === userMal.status : malData.status.toUpperCase() === userMal.status)
+            )
+        })
+    }
+
+    const fetchAniListIdsInBatches = async (malIds, mediaType) => {
+        const malIdBatches = chunkArray(malIds, 50)
+        let aniListIdMap = []
+
+        try {
+            for (const batch of malIdBatches) {
+                setProgressData((prev) => ({ ...prev, currentMedia: 'Fetching AniList IDs' }))
+                const result = await getAniListIds(batch, mediaType, abortControllerRef.current.signal)
+
+                if (result.success) {
+                    aniListIdMap.push(result.aniListIds)
+                } else {
+                    handleError(result)
+                    return null
+                }
+            }
+        } catch (error) {
+            if (abortControllerRef.current.signal.aborted) {
+                window.addToast('Import process was cancelled.', 'error')
+            }
+            return null
+        }
+
+        return aniListIdMap.reduce((acc, val) => ({ ...acc, ...val }), {})
+    }
+
+    const processMediaInBatches = async (malIds, malIdMap, aniListIdMap, accessToken, importList, failedList) => {
+        const mediaBatches = chunkArray(malIds, 25)
+        let remainingRateLimit = 100
+        let retryAfterSeconds = 0
+
+        for (const batch of mediaBatches) {
+            for (const malId of batch) {
+                if (abortControllerRef.current.signal.aborted) {
+                    window.addToast('Import process was cancelled.', 'error')
+                    return
+                }
+
+                const mediaData = malIdMap[malId]
+                const aniListId = aniListIdMap[malId]
+
+                await handleRateLimits(remainingRateLimit, retryAfterSeconds)
+
+                if (aniListId) {
+                    try {
+                        setProgressData((prev) => ({ ...prev, currentMedia: mediaData.name }))
+
+                        const result = await addToAniList(accessToken, aniListId, mediaData.status, abortControllerRef.current.signal)
+
+                        // Use default values if remainingRateLimit or retryAfterSeconds is not provided
+                        ;({ remainingRateLimit = remainingRateLimit, retryAfterSeconds = retryAfterSeconds } = result)
+
+                        if (result.success) {
+                            importList.push({ name: mediaData.name, statusText: 'Success' })
+                        } else {
+                            failedList.push({ ...mediaData, malId, aniListId, statusText: 'Failed' })
+                        }
+                    } catch (error) {
+                        failedList.push({ ...mediaData, malId, aniListId, statusText: 'Error while importing' })
+                    }
+                } else {
+                    failedList.push({ ...mediaData, malId, statusText: 'AniList ID not found' })
+                }
+
+                setProgressData((prev) => ({ ...prev, currentProcessed: prev.currentProcessed + 1 }))
+            }
+        }
+    }
+
+    const handleError = (result) => {
+        if (result.retryAfterSeconds > 0) {
+            window.addToast(`Rate limit exceeded. Try again after ${result.retryAfterSeconds} seconds.`, 'error')
+            handleCancel()
+        } else {
+            window.addToast(result.message, 'error')
+        }
+    }
+
+    const handleCompletion = (failedList, importList = []) => {
+        if (abortControllerRef.current) abortControllerRef.current.abort()
+        setImportProgress(importList)
+        setFailedImports(failedList)
+        setProgressData((prev) => ({ ...prev, inProgress: false }))
+    }
+
+    const handleRateLimits = async (remainingRateLimit, retryAfterSeconds) => {
+        if (remainingRateLimit <= 60 || retryAfterSeconds > 0) {
+            await new Promise((resolve) => setTimeout(resolve, (retryAfterSeconds || 60) * 1000))
         }
     }
 
     // Main logic to process the media list
     const processMediaList = useCallback(
-        async (listToProcess = null) => {
+        async (listToProcess = null, retryFailed = false) => {
             const mediaList = listToProcess || jsonData
             const failedList = []
             const importList = []
@@ -135,207 +274,105 @@ const ImportAnime = () => {
             abortControllerRef.current = new AbortController()
             setProgressData({ currentMedia: '', inProgress: true, totalToProcess: 0, currentProcessed: 0 })
 
-            // Step 1: Collect MAL IDs
-            const malIdMap = {}
-            for (const [status, mediaArray] of Object.entries(mediaList)) {
-                const resolvedStatus = correctStatus(status)
-                if (!resolvedStatus) {
-                    handleInvalidStatus(status, mediaArray[0]?.name)
-                    return
-                }
+            // Step 1: Process media list and extract MAL IDs
+            const malIdMap = retryFailed
+                ? Object.fromEntries(mediaList.map((media) => [media.malId, { name: media.name, status: media.status }]))
+                : processMediaArray(mediaList, mediaType, failedList)
 
-                mediaArray.forEach((media) => {
-                    const malId = extractMalId(media.link, mediaType)
-                    if (malId) {
-                        malIdMap[malId] = { name: media.name, status: resolvedStatus }
-                    } else {
-                        failedList.push({ name: media.name, status: 'Invalid MAL ID' })
-                    }
-                })
+            if (malIdMap === -1) {
+                window.addToast('Invalid statuses found in the list.', 'error')
+                handleCompletion(failedList)
+                return
             }
 
-            let malIds = Object.keys(malIdMap)
+            if (Object.keys(malIdMap).length === 0) {
+                window.addToast('MAL IDs not found from the list.', 'error')
+                handleCompletion(failedList)
+                return
+            }
 
             // Step 2: Fetch user's media list and filter out existing entries
+            let malIds = Object.keys(malIdMap)
             try {
                 const result = await getUserMediaListIDs(accessToken, mediaType)
 
                 if (result.success) {
-                    const userMediaList = result.mediaListIDs
-                    const userMalIds = []
-
-                    userMediaList.lists.forEach((list) => {
-                        list.entries.forEach((entry) => {
-                            userMalIds.push({ idMal: entry.media.idMal, status: list.name })
-                        })
-                    })
-
-                    malIds = malIds.filter((malId) => {
-                        return !userMalIds.some((userMalId) =>
-                            parseInt(malId) === parseInt(userMalId.idMal) && malIdMap[malId].status.toUpperCase() === 'CURRENT'
-                                ? 'WATCHING' === userMalId.status.toUpperCase()
-                                : malIdMap[malId].status.toUpperCase() === userMalId.status.toUpperCase()
-                        )
-                    })
-                } else if (result.retryAfter > 0) {
-                    window.addToast(`Rate limit exceeded. Try again after ${result.retryAfter} seconds.`, 'error')
-                    handleCancel()
-                    return
+                    malIds = filterExistingMalIds(malIdMap, result.mediaListIDs)
                 } else {
-                    window.addToast(result.message, 'error')
+                    handleError(result)
                     return
                 }
             } catch (error) {
-                window.addToast('Error fetching media list.', 'error')
+                handleError({ message: 'Error fetching media list.' })
                 return
             }
 
             if (malIds.length === 0) {
-                window.addToast('No new entries to import.', 'error')
-
-                handleCancel()
-
-                if (failedList.length > 0) {
-                    setFailedImports(failedList)
-                }
+                window.addToast('No media to import. All media is already in your list.', 'info')
+                handleCompletion(failedList)
+                return
             }
 
-            const malIdBatches = chunkArray(malIds, 50)
-            let aniListIdMap = []
+            // Step 3: Fetch AniList IDs
+            setProgressData((prev) => ({ ...prev, totalToProcess: malIds.length }))
 
-            try {
-                for (const batch of malIdBatches) {
-                    setProgressData((prev) => ({ ...prev, currentMedia: 'Fetching AniList IDs' }))
+            const aniListIdMap = await fetchAniListIdsInBatches(malIds, mediaType)
 
-                    const result = await getAniListIds(batch, mediaType, abortControllerRef.current.signal)
-
-                    if (result.success) {
-                        aniListIdMap.push(result.aniListIds)
-                    } else if (result.retryAfter > 0) {
-                        window.addToast(`Rate limit exceeded. Try again after ${result.retryAfter} seconds.`, 'error')
-                        handleCancel()
-                        return
-                    } else {
-                        window.addToast('Error fetching AniList IDs.', 'error')
-                        return
-                    }
-                }
-            } catch (error) {
-                if (abortControllerRef.current.signal.aborted) {
-                    window.addToast('Import process was cancelled.', 'error')
-                    return
-                }
+            if (!aniListIdMap) {
+                handleCompletion(failedList)
+                return
             }
 
-            aniListIdMap = aniListIdMap.reduce((acc, val) => ({ ...acc, ...val }), {})
-            const totalToProcess = Object.keys(aniListIdMap).length
-            setProgressData((prev) => ({ ...prev, totalToProcess }))
-
-            // Step 3: Process each media entry and handle rate limits
-            let remainingRateLimit = 100
-            let retryAfterSeconds = 0
-            const mediaBatches = chunkArray(malIds, 25)
-
-            for (const batch of mediaBatches) {
-                for (const malId of batch) {
-                    if (abortControllerRef.current.signal.aborted) {
-                        window.addToast('Import process was cancelled.', 'error')
-                        return
-                    }
-
-                    const mediaData = malIdMap[malId]
-                    const aniListId = aniListIdMap[malId]
-
-                    // Handle rate limits
-                    if (remainingRateLimit <= 60 || retryAfterSeconds > 0) {
-                        await new Promise((resolve) => setTimeout(resolve, (retryAfterSeconds || 60) * 1000))
-                    }
-
-                    if (aniListId) {
-                        try {
-                            setProgressData((prev) => ({
-                                ...prev,
-                                currentMedia: mediaData.name,
-                            }))
-
-                            const result = await addToAniList(accessToken, aniListId, mediaData.status, abortControllerRef.current.signal)
-
-                            // console.log(`rateRemaining: ${result.rateRemaining}, retryAfter: ${result.retryAfter}`)
-
-                            // Update rate limit and retryAfter values
-                            if (result.rateRemaining !== undefined && result.retryAfter !== undefined) {
-                                remainingRateLimit = result.rateRemaining
-                                retryAfterSeconds = result.retryAfter
-                            }
-
-                            if (result.success) {
-                                importList.push({ name: mediaData.name, statusText: 'Success' })
-                            } else {
-                                failedList.push({
-                                    name: mediaData.name,
-                                    status: mediaData.status,
-                                    statusText: 'Failed',
-                                    malId,
-                                    aniListId,
-                                })
-                            }
-                        } catch (error) {
-                            failedList.push({
-                                name: mediaData.name,
-                                status: mediaData.status,
-                                statusText: 'Error while importing',
-                                malId,
-                                aniListId,
-                            })
-                        }
-                    } else {
-                        failedList.push({
-                            name: mediaData.name,
-                            statusText: 'AniList ID not found',
-                            malId,
-                        })
-                    }
-
-                    // Update progress after processing each media item
-                    setProgressData((prev) => ({
-                        ...prev,
-                        currentProcessed: prev.currentProcessed + 1,
-                    }))
-                }
-
-                // Update progress after processing each batch
-                setImportProgress(importList)
-            }
-
-            setImportProgress(importList)
-            setFailedImports(failedList)
-            setProgressData((prev) => ({ ...prev, inProgress: false }))
+            // Step 4: Import media in batches with rate limit handling
+            await processMediaInBatches(malIds, malIdMap, aniListIdMap, accessToken, importList, failedList)
+            handleCompletion(failedList, importList)
         },
-        [jsonData, mediaType, handleInvalidStatus]
+        [jsonData, mediaType, correctingStatus]
     )
-
-    // Retry logic for failed imports
-    const retryFailedImports = () => {
-        const failedList = failedImports.map((item) => {
-            return item.aniListId ? { ...item, statusText: 'Retrying...' } : item
-        })
-        setFailedImports(failedList)
-        processMediaList(failedList)
-    }
 
     return (
         <div className="bg-primary container mx-auto grid place-items-center rounded-lg border border-light-secondary p-3 shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-sm md:p-5">
-            <h2 className="text-primary text-center font-aladin text-2xl font-semibold tracking-widest">Import Media</h2>
-            <p className="text-secondary text-center font-indie-flower tracking-wide">Import your anime or manga list from a JSON file to AniList</p>
-
             {progressData.inProgress ? (
-                <div className="mt-5 grid w-full place-items-center gap-5">
-                    <ProgressBar total={progressData.totalToProcess} current={progressData.currentProcessed} name={progressData.currentMedia} />
-                    <button
-                        className="neu-btn neu-icon-btn text-red-500 hover:text-red-700 dark:text-red-500 dark:hover:text-red-700"
-                        onClick={handleCancel}>
-                        Cancel
-                    </button>
+                <>
+                    <h2 className="text-primary text-center font-aladin text-2xl font-semibold tracking-widest">Import Media</h2>
+                    <p className="text-secondary text-center font-indie-flower tracking-wide">
+                        Import your anime or manga list from a JSON file to AniList
+                    </p>
+                    <div className="mt-5 grid w-full place-items-center gap-5">
+                        <ProgressBar total={progressData.totalToProcess} current={progressData.currentProcessed} name={progressData.currentMedia} />
+                        <button
+                            className="neu-btn neu-icon-btn text-red-500 hover:text-red-700 dark:text-red-500 dark:hover:text-red-700"
+                            onClick={handleCancel}>
+                            Cancel
+                        </button>
+                    </div>
+                </>
+            ) : correctingStatus ? (
+                <div className="bg-primary my-3 w-full max-w-lg rounded-lg border border-light-secondary p-6 shadow-neu-light-lg dark:border-dark-secondary dark:shadow-neu-dark-lg">
+                    <h2 className="text-primary mb-6 font-aladin text-2xl font-semibold tracking-widest">Correct Invalid Statuses</h2>
+
+                    <div className="space-y-4">
+                        {correctedStatusRef.current.map((item, index) => (
+                            <div
+                                key={index}
+                                className="bg-primary neu-form-group rounded-md border border-light-secondary p-4 shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-sm">
+                                <label className="neu-form-label">
+                                    Invalid Status: <span className="error font-bold">{item.status}</span>
+                                </label>
+                                <select
+                                    className="neu-form-select"
+                                    value={item.corrected}
+                                    onChange={(e) => handleStatusCorrection(index, e.target.value)}>
+                                    <option value="">Select valid status</option>
+                                    {validStatus.map((status) => (
+                                        <option key={status} value={status}>
+                                            {status}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             ) : (
                 <div className="mt-10 grid w-fit place-items-center gap-5 md:grid-cols-2">
@@ -377,30 +414,8 @@ const ImportAnime = () => {
                 </div>
             )}
 
-            {/* Invalid Status Correction */}
-            {invalidStatus && (
-                <div className="mt-5">
-                    <p className="text-red-500">
-                        Invalid Status Found: {invalidStatus.status} for {invalidStatus.mediaName}
-                    </p>
-                    <div className="mt-3 flex gap-2">
-                        <select className="neu-form-select" value={correctingStatus} onChange={(e) => setCorrectingStatus(e.target.value)}>
-                            <option value="">Select a valid status</option>
-                            {validStatus.map((status) => (
-                                <option key={status} value={status}>
-                                    {status}
-                                </option>
-                            ))}
-                        </select>
-                        <button className="neu-btn" onClick={handleStatusCorrection}>
-                            Confirm
-                        </button>
-                    </div>
-                </div>
-            )}
-
             {/* Progress Tables */}
-            <div className="flex-center mt-5 flex-col gap-6 sm:flex-row">
+            <div className="mt-5 flex w-full flex-col items-start justify-center gap-6 sm:flex-row">
                 {/* Successful Imports */}
                 {importProgress.length > 0 && (
                     <div className="bg-primary w-full max-w-2xl rounded-2xl border border-light-secondary shadow-neu-light-sm dark:border-dark-secondary dark:shadow-neu-dark-sm">
@@ -408,7 +423,7 @@ const ImportAnime = () => {
                             <h2 className="text-primary font-aladin text-xl font-semibold tracking-widest">Successful Imports</h2>
                         </header>
                         <div className="p-3">
-                            <div className="scrollbar-thin h-80 overflow-y-scroll">
+                            <div className="scrollbar-thin max-h-80 min-h-32 overflow-y-scroll">
                                 <table className="w-full table-auto">
                                     <thead className="text-secondary text-left font-indie-flower tracking-wide">
                                         <tr>
@@ -458,13 +473,10 @@ const ImportAnime = () => {
                                         ))}
                                     </tbody>
                                 </table>
-                                <button className="neu-btn mt-2 w-full" onClick={retryFailedImports}>
-                                    Retry Failed Imports
-                                </button>
-                                {/* <button className="neu-btn mt-2 w-full" onClick={exportFailedImports}>
-                                    Export Failed Imports
-                                </button> */}
                             </div>
+                            <button className="neu-btn mt-2 w-full" onClick={() => processMediaList(failedImports, true)}>
+                                Retry Failed Imports
+                            </button>
                         </div>
                     </div>
                 )}

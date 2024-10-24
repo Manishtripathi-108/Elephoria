@@ -31,8 +31,8 @@ function AnimeAuth() {
             window.addToast('Authorization successful', 'success')
             navigate('/anime')
         } else {
-            if (result.retryAfter) {
-                window.addToast(`${result.message} Try Again After ${result.retryAfter}Seconds`, 'error')
+            if (result.retryAfterSeconds) {
+                window.addToast(`${result.message} Try Again After ${result.retryAfterSeconds}Seconds`, 'error')
             } else {
                 window.addToast(result.message, 'error')
             }

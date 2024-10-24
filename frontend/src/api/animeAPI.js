@@ -7,8 +7,8 @@ const handleError = (message, error) => {
     return {
         success: false,
         message: error.response?.data?.message || error.message,
-        retryAfter: error?.response?.data?.retryAfter || 0,
-        rateRemaining: error?.response?.data?.retryAfter ? 0 : error?.response?.data?.rateRemaining || 100,
+        retryAfterSeconds: error?.response?.data?.retryAfterSeconds || 0,
+        remainingRateLimit: error?.response?.data?.retryAfterSeconds ? 0 : error?.response?.data?.remainingRateLimit || 100,
     }
 }
 
@@ -30,14 +30,14 @@ export const getAniListIds = async (malIds, mediaType) => {
     try {
         const response = await axios.post('/api/anime/anilist-ids', { malIds, mediaType })
 
-        const { aniListIds, rateRemaining, retryAfter } = response.data
+        const { aniListIds, remainingRateLimit, retryAfterSeconds } = response.data
 
         // Return AniList ID mapping and rate limit information
         return {
             success: !!aniListIds,
             aniListIds,
-            rateRemaining: rateRemaining || 100,
-            retryAfter: retryAfter || 0,
+            remainingRateLimit: remainingRateLimit || 100,
+            retryAfterSeconds: retryAfterSeconds || 0,
         }
     } catch (error) {
         return handleError('Error fetching AniList IDs', error)
@@ -65,13 +65,13 @@ export const addToAniList = async (accessToken, aniListId, status) => {
             status,
         })
 
-        const { SaveMediaListEntry, rateRemaining, retryAfter } = response.data
+        const { SaveMediaListEntry, remainingRateLimit, retryAfterSeconds } = response.data
 
         // Return success status and rate limit information
         return {
             success: SaveMediaListEntry.status === status,
-            rateRemaining: rateRemaining || 100,
-            retryAfter: retryAfter || 0,
+            remainingRateLimit: remainingRateLimit || 100,
+            retryAfterSeconds: retryAfterSeconds || 0,
         }
     } catch (error) {
         return handleError('Error adding media to AniList', error)

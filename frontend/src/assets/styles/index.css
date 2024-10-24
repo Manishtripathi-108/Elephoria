@@ -25,7 +25,7 @@
 
     .neu-form-label,
     .neu-form-text {
-        @apply text-secondary font-indie-flower text-sm leading-3;
+        @apply text-secondary font-indie-flower text-sm leading-3 tracking-wider;
     }
 
     /*-- ------------------------- neu-form-input ------------------------- */
@@ -72,7 +72,7 @@
     }
 
     .neu-input-group:focus-within .neu-input-icon.error {
-        @apply border border-light-accent-primary dark:border-dark-accent-primary;
+        @apply border border-red-500 dark:border-red-500;
     }
 
     /* ------------------------- neu-inset-outset-input ------------------------- */
@@ -374,13 +374,25 @@
 @layer utilities {
     /* ---------------------------------- Error --------------------------------- */
     .error {
-        @apply text-accent-primary border-light-accent-primary transition-all duration-300 focus-within:border-light-accent-primary hover:border-light-accent-primary focus:border-light-accent-primary dark:border-dark-accent-primary dark:focus-within:border-dark-accent-primary dark:hover:border-dark-accent-primary dark:focus:border-dark-accent-primary;
+        @apply border-red-500 text-red-500 transition-all duration-300 focus-within:border-red-500 hover:border-red-500 focus:border-red-500 dark:border-red-600 dark:text-red-500 dark:focus-within:border-red-600 dark:hover:border-red-600 dark:focus:border-red-600;
     }
 
     .flex-center {
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+
+    .animation-duration-1000 {
+        animation-duration: 1000ms;
+    }
+
+    .animation-duration-1500 {
+        animation-duration: 1500ms;
+    }
+
+    .animation-duration-2000 {
+        animation-duration: 2000ms;
     }
 
     /* -------------------------------------------------------------------------- */
