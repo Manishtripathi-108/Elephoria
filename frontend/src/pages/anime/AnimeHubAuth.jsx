@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
-import { exchangePin } from '../../api/animeApi'
+import { exchangePin } from '../../api/animeHubApi'
 
 const validationSchema = Yup.object().shape({
     pin: Yup.string()
@@ -13,13 +13,13 @@ const validationSchema = Yup.object().shape({
         .matches(/^[0-9a-fA-F]+$/, 'Auth Pin must be a valid hexadecimal string'),
 })
 
-function AnimeAuth() {
+function AnimeHubAuth() {
     const [accessToken, setAccessToken] = useState(null) // State to store access token
     const navigate = useNavigate()
 
     useEffect(() => {
         if (window.localStorage.getItem('accessToken')) {
-            navigate('/anime')
+            navigate('/anime-hub')
         }
     }, [accessToken, navigate])
 
@@ -29,7 +29,7 @@ function AnimeAuth() {
             setAccessToken(result.token)
             window.localStorage.setItem('accessToken', result.token)
             window.addToast('Authorization successful', 'success')
-            navigate('/anime')
+            navigate('/anime-hub')
         } else {
             if (result.retryAfterSeconds) {
                 window.addToast(`${result.message} Try Again After ${result.retryAfterSeconds}Seconds`, 'error')
@@ -80,4 +80,4 @@ function AnimeAuth() {
     )
 }
 
-export default AnimeAuth
+export default AnimeHubAuth

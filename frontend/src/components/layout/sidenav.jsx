@@ -22,8 +22,11 @@ const menuItems = [
         items: [{ name: 'Music Editor', url: '/audio' }],
     },
     {
-        category: 'Anime',
-        items: [{ name: 'Anime', url: '/anime' }],
+        category: 'Anime Hub',
+        items: [
+            { name: 'Anime Hub', url: '/anime-hub' },
+            { name: 'Authorize', url: '/anime-hub/auth' },
+        ],
     },
 ]
 

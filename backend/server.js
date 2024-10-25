@@ -7,7 +7,6 @@ const path = require("path");
 // Import handlers
 const { uploadAudio } = require("./audioHandlers/uploadAudio");
 const { editMetadata } = require("./audioHandlers/editMetadata");
-const getJson = require("./anime/getJson");
 
 // Load environment variables
 dotenv.config();
@@ -52,8 +51,6 @@ app.post("/api/upload", upload.single("audio"), uploadAudio);
 // Endpoint for editing metadata
 app.post("/api/edit-metadata", upload.single("audio"), editMetadata);
 
-app.get("/api/json", getJson);
-
 /* ------------------------------- Anilist API ------------------------------ */
 // Import Anilist API handler
 const {
@@ -65,24 +62,24 @@ const {
 	fetchUserFavorites,
 	getAniListIds,
 	addToAniList,
-} = require("./anime/anilist");
+} = require("./animeHub/anilist");
 
 // Route to fetch anime list from Anilist API
-app.post("/api/anime", getAnimeList);
+app.post("/api/anime-hub", getAnimeList);
 
-app.post("/api/anime/exchange-pin", exchangePinForToken);
+app.post("/api/anime-hub/exchange-pin", exchangePinForToken);
 
-app.post("/api/anime/user-data", fetchUserData);
+app.post("/api/anime-hub/user-data", fetchUserData);
 
-app.post("/api/anime/user-media", fetchUserMediaDetails);
+app.post("/api/anime-hub/user-media", fetchUserMediaDetails);
 
-app.post("/api/anime/user-media-ids", fetchUserMediaIDs);
+app.post("/api/anime-hub/user-media-ids", fetchUserMediaIDs);
 
-app.post("/api/anime/user-favorites", fetchUserFavorites);
+app.post("/api/anime-hub/user-favorites", fetchUserFavorites);
 
-app.post("/api/anime/anilist-ids", getAniListIds);
+app.post("/api/anime-hub/anilist-ids", getAniListIds);
 
-app.post("/api/anime/add-to-anilist", addToAniList);
+app.post("/api/anime-hub/add-to-anilist", addToAniList);
 
 // Set PORT from environment or default to 3000
 const PORT = process.env.PORT || 3000;

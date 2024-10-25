@@ -184,8 +184,8 @@ const fetchUserData = async (req, res) => {
  * @returns {void} Sends a JSON response containing the user's media list with detailed media info or an error message.
  */
 const fetchUserMediaDetails = async (req, res) => {
-	const { accessToken, mediaType } = req.body; // Retrieve access token from request body
-	const userId = await fetchUserId(accessToken); // Fetch the user's AniList ID based on accessToken
+	const { accessToken, mediaType } = req.body;
+	const userId = await fetchUserId(accessToken);
 
 	if (!userId) {
 		return res.status(500).json({ message: "Error fetching user ID" });

@@ -18,7 +18,7 @@ function AnimeNav({ currentTab }) {
         if (localStorage.getItem('accessToken')) {
             localStorage.removeItem('accessToken')
             window.addToast('Logged out successfully', 'success')
-            navigate('/anime/auth')
+            navigate('/anime-hub/auth')
         } else {
             // If there's no accessToken in localStorage
             window.addToast('Error logging out', 'error')

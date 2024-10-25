@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 
-import { addToAniList, getAniListIds, getUserMediaListIDs } from '../../api/animeApi'
+import { addToAniList, getAniListIds, getUserMediaListIDs } from '../../api/animeHubApi'
 import ProgressBar from '../../components/common/ProgressBar'
 import UploadInput from '../../components/common/form/upload-input'
 import StatusTable from './components/statusTable'

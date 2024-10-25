@@ -8,7 +8,7 @@ import AppName from '../../assets/svg/app-name'
 import Logo from '../../assets/svg/logo'
 import useDarkMode from '../../hooks/useDark'
 import NeuHamburgerBtn from '../common/buttons/NeuHamburgerBtn'
-import Sidenav from './sidenav'
+import Sidenav from './Sidenav'
 
 const Header = () => {
     const [isSidenavOpen, setIsSidenavOpen] = useState(false)

@@ -41,7 +41,7 @@ function MediaList({ data = [], isFavorite = false }) {
 
     // Render a favorite media table (for Anime/Manga)
     const FavoriteTable = ({ type, media }) => (
-        <div className="w-full overflow-hidden rounded-xl shadow-neu-light-sm dark:shadow-neu-dark-sm">
+        <div className="mb-5 w-full overflow-hidden rounded-xl shadow-neu-light-sm dark:shadow-neu-dark-sm">
             <div className="bg-secondary rounded-t-xl border border-light-secondary dark:border-dark-secondary">
                 <h2 className="text-primary p-3 font-aladin text-lg tracking-widest">Favorite {type}</h2>
             </div>
@@ -65,10 +65,10 @@ function MediaList({ data = [], isFavorite = false }) {
     // Handle favorite list rendering
     if (isFavorite) {
         return data?.anime?.length > 0 || data?.manga?.length > 0 ? (
-            <div className="bg-primary mx-auto grid w-full place-items-center gap-y-5 rounded-lg border border-light-secondary p-3 shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-sm md:p-5">
+            <>
                 {data?.anime?.length > 0 && <FavoriteTable type="Anime" media={data.anime} />}
                 {data?.manga?.length > 0 && <FavoriteTable type="Manga" media={data.manga} />}
-            </div>
+            </>
         ) : (
             <NoDataCard name="favorites" message={`Add some favorite anime or manga to your list to see them here.`} />
         )

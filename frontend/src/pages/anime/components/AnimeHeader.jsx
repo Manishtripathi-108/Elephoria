@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react'
 
 import axios from 'axios'
 
-import avatarImage from '../../../assets/images/portrait/lady-cute.png'
-
 function AnimeHeader() {
     const [userData, setUserData] = useState(null)
     const [loading, setLoading] = useState(true)
@@ -20,7 +18,7 @@ function AnimeHeader() {
 
         const getUserData = async () => {
             try {
-                const response = await axios.post('/api/anime/user-data', { accessToken })
+                const response = await axios.post('/api/anime-hub/user-data', { accessToken })
                 setUserData(response.data)
             } catch (err) {
                 setError('Error fetching user data')

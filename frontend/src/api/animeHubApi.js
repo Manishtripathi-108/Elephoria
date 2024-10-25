@@ -15,7 +15,7 @@ const handleError = (message, error) => {
 // Function to exchange the pin for an access token
 export const exchangePin = async (pin) => {
     try {
-        const response = await axios.post('/api/anime/exchange-pin', { pin })
+        const response = await axios.post('/api/anime-hub/exchange-pin', { pin })
         return {
             success: !!response.data.accessToken,
             token: response.data.accessToken,
@@ -28,7 +28,7 @@ export const exchangePin = async (pin) => {
 // Function to get AniList IDs from MAL IDs in bulk
 export const getAniListIds = async (malIds, mediaType) => {
     try {
-        const response = await axios.post('/api/anime/anilist-ids', { malIds, mediaType })
+        const response = await axios.post('/api/anime-hub/anilist-ids', { malIds, mediaType })
 
         const { aniListIds, remainingRateLimit, retryAfterSeconds } = response.data
 
@@ -46,7 +46,7 @@ export const getAniListIds = async (malIds, mediaType) => {
 
 export const getUserMediaListIDs = async (accessToken, mediaType) => {
     try {
-        const response = await axios.post('/api/anime/user-media-ids', { accessToken, mediaType })
+        const response = await axios.post('/api/anime-hub/user-media-ids', { accessToken, mediaType })
         return {
             success: !!response.data.mediaListIDs,
             mediaListIDs: response.data.mediaListIDs,
@@ -59,7 +59,7 @@ export const getUserMediaListIDs = async (accessToken, mediaType) => {
 // Function to add media to AniList
 export const addToAniList = async (accessToken, aniListId, status) => {
     try {
-        const response = await axios.post('/api/anime/add-to-anilist', {
+        const response = await axios.post('/api/anime-hub/add-to-anilist', {
             accessToken,
             mediaId: aniListId,
             status,

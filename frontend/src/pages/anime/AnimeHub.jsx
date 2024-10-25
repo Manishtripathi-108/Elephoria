@@ -6,7 +6,7 @@ import { Icon } from '@iconify/react'
 import axios from 'axios'
 
 import NoDataCard from '../../components/common/NoDataCard'
-import ImportAnime from './ImportAnime'
+import ImportAnime from './ImportMedia'
 import AnimeFilter from './components/AnimeFilter'
 import AnimeHeader from './components/AnimeHeader'
 import AnimeNav from './components/AnimeNav'
@@ -14,7 +14,8 @@ import MediaCardList from './components/MediaCardList'
 import MediaList from './components/MediaList'
 import AnimeSkeleton from './components/loading/AnimeSkeleton'
 
-function AnimePage() {
+function AnimeHub() {
+    const navigate = useNavigate()
     const [activeTab, setActiveTab] = useState('ANIME')
     const [isListView, setIsListView] = useState(true)
     const [mediaData, setMediaData] = useState([])
@@ -23,13 +24,12 @@ function AnimePage() {
     const [filteredMediaData, setFilteredMediaData] = useState([])
     const [isFilterActive, setIsFilterActive] = useState(false)
 
-    const navigate = useNavigate() // Use for redirection to /anime/auth
-    const accessToken = localStorage.getItem('accessToken') // Retrieve access token from local storage
+    const accessToken = localStorage.getItem('accessToken')
 
-    // Redirect to /anime/auth if accessToken is missing
+    // Redirect to /anime-hub/auth if accessToken is missing
     useEffect(() => {
         if (!accessToken) {
-            navigate('/anime/auth')
+            navigate('/anime-hub/auth')
         }
     }, [accessToken, navigate])
 
@@ -43,14 +43,14 @@ function AnimePage() {
         setIsFilterActive(false)
 
         try {
-            let endpoint = '/api/anime/user-media'
+            let endpoint = '/api/anime-hub/user-media'
             if (activeTab === 'FAVORITES') {
-                endpoint = '/api/anime/user-favorites'
+                endpoint = '/api/anime-hub/user-favorites'
             }
 
             const response = await axios.post(endpoint, {
                 accessToken,
-                type: activeTab === 'MANGA' ? 'Manga' : 'Anime',
+                mediaType: activeTab === 'MANGA' ? 'Manga' : 'Anime',
             })
 
             const mediaList = response.data.mediaList?.lists || response.data.favorites || []
@@ -77,7 +77,7 @@ function AnimePage() {
             <div className="container mx-auto text-center">
                 <h1 className="text-2xl text-red-500 dark:text-red-400">{errorMessage}</h1>
                 <div className="flex-center mt-5">
-                    <Link to="/anime/auth" className="neu-btn">
+                    <Link to="/anime-hub/auth" className="neu-btn">
                         Go back to login
                     </Link>
                 </div>
@@ -144,4 +144,4 @@ function AnimePage() {
     )
 }
 
-export default AnimePage
+export default AnimeHub

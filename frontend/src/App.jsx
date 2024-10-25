@@ -7,8 +7,8 @@ import ToastStack from './components/common/notifications/ToastStack'
 import Header from './components/layout/header'
 import NotFound from './pages/404-page'
 import Shadows from './pages/ShadowsGrid'
-import AnimeAuth from './pages/anime/AnimeAuth'
-import Anime from './pages/anime/anime'
+import AnimeHub from './pages/anime/AnimeHub'
+import AnimeHubAuth from './pages/anime/AnimeHubAuth'
 import MusicEditor from './pages/audio/AudioEditor'
 // import AuthPage from './pages/auth/AuthState'
 import TicTacToeClassic from './pages/games/tic-tac-toe/classic'
@@ -44,13 +44,13 @@ function App() {
 
                 {/* Public Routes */}
 
-                <Route path="/" element={<Anime />} />
+                <Route path="/" element={<AnimeHub />} />
                 <Route path="/shadows" element={<Shadows />} />
                 {/* <Route path="/auth" element={<AuthPage />} /> */}
                 <Route path="/audio" element={<MusicEditor />} />
-                <Route path="/anime">
-                    <Route index element={<Anime />} />
-                    <Route path="auth" element={<AnimeAuth />} />
+                <Route path="/anime-hub">
+                    <Route index element={<AnimeHub />} />
+                    <Route path="auth" element={<AnimeHubAuth />} />
                 </Route>
 
                 {/* Tic-Tac-Toe Routes */}
