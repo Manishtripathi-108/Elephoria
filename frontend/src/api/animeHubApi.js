@@ -25,6 +25,24 @@ export const exchangePin = async (pin) => {
     }
 }
 
+// Function to get user media data from AniList
+export const getUserMediaList = async (accessToken, mediaType, favorite = false) => {
+    try {
+        let endpoint = '/api/anime-hub/user-media'
+        if (favorite) {
+            endpoint = '/api/anime-hub/user-favorites'
+        }
+
+        const response = await axios.post(endpoint, { accessToken, mediaType })
+        return {
+            success: !!response.data.mediaList || !!response.data.favorites,
+            mediaList: response.data.mediaList?.lists || response.data.favorites || [],
+        }
+    } catch (error) {
+        return handleError('Error fetching user media list', error)
+    }
+}
+
 // Function to get AniList IDs from MAL IDs in bulk
 export const getAniListIds = async (malIds, mediaType) => {
     try {
@@ -44,6 +62,7 @@ export const getAniListIds = async (malIds, mediaType) => {
     }
 }
 
+// Function to get user media data from AniList
 export const getUserMediaListIDs = async (accessToken, mediaType) => {
     try {
         const response = await axios.post('/api/anime-hub/user-media-ids', { accessToken, mediaType })

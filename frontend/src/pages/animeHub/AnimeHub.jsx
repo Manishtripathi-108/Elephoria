@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react'
 
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import { Icon } from '@iconify/react'
-import axios from 'axios'
 
+import { getUserMediaList } from '../../api/animeHubApi'
 import NoDataCard from '../../components/common/NoDataCard'
 import ImportAnime from './ImportMedia'
 import AnimeFilter from './components/AnimeFilter'
@@ -19,7 +19,6 @@ function AnimeHub() {
     const [activeTab, setActiveTab] = useState('ANIME')
     const [isListView, setIsListView] = useState(true)
     const [mediaData, setMediaData] = useState([])
-    const [errorMessage, setErrorMessage] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
     const [filteredMediaData, setFilteredMediaData] = useState([])
     const [isFilterActive, setIsFilterActive] = useState(false)
@@ -38,25 +37,21 @@ function AnimeHub() {
         if (!accessToken) return
 
         setIsLoading(true)
-        setErrorMessage(null)
         setFilteredMediaData([])
         setIsFilterActive(false)
 
         try {
-            let endpoint = '/api/anime-hub/user-media'
-            if (activeTab === 'FAVORITES') {
-                endpoint = '/api/anime-hub/user-favorites'
+            let result = await getUserMediaList(accessToken, activeTab, activeTab === 'FAVORITES')
+
+            if (result.success) {
+                setMediaData(result.mediaList)
+            } else if (result.retryAfterSeconds > 0) {
+                window.addToast(`Rate limit exceeded. Try again after ${result.retryAfterSeconds} seconds.`, 'error')
+            } else {
+                window.addToast(result.message, 'error')
             }
-
-            const response = await axios.post(endpoint, {
-                accessToken,
-                mediaType: activeTab === 'MANGA' ? 'Manga' : 'Anime',
-            })
-
-            const mediaList = response.data.mediaList?.lists || response.data.favorites || []
-            setMediaData(mediaList)
         } catch (error) {
-            setErrorMessage(`Error fetching ${activeTab.toLowerCase()} data.`)
+            window.addToast(`Error fetching ${activeTab.toLowerCase()} data.`, 'error', 10000)
             console.error(`Error fetching ${activeTab.toLowerCase()} data:`, error)
         } finally {
             setIsLoading(false)
@@ -70,20 +65,6 @@ function AnimeHub() {
 
     // Decide whether to show filtered data or all media data
     const displayMediaData = isFilterActive && filteredMediaData.length > 0 ? filteredMediaData : mediaData
-
-    // Render error message if there is an error
-    if (errorMessage) {
-        return (
-            <div className="container mx-auto text-center">
-                <h1 className="text-2xl text-red-500 dark:text-red-400">{errorMessage}</h1>
-                <div className="flex-center mt-5">
-                    <Link to="/anime-hub/auth" className="neu-btn">
-                        Go back to login
-                    </Link>
-                </div>
-            </div>
-        )
-    }
 
     return (
         <div>
