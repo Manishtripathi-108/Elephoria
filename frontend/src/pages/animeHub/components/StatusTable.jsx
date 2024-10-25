@@ -4,7 +4,7 @@ const StatusTable = ({ data, title, failed = false }) => {
     return (
         <div className="bg-primary w-full max-w-2xl rounded-2xl border border-light-secondary shadow-neu-light-sm dark:border-dark-secondary dark:shadow-neu-dark-sm">
             <header className="border-b border-light-secondary px-4 py-3 dark:border-dark-secondary">
-                <h2 className="text-primary font-aladin text-xl font-semibold tracking-widest">{title}</h2>
+                <h2 className="text-primary font-aladin text-xl font-semibold tracking-widest">{title} ({data.length})</h2>
             </header>
             <div className="p-3">
                 <div className="relative">

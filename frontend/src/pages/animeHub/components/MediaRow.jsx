@@ -13,6 +13,7 @@ function MediaRow({ mediaItem, isFavorite = false }) {
                         className="h-full w-full rounded-lg object-cover"
                         src={media?.coverImage?.large || '/placeholder-image.jpg'}
                         alt={media?.title?.romaji || 'Cover Image'}
+                        loading="lazy"
                     />
                 </div>
             </td>

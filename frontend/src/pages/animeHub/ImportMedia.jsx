@@ -84,11 +84,11 @@ const ImportAnime = () => {
     }, [file])
 
     // Handle component unmount (cleanup)
-    // useEffect(() => {
-    //     return () => {
-    //         if (abortControllerRef.current) abortControllerRef.current.abort()
-    //     }
-    // }, [])
+    useEffect(() => {
+        return () => {
+            if (abortControllerRef.current) abortControllerRef.current.abort()
+        }
+    }, [])
 
     const handleStatusCorrection = (index, correctedStatus) => {
         correctedStatusRef.current[index] = { ...correctedStatusRef.current[index], corrected: correctedStatus }
@@ -135,7 +135,7 @@ const ImportAnime = () => {
                 if (malId) {
                     malIdMap[malId] = { name: media.name, status: correctStatus }
                 } else {
-                    failedList.push({ name: media.name, status: 'Invalid MAL ID' })
+                    failedList.push({ name: media.name, statusText: 'Invalid MAL ID' })
                 }
             })
         })
@@ -255,7 +255,7 @@ const ImportAnime = () => {
     // Main logic to process the media list
     const processMediaList = useCallback(
         async (listToProcess = null, retryFailed = false) => {
-            const mediaList = listToProcess || jsonData
+            let mediaList = listToProcess || jsonData
             const failedList = []
             const importList = []
 
@@ -269,6 +269,30 @@ const ImportAnime = () => {
                 window.addToast('Access token not found. Please log in.', 'error')
                 return
             }
+
+            if (mediaType === 'MANGA') {
+                const completedManga = mediaList
+                    .filter((manga) => manga.type === 'Completed')
+                    .map((manga) => ({ name: manga.title, link: manga.mal }))
+                const readingManga = mediaList.filter((manga) => manga.type === 'Reading').map((manga) => ({ name: manga.title, link: manga.mal }))
+
+                const planToReadManga = mediaList
+                    .filter((manga) => manga.type === 'Plan to Read')
+                    .map((manga) => ({ name: manga.title, link: manga.mal }))
+
+                const droppedManga = mediaList.filter((manga) => manga.type === 'Dropped').map((manga) => ({ name: manga.title, link: manga.mal }))
+
+                const onHoldManga = mediaList.filter((manga) => manga.type === 'On-Hold').map((manga) => ({ name: manga.title, link: manga.mal }))
+
+                mediaList = {
+                    Completed: completedManga,
+                    Reading: readingManga,
+                    'Plan to Read': planToReadManga,
+                    Dropped: droppedManga,
+                    'On-Hold': onHoldManga,
+                }
+            }
+            console.log(mediaList)
 
             abortControllerRef.current = new AbortController()
             setProgressData({ currentMedia: '', inProgress: true, totalToProcess: 0, currentProcessed: 0 })
@@ -373,6 +397,12 @@ const ImportAnime = () => {
                             </div>
                         ))}
                     </div>
+
+                    <button
+                        className="neu-btn neu-icon-btn mx-auto mt-5 text-red-500 hover:text-red-700 dark:text-red-500 dark:hover:text-red-700"
+                        onClick={handleCancel}>
+                        Cancel
+                    </button>
                 </div>
             ) : (
                 <div className="mt-10 grid w-fit place-items-center gap-5 md:grid-cols-2">

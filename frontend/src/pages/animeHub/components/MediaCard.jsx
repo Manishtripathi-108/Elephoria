@@ -21,6 +21,7 @@ function MediaCard({ mediaItem, isFavorite = false }) {
                 className="text-secondary h-4/5 max-h-56 w-full rounded-t-lg border-b border-light-secondary object-cover dark:border-dark-secondary sm:max-h-72"
                 src={media?.coverImage?.large}
                 alt={media?.title?.english || media?.title?.native}
+                loading='lazy'
             />
 
             <div className="p-2">
