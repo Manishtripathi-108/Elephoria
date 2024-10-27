@@ -8,6 +8,7 @@ export default {
                 'close-n-zero': 'close-n-zero 0.2s forwards',
                 pulsate: 'pulsate 1s infinite',
                 'puff-in': 'puff-in 0.3s forwards',
+                'puff-out': 'puff-out 0.3s forwards',
                 'scale-up': 'scale-up 0.3s cubic-bezier(0.6, -0.28, 0.74, 0.05) forwards',
                 'slide-left-return': 'slide-left-return 0.3s forwards',
                 'slide-left': 'slide-left 0.3s forwards',
@@ -15,6 +16,10 @@ export default {
                 'wipe-in-up': 'wipe-in-up 0.5s cubic-bezier(0.6, -0.28, 0.74, 0.05) forwards',
                 'wipe-out-down': 'wipe-out-down 0.5s cubic-bezier(0.6, -0.28, 0.74, 0.05) forwards',
                 'wipe-out-up': 'wipe-out-up 0.5s cubic-bezier(0.6, -0.28, 0.74, 0.05) forwards',
+                unfoldIn: 'unfoldIn 0.5s forwards',
+                unfoldOut: 'unfoldOut 0.5s 0.5s forwards',
+                zoomIn: 'zoomIn 0.5s 0.5s forwards',
+                zoomOut: 'zoomOut 0.5s forwards',
             },
             keyframes: {
                 'anti-rotate': {
@@ -32,6 +37,20 @@ export default {
                 'puff-in': {
                     '0%': { opacity: 0, transformOrigin: '50% 50%', transform: 'scale(2, 2)', filter: 'blur(2px)', visibility: 'hidden' },
                     '100%': { opacity: 1, transformOrigin: '50% 50%', transform: 'scale(1, 1)', filter: 'blur(0px)', visibility: 'visible' },
+                },
+                'puff-out': {
+                    '0%': {
+                        opacity: '1',
+                        transform: 'scale(1)',
+                        transformOrigin: '50% 50%',
+                        filter: 'blur(0px)',
+                    },
+                    '100%': {
+                        opacity: '0',
+                        transform: 'scale(2)',
+                        transformOrigin: '50% 50%',
+                        filter: 'blur(2px)',
+                    },
                 },
                 'scale-up': {
                     '0%': { transform: 'scale(0)', opacity: '0', visibility: 'hidden' },
@@ -61,6 +80,35 @@ export default {
                     '0%': { clipPath: 'inset(0 0 0 0)' },
                     '100%': { clipPath: 'inset(100% 0 0 0)' },
                 },
+                unfoldIn: {
+                    '0%': { transform: 'scaleY(0.005) scaleX(0)' },
+                    '50%': { transform: 'scaleY(0.005) scaleX(1)' },
+                    '100%': { transform: 'scaleY(1) scaleX(1)' },
+                },
+                unfoldOut: {
+                    '0%': { transform: 'scaleY(1) scaleX(1)' },
+                    '50%': { transform: 'scaleY(0.005) scaleX(1)' },
+                    '100%': { transform: 'scaleY(0.005) scaleX(0)' },
+                },
+                zoomIn: {
+                    '0%': { transform: 'scale(0)' },
+                    '100%': { transform: 'scale(1)' },
+                },
+                zoomOut: {
+                    '0%': { transform: 'scale(1)' },
+                    '100%': { transform: 'scale(0)' },
+                },
+            },
+            backgroundImage: {
+                'primary-gradient':
+                    'linear-gradient(to left, rgba(31,41,55,1) 0%, rgba(51,65,85,1) 10%, rgba(51,65,85,1) 90%, rgba(31,41,55,1) 100%)',
+                'secondary-gradient':
+                    'linear-gradient(to left, rgba(51,65,85,1) 0%, rgba(67,76,94,1) 10%, rgba(67,76,94,1) 90%, rgba(51,65,85,1) 100%)',
+                'yellow-gradient': 'linear-gradient(to left, #eab308 0%, #facc15 10%, #facc15 90%, #eab308 100%)',
+                'green-gradient': 'linear-gradient(to left, #22c55e 0%, #4ade80 10%, #4ade80 90%, #22c55e 100%)',
+                'blue-gradient': 'linear-gradient(to left, #3b82f6 0%, #60a5fa 10%, #60a5fa 90%, #3b82f6 100%)',
+                'red-gradient':
+                    'linear-gradient(to left, rgba(220,38,38,1) 0%, rgba(239,68,68,1) 10%, rgba(239,68,68,1) 90%, rgba(220,38,38,1) 100%)',
             },
             colors: {
                 // Light Mode Colors
