@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Icon } from '@iconify/react/dist/iconify.js'
+import { Icon } from '@iconify/react'
 
 const GameOverModal = ({ initializeGame, playerXName, playerOName, isDraw, winner }) => {
     const message = isDraw ? "It's a draw!" : `${winner === 'X' ? playerXName : playerOName} wins!`

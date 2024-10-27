@@ -53,7 +53,7 @@ function MediaCardList({ data = [], isFavorite = false }) {
                 {/* Media Grid */}
                 <div className="grid grid-cols-2 gap-1 sm:grid-cols-3 sm:gap-3 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
                     {list.entries.length > 0 ? (
-                        list.entries.map((media) => <MediaCard key={media.media?.id} mediaItem={media} />)
+                        list.entries.map((entry) => <MediaCard key={entry.media?.id} mediaItem={entry} />)
                     ) : (
                         <NoDataCard name={list.name} message={`Add some media to your list to see them here.`} />
                     )}

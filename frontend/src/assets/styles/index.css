@@ -327,7 +327,7 @@
 
     .neu-btn.active,
     .neu-btn:active {
-        @apply text-primary shadow-neu-inset-light-sm dark:shadow-neu-inset-dark-sm;
+        @apply text-primary shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs;
     }
 
     .neu-btn:hover:not(.active),

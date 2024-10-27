@@ -16,7 +16,7 @@ const AnimeFilter = ({ data = [], setFilteredData, setIsFilterActive }) => {
         status: '',
         genres: '',
         year: '',
-        sort: '',
+        sort: 'Popularity',
     })
     const [isFiltersOpen, setIsFiltersOpen] = useState(window.innerWidth >= 768)
 

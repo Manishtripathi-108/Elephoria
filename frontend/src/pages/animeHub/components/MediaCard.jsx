@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { memo, useState } from 'react'
 
 import { Icon } from '@iconify/react'
+
+import AnimeModal from './AnimeModal'
 
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
@@ -14,14 +16,19 @@ const convertMonthNumberToName = (monthNumber) => {
 function MediaCard({ mediaItem, isFavorite = false }) {
     // Handle favorites, which don't have the `media` nesting.
     const media = isFavorite ? mediaItem : mediaItem?.media
+    const [modalOpen, setModalOpen] = useState(false)
+
+    const ToggleModal = () => {
+        setModalOpen((prev) => !prev)
+    }
 
     return (
-        <div className="group relative rounded-lg border border-light-secondary shadow-neu-light-sm dark:border-dark-secondary dark:shadow-neu-dark-sm">
+        <div className="group relative min-h-44 rounded-lg border border-light-secondary shadow-neu-light-sm dark:border-dark-secondary dark:shadow-neu-dark-sm">
             <img
                 className="text-secondary h-4/5 max-h-56 w-full rounded-t-lg border-b border-light-secondary object-cover dark:border-dark-secondary sm:max-h-72"
                 src={media?.coverImage?.large}
                 alt={media?.title?.english || media?.title?.native}
-                loading='lazy'
+                loading="lazy"
             />
 
             <div className="p-2">
@@ -52,13 +59,13 @@ function MediaCard({ mediaItem, isFavorite = false }) {
 
             {/* Description Popup */}
             <div
-                className="absolute inset-x-1/2 top-1/3 z-10 hidden w-72 rounded-lg border border-light-secondary bg-light-primary/60 p-3 opacity-0 backdrop-blur-md backdrop-saturate-150 transition-opacity duration-300 ease-in-out dark:border-dark-secondary dark:bg-dark-primary/50 sm:group-hover:block sm:group-hover:opacity-100"
+                className="invisible absolute inset-x-1/2 top-1/3 z-10 w-72 rounded-lg border border-light-secondary bg-light-primary/60 p-3 opacity-0 backdrop-blur-md backdrop-saturate-150 transition-opacity delay-500 duration-500 ease-in-out dark:border-dark-secondary dark:bg-dark-primary/50 sm:group-hover:visible sm:group-hover:opacity-100"
                 aria-hidden="true"
                 aria-label="Anime Description Popup">
                 {/* Title Section */}
                 <div className="mb-2">
                     <h3 className="text-primary font-aladin text-xl font-bold tracking-widest" aria-live="polite">
-                        {media?.title?.english || 'Untitled'}
+                        {media?.title?.english || media?.title?.native || media?.title?.romaji || 'Unknown Title'}
                     </h3>
                 </div>
 
@@ -91,11 +98,18 @@ function MediaCard({ mediaItem, isFavorite = false }) {
             </div>
 
             {/* Dots Menu */}
-            <button type="button" className="bg-secondary text-secondary absolute right-1 top-1 flex items-center justify-center rounded-lg p-0.5">
+            <button
+                type="button"
+                onClick={ToggleModal}
+                className="bg-secondary text-secondary absolute right-1 top-1 flex items-center justify-center rounded-lg p-0.5">
                 <Icon icon="pepicons-pop:dots-y" className="size-6" />
             </button>
+
+            {modalOpen && (
+                <AnimeModal onClose={() => setModalOpen(false)} media={media} mediaStatus={mediaItem?.status} mediaProgress={mediaItem?.progress} />
+            )}
         </div>
     )
 }
 
-export default React.memo(MediaCard)
+export default memo(MediaCard)

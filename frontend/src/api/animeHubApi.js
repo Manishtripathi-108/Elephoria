@@ -93,6 +93,32 @@ export const addToAniList = async (accessToken, aniListId, status) => {
             retryAfterSeconds: retryAfterSeconds || 0,
         }
     } catch (error) {
-        return handleError('Error adding media to AniList', error)
+        return handleError('Error adding media to AniList:', error)
+    }
+}
+
+// Function to Edit Media Entry
+export const editMediaEntry = async (accessToken, mediaId, status, progress) => {
+    if (!mediaId || mediaId === '') {
+        return -1
+    }
+
+    try {
+        const response = await axios.post('/api/anime-hub/edit-media-entry', {
+            accessToken,
+            mediaId,
+            progress,
+            status,
+        })
+
+        const { SaveMediaListEntry, remainingRateLimit, retryAfterSeconds } = response.data
+
+        return {
+            success: !!SaveMediaListEntry.status,
+            remainingRateLimit: remainingRateLimit || 100,
+            retryAfterSeconds: retryAfterSeconds || 0,
+        }
+    } catch (error) {
+        return handleError('Error Editing Media:', error)
     }
 }

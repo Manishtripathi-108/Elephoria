@@ -62,6 +62,7 @@ const {
 	fetchUserFavorites,
 	getAniListIds,
 	addToAniList,
+	editAniListEntry,
 } = require("./animeHub/anilist");
 
 // Route to fetch anime list from Anilist API
@@ -80,6 +81,8 @@ app.post("/api/anime-hub/user-favorites", fetchUserFavorites);
 app.post("/api/anime-hub/anilist-ids", getAniListIds);
 
 app.post("/api/anime-hub/add-to-anilist", addToAniList);
+
+app.post("/api/anime-hub/edit-media-entry", editAniListEntry);
 
 // Set PORT from environment or default to 3000
 const PORT = process.env.PORT || 3000;

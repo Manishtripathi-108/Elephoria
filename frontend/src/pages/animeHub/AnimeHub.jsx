@@ -17,7 +17,7 @@ import AnimeSkeleton from './components/loading/AnimeSkeleton'
 function AnimeHub() {
     const navigate = useNavigate()
     const [activeTab, setActiveTab] = useState('ANIME')
-    const [isListView, setIsListView] = useState(true)
+    const [isListView, setIsListView] = useState(false)
     const [mediaData, setMediaData] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const [filteredMediaData, setFilteredMediaData] = useState([])
@@ -104,8 +104,8 @@ function AnimeHub() {
                             />
                         )}
 
-                        {/* Show NoDataCard component if no filtered data is found */}
-                        <div className="bg-primary mx-auto w-full rounded-lg border border-light-secondary p-2 shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-sm md:p-5">
+                        <div
+                            className={`bg-primary mx-auto w-full rounded-lg border border-light-secondary p-2 shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-sm md:p-5 ${isListView ? '' : 'scrollbar-thin h-dvh overflow-y-scroll'}`}>
                             {isFilterActive && filteredMediaData.length === 0 ? (
                                 <NoDataCard name="Filtered Results" message="No media matches your filter criteria. Please adjust the filters." />
                             ) : isListView ? (

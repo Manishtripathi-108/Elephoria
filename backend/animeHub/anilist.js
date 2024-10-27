@@ -220,6 +220,7 @@ const fetchUserMediaDetails = async (req, res) => {
                                 english
                                 native
                             }
+							bannerImage
                             coverImage {
                                 large
                             }
@@ -353,6 +354,7 @@ const fetchUserFavorites = async (req, res) => {
                             format
                             status
                             description
+							isFavourite
                             duration
                             episodes
                             genres
@@ -380,6 +382,7 @@ const fetchUserFavorites = async (req, res) => {
                             chapters
                             description
                             genres
+							isFavourite
                             title {
                                 romaji
                                 english
@@ -535,6 +538,50 @@ const addToAniList = async (req, res) => {
 	}
 };
 
+const editAniListEntry = async (req, res) => {
+	const { accessToken, mediaId, status, progress } = req.body;
+
+	const mutation = `
+        mutation($mediaId: Int, $status: MediaListStatus, $progress: Int) {
+            SaveMediaListEntry(mediaId: $mediaId, status: $status, progress: $progress) {
+                id
+                status
+                progress
+                score
+            }
+        }
+    `;
+
+	try {
+		const response = await axios.post(
+			"/",
+			{
+				query: mutation,
+				variables: {
+					mediaId,
+					status,
+					progress,
+				},
+			},
+			{
+				...axiosConfig,
+				headers: {
+					...axiosConfig.headers,
+					Authorization: `Bearer ${accessToken}`,
+				},
+			}
+		);
+
+		res.json({
+			SaveMediaListEntry: response.data.data.SaveMediaListEntry,
+			retryAfterSeconds: response.headers["retry-after"],
+			remainingRateLimit: response.headers["x-ratelimit-remaining"],
+		});
+	} catch (error) {
+		handleError(res, "Failed to update media entry", error);
+	}
+};
+
 module.exports = {
 	getAnimeList,
 	exchangePinForToken,
@@ -544,4 +591,5 @@ module.exports = {
 	fetchUserFavorites,
 	getAniListIds,
 	addToAniList,
+	editAniListEntry,
 };
