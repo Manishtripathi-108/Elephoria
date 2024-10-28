@@ -6,13 +6,12 @@ import { Icon } from '@iconify/react'
 
 import AppName from '../../assets/svg/app-name'
 import Logo from '../../assets/svg/logo'
-import useDarkMode from '../../hooks/useDark'
 import NeuHamburgerBtn from '../common/buttons/NeuHamburgerBtn'
+import ThemeToggleBtn from '../common/buttons/ThemeToggleBtn'
 import Sidenav from './Sidenav'
 
 const Header = () => {
     const [isSidenavOpen, setIsSidenavOpen] = useState(false)
-    const { isDarkMode, toggleDarkMode } = useDarkMode()
 
     const toggleSidenav = () => {
         setIsSidenavOpen((prev) => !prev)
@@ -28,22 +27,6 @@ const Header = () => {
             }
         }
     }
-
-    // Add keyboard shortcut to toggle dark mode (Alt + X)
-    useEffect(() => {
-        const handleKeydown = (e) => {
-            if (e.key === 'x' && e.altKey) {
-                toggleDarkMode()
-            }
-        }
-
-        document.addEventListener('keydown', handleKeydown)
-
-        // Cleanup the event listener on component unmount
-        return () => {
-            document.removeEventListener('keydown', handleKeydown)
-        }
-    }, [toggleDarkMode])
 
     return (
         <>
@@ -66,14 +49,8 @@ const Header = () => {
                     <AppName className="w-20" />
                 </Link>
 
-                {/* Dark Mode Toggle */}
-                <button className="neu-btn neu-icon-only-btn ml-auto" onClick={toggleDarkMode} aria-label="Toggle dark mode" title="Toggle dark mode">
-                    {isDarkMode ? (
-                        <Icon icon="meteocons:clear-day-fill" className="size-6" />
-                    ) : (
-                        <Icon icon="meteocons:clear-night-fill" className="size-6" />
-                    )}
-                </button>
+                {/* Theme Toggle */}
+                <ThemeToggleBtn />
             </header>
 
             {/* Sidenav */}
