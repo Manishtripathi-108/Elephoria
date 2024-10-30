@@ -3,41 +3,41 @@ import React from 'react'
 import NoDataCard from '../../../components/common/NoDataCard'
 import MediaCard from './MediaCard'
 
-function MediaCardList({ data = [], isFavorite = false }) {
-    // Render Favorite List (Anime and Manga)
-    if (isFavorite) {
+function MediaCardList({ data = [], isFavourite = false }) {
+    // Render Favourite List (Anime and Manga)
+    if (isFavourite) {
         return data?.anime?.length > 0 || data?.manga?.length > 0 ? (
             <>
-                {/* Favorite Anime Section */}
+                {/* Favourite Anime Section */}
                 {data.anime.length > 0 && (
                     <div className="mb-5 w-full">
                         <h2 className="text-primary bg-secondary mb-2 rounded-t-xl p-3 font-aladin text-lg tracking-widest shadow-neu-light-sm dark:shadow-neu-dark-sm">
-                            Favorite Anime
+                            Favourite Anime
                         </h2>
                         <div className="grid grid-cols-2 gap-1 sm:grid-cols-3 sm:gap-3 lg:grid-cols-5">
                             {data.anime.map((mediaItem) => (
-                                <MediaCard key={mediaItem.id} mediaItem={mediaItem} isFavorite={true} />
+                                <MediaCard key={mediaItem.id} mediaItem={mediaItem} isFavouriteList={true} />
                             ))}
                         </div>
                     </div>
                 )}
 
-                {/* Favorite Manga Section */}
+                {/* Favourite Manga Section */}
                 {data.manga.length > 0 && (
                     <div className="w-full">
                         <h2 className="text-primary bg-secondary mb-2 rounded-t-xl p-3 font-aladin text-lg tracking-widest shadow-neu-light-sm dark:shadow-neu-dark-sm">
-                            Favorite Manga
+                            Favourite Manga
                         </h2>
                         <div className="grid grid-cols-2 gap-1 sm:grid-cols-3 sm:gap-3 lg:grid-cols-5">
                             {data.manga.map((mediaItem) => (
-                                <MediaCard key={mediaItem.id} mediaItem={mediaItem} isFavorite={true} />
+                                <MediaCard key={mediaItem.id} mediaItem={mediaItem} isFavouriteList={true} />
                             ))}
                         </div>
                     </div>
                 )}
             </>
         ) : (
-            <NoDataCard name="favorites" message={`Add some favorite anime or manga to your list to see them here.`} />
+            <NoDataCard name="favourites" message={`Add some favourite anime or manga to your list to see them here.`} />
         )
     }
 

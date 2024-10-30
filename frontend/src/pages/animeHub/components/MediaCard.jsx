@@ -13,9 +13,9 @@ const convertMonthNumberToName = (monthNumber) => {
     return '...'
 }
 
-function MediaCard({ mediaItem, isFavorite = false }) {
-    // Handle favorites, which don't have the `media` nesting.
-    const media = isFavorite ? mediaItem : mediaItem?.media
+function MediaCard({ mediaItem, isFavouriteList = false }) {
+    // Handle favourites, which don't have the `media` nesting.
+    const media = isFavouriteList ? mediaItem : mediaItem?.media
     const [modalOpen, setModalOpen] = useState(false)
 
     const ToggleModal = () => {
@@ -31,12 +31,12 @@ function MediaCard({ mediaItem, isFavorite = false }) {
                 loading="lazy"
             />
 
-            <div className="p-2">
+            <div className="flex h-1/5 flex-col items-start justify-center p-2">
                 <h2
-                    className={`text-primary line-clamp-1 font-aladin text-sm font-normal capitalize leading-none tracking-widest ${isFavorite && 'my-2'}`}>
+                    className={`text-primary line-clamp-1 font-aladin text-sm font-normal capitalize leading-none tracking-widest ${isFavouriteList && 'flex'}`}>
                     {media?.title?.english || media?.title?.native || media?.title?.romaji || 'Unknown Title'}
                 </h2>
-                {!isFavorite && (
+                {!isFavouriteList && (
                     <span className="text-secondary font-indie-flower text-xs tracking-wider">
                         {media?.format || 'Unknown Format'}
                         {media?.type === 'ANIME' ? (
@@ -98,12 +98,14 @@ function MediaCard({ mediaItem, isFavorite = false }) {
             </div>
 
             {/* Dots Menu */}
-            <button
-                type="button"
-                onClick={ToggleModal}
-                className="bg-secondary text-secondary absolute right-1 top-1 flex items-center justify-center rounded-lg p-0.5">
-                <Icon icon="pepicons-pop:dots-y" className="size-6" />
-            </button>
+            {!isFavouriteList && (
+                <button
+                    type="button"
+                    onClick={ToggleModal}
+                    className="bg-secondary text-secondary absolute right-1 top-1 flex items-center justify-center rounded-lg p-0.5">
+                    <Icon icon="pepicons-pop:dots-y" className="size-6" />
+                </button>
+            )}
 
             {modalOpen && (
                 <AnimeModal onClose={() => setModalOpen(false)} media={media} mediaStatus={mediaItem?.status} mediaProgress={mediaItem?.progress} />

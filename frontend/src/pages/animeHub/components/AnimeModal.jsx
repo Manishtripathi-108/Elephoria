@@ -4,13 +4,14 @@ import { Icon } from '@iconify/react'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
-import { saveMediaEntry } from '../../../api/animeHubApi'
+import { saveMediaEntry, toggleFavourite } from '../../../api/animeHubApi'
 import JelloButton from '../../../components/common/buttons/JelloButton'
 import { validStatus } from '../constants'
 
 export default function AnimeModal({ onClose, media, mediaStatus = '', mediaProgress = '0' }) {
     const bannerStyle = { backgroundImage: `url(${media?.bannerImage})` }
-    const [isFavorite, setIsFavorite] = useState(media?.isFavorite || false)
+    const [isLiked, setIsLiked] = useState(media.isFavourite || false)
+    const [isToggling, setIsToggling] = useState(false)
 
     // Form validation schema
     const validationSchema = Yup.object({
@@ -20,8 +21,7 @@ export default function AnimeModal({ onClose, media, mediaStatus = '', mediaProg
 
     // Save media entry updates
     const handleSave = async (values, { setSubmitting }) => {
-        const result = await saveMediaEntry(media?.id, values.status, values.progress)
-
+        const result = await saveMediaEntry(media.id, values.status, values.progress)
         setSubmitting(false)
 
         if (result === -1) {
@@ -39,6 +39,22 @@ export default function AnimeModal({ onClose, media, mediaStatus = '', mediaProg
         }
     }
 
+    // Toggle the favourite status of a media item
+    const toggleLike = async () => {
+        setIsToggling(true)
+        const result = await toggleFavourite(media.id, media.type)
+        setIsToggling(false)
+
+        if (result.success) {
+            setIsLiked((prev) => !prev)
+            window.addToast(`${isLiked ? 'Removed from' : 'Added to'} favourites successfully.`, 'success')
+        } else if (result.retryAfterSeconds > 0) {
+            window.addToast(`Rate limit exceeded. Please try again in ${result.retryAfterSeconds} seconds.`, 'error')
+        } else {
+            window.addToast(result.message || 'An error occurred while toggling favourite status.', 'error')
+        }
+    }
+
     return (
         <div className="fixed inset-0 z-50 animate-unfoldIn overflow-y-auto rounded-lg" onClick={onClose}>
             {/* Background overlay */}
@@ -46,7 +62,7 @@ export default function AnimeModal({ onClose, media, mediaStatus = '', mediaProg
 
             {/* Modal content */}
             <div className="flex h-dvh scale-0 animate-zoomIn items-center justify-center p-2" onClick={(e) => e.stopPropagation()}>
-                <div className="bg-primary relative m-1 w-full max-w-lg rounded-lg p-6 shadow-neu-light-md dark:shadow-neu-dark-md">
+                <div className="bg-primary relative m-1 w-full max-w-2xl rounded-lg p-6 shadow-neu-light-md dark:shadow-neu-dark-md">
                     {/* Close button */}
                     <button className="text-secondary hover:text-primary absolute right-2 top-2 z-20 text-xl" onClick={onClose}>
                         &#x2715;
@@ -58,7 +74,7 @@ export default function AnimeModal({ onClose, media, mediaStatus = '', mediaProg
                         style={bannerStyle}></div>
 
                     {/* Cover image */}
-                    <div className="bg-primary relative mx-auto -mt-24 w-full max-w-40 rounded-lg border border-light-secondary p-3 shadow-neu-inset-light-xs dark:border-dark-secondary dark:shadow-neu-inset-dark-xs">
+                    <div className="bg-primary relative -mt-24 ml-5 w-full max-w-40 rounded-lg border border-light-secondary p-3 shadow-neu-inset-light-xs dark:border-dark-secondary dark:shadow-neu-inset-dark-xs">
                         <img
                             className="size-full rounded-lg object-cover"
                             src={media?.coverImage?.large}
@@ -68,27 +84,25 @@ export default function AnimeModal({ onClose, media, mediaStatus = '', mediaProg
                     </div>
 
                     {/* Title */}
-                    <h2 className="text-primary my-6 font-aladin text-xl font-normal capitalize leading-none tracking-widest">
+                    <h2 className="text-primary mb-6 ml-7 mt-4 font-aladin text-xl font-normal capitalize leading-none tracking-widest">
                         {media?.title?.english || media?.title?.native || media?.title?.romaji || 'Unknown Title'}
                     </h2>
 
+                    {/* Favourite button */}
+                    <button
+                        type="button"
+                        className={`neu-btn neu-icon-only-btn absolute right-6 top-2/4 ${isLiked ? 'active' : ''}`}
+                        onClick={toggleLike}
+                        disabled={isToggling}>
+                        <Icon icon="icomoon-free:heart" className={`size-5 ${isLiked ? 'text-[#ff4545]' : ''}`} />
+                    </button>
+
                     <Formik
-                        initialValues={{ favorite: isFavorite, status: mediaStatus, progress: mediaProgress }}
+                        initialValues={{ status: mediaStatus, progress: mediaProgress }}
                         validationSchema={validationSchema}
                         onSubmit={handleSave}>
-                        {({ isSubmitting, setFieldValue }) => (
+                        {({ isSubmitting }) => (
                             <Form>
-                                {/* Favorite button */}
-                                <button
-                                    type="button"
-                                    className={`neu-btn neu-icon-only-btn absolute right-6 top-2/3 ${isFavorite ? 'active' : ''}`}
-                                    onClick={() => {
-                                        setIsFavorite((prev) => !prev)
-                                        setFieldValue('favorite', !isFavorite)
-                                    }}>
-                                    <Icon icon="icomoon-free:heart" className={`size-5 ${isFavorite ? 'text-[#ff4545]' : ''}`} />
-                                </button>
-
                                 {/* Status and Progress fields */}
                                 <div className="flex-center gap-4">
                                     <div className="neu-form-group">

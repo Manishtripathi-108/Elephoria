@@ -3,7 +3,7 @@ import React from 'react'
 import NoDataCard from '../../../components/common/NoDataCard'
 import MediaRow from './MediaRow'
 
-function MediaList({ data = [], isFavorite = false }) {
+function MediaList({ data = [], isFavourite = false }) {
     // Render Table Header for media list
     const renderTableHeader = () => (
         <thead className="bg-primary text-secondary border-x border-b border-light-secondary dark:border-dark-secondary">
@@ -39,21 +39,21 @@ function MediaList({ data = [], isFavorite = false }) {
         </div>
     )
 
-    // Render a favorite media table (for Anime/Manga)
-    const FavoriteTable = ({ type, media }) => (
+    // Render a Favourite media table (for Anime/Manga)
+    const FavouriteTable = ({ type, media }) => (
         <div className="mb-5 w-full overflow-hidden rounded-xl shadow-neu-light-sm dark:shadow-neu-dark-sm">
             <div className="bg-secondary rounded-t-xl border border-light-secondary dark:border-dark-secondary">
-                <h2 className="text-primary p-3 font-aladin text-lg tracking-widest">Favorite {type}</h2>
+                <h2 className="text-primary p-3 font-aladin text-lg tracking-widest">Favourite {type}</h2>
             </div>
             <table className="w-full table-auto">
                 {renderTableHeader()}
                 <tbody className="bg-primary">
                     {media.length > 0 ? (
-                        media.map((mediaItem) => <MediaRow key={mediaItem.id} mediaItem={mediaItem} isFavorite={true} />)
+                        media.map((mediaItem) => <MediaRow key={mediaItem.id} mediaItem={mediaItem} isFavourite={true} />)
                     ) : (
                         <tr>
                             <td className="p-4 text-center font-indie-flower tracking-wider text-red-500" colSpan="4">
-                                No {type.toLowerCase()} favorites available
+                                No {type.toLowerCase()} favourites available
                             </td>
                         </tr>
                     )}
@@ -62,15 +62,15 @@ function MediaList({ data = [], isFavorite = false }) {
         </div>
     )
 
-    // Handle favorite list rendering
-    if (isFavorite) {
+    // Handle favourite list rendering
+    if (isFavourite) {
         return data?.anime?.length > 0 || data?.manga?.length > 0 ? (
             <>
-                {data?.anime?.length > 0 && <FavoriteTable type="Anime" media={data.anime} />}
-                {data?.manga?.length > 0 && <FavoriteTable type="Manga" media={data.manga} />}
+                {data?.anime?.length > 0 && <FavouriteTable type="Anime" media={data.anime} />}
+                {data?.manga?.length > 0 && <FavouriteTable type="Manga" media={data.manga} />}
             </>
         ) : (
-            <NoDataCard name="favorites" message={`Add some favorite anime or manga to your list to see them here.`} />
+            <NoDataCard name="favourites" message={`Add some favourite anime or manga to your list to see them here.`} />
         )
     }
 

@@ -63,7 +63,7 @@ function AnimeHub() {
 
                     {/* Main Content Area */}
                     <div className="container mx-auto flex flex-col items-start justify-center gap-2 md:flex-row md:gap-5 md:p-5">
-                        {activeTab !== 'FAVORITES' && (
+                        {activeTab !== 'FAVOURITES' && (
                             <AnimeFilter
                                 data={mediaData}
                                 setFilteredData={setFilteredMediaData}
@@ -77,9 +77,9 @@ function AnimeHub() {
                             {isFilterActive && filteredMediaData.length === 0 ? (
                                 <NoDataCard name="Filtered Results" message="No media matches your filter criteria. Please adjust the filters." />
                             ) : isListView ? (
-                                <MediaList data={displayMediaData} isFavorite={activeTab === 'FAVORITES'} />
+                                <MediaList data={displayMediaData} isFavourite={activeTab === 'FAVOURITES'} />
                             ) : (
-                                <MediaCardList data={displayMediaData} isFavorite={activeTab === 'FAVORITES'} />
+                                <MediaCardList data={displayMediaData} isFavourite={activeTab === 'FAVOURITES'} />
                             )}
                         </div>
                     </div>

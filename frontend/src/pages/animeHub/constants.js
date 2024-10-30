@@ -1,7 +1,7 @@
 export const TabEnum = {
     ANIME: 'anime',
     MANGA: 'manga',
-    FAVORITES: 'favorites',
+    FAVOURITES: 'favourites',
     LOGOUT: 'logout',
 }
 

@@ -312,12 +312,12 @@ const fetchUserMediaIDs = async (req, res) => {
 };
 
 /**
- * Retrieves the user's favorite anime/manga list from AniList.
+ * Retrieves the user's favourite anime/manga list from AniList.
  *
  * @param {Object} req - Express request object with `accessToken` in cookies
  * @param {Object} res - Express response object
  */
-const fetchUserFavorites = async (req, res) => {
+const fetchUserFavourites = async (req, res) => {
 	const accessToken = req.cookies.accessToken;
 	const userId = req.userId;
 
@@ -394,24 +394,24 @@ const fetchUserFavorites = async (req, res) => {
 			}
 		);
 
-		const favorites = response.data?.data?.User?.favourites;
+		const favourites = response.data?.data?.User?.favourites;
 
-		if (!favorites) {
+		if (!favourites) {
 			return res
 				.status(404)
-				.json({ message: "Favorites data not found" });
+				.json({ message: "Favourites data not found" });
 		}
 
 		res.json({
-			favorites: {
-				anime: favorites.anime?.nodes || [],
-				manga: favorites.manga?.nodes || [],
+			favourites: {
+				anime: favourites.anime?.nodes || [],
+				manga: favourites.manga?.nodes || [],
 			},
 		});
 	} catch (error) {
 		handleError(
 			res,
-			"Unable to retrieve favorites. Please try again.",
+			"Unable to retrieve favourites. Please try again.",
 			error
 		);
 	}
@@ -520,6 +520,76 @@ const saveMediaEntry = async (req, res) => {
 	}
 };
 
+const toggleFavourite = async (req, res) => {
+	const accessToken = req.cookies.accessToken;
+	const { mediaId, mediaType } = req.body;
+
+	// Mutation strings for Anime and Manga
+	const mutationAnime = `
+		mutation ToggleFavourite($mediaId: Int) {
+			ToggleFavourite(animeId: $mediaId) {
+				anime {
+					nodes {
+						id
+					}
+				}
+			}
+		}
+	`;
+
+	const mutationManga = `
+		mutation ToggleFavourite($mediaId: Int) {
+			ToggleFavourite(mangaId: $mediaId) {
+				manga {
+					nodes {
+						id
+					}
+				}
+			}
+		}
+	`;
+
+	// Choose the correct mutation based on mediaType
+	const mutation =
+		mediaType.toLowerCase() === "anime" ? mutationAnime : mutationManga;
+
+	try {
+		const response = await axios.post(
+			"/",
+			{
+				query: mutation,
+				variables: { mediaId },
+			},
+			{
+				...axiosConfig,
+				headers: {
+					...axiosConfig.headers,
+					Authorization: `Bearer ${accessToken}`,
+				},
+			}
+		);
+
+		// Extract favourite status from response
+		const favouriteNodes =
+			response.data.data.ToggleFavourite[mediaType.toLowerCase()].nodes;
+		const isFavouriteNow = favouriteNodes.some(
+			(node) => node.id === mediaId
+		);
+
+		// Return the updated favourite status
+		res.json({
+			mediaId,
+			isFavourite: isFavouriteNow,
+		});
+	} catch (error) {
+		handleError(
+			res,
+			"Failed to toggle favourite status. Please try again later.",
+			error
+		);
+	}
+};
+
 module.exports = {
 	fetchAnimeList,
 	exchangePinForToken,
@@ -527,7 +597,8 @@ module.exports = {
 	fetchUserData,
 	fetchUserMediaDetails,
 	fetchUserMediaIDs,
-	fetchUserFavorites,
+	fetchUserFavourites,
 	fetchAniListIds,
 	saveMediaEntry,
+	toggleFavourite,
 };

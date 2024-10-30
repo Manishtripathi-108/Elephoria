@@ -13,8 +13,8 @@ const useUserMediaList = (activeTab) => {
         setError(null)
 
         try {
-            // Call API with the active tab for media type and favorite flag
-            const result = await fetchUserMediaList(activeTab, activeTab === 'FAVORITES')
+            // Call API with the active tab for media type and favourite flag
+            const result = await fetchUserMediaList(activeTab, activeTab === 'FAVOURITES')
 
             if (result.success) {
                 setMediaData(result.mediaList)
@@ -33,7 +33,7 @@ const useUserMediaList = (activeTab) => {
     }, [activeTab])
 
     useEffect(() => {
-        if (['ANIME', 'MANGA', 'FAVORITES'].includes(activeTab)) {
+        if (['ANIME', 'MANGA', 'FAVOURITES'].includes(activeTab)) {
             fetchMediaData()
         }
     }, [activeTab, fetchMediaData])

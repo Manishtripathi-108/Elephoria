@@ -57,15 +57,15 @@ function AnimeNav({ currentTab }) {
                 </button>
                 <button
                     type="button"
-                    title="Favorite List"
-                    onClick={() => handleTabChange('FAVORITES')}
-                    className={`neu-btn ${activeTab === 'FAVORITES' ? 'active' : ''} neu-icon-btn gap-1 text-nowrap px-2 py-2 md:gap-2 md:px-4 md:py-2 md:text-base`}>
+                    title="Favourite List"
+                    onClick={() => handleTabChange('FAVOURITES')}
+                    className={`neu-btn ${activeTab === 'FAVOURITES' ? 'active' : ''} neu-icon-btn gap-1 text-nowrap px-2 py-2 md:gap-2 md:px-4 md:py-2 md:text-base`}>
                     <Icon icon="icomoon-free:heart" className="size-4 shrink-0 md:size-5" />
-                    Favorites
+                    Favourites
                 </button>
                 <button
                     type="button"
-                    title="Favorite List"
+                    title="Favourite List"
                     onClick={() => handleTabChange('IMPORT')}
                     className={`neu-btn ${activeTab === 'IMPORT' ? 'active' : ''} neu-icon-btn gap-1 text-nowrap px-2 py-2 md:gap-2 md:px-4 md:py-2 md:text-base`}>
                     <Icon icon="icomoon-free:heart" className="size-4 shrink-0 md:size-5" />

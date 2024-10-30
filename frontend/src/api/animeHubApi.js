@@ -36,17 +36,17 @@ export const fetchUserData = async () => {
 }
 
 // Function to fetch user media list from AniList
-export const fetchUserMediaList = async (mediaType, favorite = false) => {
+export const fetchUserMediaList = async (mediaType, favourite = false) => {
     try {
         let endpoint = '/api/anime-hub/user-media'
-        if (favorite) {
-            endpoint = '/api/anime-hub/user-favorites'
+        if (favourite) {
+            endpoint = '/api/anime-hub/user-favourites'
         }
         const response = await axios.post(endpoint, { mediaType }, { withCredentials: true })
 
         return {
-            success: !!response.data.mediaList || !!response.data.favorites,
-            mediaList: response.data.mediaList?.lists || response.data.favorites || [],
+            success: !!response.data.mediaList || !!response.data.favourites,
+            mediaList: response.data.mediaList?.lists || response.data.favourites || [],
         }
     } catch (error) {
         return handleError('Failed to load user media list. Please try again later.', error)
@@ -99,5 +99,18 @@ export const saveMediaEntry = async (mediaId, status, progress = 0) => {
         }
     } catch (error) {
         return handleError('Oops! We couldn’t save your media entry. Please try again later.', error)
+    }
+}
+
+export const toggleFavourite = async (mediaId, mediaType) => {
+    try {
+        const response = await axios.post('/api/anime-hub/toggle-favourite', { mediaId, mediaType }, { withCredentials: true })
+
+        return {
+            success: mediaId === response.data.mediaId,
+            favouriteStatus: response.data.isFavourite,
+        }
+    } catch (error) {
+        return handleError('', error)
     }
 }
