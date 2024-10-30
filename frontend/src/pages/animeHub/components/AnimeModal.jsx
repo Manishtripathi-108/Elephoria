@@ -4,14 +4,13 @@ import { Icon } from '@iconify/react'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
-import { editMediaEntry } from '../../../api/animeHubApi'
+import { saveMediaEntry } from '../../../api/animeHubApi'
 import JelloButton from '../../../components/common/buttons/JelloButton'
 import { validStatus } from '../constants'
 
 export default function AnimeModal({ onClose, media, mediaStatus = '', mediaProgress = '0' }) {
     const bannerStyle = { backgroundImage: `url(${media?.bannerImage})` }
     const [isFavorite, setIsFavorite] = useState(media?.isFavorite || false)
-    const accessToken = localStorage.getItem('accessToken')
 
     // Form validation schema
     const validationSchema = Yup.object({
@@ -21,7 +20,7 @@ export default function AnimeModal({ onClose, media, mediaStatus = '', mediaProg
 
     // Save media entry updates
     const handleSave = async (values, { setSubmitting }) => {
-        const result = await editMediaEntry(accessToken, media?.id, values.status, values.progress)
+        const result = await saveMediaEntry(media?.id, values.status, values.progress)
 
         setSubmitting(false)
 

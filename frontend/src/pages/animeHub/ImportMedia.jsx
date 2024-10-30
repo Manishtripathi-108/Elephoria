@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 
-import { addToAniList, getAniListIds, getUserMediaListIDs } from '../../api/animeHubApi'
+import { fetchAniListIds, fetchUserMediaListIDs, saveMediaEntry } from '../../api/animeHubApi'
 import ProgressBar from '../../components/common/ProgressBar'
 import UploadInput from '../../components/common/form/upload-input'
 import StatusTable from './components/statusTable'
@@ -86,7 +86,7 @@ const ImportAnime = () => {
     // Handle component unmount (cleanup)
     useEffect(() => {
         return () => {
-            if (abortControllerRef.current) abortControllerRef.current.abort()
+            handleCancel()
         }
     }, [])
 
@@ -101,6 +101,34 @@ const ImportAnime = () => {
         }
     }
 
+    const handleError = (result) => {
+        if (result.retryAfterSeconds > 0) {
+            window.addToast(`Rate limit exceeded. Try again after ${result.retryAfterSeconds} seconds.`, 'error')
+            console.log('inside handleError if')
+
+            handleCancel()
+        } else {
+            window.addToast(result.message || 'An error occurred while importing. Please try again.', 'error')
+            console.log('inside handleError else')
+
+            handleCancel()
+        }
+    }
+
+    const handleCompletion = (failedList, importList = []) => {
+        if (abortControllerRef.current) abortControllerRef.current.abort()
+        setImportProgress(importList)
+        setFailedImports(failedList)
+        setProgressData((prev) => ({ ...prev, inProgress: false }))
+    }
+
+    const handleRateLimits = async (remainingRateLimit, retryAfterSeconds) => {
+        if (remainingRateLimit <= 60 || retryAfterSeconds > 0) {
+            await new Promise((resolve) => setTimeout(resolve, (retryAfterSeconds || 60) * 1000))
+        }
+    }
+
+    // Process media list and extract MAL IDs
     const processMediaArray = (mediaList, mediaType, failedList) => {
         const malIdMap = {}
         const mediaStatus = Object.keys(mediaList)
@@ -143,6 +171,7 @@ const ImportAnime = () => {
         return malIdMap
     }
 
+    // Fetch AniList IDs
     const filterExistingMalIds = (malIdMap, userMediaList) => {
         const userMalIds = userMediaList.lists.flatMap((list) =>
             list.entries.map((entry) => ({
@@ -161,33 +190,28 @@ const ImportAnime = () => {
         })
     }
 
+    // Fetch AniList IDs for a batch of MAL IDs
     const fetchAniListIdsInBatches = async (malIds, mediaType) => {
         const malIdBatches = chunkArray(malIds, 50)
         let aniListIdMap = []
 
-        try {
-            for (const batch of malIdBatches) {
-                setProgressData((prev) => ({ ...prev, currentMedia: 'Fetching AniList IDs' }))
-                const result = await getAniListIds(batch, mediaType, abortControllerRef.current.signal)
+        for (const batch of malIdBatches) {
+            setProgressData((prev) => ({ ...prev, currentMedia: 'Fetching AniList IDs' }))
+            const result = await fetchAniListIds(batch, mediaType, abortControllerRef.current.signal)
 
-                if (result.success) {
-                    aniListIdMap.push(result.aniListIds)
-                } else {
-                    handleError(result)
-                    return null
-                }
+            if (result.success) {
+                aniListIdMap.push(result.aniListIds)
+            } else {
+                handleError(result)
+                return null
             }
-        } catch (error) {
-            if (abortControllerRef.current.signal.aborted) {
-                window.addToast('Import process was cancelled.', 'error')
-            }
-            return null
         }
 
         return aniListIdMap.reduce((acc, val) => ({ ...acc, ...val }), {})
     }
 
-    const processMediaInBatches = async (malIds, malIdMap, aniListIdMap, accessToken, importList, failedList) => {
+    // Save media entries to AniList in batches
+    const processMediaInBatches = async (malIds, malIdMap, aniListIdMap, importList, failedList) => {
         const mediaBatches = chunkArray(malIds, 25)
         let remainingRateLimit = 100
         let retryAfterSeconds = 0
@@ -195,7 +219,7 @@ const ImportAnime = () => {
         for (const batch of mediaBatches) {
             for (const malId of batch) {
                 if (abortControllerRef.current.signal.aborted) {
-                    window.addToast('Import process was cancelled.', 'error')
+                    window.addToast('Import process was cancelled.', 'info')
                     return
                 }
 
@@ -205,21 +229,17 @@ const ImportAnime = () => {
                 await handleRateLimits(remainingRateLimit, retryAfterSeconds)
 
                 if (aniListId) {
-                    try {
-                        setProgressData((prev) => ({ ...prev, currentMedia: mediaData.name }))
+                    setProgressData((prev) => ({ ...prev, currentMedia: mediaData.name }))
 
-                        const result = await addToAniList(accessToken, aniListId, mediaData.status, abortControllerRef.current.signal)
+                    const result = await saveMediaEntry(aniListId, mediaData.status, 0, abortControllerRef.current.signal)
 
-                        // Use default values if remainingRateLimit or retryAfterSeconds is not provided
-                        ;({ remainingRateLimit = remainingRateLimit, retryAfterSeconds = retryAfterSeconds } = result)
+                    // Use default values if remainingRateLimit or retryAfterSeconds is not provided
+                    ;({ remainingRateLimit = remainingRateLimit, retryAfterSeconds = retryAfterSeconds } = result)
 
-                        if (result.success) {
-                            importList.push({ name: mediaData.name, statusText: 'Success' })
-                        } else {
-                            failedList.push({ ...mediaData, malId, aniListId, statusText: 'Failed' })
-                        }
-                    } catch (error) {
-                        failedList.push({ ...mediaData, malId, aniListId, statusText: 'Error while importing' })
+                    if (result.success) {
+                        importList.push({ name: mediaData.name, statusText: 'Success' })
+                    } else {
+                        failedList.push({ ...mediaData, malId, aniListId, statusText: 'Failed' })
                     }
                 } else {
                     failedList.push({ ...mediaData, malId, statusText: 'AniList ID not found' })
@@ -227,28 +247,6 @@ const ImportAnime = () => {
 
                 setProgressData((prev) => ({ ...prev, currentProcessed: prev.currentProcessed + 1 }))
             }
-        }
-    }
-
-    const handleError = (result) => {
-        if (result.retryAfterSeconds > 0) {
-            window.addToast(`Rate limit exceeded. Try again after ${result.retryAfterSeconds} seconds.`, 'error')
-            handleCancel()
-        } else {
-            window.addToast(result.message, 'error')
-        }
-    }
-
-    const handleCompletion = (failedList, importList = []) => {
-        if (abortControllerRef.current) abortControllerRef.current.abort()
-        setImportProgress(importList)
-        setFailedImports(failedList)
-        setProgressData((prev) => ({ ...prev, inProgress: false }))
-    }
-
-    const handleRateLimits = async (remainingRateLimit, retryAfterSeconds) => {
-        if (remainingRateLimit <= 60 || retryAfterSeconds > 0) {
-            await new Promise((resolve) => setTimeout(resolve, (retryAfterSeconds || 60) * 1000))
         }
     }
 
@@ -261,12 +259,6 @@ const ImportAnime = () => {
 
             if (!mediaList) {
                 window.addToast('No JSON file uploaded.', 'error')
-                return
-            }
-
-            const accessToken = localStorage.getItem('accessToken')
-            if (!accessToken) {
-                window.addToast('Access token not found. Please log in.', 'error')
                 return
             }
 
@@ -316,17 +308,12 @@ const ImportAnime = () => {
 
             // Step 2: Fetch user's media list and filter out existing entries
             let malIds = Object.keys(malIdMap)
-            try {
-                const result = await getUserMediaListIDs(accessToken, mediaType)
+            const result = await fetchUserMediaListIDs(mediaType)
 
-                if (result.success) {
-                    malIds = filterExistingMalIds(malIdMap, result.mediaListIDs)
-                } else {
-                    handleError(result)
-                    return
-                }
-            } catch (error) {
-                handleError({ message: 'Error fetching media list.' })
+            if (result.success) {
+                malIds = filterExistingMalIds(malIdMap, result.mediaListIDs)
+            } else {
+                handleError(result)
                 return
             }
 
@@ -347,8 +334,14 @@ const ImportAnime = () => {
             }
 
             // Step 4: Import media in batches with rate limit handling
-            await processMediaInBatches(malIds, malIdMap, aniListIdMap, accessToken, importList, failedList)
+            await processMediaInBatches(malIds, malIdMap, aniListIdMap, importList, failedList)
+
             handleCompletion(failedList, importList)
+
+            if (abortControllerRef.current.signal.aborted) {
+                return
+            }
+
             window.addToast('Import process completed.', 'success')
         },
         [jsonData, mediaType, correctingStatus]

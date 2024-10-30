@@ -3,6 +3,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const multer = require("multer");
 const path = require("path");
+const cookieParser = require("cookie-parser");
 
 // Import handlers
 const { uploadAudio } = require("./audioHandlers/uploadAudio");
@@ -17,6 +18,7 @@ const app = express();
 /* ------------------------------- Middleware ------------------------------- */
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
 /* ------------------ Serve Static Files for Uploaded Images ---------------- */
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -54,35 +56,80 @@ app.post("/api/edit-metadata", upload.single("audio"), editMetadata);
 /* ------------------------------- Anilist API ------------------------------ */
 // Import Anilist API handler
 const {
-	getAnimeList,
+	fetchAnimeList,
 	exchangePinForToken,
+	fetchUserId,
 	fetchUserData,
 	fetchUserMediaDetails,
 	fetchUserMediaIDs,
 	fetchUserFavorites,
-	getAniListIds,
-	addToAniList,
-	editAniListEntry,
+	fetchAniListIds,
+	saveMediaEntry,
 } = require("./animeHub/anilist");
 
+// Middleware to check token and fetch user ID if not present
+const verifyAuth = async (req, res, next) => {
+	const token = req.cookies.accessToken; // Access the token from cookies
+	let userId = req.cookies.userId; // Access the userId from cookies
+
+	if (!token) {
+		return res.status(401).json({
+			message: "Unauthorized: Please log in again, token not found.",
+		});
+	}
+
+	if (!userId) {
+		try {
+			// Fetch the user ID
+			const response = await fetchUserId(token);
+			userId = response;
+			console.log("User ID fetched: ", userId);
+
+			if (!userId) {
+				return res.status(401).json({
+					message:
+						"Unauthorized: Please log in again, user ID not found.",
+				});
+			}
+
+			// Set the user ID cookie for the frontend
+			res.cookie("userId", userId, {
+				httpOnly: true,
+				secure: true,
+				sameSite: "strict",
+				maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+			});
+		} catch (error) {
+			return res.status(500).json({
+				message:
+					"Failed to fetch user ID. Please reload the page or log in again.",
+				error,
+			});
+		}
+	}
+
+	// Attach userId to the req object for access in subsequent middleware/route handlers
+	req.userId = userId;
+
+	next();
+};
+
 // Route to fetch anime list from Anilist API
-app.post("/api/anime-hub", getAnimeList);
+app.post("/api/anime-hub", verifyAuth, fetchAnimeList);
 
 app.post("/api/anime-hub/exchange-pin", exchangePinForToken);
 
-app.post("/api/anime-hub/user-data", fetchUserData);
+app.post("/api/anime-hub/user-data", verifyAuth, fetchUserData);
 
-app.post("/api/anime-hub/user-media", fetchUserMediaDetails);
+app.post("/api/anime-hub/user-media", verifyAuth, fetchUserMediaDetails);
 
-app.post("/api/anime-hub/user-media-ids", fetchUserMediaIDs);
+app.post("/api/anime-hub/user-media-ids", verifyAuth, fetchUserMediaIDs);
 
-app.post("/api/anime-hub/user-favorites", fetchUserFavorites);
+app.post("/api/anime-hub/user-favorites", verifyAuth, fetchUserFavorites);
 
-app.post("/api/anime-hub/anilist-ids", getAniListIds);
+app.post("/api/anime-hub/anilist-ids", verifyAuth, fetchAniListIds);
 
-app.post("/api/anime-hub/add-to-anilist", addToAniList);
-
-app.post("/api/anime-hub/edit-media-entry", editAniListEntry);
+app.post("/api/anime-hub/save-media-entry", verifyAuth, saveMediaEntry);
 
 // Set PORT from environment or default to 3000
 const PORT = process.env.PORT || 3000;

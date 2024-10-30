@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 
 import { useNavigate } from 'react-router-dom'
 
@@ -14,27 +14,18 @@ const validationSchema = Yup.object().shape({
 })
 
 function AnimeHubAuth() {
-    const [accessToken, setAccessToken] = useState(null) // State to store access token
     const navigate = useNavigate()
-
-    useEffect(() => {
-        if (window.localStorage.getItem('accessToken')) {
-            navigate('/anime-hub')
-        }
-    }, [accessToken, navigate])
 
     const handleSubmit = async (values, { setSubmitting }) => {
         const result = await exchangePin(values.pin)
         if (result.success) {
-            setAccessToken(result.token)
-            window.localStorage.setItem('accessToken', result.token)
-            window.addToast('Authorization successful', 'success')
+            window.addToast('Authorization successful!', 'success')
             navigate('/anime-hub')
         } else {
             if (result.retryAfterSeconds) {
-                window.addToast(`${result.message} Try Again After ${result.retryAfterSeconds}Seconds`, 'error')
+                window.addToast(`Rate limit exceeded. Please try again after ${result.retryAfterSeconds} seconds.`, 'error')
             } else {
-                window.addToast(result.message, 'error')
+                window.addToast(result.message || 'An error occurred. Please try again later.', 'error')
             }
         }
         setSubmitting(false)

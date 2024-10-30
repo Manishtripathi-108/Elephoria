@@ -2,11 +2,11 @@ import axios from 'axios'
 
 // Helper to create a standardized error response
 const handleError = (message, error) => {
-    console.error(error.response?.data)
+    console.error(message, error)
 
     return {
         success: false,
-        message: error.response?.data?.message || error.message,
+        message: error.response?.data?.message || `Oops! ${message}`,
         retryAfterSeconds: error?.response?.data?.retryAfterSeconds || 0,
         remainingRateLimit: error?.response?.data?.retryAfterSeconds ? 0 : error?.response?.data?.remainingRateLimit || 100,
     }
@@ -16,35 +16,45 @@ const handleError = (message, error) => {
 export const exchangePin = async (pin) => {
     try {
         const response = await axios.post('/api/anime-hub/exchange-pin', { pin })
-        return {
-            success: !!response.data.accessToken,
-            token: response.data.accessToken,
-        }
+        return { success: response.data.success }
     } catch (error) {
-        return handleError('Error exchanging pin', error)
+        return handleError('Something went wrong while exchanging the pin. Please try again later.', error)
     }
 }
 
-// Function to get user media data from AniList
-export const getUserMediaList = async (accessToken, mediaType, favorite = false) => {
+// Function to fetch user data
+export const fetchUserData = async () => {
+    try {
+        const response = await axios.post('/api/anime-hub/user-data', { withCredentials: true })
+        return {
+            success: !!response.data.userData,
+            userData: response.data.userData,
+        }
+    } catch (error) {
+        return handleError('Failed to load user data. Please refresh the page or try again.', error)
+    }
+}
+
+// Function to fetch user media list from AniList
+export const fetchUserMediaList = async (mediaType, favorite = false) => {
     try {
         let endpoint = '/api/anime-hub/user-media'
         if (favorite) {
             endpoint = '/api/anime-hub/user-favorites'
         }
+        const response = await axios.post(endpoint, { mediaType }, { withCredentials: true })
 
-        const response = await axios.post(endpoint, { accessToken, mediaType })
         return {
             success: !!response.data.mediaList || !!response.data.favorites,
             mediaList: response.data.mediaList?.lists || response.data.favorites || [],
         }
     } catch (error) {
-        return handleError('Error fetching user media list', error)
+        return handleError('Failed to load user media list. Please try again later.', error)
     }
 }
 
 // Function to get AniList IDs from MAL IDs in bulk
-export const getAniListIds = async (malIds, mediaType) => {
+export const fetchAniListIds = async (malIds, mediaType) => {
     try {
         const response = await axios.post('/api/anime-hub/anilist-ids', { malIds, mediaType })
 
@@ -58,32 +68,27 @@ export const getAniListIds = async (malIds, mediaType) => {
             retryAfterSeconds: retryAfterSeconds || 0,
         }
     } catch (error) {
-        return handleError('Error fetching AniList IDs', error)
+        return handleError('Error fetching AniList IDs. Please try again later.', error)
     }
 }
 
-// Function to get user media data from AniList
-export const getUserMediaListIDs = async (accessToken, mediaType) => {
+// Function to fetch user media list IDs from AniList
+export const fetchUserMediaListIDs = async (mediaType) => {
     try {
-        const response = await axios.post('/api/anime-hub/user-media-ids', { accessToken, mediaType })
+        const response = await axios.post('/api/anime-hub/user-media-ids', { mediaType }, { withCredentials: true })
         return {
             success: !!response.data.mediaListIDs,
             mediaListIDs: response.data.mediaListIDs,
         }
     } catch (error) {
-        return handleError('Error fetching user media IDs', error)
+        return handleError('Failed to load user media IDs. Please try again later.', error)
     }
 }
 
-// Function to add media to AniList
-export const addToAniList = async (accessToken, aniListId, status) => {
+// Function to save media entry
+export const saveMediaEntry = async (mediaId, status, progress = 0) => {
     try {
-        const response = await axios.post('/api/anime-hub/add-to-anilist', {
-            accessToken,
-            mediaId: aniListId,
-            status,
-        })
-
+        const response = await axios.post('/api/anime-hub/save-media-entry', { mediaId, status, progress }, { withCredentials: true })
         const { SaveMediaListEntry, remainingRateLimit, retryAfterSeconds } = response.data
 
         // Return success status and rate limit information
@@ -93,32 +98,6 @@ export const addToAniList = async (accessToken, aniListId, status) => {
             retryAfterSeconds: retryAfterSeconds || 0,
         }
     } catch (error) {
-        return handleError('Error adding media to AniList:', error)
-    }
-}
-
-// Function to Edit Media Entry
-export const editMediaEntry = async (accessToken, mediaId, status, progress) => {
-    if (!mediaId || mediaId === '') {
-        return -1
-    }
-
-    try {
-        const response = await axios.post('/api/anime-hub/edit-media-entry', {
-            accessToken,
-            mediaId,
-            progress,
-            status,
-        })
-
-        const { SaveMediaListEntry, remainingRateLimit, retryAfterSeconds } = response.data
-
-        return {
-            success: !!SaveMediaListEntry.status,
-            remainingRateLimit: remainingRateLimit || 100,
-            retryAfterSeconds: retryAfterSeconds || 0,
-        }
-    } catch (error) {
-        return handleError('Error Editing Media:', error)
+        return handleError('Oops! We couldn’t save your media entry. Please try again later.', error)
     }
 }

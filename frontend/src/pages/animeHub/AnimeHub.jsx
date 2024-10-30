@@ -1,10 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react'
-
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
 
 import { Icon } from '@iconify/react'
 
-import { getUserMediaList } from '../../api/animeHubApi'
 import NoDataCard from '../../components/common/NoDataCard'
 import ImportAnime from './ImportMedia'
 import AnimeFilter from './components/AnimeFilter'
@@ -13,55 +10,22 @@ import AnimeNav from './components/AnimeNav'
 import MediaCardList from './components/MediaCardList'
 import MediaList from './components/MediaList'
 import AnimeSkeleton from './components/loading/AnimeSkeleton'
+import useUserMediaList from './hooks/useUserMediaList'
 
 function AnimeHub() {
-    const navigate = useNavigate()
     const [activeTab, setActiveTab] = useState('ANIME')
     const [isListView, setIsListView] = useState(false)
-    const [mediaData, setMediaData] = useState([])
-    const [isLoading, setIsLoading] = useState(false)
     const [filteredMediaData, setFilteredMediaData] = useState([])
     const [isFilterActive, setIsFilterActive] = useState(false)
 
-    const accessToken = localStorage.getItem('accessToken')
-
-    // Redirect to /anime-hub/auth if accessToken is missing
+    // Reset filtered data and filter state when the active tab changes
     useEffect(() => {
-        if (!accessToken) {
-            navigate('/anime-hub/auth')
-        }
-    }, [accessToken, navigate])
-
-    // Fetch media data based on the active tab (Anime, Manga, or Favorites)
-    const fetchMediaData = useCallback(async () => {
-        if (!accessToken) return
-
-        setIsLoading(true)
         setFilteredMediaData([])
         setIsFilterActive(false)
+    }, [activeTab])
 
-        try {
-            let result = await getUserMediaList(accessToken, activeTab, activeTab === 'FAVORITES')
-
-            if (result.success) {
-                setMediaData(result.mediaList)
-            } else if (result.retryAfterSeconds > 0) {
-                window.addToast(`Rate limit exceeded. Try again after ${result.retryAfterSeconds} seconds.`, 'error')
-            } else {
-                window.addToast(result.message, 'error')
-            }
-        } catch (error) {
-            window.addToast(`Error fetching ${activeTab.toLowerCase()} data.`, 'error', 10000)
-            console.error(`Error fetching ${activeTab.toLowerCase()} data:`, error)
-        } finally {
-            setIsLoading(false)
-        }
-    }, [activeTab, accessToken])
-
-    // Fetch media data when the active tab changes
-    useEffect(() => {
-        if (['ANIME', 'MANGA', 'FAVORITES'].includes(activeTab)) fetchMediaData()
-    }, [activeTab, fetchMediaData])
+    // Fetch media data using the custom hook
+    const { mediaData, isLoading, error } = useUserMediaList(activeTab)
 
     // Decide whether to show filtered data or all media data
     const displayMediaData = isFilterActive && filteredMediaData.length > 0 ? filteredMediaData : mediaData
@@ -69,11 +33,15 @@ function AnimeHub() {
     return (
         <div>
             <AnimeHeader />
-            <AnimeNav currentTab={setActiveTab} /> {/* Navigation for tabs */}
+            <AnimeNav currentTab={setActiveTab} />
+
             {isLoading ? (
-                // Show loading skeleton while data is being fetched
                 <AnimeSkeleton isList={isListView} />
-            ) : activeTab !== 'IMPORT' ? (
+            ) : activeTab === 'IMPORT' ? (
+                <div className="md:p-5">
+                    <ImportAnime />
+                </div>
+            ) : (
                 <>
                     {/* Toggle between List and Card views */}
                     <div className="container mx-auto flex items-center justify-end px-4">
@@ -116,10 +84,6 @@ function AnimeHub() {
                         </div>
                     </div>
                 </>
-            ) : (
-                <div className="md:p-5">
-                    <ImportAnime />
-                </div>
             )}
         </div>
     )
