@@ -17,8 +17,6 @@ export const AnimeHubProvider = ({ children }) => {
             setIsLoading(reload)
             setError(null)
 
-            console.log('fetchMediaData', activeTab, reload)
-
             try {
                 // Call API with the active tab for media type and favourite flag
                 const result = await fetchUserMediaList(activeTab, activeTab === 'FAVOURITES')
@@ -47,11 +45,7 @@ export const AnimeHubProvider = ({ children }) => {
         }
     }, [activeTab, fetchMediaData])
 
-    const refetchMedia = () => {
-        console.log('refetchMedia')
-
-        fetchMediaData()
-    }
+    const refetchMedia = () => fetchMediaData()
 
     return (
         <AnimeHubContext.Provider value={{ mediaData, activeTab, setActiveTab, isLoading, refetchMedia, error }}>{children}</AnimeHubContext.Provider>

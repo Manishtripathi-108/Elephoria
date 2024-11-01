@@ -84,7 +84,6 @@ const verifyAuth = async (req, res, next) => {
 			// Fetch the user ID
 			const response = await fetchUserId(token);
 			userId = response;
-			console.log("User ID fetched: ", userId);
 
 			if (!userId) {
 				return res.status(401).json({

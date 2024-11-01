@@ -129,7 +129,7 @@ const fetchUserId = async (accessToken) => {
 				},
 			}
 		);
-		console.log("from fn", response.data.data.Viewer.id);
+
 		return response.data.data.Viewer.id;
 	} catch (error) {
 		return null;

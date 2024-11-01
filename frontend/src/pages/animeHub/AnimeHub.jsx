@@ -70,8 +70,7 @@ function AnimeHub() {
                             />
                         )}
 
-                        <div
-                            className={`bg-primary mx-auto w-full rounded-lg border border-light-secondary p-2 shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-sm md:p-5 ${isListView ? '' : 'scrollbar-thin h-dvh overflow-y-scroll'}`}>
+                        <div className="bg-primary mx-auto w-full rounded-lg border border-light-secondary p-2 shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-sm md:p-5">
                             {isFilterActive && filteredMediaData.length === 0 ? (
                                 <NoDataCard name="Filtered Results" message="No media matches your filter criteria. Please adjust the filters." />
                             ) : isListView ? (

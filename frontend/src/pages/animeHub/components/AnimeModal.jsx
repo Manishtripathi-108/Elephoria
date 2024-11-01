@@ -67,12 +67,14 @@ export default function AnimeModal({ onClose, media, mediaStatus = '', mediaProg
     }
 
     return (
-        <div className="fixed inset-0 z-50 grid animate-unfoldIn place-items-center overflow-y-auto rounded-lg">
+        <div
+            className="fixed inset-0 z-50 grid h-dvh w-full animate-unfoldIn place-items-center overflow-y-auto rounded-lg"
+            onClick={(e) => e.stopPropagation()}>
             {/* Background overlay */}
             <div className="fixed inset-0 h-dvh bg-light-primary/75 bg-opacity-75 dark:bg-dark-primary/75" onClick={onClose}></div>
 
             {/* Modal content */}
-            <div className="flex w-full max-w-2xl scale-0 animate-zoomIn items-center justify-center p-2" onClick={(e) => e.stopPropagation()}>
+            <div className="flex w-full max-w-2xl scale-0 animate-zoomIn items-center justify-center p-2">
                 <div className="bg-primary relative m-1 w-full rounded-lg p-6 shadow-neu-light-md dark:shadow-neu-dark-md">
                     {/* Close button */}
                     <button className="text-secondary hover:text-primary absolute right-2 top-2 z-20 text-xl" onClick={onClose}>

@@ -104,13 +104,9 @@ const ImportAnime = () => {
     const handleError = (result) => {
         if (result.retryAfterSeconds > 0) {
             window.addToast(`Rate limit exceeded. Try again after ${result.retryAfterSeconds} seconds.`, 'error')
-            console.log('inside handleError if')
-
             handleCancel()
         } else {
             window.addToast(result.message || 'An error occurred while importing. Please try again.', 'error')
-            console.log('inside handleError else')
-
             handleCancel()
         }
     }
@@ -185,7 +181,9 @@ const ImportAnime = () => {
             return !userMalIds.some(
                 (userMal) =>
                     parseInt(malId) === parseInt(userMal.idMal) &&
-                    (malData.status.toUpperCase() === 'CURRENT' ? 'WATCHING' === userMal.status : malData.status.toUpperCase() === userMal.status)
+                    (malData.status.toUpperCase() === 'CURRENT'
+                        ? 'WATCHING' === userMal.status || 'READING' === userMal.status // as AniList doesn't have 'CURRENT' status so watching is for anime and reading is for manga
+                        : malData.status.toUpperCase() === userMal.status)
             )
         })
     }
@@ -262,7 +260,7 @@ const ImportAnime = () => {
                 return
             }
 
-            if (mediaType === 'MANGA') {
+            if (mediaType === 'MANGA' && !retryFailed) {
                 const completedManga = mediaList
                     .filter((manga) => manga.type === 'Completed')
                     .map((manga) => ({ name: manga.title, link: manga.mal }))

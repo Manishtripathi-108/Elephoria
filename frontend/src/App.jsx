@@ -49,13 +49,15 @@ function App() {
                 <Route path="/shadows" element={<Shadows />} />
                 {/* <Route path="/auth" element={<AuthPage />} /> */}
                 <Route path="/audio" element={<MusicEditor />} />
-                <Route
-                    path="/anime-hub"
-                    element={
-                        <AnimeHubProvider>
-                            <AnimeHub />
-                        </AnimeHubProvider>
-                    }>
+                <Route path="/anime-hub">
+                    <Route
+                        index
+                        element={
+                            <AnimeHubProvider>
+                                <AnimeHub />
+                            </AnimeHubProvider>
+                        }
+                    />
                     <Route path="auth" element={<AnimeHubAuth />} />
                 </Route>
 

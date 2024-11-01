@@ -39,8 +39,6 @@ const AudioEditor = () => {
                 },
             })
 
-            console.log('Response:', response.data)
-
             // Set metadata and cover image URL
             setMetadata(response.data?.metadata?.format?.tags)
             setCoverImage(response.data?.coverImage) // Set the full URL of the cover image
