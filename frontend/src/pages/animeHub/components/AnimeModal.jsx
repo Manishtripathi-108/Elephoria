@@ -6,23 +6,33 @@ import * as Yup from 'yup'
 
 import { saveMediaEntry, toggleFavourite } from '../../../api/animeHubApi'
 import JelloButton from '../../../components/common/buttons/JelloButton'
+import { useAnimeHubContext } from '../../../context/AnimeHubContext'
 import { validStatus } from '../constants'
 
 export default function AnimeModal({ onClose, media, mediaStatus = '', mediaProgress = '0' }) {
     const bannerStyle = { backgroundImage: `url(${media?.bannerImage})` }
     const [isLiked, setIsLiked] = useState(media.isFavourite || false)
     const [isToggling, setIsToggling] = useState(false)
+    const { refetchMedia } = useAnimeHubContext()
+    const maxProgress = media?.episodes || media?.chapters || 100000
 
     // Form validation schema
     const validationSchema = Yup.object({
         status: Yup.string().oneOf(validStatus).required('Status is required'),
-        progress: Yup.number().min(0, 'Progress must be zero or more').required('Progress is required'),
+        progress: Yup.number()
+            .min(0, 'Progress must be zero or more')
+            .max(maxProgress, `Progress must be less than ${maxProgress}`)
+            .required('Progress is required'),
     })
 
     // Save media entry updates
-    const handleSave = async (values, { setSubmitting }) => {
+    const handleSave = async (values) => {
+        if (values.status === mediaStatus && values.progress === mediaProgress) {
+            window.addToast('No changes to save.', 'info')
+            onClose()
+            return
+        }
         const result = await saveMediaEntry(media.id, values.status, values.progress)
-        setSubmitting(false)
 
         if (result === -1) {
             window.addToast('ID not found', 'error')
@@ -31,6 +41,7 @@ export default function AnimeModal({ onClose, media, mediaStatus = '', mediaProg
 
         if (result.success) {
             window.addToast('Entry updated successfully', 'success')
+            refetchMedia()
             onClose()
         } else if (result.retryAfterSeconds > 0) {
             window.addToast(`Rate limit exceeded. Please try again in ${result.retryAfterSeconds} seconds.`, 'error')
@@ -56,13 +67,13 @@ export default function AnimeModal({ onClose, media, mediaStatus = '', mediaProg
     }
 
     return (
-        <div className="fixed inset-0 z-50 animate-unfoldIn overflow-y-auto rounded-lg" onClick={onClose}>
+        <div className="fixed inset-0 z-50 grid animate-unfoldIn place-items-center overflow-y-auto rounded-lg">
             {/* Background overlay */}
-            <div className="fixed inset-0 h-dvh bg-light-primary/75 bg-opacity-75 dark:bg-dark-primary/75"></div>
+            <div className="fixed inset-0 h-dvh bg-light-primary/75 bg-opacity-75 dark:bg-dark-primary/75" onClick={onClose}></div>
 
             {/* Modal content */}
-            <div className="flex h-dvh scale-0 animate-zoomIn items-center justify-center p-2" onClick={(e) => e.stopPropagation()}>
-                <div className="bg-primary relative m-1 w-full max-w-2xl rounded-lg p-6 shadow-neu-light-md dark:shadow-neu-dark-md">
+            <div className="flex w-full max-w-2xl scale-0 animate-zoomIn items-center justify-center p-2" onClick={(e) => e.stopPropagation()}>
+                <div className="bg-primary relative m-1 w-full rounded-lg p-6 shadow-neu-light-md dark:shadow-neu-dark-md">
                     {/* Close button */}
                     <button className="text-secondary hover:text-primary absolute right-2 top-2 z-20 text-xl" onClick={onClose}>
                         &#x2715;
@@ -124,7 +135,7 @@ export default function AnimeModal({ onClose, media, mediaStatus = '', mediaProg
                                         <label htmlFor="progress" className="neu-form-label">
                                             Episode Progress:
                                         </label>
-                                        <Field type="number" name="progress" min="0" className="neu-form-input text-center" />
+                                        <Field type="number" name="progress" min="0" max={maxProgress} className="neu-form-input text-center" />
                                         <ErrorMessage name="progress" component="div" className="neu-form-text error" />
                                     </div>
                                 </div>

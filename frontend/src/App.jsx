@@ -5,6 +5,7 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import PrivateRoute from './components/PrivateRoute'
 import ToastStack from './components/common/notifications/ToastStack'
 import Header from './components/layout/Header'
+import { AnimeHubProvider } from './context/AnimeHubContext'
 import NotFound from './pages/404-page'
 import Shadows from './pages/ShadowsGrid'
 import AnimeHub from './pages/animeHub/AnimeHub'
@@ -44,12 +45,17 @@ function App() {
 
                 {/* Public Routes */}
 
-                <Route path="/" element={<AnimeHub />} />
+                <Route path="/" element={<Shadows />} />
                 <Route path="/shadows" element={<Shadows />} />
                 {/* <Route path="/auth" element={<AuthPage />} /> */}
                 <Route path="/audio" element={<MusicEditor />} />
-                <Route path="/anime-hub">
-                    <Route index element={<AnimeHub />} />
+                <Route
+                    path="/anime-hub"
+                    element={
+                        <AnimeHubProvider>
+                            <AnimeHub />
+                        </AnimeHubProvider>
+                    }>
                     <Route path="auth" element={<AnimeHubAuth />} />
                 </Route>
 

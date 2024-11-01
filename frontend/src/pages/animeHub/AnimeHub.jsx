@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Icon } from '@iconify/react'
 
 import NoDataCard from '../../components/common/NoDataCard'
+import { useAnimeHubContext } from '../../context/AnimeHubContext'
 import ImportAnime from './ImportMedia'
 import AnimeFilter from './components/AnimeFilter'
 import AnimeHeader from './components/AnimeHeader'
@@ -10,22 +11,19 @@ import AnimeNav from './components/AnimeNav'
 import MediaCardList from './components/MediaCardList'
 import MediaList from './components/MediaList'
 import AnimeSkeleton from './components/loading/AnimeSkeleton'
-import useUserMediaList from './hooks/useUserMediaList'
 
 function AnimeHub() {
-    const [activeTab, setActiveTab] = useState('ANIME')
     const [isListView, setIsListView] = useState(false)
     const [filteredMediaData, setFilteredMediaData] = useState([])
     const [isFilterActive, setIsFilterActive] = useState(false)
+
+    const { mediaData, activeTab, setActiveTab, isLoading, error } = useAnimeHubContext()
 
     // Reset filtered data and filter state when the active tab changes
     useEffect(() => {
         setFilteredMediaData([])
         setIsFilterActive(false)
     }, [activeTab])
-
-    // Fetch media data using the custom hook
-    const { mediaData, isLoading, error } = useUserMediaList(activeTab)
 
     // Decide whether to show filtered data or all media data
     const displayMediaData = isFilterActive && filteredMediaData.length > 0 ? filteredMediaData : mediaData
