@@ -14,6 +14,28 @@
     all: unset;
 }
 
+/* Animating the popover in */
+
+/* IS-OPEN STATE   */
+/* [popover]:popover-open {
+    translate: 0 0;
+} */
+
+/* EXIT STATE   */
+/* [popover] {
+    transition:
+        translate 0.7s ease-out,
+        display 0.7s ease-out allow-discrete;
+    translate: 0 -22rem;
+} */
+
+/* 0. BEFORE-OPEN STATE   */
+/* @starting-style {
+    [popover]:popover-open {
+        translate: 0 -22rem;
+    }
+} */
+
 @layer components {
     /* -------------------------------------------------------------------------- */
     /*                                  neu-form                                  */
@@ -368,6 +390,49 @@
 
     .neu-btn-xl {
         @apply px-5 py-4 text-lg;
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /*                                    Modal                                   */
+    /* -------------------------------------------------------------------------- */
+    /* When not visible: 0% */
+    dialog.animation-modal {
+        @apply m-auto hidden scale-0 opacity-0 ease-in-out;
+        transition:
+            overlay allow-discrete,
+            display allow-discrete,
+            transform,
+            opacity;
+        transition-duration: 300ms;
+    }
+
+    dialog::backdrop {
+        transition:
+            opacity,
+            display allow-discrete,
+            overlay allow-discrete,
+            transform;
+        transition-duration: 300ms;
+        @apply bg-primary scale-x-100 scale-y-0 transform opacity-65 ease-in-out;
+    }
+
+    /* When visible: 100% */
+    dialog[open].animation-modal {
+        @apply block scale-100 opacity-100 delay-300;
+    }
+
+    dialog[open]::backdrop {
+        @apply scale-x-100 scale-y-100 transform;
+    }
+
+    /* Initial styles for smooth entry transition: 0% */
+    @starting-style {
+        dialog[open].animation-modal {
+            @apply scale-0 opacity-0;
+        }
+        dialog[open]::backdrop {
+            @apply scale-x-100 scale-y-0 transform;
+        }
     }
 }
 

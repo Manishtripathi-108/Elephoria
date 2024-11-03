@@ -2,28 +2,18 @@ import React, { memo, useState } from 'react'
 
 import { Icon } from '@iconify/react'
 
+import { ModalTrigger } from '../../../components/common/NeuModal'
+import { convertMonthNumberToName } from '../constants'
 import AnimeModal from './AnimeModal'
-
-const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-
-const convertMonthNumberToName = (monthNumber) => {
-    if (monthNumber >= 1 && monthNumber <= 12) {
-        return monthNames[monthNumber - 1]
-    }
-    return '...'
-}
 
 function MediaCard({ mediaItem, isFavouriteList = false }) {
     // Handle favourites, which don't have the `media` nesting.
     const media = isFavouriteList ? mediaItem : mediaItem?.media
-    const [modalOpen, setModalOpen] = useState(false)
-
-    const ToggleModal = () => {
-        setModalOpen((prev) => !prev)
-    }
 
     return (
-        <div className="group relative min-h-44 rounded-lg border border-light-secondary shadow-neu-light-sm dark:border-dark-secondary dark:shadow-neu-dark-sm">
+        <div
+            id={`card-${media.id}`}
+            className="group relative min-h-44 rounded-lg border border-light-secondary shadow-neu-light-sm dark:border-dark-secondary dark:shadow-neu-dark-sm">
             <img
                 className="text-secondary h-4/5 max-h-56 w-full rounded-t-lg border-b border-light-secondary object-cover dark:border-dark-secondary sm:max-h-72"
                 src={media?.coverImage?.large}
@@ -57,12 +47,20 @@ function MediaCard({ mediaItem, isFavouriteList = false }) {
                 )}
             </div>
 
-            {/* Description Popup */}
+            {/* Info Button to Trigger Popover */}
+            <button
+                className="bg-secondary text-secondary absolute bottom-12 right-2 rounded-full p-1"
+                popovertarget={`description-popover-${media.id}`}
+                popovertargetaction="toggle"
+                aria-label="Show Description">
+                <Icon icon="carbon:information" className="text-primary size-5" />
+            </button>
+
+            {/* Description Popover */}
             <div
-                className="invisible absolute inset-x-1/2 top-1/3 z-10 w-72 rounded-lg border border-light-secondary bg-light-primary/60 p-3 opacity-0 backdrop-blur-md backdrop-saturate-150 transition-opacity delay-500 duration-500 ease-in-out dark:border-dark-secondary dark:bg-dark-primary/50 sm:group-hover:visible sm:group-hover:opacity-100"
-                aria-hidden="true"
-                aria-label="Anime Description Popup">
-                {/* Title Section */}
+                id={`description-popover-${media.id}`}
+                popover="auto"
+                className="w-72 rounded-lg border border-light-secondary bg-light-primary/60 p-3 shadow-lg backdrop-blur-md backdrop-saturate-150 dark:border-dark-secondary dark:bg-dark-primary/50">
                 <div className="mb-2">
                     <h3 className="text-primary font-aladin text-xl font-bold tracking-widest" aria-live="polite">
                         {media?.title?.english || media?.title?.native || media?.title?.romaji || 'Unknown Title'}
@@ -99,17 +97,14 @@ function MediaCard({ mediaItem, isFavouriteList = false }) {
 
             {/* Dots Menu */}
             {!isFavouriteList && (
-                <button
-                    type="button"
-                    onClick={ToggleModal}
+                <ModalTrigger
+                    id={`modal_${media.id}`}
                     className="bg-secondary text-secondary absolute right-1 top-1 flex items-center justify-center rounded-lg p-0.5">
                     <Icon icon="pepicons-pop:dots-y" className="size-6" />
-                </button>
+                </ModalTrigger>
             )}
 
-            {modalOpen && (
-                <AnimeModal onClose={() => setModalOpen(false)} media={media} mediaStatus={mediaItem?.status} mediaProgress={mediaItem?.progress} />
-            )}
+            <AnimeModal id={`modal_${media.id}`} media={media} mediaStatus={mediaItem?.status} mediaProgress={mediaItem?.progress} />
         </div>
     )
 }

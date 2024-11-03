@@ -41,3 +41,12 @@ export const filterOptions = [
 export const sortOptions = ['Average Score', 'Last Added', 'Last Updated', 'Popularity', 'Progress', 'Score', 'Title']
 
 export const validStatus = ['COMPLETED', 'CURRENT', 'DROPPED', 'PAUSED', 'PLANNING', 'REPEATING']
+
+const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+
+export const convertMonthNumberToName = (monthNumber) => {
+    if (monthNumber >= 1 && monthNumber <= 12) {
+        return monthNames[monthNumber - 1]
+    }
+    return '...'
+}
