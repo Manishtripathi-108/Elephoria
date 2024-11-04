@@ -193,6 +193,7 @@ const fetchUserMediaDetails = async (req, res) => {
                 lists {
                     name
                     entries {
+						id
                         progress
                         status
                         updatedAt
@@ -590,6 +591,46 @@ const toggleFavourite = async (req, res) => {
 	}
 };
 
+const deleteMediaEntry = async (req, res) => {
+	const accessToken = req.cookies.accessToken;
+	const { entryId } = req.body;
+
+	const mutation = `
+		mutation DeleteMediaListEntry($entryId: Int) {
+			DeleteMediaListEntry(id: $entryId) {
+				deleted
+			}
+		}
+	`;
+
+	try {
+		const response = await axios.post(
+			"/",
+			{
+				query: mutation,
+				variables: { entryId },
+			},
+			{
+				...axiosConfig,
+				headers: {
+					...axiosConfig.headers,
+					Authorization: `Bearer ${accessToken}`,
+				},
+			}
+		);
+
+		res.json({
+			deleted: response.data.data.DeleteMediaListEntry.deleted,
+		});
+	} catch (error) {
+		handleError(
+			res,
+			"Failed to delete media entry. Please try again later.",
+			error
+		);
+	}
+};
+
 module.exports = {
 	fetchAnimeList,
 	exchangePinForToken,
@@ -601,4 +642,5 @@ module.exports = {
 	fetchAniListIds,
 	saveMediaEntry,
 	toggleFavourite,
+	deleteMediaEntry,
 };

@@ -102,6 +102,7 @@ export const saveMediaEntry = async (mediaId, status, progress = 0) => {
     }
 }
 
+// Function to toggle the favourite status of a media item
 export const toggleFavourite = async (mediaId, mediaType) => {
     try {
         const response = await axios.post('/api/anime-hub/toggle-favourite', { mediaId, mediaType }, { withCredentials: true })
@@ -112,5 +113,18 @@ export const toggleFavourite = async (mediaId, mediaType) => {
         }
     } catch (error) {
         return handleError('', error)
+    }
+}
+
+// Function to delete a media entry
+export const deleteMediaEntry = async (entryId) => {
+    try {
+        const response = await axios.post('/api/anime-hub/delete-media-entry', { entryId }, { withCredentials: true })
+
+        return {
+            success: response.data.deleted,
+        }
+    } catch (error) {
+        return handleError('Failed to delete media entry. Please try again later.', error)
     }
 }

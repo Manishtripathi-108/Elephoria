@@ -282,7 +282,6 @@ const ImportAnime = () => {
                     'On-Hold': onHoldManga,
                 }
             }
-            console.log(mediaList)
 
             abortControllerRef.current = new AbortController()
             setProgressData({ currentMedia: '', inProgress: true, totalToProcess: 0, currentProcessed: 0 })

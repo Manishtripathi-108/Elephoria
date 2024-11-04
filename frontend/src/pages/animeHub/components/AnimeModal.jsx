@@ -4,13 +4,13 @@ import { Icon } from '@iconify/react'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
-import { saveMediaEntry, toggleFavourite } from '../../../api/animeHubApi'
+import { deleteMediaEntry, saveMediaEntry, toggleFavourite } from '../../../api/animeHubApi'
 import { Modal } from '../../../components/common/NeuModal'
 import JelloButton from '../../../components/common/buttons/JelloButton'
 import { useAnimeHubContext } from '../../../context/AnimeHubContext'
 import { validStatus } from '../constants'
 
-export default function AnimeModal({ id, media, mediaStatus = '', mediaProgress = '0' }) {
+export default function AnimeModal({ entryId, modalId, media, mediaStatus = '', mediaProgress = '0' }) {
     const bannerStyle = { backgroundImage: `url(${media?.bannerImage})` }
     const [isLiked, setIsLiked] = useState(media.isFavourite || false)
     const [isToggling, setIsToggling] = useState(false)
@@ -18,7 +18,7 @@ export default function AnimeModal({ id, media, mediaStatus = '', mediaProgress 
     const maxProgress = media?.episodes || media?.chapters || 100000
 
     const closeModal = () => {
-        const modal = document.getElementById(id)
+        const modal = document.getElementById(modalId)
         if (modal) {
             modal.close()
         }
@@ -74,8 +74,28 @@ export default function AnimeModal({ id, media, mediaStatus = '', mediaProgress 
         }
     }
 
+    // Delete media entry
+    const deleteEntry = async () => {
+        const result = await deleteMediaEntry(entryId)
+
+        if (result === -1) {
+            window.addToast('ID not found', 'error')
+            return
+        }
+
+        if (result.success) {
+            window.addToast('Entry deleted successfully', 'success')
+            refetchMedia()
+            closeModal()
+        } else if (result.retryAfterSeconds > 0) {
+            window.addToast(`Rate limit exceeded. Please try again in ${result.retryAfterSeconds} seconds.`, 'error')
+        } else {
+            window.addToast(result.message || 'An error occurred while deleting.', 'error')
+        }
+    }
+
     return (
-        <Modal id={id}>
+        <Modal id={modalId}>
             {/* Banner image */}
             <div
                 className="after:bg-secondary relative h-44 rounded-lg bg-cover bg-center after:absolute after:size-full after:rounded-lg after:opacity-40 md:h-64"
@@ -136,8 +156,8 @@ export default function AnimeModal({ id, media, mediaStatus = '', mediaProgress 
 
                         {/* Action buttons */}
                         <div className="mt-8 flex justify-end space-x-2">
-                            <JelloButton title="Delete" variant="danger" type="button" onClick={closeModal} disabled={isSubmitting}>
-                                Delete
+                            <JelloButton title="Delete" variant="danger" type="button" onClick={deleteEntry} disabled={isSubmitting}>
+                                {isSubmitting ? <Icon icon="line-md:loading-loop" className="mx-2 size-5" /> : 'Delete'}
                             </JelloButton>
                             <JelloButton title="Save" variant="info" type="submit" disabled={isSubmitting}>
                                 {isSubmitting ? <Icon icon="line-md:loading-loop" className="mx-2 size-5" /> : 'Save'}

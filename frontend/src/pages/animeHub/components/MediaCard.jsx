@@ -13,7 +13,7 @@ function MediaCard({ mediaItem, isFavouriteList = false }) {
     return (
         <div
             id={`card-${media.id}`}
-            className="group relative min-h-44 rounded-lg border border-light-secondary shadow-neu-light-sm dark:border-dark-secondary dark:shadow-neu-dark-sm">
+            className="relative min-h-44 rounded-lg border border-light-secondary shadow-neu-light-sm dark:border-dark-secondary dark:shadow-neu-dark-sm">
             <img
                 className="text-secondary h-4/5 max-h-56 w-full rounded-t-lg border-b border-light-secondary object-cover dark:border-dark-secondary sm:max-h-72"
                 src={media?.coverImage?.large}
@@ -95,16 +95,24 @@ function MediaCard({ mediaItem, isFavouriteList = false }) {
                 </div>
             </div>
 
-            {/* Dots Menu */}
+            {/* Modal */}
             {!isFavouriteList && (
-                <ModalTrigger
-                    id={`modal_${media.id}`}
-                    className="bg-secondary text-secondary absolute right-1 top-1 flex items-center justify-center rounded-lg p-0.5">
-                    <Icon icon="pepicons-pop:dots-y" className="size-6" />
-                </ModalTrigger>
-            )}
+                <>
+                    <ModalTrigger
+                        id={`modal_${media.id}`}
+                        className="bg-secondary text-secondary absolute right-1 top-1 flex items-center justify-center rounded-lg p-0.5">
+                        <Icon icon="pepicons-pop:dots-y" className="size-6" />
+                    </ModalTrigger>
 
-            <AnimeModal id={`modal_${media.id}`} media={media} mediaStatus={mediaItem?.status} mediaProgress={mediaItem?.progress} />
+                    <AnimeModal
+                        modalId={`modal_${media.id}`}
+                        entryId={mediaItem.id}
+                        media={media}
+                        mediaStatus={mediaItem?.status}
+                        mediaProgress={mediaItem?.progress}
+                    />
+                </>
+            )}
         </div>
     )
 }

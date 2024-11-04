@@ -66,6 +66,7 @@ const {
 	fetchAniListIds,
 	saveMediaEntry,
 	toggleFavourite,
+	deleteMediaEntry,
 } = require("./animeHub/anilist");
 
 // Middleware to check token and fetch user ID if not present
@@ -132,6 +133,8 @@ app.post("/api/anime-hub/anilist-ids", verifyAuth, fetchAniListIds);
 app.post("/api/anime-hub/save-media-entry", verifyAuth, saveMediaEntry);
 
 app.post("/api/anime-hub/toggle-favourite", verifyAuth, toggleFavourite);
+
+app.post("/api/anime-hub/delete-media-entry", verifyAuth, deleteMediaEntry);
 
 // Set PORT from environment or default to 3000
 const PORT = process.env.PORT || 3000;

@@ -22,7 +22,10 @@ export const AnimeHubProvider = ({ children }) => {
                 const result = await fetchUserMediaList(activeTab, activeTab === 'FAVOURITES')
 
                 if (result.success) {
-                    setMediaData(result.mediaList)
+                    // Sort the mediaList by 'name'
+                    const sortedMediaList = result.mediaList.sort((a, b) => a.name.localeCompare(b.name))
+
+                    setMediaData(sortedMediaList)
                 } else if (result.retryAfterSeconds > 0) {
                     window.addToast(`Rate limit exceeded. Try again after ${result.retryAfterSeconds} seconds.`, 'error')
                 } else {
