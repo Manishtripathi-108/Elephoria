@@ -1,9 +1,9 @@
 import React from 'react'
 
-import NoDataCard from '../../../components/common/NoDataCard'
+import NoContentCard from '../../../components/common/NoContentCard'
 import MediaRow from './MediaRow'
 
-function MediaList({ data = [], isFavourite = false }) {
+function ListView({ data = [], isFavourite = false }) {
     // Render Table Header for media list
     const renderTableHeader = () => (
         <thead className="bg-primary text-secondary border-x border-b border-light-secondary dark:border-dark-secondary">
@@ -70,7 +70,7 @@ function MediaList({ data = [], isFavourite = false }) {
                 {data?.manga?.length > 0 && <FavouriteTable type="Manga" media={data.manga} />}
             </>
         ) : (
-            <NoDataCard name="favourites" message={`Add some favourite anime or manga to your list to see them here.`} />
+            <NoContentCard name="favourites" message={`Add some favourite anime or manga to your list to see them here.`} />
         )
     }
 
@@ -78,8 +78,8 @@ function MediaList({ data = [], isFavourite = false }) {
     return data.length > 0 ? (
         data.map((list) => <MediaTable key={list.name} list={list} />)
     ) : (
-        <NoDataCard name="media" message={`Add some media to your list to see them here.`} />
+        <NoContentCard name="media" message={`Add some media to your list to see them here.`} />
     )
 }
 
-export default React.memo(MediaList)
+export default React.memo(ListView)

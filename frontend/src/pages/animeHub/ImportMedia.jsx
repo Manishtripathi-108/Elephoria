@@ -25,7 +25,7 @@ const chunkArray = (array, chunkSize) => {
     }, [])
 }
 
-const ImportAnime = () => {
+const ImportMedia = () => {
     const [file, setFile] = useState(null)
     const [jsonData, setJsonData] = useState(null)
     const [mediaType, setMediaType] = useState('ANIME')
@@ -453,4 +453,4 @@ const ImportAnime = () => {
     )
 }
 
-export default ImportAnime
+export default ImportMedia

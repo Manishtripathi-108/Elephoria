@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import { fetchUserData } from '../../../api/animeHubApi'
 
-function AnimeHeader() {
+function Header() {
     const [userData, setUserData] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
@@ -79,4 +79,4 @@ function AnimeHeader() {
     )
 }
 
-export default AnimeHeader
+export default Header

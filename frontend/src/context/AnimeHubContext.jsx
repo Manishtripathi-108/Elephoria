@@ -7,12 +7,12 @@ const AnimeHubContext = createContext()
 export const useAnimeHubContext = () => useContext(AnimeHubContext)
 
 export const AnimeHubProvider = ({ children }) => {
-    const [mediaData, setMediaData] = useState([])
+    const [mediaContent, setMediaContent] = useState([])
     const [activeTab, setActiveTab] = useState('ANIME')
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState(null)
 
-    const fetchMediaData = useCallback(
+    const fetchMediaContent = useCallback(
         async (reload = false) => {
             setIsLoading(reload)
             setError(null)
@@ -23,9 +23,10 @@ export const AnimeHubProvider = ({ children }) => {
 
                 if (result.success) {
                     // Sort the mediaList by 'name'
-                    const sortedMediaList = result.mediaList.sort((a, b) => a.name.localeCompare(b.name))
+                    const sortedMediaList =
+                        activeTab !== 'FAVOURITES' ? result.mediaList.sort((a, b) => a.name.localeCompare(b.name)) : result.mediaList
 
-                    setMediaData(sortedMediaList)
+                    setMediaContent(sortedMediaList)
                 } else if (result.retryAfterSeconds > 0) {
                     window.addToast(`Rate limit exceeded. Try again after ${result.retryAfterSeconds} seconds.`, 'error')
                 } else {
@@ -44,13 +45,15 @@ export const AnimeHubProvider = ({ children }) => {
 
     useEffect(() => {
         if (['ANIME', 'MANGA', 'FAVOURITES'].includes(activeTab)) {
-            fetchMediaData(true)
+            fetchMediaContent(true)
         }
-    }, [activeTab, fetchMediaData])
+    }, [activeTab, fetchMediaContent])
 
-    const refetchMedia = () => fetchMediaData()
+    const refetchMedia = () => fetchMediaContent()
 
     return (
-        <AnimeHubContext.Provider value={{ mediaData, activeTab, setActiveTab, isLoading, refetchMedia, error }}>{children}</AnimeHubContext.Provider>
+        <AnimeHubContext.Provider value={{ mediaContent, activeTab, setActiveTab, isLoading, refetchMedia, error }}>
+            {children}
+        </AnimeHubContext.Provider>
     )
 }

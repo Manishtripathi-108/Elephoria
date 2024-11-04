@@ -4,15 +4,27 @@ import SkeletonCard from './SkeletonCard'
 import SkeletonFilter from './SkeletonFilter'
 import SkeletonList from './SkeletonList'
 
-function AnimeSkeleton({ isList }) {
+function LoadingSkeleton({ isListView }) {
     return (
         <div className="container mx-auto flex flex-col items-start justify-center gap-2 md:flex-row md:gap-5 md:p-5">
             <SkeletonFilter />
             <div className="bg-primary mx-auto grid w-full place-items-center rounded-lg border border-light-secondary p-3 shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-sm">
-                {isList ? <SkeletonList /> : <SkeletonCard />}
+                {isListView ? (
+                    <>
+                        <SkeletonList />
+                        <SkeletonList />
+                        <SkeletonList />
+                    </>
+                ) : (
+                    <>
+                        <SkeletonCard />
+                        <SkeletonCard />
+                        <SkeletonCard />
+                    </>
+                )}
             </div>
         </div>
     )
 }
 
-export default AnimeSkeleton
+export default LoadingSkeleton

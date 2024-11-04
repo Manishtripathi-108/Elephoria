@@ -2,87 +2,87 @@ import React, { useEffect, useState } from 'react'
 
 import { Icon } from '@iconify/react'
 
-import NoDataCard from '../../components/common/NoDataCard'
+import NoContentCard from '../../components/common/NoContentCard'
 import { useAnimeHubContext } from '../../context/AnimeHubContext'
-import ImportAnime from './ImportMedia'
-import AnimeFilter from './components/AnimeFilter'
-import AnimeHeader from './components/AnimeHeader'
-import AnimeNav from './components/AnimeNav'
-import MediaCardList from './components/MediaCardList'
-import MediaList from './components/MediaList'
-import AnimeSkeleton from './components/loading/AnimeSkeleton'
+import ImportMedia from './ImportMedia'
+import CardView from './components/CardView'
+import FilterPanel from './components/FilterPanel'
+import Header from './components/Header'
+import ListView from './components/ListView'
+import NavigationBar from './components/NavigationBar'
+import LoadingSkeleton from './components/loading/LoadingSkeleton'
 
 function AnimeHub() {
-    const [isListView, setIsListView] = useState(false)
-    const [filteredMediaData, setFilteredMediaData] = useState([])
-    const [isFilterActive, setIsFilterActive] = useState(false)
-    const [isFiltering, setIsFiltering] = useState(false)
+    const [viewMode, setViewMode] = useState('card')
+    const [filteredContent, setFilteredContent] = useState([])
+    const [isFilterApplied, setIsFilterApplied] = useState(false)
+    const [isFilteringActive, setIsFilteringActive] = useState(false)
 
-    const { mediaData, activeTab, setActiveTab, isLoading, error } = useAnimeHubContext()
+    const { mediaContent, activeTab, isLoading, error } = useAnimeHubContext()
 
-    // Reset filtered data and filter state when the active tab changes
+    // Reset filtered content when the active tab changes
     useEffect(() => {
-        setFilteredMediaData([])
-        setIsFilterActive(false)
+        setFilteredContent([])
+        setIsFilterApplied(false)
     }, [activeTab])
 
-    // Decide whether to show filtered data or all media data
-    const displayMediaData = isFilterActive && filteredMediaData.length > 0 ? filteredMediaData : mediaData
+    // Determine whether to show filtered or full content
+    const contentToDisplay = isFilterApplied && filteredContent.length > 0 ? filteredContent : mediaContent
 
     return (
         <div>
-            <AnimeHeader />
-            <AnimeNav currentTab={setActiveTab} />
+            <Header />
+            <NavigationBar />
 
             {isLoading ? (
-                <AnimeSkeleton isList={isListView} />
+                <LoadingSkeleton isListView={viewMode === 'list'} />
             ) : activeTab === 'IMPORT' ? (
                 <div className="md:p-5">
-                    <ImportAnime />
+                    <ImportMedia />
                 </div>
             ) : (
                 <>
-                    {/* Toggle between List and Card views */}
+                    {/* Toggle between List and Card view modes */}
                     <div className="container mx-auto flex items-center justify-end px-4">
                         <button
-                            className={`text-primary neu-btn ${isListView ? 'active' : ''} rounded-lg rounded-e-none p-2 shadow-none dark:shadow-none`}
-                            aria-pressed={isListView}
-                            aria-label="Display as list"
-                            onClick={() => setIsListView(true)}>
+                            className={`text-primary neu-btn ${viewMode === 'list' ? 'active' : ''} rounded-lg rounded-e-none p-2 shadow-none dark:shadow-none`}
+                            aria-pressed={viewMode === 'list'}
+                            aria-label="List View"
+                            onClick={() => setViewMode('list')}>
                             <Icon icon="tabler:list" className="size-4" />
                         </button>
                         <button
-                            className={`text-primary neu-btn ${!isListView ? 'active' : ''} rounded-lg rounded-s-none p-2 shadow-none dark:shadow-none`}
-                            aria-pressed={!isListView}
-                            aria-label="Display as card"
-                            onClick={() => setIsListView(false)}>
+                            className={`text-primary neu-btn ${viewMode === 'card' ? 'active' : ''} rounded-lg rounded-s-none p-2 shadow-none dark:shadow-none`}
+                            aria-pressed={viewMode === 'card'}
+                            aria-label="Card View"
+                            onClick={() => setViewMode('card')}>
                             <Icon icon="material-symbols:cards-outline-rounded" className="size-4" />
                         </button>
                     </div>
 
-                    {/* Main Content Area */}
+                    {/* Main Content Display */}
                     <div className="container mx-auto flex flex-col items-start justify-center gap-2 md:flex-row md:gap-5 md:p-5">
                         {activeTab !== 'FAVOURITES' && (
-                            <AnimeFilter
-                                data={mediaData}
-                                setFilteredData={setFilteredMediaData}
-                                setIsFilterActive={setIsFilterActive}
-                                setIsFiltering={setIsFiltering}
+                            <FilterPanel
+                                data={mediaContent}
+                                onFilterUpdate={setFilteredContent}
+                                onFilterStatusChange={setIsFilterApplied}
+                                onFiltering={setIsFilteringActive}
                             />
                         )}
 
                         <div
                             className={`bg-primary relative mx-auto w-full rounded-lg border border-light-secondary p-2 shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-sm md:p-5 ${
-                                isFiltering
+                                isFilteringActive
                                     ? 'after:bg-primary after:absolute after:right-0 after:top-0 after:z-40 after:size-full after:animate-pulse after:opacity-60'
                                     : ''
                             }`}>
-                            {isFilterActive && filteredMediaData.length === 0 ? (
-                                <NoDataCard name="Filtered Results" message="No media matches your filter criteria. Please adjust the filters." />
-                            ) : isListView ? (
-                                <MediaList data={displayMediaData} isFavourite={activeTab === 'FAVOURITES'} />
+                            {isFilterApplied && filteredContent.length === 0 ? (
+                                <NoContentCard title="Filtered Results" message="No matches found for the applied filters. Try adjusting them." />
+                            ) : viewMode === 'list' ? (
+                                <ListView data={contentToDisplay} isFavourite={activeTab === 'FAVOURITES'} />
                             ) : (
-                                <MediaCardList data={displayMediaData} isFavourite={activeTab === 'FAVOURITES'} />
+                                <CardView data={contentToDisplay} isFavourite={activeTab === 'FAVOURITES'} />
                             )}
                         </div>
                     </div>

@@ -4,14 +4,15 @@ import { useNavigate } from 'react-router-dom'
 
 import { Icon } from '@iconify/react'
 
-function AnimeNav({ currentTab }) {
-    const [activeTab, setActiveTab] = useState('ANIME')
+import { useAnimeHubContext } from '../../../context/AnimeHubContext'
+
+function NavigationBar() {
+    const { activeTab, setActiveTab } = useAnimeHubContext()
 
     const navigate = useNavigate()
 
     const handleTabChange = (tab) => {
         setActiveTab(tab)
-        currentTab(tab)
     }
 
     const handleLogOut = () => {
@@ -84,4 +85,4 @@ function AnimeNav({ currentTab }) {
     )
 }
 
-export default AnimeNav
+export default NavigationBar

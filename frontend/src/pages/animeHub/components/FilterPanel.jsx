@@ -7,7 +7,7 @@ import { filterOptions, sortOptions } from '../constants'
 
 const currentYear = new Date().getFullYear()
 
-const AnimeFilter = ({ data = [], setFilteredData, setIsFilterActive, setIsFiltering }) => {
+const FilterPanel = ({ data = [], onFilterUpdate, onFilterStatusChange, onFiltering }) => {
     // Search input and filter state
     const [searchQuery, setSearchQuery] = useState('')
     const [selectedList, setSelectedList] = useState('All')
@@ -22,7 +22,7 @@ const AnimeFilter = ({ data = [], setFilteredData, setIsFilterActive, setIsFilte
 
     // Apply filters and update filtered data
     useEffect(() => {
-        setIsFiltering(true)
+        onFiltering(true)
         if (!Array.isArray(data)) {
             return
         }
@@ -119,10 +119,10 @@ const AnimeFilter = ({ data = [], setFilteredData, setIsFilterActive, setIsFilte
             selectedList === 'All'
 
         // Set active filter state and filtered data
-        setIsFilterActive(!allFiltersReset)
-        setFilteredData(filteredList)
-        setIsFiltering(false)
-    }, [data, filters, searchQuery, selectedList, setFilteredData, setIsFilterActive])
+        onFilterStatusChange(!allFiltersReset)
+        onFilterUpdate(filteredList)
+        onFiltering(false)
+    }, [data, filters, searchQuery, selectedList, onFilterUpdate, onFilterStatusChange])
 
     // Handle filter input change
     const handleFilterChange = useCallback((filterType, value) => {
@@ -143,9 +143,9 @@ const AnimeFilter = ({ data = [], setFilteredData, setIsFilterActive, setIsFilte
         })
         setSearchQuery('')
         setSelectedList('All')
-        setFilteredData([])
-        setIsFilterActive(false)
-    }, [setFilteredData, setIsFilterActive])
+        onFilterUpdate([])
+        onFilterStatusChange(false)
+    }, [onFilterUpdate, onFilterStatusChange])
 
     // Generate list options with "All" option included
     const listOptions = ['All', ...(Array.isArray(data) ? data.map((list) => list.name) : [])]
@@ -280,4 +280,4 @@ const AnimeFilter = ({ data = [], setFilteredData, setIsFilterActive, setIsFilte
     )
 }
 
-export default AnimeFilter
+export default FilterPanel

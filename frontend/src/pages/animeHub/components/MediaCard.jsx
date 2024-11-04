@@ -23,11 +23,11 @@ function MediaCard({ mediaItem, isFavouriteList = false }) {
 
             <div className="flex h-1/5 flex-col items-start justify-center p-2">
                 <h2
-                    className={`text-primary line-clamp-1 font-aladin text-sm font-normal capitalize leading-none tracking-widest ${isFavouriteList && 'flex'}`}>
+                    className={`text-primary line-clamp-1 shrink-0 font-aladin text-sm font-normal capitalize leading-none tracking-widest ${isFavouriteList && 'flex'}`}>
                     {media?.title?.english || media?.title?.native || media?.title?.romaji || 'Unknown Title'}
                 </h2>
                 {!isFavouriteList && (
-                    <span className="text-secondary font-indie-flower text-xs tracking-wider">
+                    <span className="text-secondary shrink-0 font-indie-flower text-xs tracking-wider">
                         {media?.format || 'Unknown Format'}
                         {media?.type === 'ANIME' ? (
                             media?.format === 'MOVIE' ? (

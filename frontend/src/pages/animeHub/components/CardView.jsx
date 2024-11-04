@@ -1,9 +1,9 @@
 import React from 'react'
 
-import NoDataCard from '../../../components/common/NoDataCard'
+import NoContentCard from '../../../components/common/NoContentCard'
 import MediaCard from './MediaCard'
 
-function MediaCardList({ data = [], isFavourite = false }) {
+function CardView({ data = [], isFavourite = false }) {
     // Render Favourite List (Anime and Manga)
     if (isFavourite) {
         return data?.anime?.length > 0 || data?.manga?.length > 0 ? (
@@ -37,7 +37,7 @@ function MediaCardList({ data = [], isFavourite = false }) {
                 )}
             </>
         ) : (
-            <NoDataCard name="favourites" message={`Add some favourite anime or manga to your list to see them here.`} />
+            <NoContentCard name="favourites" message={`Add some favourite anime or manga to your list to see them here.`} />
         )
     }
 
@@ -55,14 +55,14 @@ function MediaCardList({ data = [], isFavourite = false }) {
                     {list.entries.length > 0 ? (
                         list.entries.map((entry) => <MediaCard key={entry.media?.id} mediaItem={entry} />)
                     ) : (
-                        <NoDataCard name={list.name} message={`Add some media to your list to see them here.`} />
+                        <NoContentCard name={list.name} message={`Add some media to your list to see them here.`} />
                     )}
                 </div>
             </div>
         ))
     ) : (
-        <NoDataCard name="media" message={`Add some media to your lists to see them here.`} />
+        <NoContentCard name="media" message={`Add some media to your lists to see them here.`} />
     )
 }
 
-export default React.memo(MediaCardList)
+export default React.memo(CardView)
