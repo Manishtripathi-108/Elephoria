@@ -7,7 +7,7 @@ import { filterOptions, sortOptions } from '../constants'
 
 const currentYear = new Date().getFullYear()
 
-const AnimeFilter = ({ data = [], setFilteredData, setIsFilterActive }) => {
+const AnimeFilter = ({ data = [], setFilteredData, setIsFilterActive, setIsFiltering }) => {
     // Search input and filter state
     const [searchQuery, setSearchQuery] = useState('')
     const [selectedList, setSelectedList] = useState('All')
@@ -16,12 +16,13 @@ const AnimeFilter = ({ data = [], setFilteredData, setIsFilterActive }) => {
         status: '',
         genres: '',
         year: '',
-        sort: 'Popularity',
+        sort: '',
     })
     const [isFiltersOpen, setIsFiltersOpen] = useState(window.innerWidth >= 768)
 
     // Apply filters and update filtered data
     useEffect(() => {
+        setIsFiltering(true)
         if (!Array.isArray(data)) {
             return
         }
@@ -70,14 +71,18 @@ const AnimeFilter = ({ data = [], setFilteredData, setIsFilterActive }) => {
             }))
             .filter((list) => list.entries.length > 0)
 
+        // Apply sort filter
         if (filteredList.length > 0) {
-            // Apply sort filter
             if (filters.sort !== '') {
                 filteredList = filteredList.map((list) => ({
                     ...list,
                     entries: list.entries.sort((a, b) => {
                         if (filters.sort === 'Title') {
-                            return a.media.title.english.localeCompare(b.media.title.english)
+                            return (
+                                (a.media.title?.english || '').localeCompare(b.media.title?.english || '') ||
+                                (a.media.title?.romaji || '').localeCompare(b.media.title?.romaji || '') ||
+                                (a.media.title?.native || '').localeCompare(b.media.title?.native || '')
+                            )
                         }
                         if (filters.sort === 'Year') {
                             return a.media.startDate.year - b.media.startDate.year
@@ -116,6 +121,7 @@ const AnimeFilter = ({ data = [], setFilteredData, setIsFilterActive }) => {
         // Set active filter state and filtered data
         setIsFilterActive(!allFiltersReset)
         setFilteredData(filteredList)
+        setIsFiltering(false)
     }, [data, filters, searchQuery, selectedList, setFilteredData, setIsFilterActive])
 
     // Handle filter input change

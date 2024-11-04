@@ -16,6 +16,7 @@ function AnimeHub() {
     const [isListView, setIsListView] = useState(false)
     const [filteredMediaData, setFilteredMediaData] = useState([])
     const [isFilterActive, setIsFilterActive] = useState(false)
+    const [isFiltering, setIsFiltering] = useState(false)
 
     const { mediaData, activeTab, setActiveTab, isLoading, error } = useAnimeHubContext()
 
@@ -66,11 +67,16 @@ function AnimeHub() {
                                 data={mediaData}
                                 setFilteredData={setFilteredMediaData}
                                 setIsFilterActive={setIsFilterActive}
-                                isLoading={isLoading}
+                                setIsFiltering={setIsFiltering}
                             />
                         )}
 
-                        <div className="bg-primary mx-auto w-full rounded-lg border border-light-secondary p-2 shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-sm md:p-5">
+                        <div
+                            className={`bg-primary relative mx-auto w-full rounded-lg border border-light-secondary p-2 shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-sm md:p-5 ${
+                                isFiltering
+                                    ? 'after:bg-primary after:absolute after:right-0 after:top-0 after:z-40 after:size-full after:animate-pulse after:opacity-60'
+                                    : ''
+                            }`}>
                             {isFilterActive && filteredMediaData.length === 0 ? (
                                 <NoDataCard name="Filtered Results" message="No media matches your filter criteria. Please adjust the filters." />
                             ) : isListView ? (

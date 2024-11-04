@@ -16,7 +16,7 @@ const Modal = ({ id, children }) => {
             onClick={(e) => e.target === e.currentTarget && close()}
             className="animation-modal bg-primary w-full max-w-2xl overflow-hidden rounded-lg p-6 shadow-neu-light-md outline-none dark:shadow-neu-dark-md">
             <button
-                className="text-secondary hover:text-primary absolute right-2 top-2 z-20 rounded-full bg-light-secondary p-1 text-lg dark:bg-dark-secondary"
+                className="text-secondary hover:text-primary absolute right-2 top-2 z-20 select-none rounded-full bg-light-secondary p-1 text-lg dark:bg-dark-secondary"
                 onClick={close}>
                 <Icon icon="iconamoon:close" className="size-6" />
             </button>

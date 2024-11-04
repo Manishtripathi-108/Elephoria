@@ -76,12 +76,9 @@ export default function AnimeModal({ entryId, modalId, media, mediaStatus = '', 
 
     // Delete media entry
     const deleteEntry = async () => {
+        setIsToggling(true)
         const result = await deleteMediaEntry(entryId)
-
-        if (result === -1) {
-            window.addToast('ID not found', 'error')
-            return
-        }
+        setIsToggling(false)
 
         if (result.success) {
             window.addToast('Entry deleted successfully', 'success')
@@ -156,8 +153,8 @@ export default function AnimeModal({ entryId, modalId, media, mediaStatus = '', 
 
                         {/* Action buttons */}
                         <div className="mt-8 flex justify-end space-x-2">
-                            <JelloButton title="Delete" variant="danger" type="button" onClick={deleteEntry} disabled={isSubmitting}>
-                                {isSubmitting ? <Icon icon="line-md:loading-loop" className="mx-2 size-5" /> : 'Delete'}
+                            <JelloButton title="Delete" variant="danger" type="button" onClick={deleteEntry} disabled={isToggling}>
+                                {isToggling ? <Icon icon="line-md:loading-loop" className="mx-2 size-5" /> : 'Delete'}
                             </JelloButton>
                             <JelloButton title="Save" variant="info" type="submit" disabled={isSubmitting}>
                                 {isSubmitting ? <Icon icon="line-md:loading-loop" className="mx-2 size-5" /> : 'Save'}
