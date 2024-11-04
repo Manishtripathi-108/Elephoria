@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useDeferredValue, useEffect, useState } from 'react'
 
 import { Icon } from '@iconify/react'
 
@@ -8,8 +8,7 @@ import { filterOptions, sortOptions } from '../constants'
 const currentYear = new Date().getFullYear()
 
 const FilterPanel = ({ data = [], onFilterUpdate, onFilterStatusChange, onFiltering }) => {
-    // Search input and filter state
-    const [searchQuery, setSearchQuery] = useState('')
+    const [searchTerm, setSearchTerm] = useState('')
     const [selectedList, setSelectedList] = useState('All')
     const [filters, setFilters] = useState({
         format: '',
@@ -18,113 +17,99 @@ const FilterPanel = ({ data = [], onFilterUpdate, onFilterStatusChange, onFilter
         year: '',
         sort: '',
     })
-    const [isFiltersOpen, setIsFiltersOpen] = useState(window.innerWidth >= 768)
+    const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(window.innerWidth >= 768)
 
-    // Apply filters and update filtered data
+    // Deferred states
+    const deferredSearchTerm = useDeferredValue(searchTerm)
+    const deferredYear = useDeferredValue(filters.year)
+
     useEffect(() => {
         onFiltering(true)
-        if (!Array.isArray(data)) {
-            return
-        }
 
-        let filteredList = data
+        if (!Array.isArray(data)) return
 
-        // Filter by selected list (if not "All")
+        let filteredData = data
+
+        // Apply list selection filter
         if (selectedList !== 'All') {
-            filteredList = filteredList.filter((item) => item.name === selectedList)
+            filteredData = filteredData.filter((item) => item.name === selectedList)
         }
 
-        // Apply search query to filter by titles
-        if (searchQuery) {
-            filteredList = filteredList
+        // Apply deferred search term filter
+        if (deferredSearchTerm) {
+            filteredData = filteredData
                 .map((list) => ({
                     ...list,
                     entries: list.entries.filter((entry) => {
-                        const { english, romaji, native } = entry.media.title
-
+                        const { english, romaji, native } = entry.media.title || {}
+                        const lowerTerm = deferredSearchTerm.toLowerCase()
                         return (
-                            (english?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
-                            (romaji?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
-                            (native?.toLowerCase() || '').includes(searchQuery.toLowerCase())
+                            (english?.toLowerCase() || '').includes(lowerTerm) ||
+                            (romaji?.toLowerCase() || '').includes(lowerTerm) ||
+                            (native?.toLowerCase() || '').includes(lowerTerm)
                         )
                     }),
                 }))
                 .filter((list) => list.entries.length > 0)
         }
 
-        // Apply additional filters (format, status, genres, year)
-        filteredList = filteredList
+        // Apply additional filters
+        filteredData = filteredData
             .map((list) => ({
                 ...list,
                 entries: list.entries.filter((entry) => {
-                    const { format, status, genres, startDate } = entry.media
-
-                    // Convert to upper case and compare, using optional chaining to handle null or undefined
+                    const { format, status, genres, startDate } = entry.media || {}
                     const matchFormat = filters.format ? format?.toUpperCase() === filters.format.toUpperCase() : true
                     const matchStatus = filters.status ? status?.toUpperCase() === filters.status.toUpperCase() : true
                     const matchGenres = filters.genres ? genres?.map((genre) => genre.toUpperCase()).includes(filters.genres.toUpperCase()) : true
-                    const matchYear = filters.year ? startDate?.year === filters.year : true
-
-                    // Return true if all conditions match
+                    const matchYear = deferredYear ? startDate?.year === deferredYear : true
                     return matchFormat && matchStatus && matchGenres && matchYear
                 }),
             }))
             .filter((list) => list.entries.length > 0)
 
-        // Apply sort filter
-        if (filteredList.length > 0) {
-            if (filters.sort !== '') {
-                filteredList = filteredList.map((list) => ({
-                    ...list,
-                    entries: list.entries.sort((a, b) => {
-                        if (filters.sort === 'Title') {
+        // Apply sorting
+        if (filters.sort) {
+            filteredData = filteredData.map((list) => ({
+                ...list,
+                entries: list.entries.sort((a, b) => {
+                    const titleA = a.media.title || {}
+                    const titleB = b.media.title || {}
+                    switch (filters.sort) {
+                        case 'Title':
                             return (
-                                (a.media.title?.english || '').localeCompare(b.media.title?.english || '') ||
-                                (a.media.title?.romaji || '').localeCompare(b.media.title?.romaji || '') ||
-                                (a.media.title?.native || '').localeCompare(b.media.title?.native || '')
+                                titleA.english?.localeCompare(titleB.english) ||
+                                titleA.romaji?.localeCompare(titleB.romaji) ||
+                                titleA.native?.localeCompare(titleB.native)
                             )
-                        }
-                        if (filters.sort === 'Year') {
+                        case 'Year':
                             return a.media.startDate.year - b.media.startDate.year
-                        }
-                        if (filters.sort === 'Average Score') {
+                        case 'Average Score':
                             return b.media.averageScore - a.media.averageScore
-                        }
-                        if (filters.sort === 'Popularity') {
+                        case 'Popularity':
                             return b.media.popularity - a.media.popularity
-                        }
-                        if (filters.sort === 'Progress') {
+                        case 'Progress':
                             return b.progress - a.progress
-                        }
-                        if (filters.sort === 'Last Updated') {
+                        case 'Last Updated':
                             return new Date(b.updatedAt) - new Date(a.updatedAt)
-                        }
-                        if (filters.sort === 'Last Added') {
+                        case 'Last Added':
                             return new Date(b.createdAt) - new Date(a.createdAt)
-                        }
-                        return 0 // No sorting
-                    }),
-                }))
-            }
+                        default:
+                            return 0
+                    }
+                }),
+            }))
         }
 
-        // Determine if any filter is active
-        const allFiltersReset =
-            filters.format === '' &&
-            filters.genres === '' &&
-            filters.status === '' &&
-            filters.year === '' &&
-            filters.sort === '' &&
-            searchQuery === '' &&
-            selectedList === 'All'
+        // Check if any filter is applied
+        const noActiveFilters =
+            !filters.format && !filters.genres && !filters.status && !deferredYear && !filters.sort && !deferredSearchTerm && selectedList === 'All'
 
-        // Set active filter state and filtered data
-        onFilterStatusChange(!allFiltersReset)
-        onFilterUpdate(filteredList)
+        onFilterStatusChange(!noActiveFilters)
+        onFilterUpdate(filteredData)
         onFiltering(false)
-    }, [data, filters, searchQuery, selectedList, onFilterUpdate, onFilterStatusChange])
+    }, [data, filters, deferredSearchTerm, deferredYear, selectedList, onFilterUpdate, onFilterStatusChange])
 
-    // Handle filter input change
     const handleFilterChange = useCallback((filterType, value) => {
         setFilters((prevFilters) => ({
             ...prevFilters,
@@ -132,22 +117,14 @@ const FilterPanel = ({ data = [], onFilterUpdate, onFilterStatusChange, onFilter
         }))
     }, [])
 
-    // Reset all filters to their default state
     const resetFilters = useCallback(() => {
-        setFilters({
-            format: '',
-            status: '',
-            genres: '',
-            year: '',
-            sort: '',
-        })
-        setSearchQuery('')
+        setFilters({ format: '', status: '', genres: '', year: '', sort: '' })
+        setSearchTerm('')
         setSelectedList('All')
         onFilterUpdate([])
         onFilterStatusChange(false)
     }, [onFilterUpdate, onFilterStatusChange])
 
-    // Generate list options with "All" option included
     const listOptions = ['All', ...(Array.isArray(data) ? data.map((list) => list.name) : [])]
 
     return (
@@ -155,70 +132,61 @@ const FilterPanel = ({ data = [], onFilterUpdate, onFilterStatusChange, onFilter
             {/* Search Input */}
             <div className="flex items-center justify-between gap-3 md:mb-4">
                 <div className="neu-input-group neu-input-group-append">
-                    <label htmlFor="anime-search" className="sr-only">
-                        Search Anime
+                    <label htmlFor="media-search" className="sr-only">
+                        Search Media
                     </label>
                     <input
-                        id="anime-search"
+                        id="media-search"
                         className="neu-form-input"
                         type="text"
                         placeholder="Search"
-                        aria-label="Search anime"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
                     />
                     <Icon icon="mingcute:search-fill" className="neu-input-icon" aria-hidden="true" />
                 </div>
 
                 <NeuHamburgerBtn
-                    onClick={() => setIsFiltersOpen((prev) => !prev)}
-                    isActive={isFiltersOpen}
-                    aria-label="Toggle Filters"
+                    onClick={() => setIsFilterMenuOpen((prev) => !prev)}
+                    isActive={isFilterMenuOpen}
+                    aria-label="Toggle Filter Menu"
                     title="Toggle Filters"
                     className="md:hidden"
                 />
             </div>
 
             {/* Filter Panel */}
-            <div className={`${!isFiltersOpen ? 'animate-wipe-out-down' : 'animate-wipe-in-down'} p-2`}>
-                {/* List Filter */}
+            <div className={`${!isFilterMenuOpen ? 'animate-wipe-out-down' : 'animate-wipe-in-down'} p-2`}>
                 <div className="mt-4">
                     <h3 className="neu-form-label mb-2 text-base">Lists:</h3>
-                    <div className="space-y-2" role="listbox" aria-label="Filter by list">
+                    <div className="space-y-2">
                         {listOptions.map((list) => (
                             <button
                                 key={list}
                                 onClick={() => setSelectedList(list)}
-                                className={`neu-btn w-full text-left ${selectedList === list ? 'active' : ''}`}
-                                role="option"
-                                aria-selected={selectedList === list}>
+                                className={`neu-btn w-full text-left ${selectedList === list ? 'active' : ''}`}>
                                 {list}
                             </button>
                         ))}
                     </div>
                 </div>
 
-                {/* Other Filters */}
                 <div className="mt-4">
                     <h3 className="neu-form-label mb-2 text-base">Filters:</h3>
-
-                    {filterOptions.map((item) => (
-                        <div className="mb-2" key={item.name}>
-                            <label htmlFor={`${item.name.toLowerCase()}-filter`} className="sr-only">
-                                {item.name}
+                    {filterOptions.map((option) => (
+                        <div className="mb-2" key={option.name}>
+                            <label htmlFor={`${option.name}-filter`} className="sr-only">
+                                {option.name}
                             </label>
                             <select
-                                className="neu-form-select capitalize"
-                                id={`${item.name.toLowerCase()}-filter`}
-                                onChange={(e) => handleFilterChange(item.name.toLowerCase(), e.target.value)}
-                                value={filters[item.name.toLowerCase()]}
-                                aria-label={`Filter by ${item.name}`}>
-                                <option value="" disabled>
-                                    {item.name}
-                                </option>
-                                {item.options.map((option) => (
-                                    <option key={option} value={option}>
-                                        {option}
+                                id={`${option.name}-filter`}
+                                onChange={(e) => handleFilterChange(option.name.toLowerCase(), e.target.value)}
+                                value={filters[option.name.toLowerCase()]}
+                                className="neu-form-select capitalize">
+                                <option value="">{option.name}</option>
+                                {option.options.map((item) => (
+                                    <option key={item} value={item}>
+                                        {item}
                                     </option>
                                 ))}
                             </select>
@@ -226,21 +194,18 @@ const FilterPanel = ({ data = [], onFilterUpdate, onFilterStatusChange, onFilter
                     ))}
                 </div>
 
-                {/* Year Filter */}
                 <div className="neu-form-range-group mt-4">
-                    <label className="neu-form-label text-secondary flex items-center justify-between text-base" htmlFor="filter-year">
+                    <label htmlFor="filter-year" className="neu-form-label text-secondary flex items-center justify-between text-base">
                         <span>Year: {filters.year}</span>
                         <button
+                            aria-label="Reset Year Filter"
                             type="button"
                             onClick={() => handleFilterChange('year', '')}
-                            className="text-secondary text-sm"
-                            aria-label="Reset Year Filter">
+                            className="text-secondary text-sm">
                             ✕
                         </button>
                     </label>
-
                     <input
-                        className="neu-form-range w-full"
                         id="filter-year"
                         type="range"
                         min="1985"
@@ -248,10 +213,10 @@ const FilterPanel = ({ data = [], onFilterUpdate, onFilterStatusChange, onFilter
                         step="1"
                         value={filters.year}
                         onChange={(e) => handleFilterChange('year', parseInt(e.target.value, 10))}
+                        className="neu-form-range w-full"
                     />
                 </div>
 
-                {/* Sort Filter */}
                 <div className="neu-form-group mt-4 w-full">
                     <label className="neu-form-label text-base" htmlFor="sort_by">
                         Sort By:
@@ -261,7 +226,7 @@ const FilterPanel = ({ data = [], onFilterUpdate, onFilterStatusChange, onFilter
                         id="sort_by"
                         onChange={(e) => handleFilterChange('sort', e.target.value)}
                         className="neu-form-select"
-                        aria-label="Sort anime by">
+                        aria-label="Sort media by">
                         <option value="">Sort By</option>
                         {sortOptions.map((option) => (
                             <option key={option} value={option}>
