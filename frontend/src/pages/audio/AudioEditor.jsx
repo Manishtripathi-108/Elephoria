@@ -5,7 +5,7 @@ import axios from 'axios'
 import AppName from '../../assets/svg/app-name'
 import Logo from '../../assets/svg/logo'
 import UploadInput from '../../components/common/form/upload-input'
-import Toast from '../../components/common/notifications/toast'
+import Toast from '../../components/common/notifications/Toast'
 
 const AudioEditor = () => {
     const [file, setFile] = useState(null)

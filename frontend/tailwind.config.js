@@ -20,8 +20,13 @@ export default {
                 unfoldOut: 'unfoldOut 0.5s 0.5s forwards',
                 zoomIn: 'zoomIn 0.5s 0.5s forwards',
                 zoomOut: 'zoomOut 0.5s forwards',
+                shimmerRay: 'shimmerRay 2.5s cubic-bezier(0, 0, 0.2, 1) infinite',
             },
             keyframes: {
+                shimmerRay: {
+                    '0%': { left: '-30%', opacity: '0', width: '0' },
+                    '100%': { left: '100%', opacity: '1', width: '35%' },
+                },
                 'anti-rotate': {
                     '0%': { transform: 'rotate(360deg)' },
                     '100%': { transform: 'rotate(0)' },
@@ -109,6 +114,8 @@ export default {
                 'blue-gradient': 'linear-gradient(to left, #3b82f6 0%, #60a5fa 10%, #60a5fa 90%, #3b82f6 100%)',
                 'red-gradient':
                     'linear-gradient(to left, rgba(220,38,38,1) 0%, rgba(239,68,68,1) 10%, rgba(239,68,68,1) 90%, rgba(220,38,38,1) 100%)',
+                shimmerRayAccent: 'radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,99,71,1) 100%)',
+                shimmerRayHighlight: 'radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(30,144,255,1) 100%)',
             },
             colors: {
                 // Light Mode Colors

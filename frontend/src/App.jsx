@@ -1,27 +1,53 @@
-import React from 'react'
+import React, { Suspense, lazy } from 'react'
 
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 
 import PrivateRoute from './components/PrivateRoute'
 import RootLayout from './components/layout/RootLayout'
 import { AnimeHubProvider } from './context/AnimeHubContext'
-import NotFound from './pages/404-page'
-import Shadows from './pages/ShadowsGrid'
-import AnimeHub from './pages/animeHub/AnimeHub'
-import AnimeHubAuth from './pages/animeHub/AnimeHubAuth'
-import MusicEditor from './pages/audio/AudioEditor'
-// import AuthPage from './pages/auth/AuthState'
-import TicTacToeClassic from './pages/games/tic-tac-toe/classic'
-import TicTacToeUltimate from './pages/games/tic-tac-toe/ultimate'
+import { LoadingBarProvider } from './context/LoadingBarContext'
+
+// Lazy-loaded components
+const NotFound = lazy(() => import('./pages/404-page'))
+const Shadows = lazy(() => import('./pages/ShadowsGrid'))
+const AnimeHub = lazy(() => import('./pages/animeHub/AnimeHub'))
+const AnimeHubAuth = lazy(() => import('./pages/animeHub/AnimeHubAuth'))
+const MusicEditor = lazy(() => import('./pages/audio/AudioEditor'))
+const TicTacToeClassic = lazy(() => import('./pages/games/tic-tac-toe/classic'))
+const TicTacToeUltimate = lazy(() => import('./pages/games/tic-tac-toe/ultimate'))
+
+// Fallback component for Suspense
+const Loading = () => <div>Loading...</div>
 
 const router = createBrowserRouter([
     {
         path: '/',
         element: <RootLayout />,
         children: [
-            { path: '/', element: <Shadows /> },
-            { path: '/shadows', element: <Shadows /> },
-            { path: '/audio', element: <MusicEditor /> },
+            {
+                path: '/',
+                element: (
+                    <Suspense fallback={<Loading />}>
+                        <Shadows />
+                    </Suspense>
+                ),
+            },
+            {
+                path: '/shadows',
+                element: (
+                    <Suspense fallback={<Loading />}>
+                        <Shadows />
+                    </Suspense>
+                ),
+            },
+            {
+                path: '/audio',
+                element: (
+                    <Suspense fallback={<Loading />}>
+                        <MusicEditor />
+                    </Suspense>
+                ),
+            },
             {
                 path: '/anime-hub',
                 children: [
@@ -29,28 +55,69 @@ const router = createBrowserRouter([
                         index: true,
                         element: (
                             <AnimeHubProvider>
-                                <AnimeHub />
+                                <Suspense fallback={<Loading />}>
+                                    <AnimeHub />
+                                </Suspense>
                             </AnimeHubProvider>
                         ),
                     },
-                    { path: 'auth', element: <AnimeHubAuth /> },
+                    {
+                        path: 'auth',
+                        element: (
+                            <Suspense fallback={<Loading />}>
+                                <AnimeHubAuth />
+                            </Suspense>
+                        ),
+                    },
                 ],
             },
             {
                 path: '/games/tic-tac-toe',
                 children: [
-                    { index: true, element: <TicTacToeClassic /> },
-                    { path: 'classic', element: <TicTacToeClassic /> },
-                    { path: 'ultimate', element: <TicTacToeUltimate /> },
+                    {
+                        index: true,
+                        element: (
+                            <Suspense fallback={<Loading />}>
+                                <TicTacToeClassic />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: 'classic',
+                        element: (
+                            <Suspense fallback={<Loading />}>
+                                <TicTacToeClassic />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: 'ultimate',
+                        element: (
+                            <Suspense fallback={<Loading />}>
+                                <TicTacToeUltimate />
+                            </Suspense>
+                        ),
+                    },
                 ],
             },
-            { path: '*', element: <NotFound /> },
+            {
+                path: '*',
+                element: (
+                    <Suspense fallback={<Loading />}>
+                        <NotFound />
+                    </Suspense>
+                ),
+            },
         ],
     },
 ])
 
 function App() {
-    return <RouterProvider router={router} />
+    return (
+        <LoadingBarProvider>
+            <RouterProvider router={router} />
+        </LoadingBarProvider>
+    )
 }
 
 export default App

@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react'
 
 import { Link } from 'react-router-dom'
 
-import { Icon } from '@iconify/react'
-
 import AppName from '../../assets/svg/app-name'
 import Logo from '../../assets/svg/logo'
 import NeuHamburgerBtn from '../common/buttons/NeuHamburgerBtn'
