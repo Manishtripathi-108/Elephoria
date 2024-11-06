@@ -1,10 +1,9 @@
-import React, { Suspense, lazy } from 'react'
+import React from 'react'
 
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
+import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 
 import PrivateRoute from './components/PrivateRoute'
-import ToastStack from './components/common/notifications/ToastStack'
-import Header from './components/layout/Header'
+import RootLayout from './components/layout/RootLayout'
 import { AnimeHubProvider } from './context/AnimeHubContext'
 import NotFound from './pages/404-page'
 import Shadows from './pages/ShadowsGrid'
@@ -15,67 +14,43 @@ import MusicEditor from './pages/audio/AudioEditor'
 import TicTacToeClassic from './pages/games/tic-tac-toe/classic'
 import TicTacToeUltimate from './pages/games/tic-tac-toe/ultimate'
 
-function App() {
-    return (
-        <Router>
-            {/* The Header will now appear on all pages */}
-            <Header />
-
-            {/* <Suspense fallback={<div>Loading...</div>}> */}
-            <Routes>
-                {/* Private Routes after proper set up of login */}
-                {/* <Route
-                    path="/"
-                    element={
-                        <PrivateRoute>
-                            <SideNav />
-                        </PrivateRoute>
-                    }
-                />
-                <Route
-                    path="/games/tic-tac-toe"
-                    element={
-                        <PrivateRoute>
-                            <TicTacToeClassic />
-                        </PrivateRoute>
-                    }>
-                    <Route path="classic" element={<TicTacToeClassic />} />
-                    <Route path="ultimate" element={<TicTacToeUltimate />} />
-                </Route> */}
-
-                {/* Public Routes */}
-
-                <Route path="/" element={<Shadows />} />
-                <Route path="/shadows" element={<Shadows />} />
-                {/* <Route path="/auth" element={<AuthPage />} /> */}
-                <Route path="/audio" element={<MusicEditor />} />
-                <Route path="/anime-hub">
-                    <Route
-                        index
-                        element={
+const router = createBrowserRouter([
+    {
+        path: '/',
+        element: <RootLayout />,
+        children: [
+            { path: '/', element: <Shadows /> },
+            { path: '/shadows', element: <Shadows /> },
+            { path: '/audio', element: <MusicEditor /> },
+            {
+                path: '/anime-hub',
+                children: [
+                    {
+                        index: true,
+                        element: (
                             <AnimeHubProvider>
                                 <AnimeHub />
                             </AnimeHubProvider>
-                        }
-                    />
-                    <Route path="auth" element={<AnimeHubAuth />} />
-                </Route>
+                        ),
+                    },
+                    { path: 'auth', element: <AnimeHubAuth /> },
+                ],
+            },
+            {
+                path: '/games/tic-tac-toe',
+                children: [
+                    { index: true, element: <TicTacToeClassic /> },
+                    { path: 'classic', element: <TicTacToeClassic /> },
+                    { path: 'ultimate', element: <TicTacToeUltimate /> },
+                ],
+            },
+            { path: '*', element: <NotFound /> },
+        ],
+    },
+])
 
-                {/* Tic-Tac-Toe Routes */}
-                <Route path="/games/tic-tac-toe">
-                    <Route index element={<TicTacToeClassic />} />
-                    <Route path="classic" element={<TicTacToeClassic />} />
-                    <Route path="ultimate" element={<TicTacToeUltimate />} />
-                </Route>
-
-                {/* Catch-all route for unknown URLs */}
-                <Route path="*" element={<NotFound />} />
-            </Routes>
-            {/* </Suspense> */}
-
-            <ToastStack />
-        </Router>
-    )
+function App() {
+    return <RouterProvider router={router} />
 }
 
 export default App
