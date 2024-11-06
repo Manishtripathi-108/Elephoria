@@ -1,11 +1,19 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
-import { Outlet, useNavigation } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 
+import { useLoadingBar } from '../../context/LoadingBarContext'
 import ToastStack from '../common/notifications/ToastStack'
 import Header from './Header'
 
 function RootLayout() {
+    const location = useLocation()
+    const { startContinuous } = useLoadingBar()
+
+    useEffect(() => {
+        startContinuous(10, 500)
+    }, [location])
+
     return (
         <>
             <Header />

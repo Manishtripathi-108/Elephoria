@@ -5,6 +5,7 @@ import { Icon } from '@iconify/react'
 import Circle from '../../../assets/svg/circle'
 import Close from '../../../assets/svg/close'
 import NeuButton from '../../../components/common/buttons/neu-button'
+import { useLoadingBar } from '../../../context/LoadingBarContext'
 import GameOverModal from './components/game-over-modal'
 import Heading from './components/heading'
 import PlayerNameModal from './components/player-name-modal'
@@ -70,6 +71,11 @@ export function TicTacToe() {
 
     const { boardSize, board, isXNext, isGameOver, isDraw, winner } = gameState
     const { playerX, playerO } = players
+    const { completeLoading } = useLoadingBar()
+
+    useEffect(() => {
+        completeLoading()
+    }, [])
 
     // Focus on the game board when it is rendered
     useEffect(() => {

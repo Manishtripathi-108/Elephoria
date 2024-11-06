@@ -5,6 +5,7 @@ import { Icon } from '@iconify/react'
 import Circle from '../../../assets/svg/circle'
 import Close from '../../../assets/svg/close'
 import NeuButton from '../../../components/common/buttons/neu-button'
+import { useLoadingBar } from '../../../context/LoadingBarContext'
 import GameOverModal from './components/game-over-modal'
 import Heading from './components/heading'
 import PlayerNameModal from './components/player-name-modal'
@@ -46,6 +47,12 @@ const Ultimate = () => {
         [0, 4, 8],
         [2, 4, 6],
     ]
+
+    const { completeLoading } = useLoadingBar()
+
+    useEffect(() => {
+        completeLoading()
+    }, [])
 
     useEffect(() => {
         const GameBoard = document.getElementById('game-board')
@@ -244,7 +251,7 @@ const Ultimate = () => {
                                         <span
                                             className={`text-primary z-20 text-center font-indie-flower text-5xl font-bold tracking-wider ${
                                                 winingLine.includes(macroIndex)
-                                                    ? '*:animate-pulsate text-light-text-primary dark:text-dark-text-primary'
+                                                    ? 'text-light-text-primary *:animate-pulsate dark:text-dark-text-primary'
                                                     : ''
                                             }`}>
                                             {largeBoard[macroIndex] === 'X' ? (

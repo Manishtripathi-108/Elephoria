@@ -6,6 +6,7 @@ import { ErrorMessage, Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
 import { exchangePin } from '../../api/animeHubApi'
+import { useLoadingBar } from '../../context/LoadingBarContext'
 
 const validationSchema = Yup.object().shape({
     pin: Yup.string()
@@ -15,6 +16,11 @@ const validationSchema = Yup.object().shape({
 
 function AnimeHubAuth() {
     const navigate = useNavigate()
+    const { completeLoading } = useLoadingBar()
+
+    useEffect(() => {
+        completeLoading()
+    }, [])
 
     const handleSubmit = async (values, { setSubmitting }) => {
         const result = await exchangePin(values.pin)

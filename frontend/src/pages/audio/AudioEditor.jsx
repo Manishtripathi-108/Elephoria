@@ -6,6 +6,7 @@ import AppName from '../../assets/svg/app-name'
 import Logo from '../../assets/svg/logo'
 import UploadInput from '../../components/common/form/upload-input'
 import Toast from '../../components/common/notifications/Toast'
+import { useLoadingBar } from '../../context/LoadingBarContext'
 
 const AudioEditor = () => {
     const [file, setFile] = useState(null)
@@ -13,6 +14,11 @@ const AudioEditor = () => {
     const [coverImage, setCoverImage] = useState(null)
 
     const [toast, setToast] = useState(null)
+    const { completeLoading } = useLoadingBar()
+
+    useEffect(() => {
+        completeLoading()
+    }, [])
 
     const showToast = (message, type) => {
         setToast({ message, type })
