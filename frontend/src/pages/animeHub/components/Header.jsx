@@ -28,10 +28,27 @@ function Header() {
 
         getUserData()
 
-        // Cleanup function to clear timeout if the component unmounts
-        return () => {
-            if (retryTimeoutRef.current) {
-                clearTimeout(retryTimeoutRef.current)
+        const pageHeader = document.getElementById('page-header')
+        pageHeader.style.opacity = `0.8`
+
+        if (pageHeader) {
+            const handleScroll = () => {
+                // Apply the 45dvh transparency effect when the scroll position is between 0 and 45vh
+                if (window.scrollY <= window.innerHeight * 0.45) {
+                    pageHeader.style.opacity = `0.8`
+                } else {
+                    pageHeader.style.opacity = '1'
+                }
+            }
+
+            window.addEventListener('scroll', handleScroll)
+
+            // Clean up scroll listener on component unmount
+            return () => {
+                window.removeEventListener('scroll', handleScroll)
+                if (retryTimeoutRef.current) {
+                    clearTimeout(retryTimeoutRef.current)
+                }
             }
         }
     }, [])
@@ -64,9 +81,9 @@ function Header() {
     }
 
     return (
-        <header className="shadow-neu-inset-light-lg dark:shadow-neu-inset-dark-lg" style={bannerStyle}>
+        <header className="h-[45dvh] shadow-neu-inset-light-lg dark:shadow-neu-inset-dark-lg" style={bannerStyle}>
             <div className="flex h-full w-full items-end justify-center bg-white/20 dark:bg-black/30">
-                <div className="flex w-5/6 max-w-screen-md items-end justify-start gap-5 pt-4 opacity-100 md:pt-20">
+                <div className="flex w-5/6 max-w-screen-md flex-wrap items-end justify-start gap-5 opacity-100 md:pt-20">
                     <img
                         src={userData?.avatar?.large}
                         alt={`${userData?.name}'s avatar`}
