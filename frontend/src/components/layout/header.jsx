@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 import AppName from '../../assets/svg/app-name'
 import Logo from '../../assets/svg/logo'
-import NeuHamburgerBtn from '../common/buttons/NeuHamburgerBtn'
+import NeuToggleButton from '../common/buttons/NeuToggleButton'
 import ThemeToggleBtn from '../common/buttons/ThemeToggleBtn'
 import Sidenav from './Sidenav'
 
@@ -17,11 +17,9 @@ const Header = () => {
         const sidenav = document.getElementById('sidenav')
         if (sidenav) {
             if (isSidenavOpen) {
-                sidenav.classList.remove('animate-slide-left-return')
-                sidenav.classList.add('animate-slide-left')
+                sidenav.close()
             } else {
-                sidenav.classList.remove('animate-slide-left')
-                sidenav.classList.add('animate-slide-left-return')
+                sidenav.showModal()
             }
         }
     }
@@ -30,15 +28,16 @@ const Header = () => {
         <>
             <header className="bg-primary flex items-center justify-between p-2 shadow-neu-light-xs dark:shadow-neu-dark-xs">
                 {/* Hamburger button */}
-                <NeuHamburgerBtn
+                <NeuToggleButton
                     id="sidenav-toggle"
                     aria-controls="sidenav"
                     aria-expanded={isSidenavOpen}
                     aria-label={isSidenavOpen ? 'Close menu' : 'Open menu'}
                     title={isSidenavOpen ? 'Close Sidenav' : 'Open Sidenav'}
                     type="button"
-                    onClick={toggleSidenav}
-                    isActive={isSidenavOpen}
+                    handleClick={toggleSidenav}
+                    active={isSidenavOpen}
+                    alignment="left"
                 />
 
                 {/* Logo */}
@@ -52,7 +51,7 @@ const Header = () => {
             </header>
 
             {/* Sidenav */}
-            {isSidenavOpen && <Sidenav onDismiss={toggleSidenav} />}
+            <Sidenav onDismiss={toggleSidenav} />
         </>
     )
 }

@@ -1,6 +1,8 @@
-import { React, useEffect, useState } from 'react'
+import React from 'react'
 
 import { Link } from 'react-router-dom'
+
+import { Icon } from '@iconify/react'
 
 import warriorImage from '../../assets/images/landscape/man-warrior.png'
 import avatarImage from '../../assets/images/square/logo.png'
@@ -31,78 +33,18 @@ const menuItems = [
 ]
 
 const Sidenav = ({ onDismiss }) => {
-    const [isSidenavOpen, setIsSidenavOpen] = useState(true)
-
-    // Close sidenav on 'Escape' key press
-    useEffect(() => {
-        const handleEscape = (e) => {
-            if (e.key === 'Escape') {
-                closeSidenav()
-            }
-        }
-        document.addEventListener('keydown', handleEscape)
-
-        return () => document.removeEventListener('keydown', handleEscape)
-    }, [])
-
-    const closeSidenav = () => {
-        setIsSidenavOpen(false)
-        const timer = setTimeout(() => {
-            if (onDismiss) onDismiss()
-        }, 300)
-
-        return () => clearTimeout(timer)
-    }
-
-    useEffect(() => {
-        const sidenav = document.getElementById('sidenav')
-        const sidenavToggle = document.getElementById('sidenav-toggle')
-
-        const closeSidenav = (e) => {
-            if (sidenav && !sidenav.contains(e.target) && !sidenavToggle.contains(e.target)) {
-                setIsSidenavOpen(false)
-                const timer = setTimeout(() => {
-                    if (onDismiss) onDismiss()
-                }, 300)
-
-                return () => clearTimeout(timer)
-            }
-        }
-
-        document.addEventListener('click', closeSidenav)
-
-        return () => {
-            document.removeEventListener('click', closeSidenav)
-        }
-    }, [isSidenavOpen, onDismiss])
-
     return (
-        <div className="fixed inset-0 left-0 top-0 z-50">
-            {isSidenavOpen && <div className="bg-primary size-full opacity-80"></div>}
-            <nav
-                id="sidenav"
-                role="dialog"
-                aria-labelledby="sidenav-heading"
-                aria-modal="true"
-                tabIndex="-1"
-                className={`${isSidenavOpen ? 'animate-slide-left-return' : 'animate-slide-left'} group/sidebar bg-secondary fixed inset-y-0 left-0 z-50 m-0 flex h-dvh w-72 shrink-0 flex-col overflow-hidden rounded-lg border-l border-dashed border-l-light-primary transition-all duration-300 ease-in-out dark:border-dark-primary`}>
-                {/* Close Button for accessibility */}
+        <dialog
+            id="sidenav"
+            onClick={(e) => e.target === e.currentTarget && onDismiss()}
+            className="bg-secondary animation-sideNav my-auto h-dvh w-72 overflow-hidden rounded-e-lg">
+            <div className="flex flex-col border-l border-dashed border-l-light-primary dark:border-dark-primary">
                 <button
                     aria-label="Close navigation"
                     className="text-secondary hover:text-primary bg-secondary dark:bg-secondary-dark absolute right-2 top-2 rounded-full border border-light-primary p-1 dark:border-dark-primary"
                     title="Close navigation"
-                    onClick={closeSidenav}>
-                    <span aria-hidden="true">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="size-7">
-                            <path
-                                fill="none"
-                                stroke="currentColor"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M12 12L7 7m5 5l5 5m-5-5l5-5m-5 5l-5 5"></path>
-                        </svg>
-                    </span>
+                    onClick={onDismiss}>
+                    <Icon icon="iconamoon:close" className="size-6" />
                 </button>
 
                 <h2 id="sidenav-heading" className="sr-only">
@@ -156,7 +98,7 @@ const Sidenav = ({ onDismiss }) => {
                                     {menu.items.map((item, itemIndex) => (
                                         <div key={itemIndex} className="my-1 flex cursor-pointer select-none items-center py-2">
                                             <Link
-                                                onClick={closeSidenav}
+                                                onClick={onDismiss}
                                                 aria-current={window.location.pathname === item.url ? 'page' : undefined}
                                                 className="text-secondary flex flex-grow items-center text-sm hover:text-dark-primary dark:hover:text-light-primary"
                                                 to={item.url}>
@@ -168,8 +110,8 @@ const Sidenav = ({ onDismiss }) => {
                             ))}
                     </div>
                 </div>
-            </nav>
-        </div>
+            </div>
+        </dialog>
     )
 }
 

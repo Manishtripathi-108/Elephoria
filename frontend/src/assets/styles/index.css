@@ -395,43 +395,73 @@
     /* -------------------------------------------------------------------------- */
     /*                                    Modal                                   */
     /* -------------------------------------------------------------------------- */
-    /* When not visible: 0% */
-    dialog.animation-modal {
-        @apply m-auto hidden scale-0 opacity-0 ease-in-out;
+    /* Base dialog styling */
+    dialog {
         transition:
-            overlay allow-discrete,
-            display allow-discrete,
-            transform,
-            opacity;
-        transition-duration: 300ms;
+            transform 300ms,
+            opacity 300ms,
+            overlay 300ms allow-discrete,
+            display 300ms allow-discrete;
+        @apply bg-primary shadow-neu-light-md outline-none dark:shadow-neu-dark-md;
     }
 
     dialog::backdrop {
         transition:
-            opacity,
-            display allow-discrete,
-            overlay allow-discrete,
-            transform;
-        transition-duration: 300ms;
-        @apply bg-primary scale-x-100 scale-y-0 transform opacity-65 ease-in-out;
+            transform 300ms,
+            opacity 300ms,
+            overlay 300ms allow-discrete,
+            display 300ms allow-discrete;
+        @apply bg-primary;
     }
 
-    /* When visible: 100% */
-    dialog[open].animation-modal {
+    /* Side navigation animations */
+    .animation-sideNav {
+        @apply -translate-x-full -translate-y-full scale-0 opacity-0;
+    }
+
+    .animation-sideNav[open] {
+        @apply translate-x-0 translate-y-0 scale-100 opacity-100;
+    }
+
+    .animation-sideNav::backdrop {
+        @apply -translate-x-full opacity-0;
+    }
+
+    .animation-sideNav[open]::backdrop {
+        @apply translate-x-0 opacity-65;
+    }
+
+    /* Modal animations */
+    .animation-modal {
+        @apply m-auto hidden scale-0 opacity-0 ease-in-out;
+    }
+
+    .animation-modal::backdrop {
+        @apply scale-x-100 scale-y-0 opacity-65 ease-in-out;
+    }
+
+    /* Visible state for modal */
+    .animation-modal[open] {
         @apply block scale-100 opacity-100 delay-300;
     }
 
-    dialog[open]::backdrop {
-        @apply scale-x-100 scale-y-100 transform;
+    .animation-modal[open]::backdrop {
+        @apply scale-x-100 scale-y-100;
     }
 
-    /* Initial styles for smooth entry transition: 0% */
+    /* Initial styles for smooth entry transition */
     @starting-style {
-        dialog[open].animation-modal {
+        .animation-modal[open] {
             @apply scale-0 opacity-0;
         }
-        dialog[open]::backdrop {
-            @apply scale-x-100 scale-y-0 transform;
+        .animation-modal[open]::backdrop {
+            @apply scale-x-100 scale-y-0;
+        }
+        .animation-sideNav[open] {
+            @apply -translate-x-full -translate-y-full scale-0 opacity-0;
+        }
+        .animation-sideNav[open]::backdrop {
+            @apply -translate-x-full opacity-0;
         }
     }
 }

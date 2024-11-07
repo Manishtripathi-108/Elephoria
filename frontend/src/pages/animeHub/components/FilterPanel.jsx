@@ -2,7 +2,7 @@ import React, { useCallback, useDeferredValue, useEffect, useState } from 'react
 
 import { Icon } from '@iconify/react'
 
-import NeuHamburgerBtn from '../../../components/common/buttons/NeuHamburgerBtn'
+import NeuToggleButton from '../../../components/common/buttons/NeuToggleButton'
 import { filterOptions, sortOptions } from '../constants'
 
 const currentYear = new Date().getFullYear()
@@ -146,12 +146,12 @@ const FilterPanel = ({ data = [], onFilterUpdate, onFilterStatusChange, onFilter
                     <Icon icon="mingcute:search-fill" className="neu-input-icon" aria-hidden="true" />
                 </div>
 
-                <NeuHamburgerBtn
-                    onClick={() => setIsFilterMenuOpen((prev) => !prev)}
-                    isActive={isFilterMenuOpen}
+                <NeuToggleButton
                     aria-label="Toggle Filter Menu"
                     title="Toggle Filters"
-                    className="md:hidden"
+                    handleClick={() => setIsFilterMenuOpen((prev) => !prev)}
+                    active={isFilterMenuOpen}
+                    additionalClasses="md:hidden"
                 />
             </div>
 
