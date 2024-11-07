@@ -15,6 +15,7 @@ const AnimeHubAuth = lazy(() => import('./pages/animeHub/AnimeHubAuth'))
 const MusicEditor = lazy(() => import('./pages/audio/AudioEditor'))
 const TicTacToeClassic = lazy(() => import('./pages/games/tic-tac-toe/classic'))
 const TicTacToeUltimate = lazy(() => import('./pages/games/tic-tac-toe/ultimate'))
+const TicTacToe = lazy(() => import('./pages/games/tic-tac-toe/TicTacToe'))
 
 // Fallback component for Suspense
 const Loading = () => <div>Loading...</div>
@@ -73,15 +74,12 @@ const router = createBrowserRouter([
             },
             {
                 path: '/games/tic-tac-toe',
+                element: (
+                    <Suspense fallback={<Loading />}>
+                        <TicTacToe />
+                    </Suspense>
+                ),
                 children: [
-                    {
-                        index: true,
-                        element: (
-                            <Suspense fallback={<Loading />}>
-                                <TicTacToeClassic />
-                            </Suspense>
-                        ),
-                    },
                     {
                         path: 'classic',
                         element: (

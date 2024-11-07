@@ -5,7 +5,7 @@ import { ErrorMessage, Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
 import { deleteMediaEntry, saveMediaEntry, toggleFavourite } from '../../../api/animeHubApi'
-import { Modal } from '../../../components/common/NeuModal'
+import { DialogModal } from '../../../components/common/PrimaryModal'
 import JelloButton from '../../../components/common/buttons/JelloButton'
 import { useAnimeHubContext } from '../../../context/AnimeHubContext'
 import { validStatus } from '../constants'
@@ -92,7 +92,7 @@ export default function AnimeModal({ entryId, modalId, media, mediaStatus = '', 
     }
 
     return (
-        <Modal id={modalId}>
+        <DialogModal modalId={modalId}>
             {/* Banner image */}
             <div
                 className="after:bg-secondary relative h-44 rounded-lg bg-cover bg-center after:absolute after:size-full after:rounded-lg after:opacity-40 md:h-64"
@@ -163,6 +163,6 @@ export default function AnimeModal({ entryId, modalId, media, mediaStatus = '', 
                     </Form>
                 )}
             </Formik>
-        </Modal>
+        </DialogModal>
     )
 }

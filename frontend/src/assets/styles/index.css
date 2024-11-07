@@ -63,27 +63,23 @@
     }
 
     .neu-input-icon {
-        @apply text-secondary size-10 border-light-secondary px-2 py-1 dark:border-dark-secondary;
+        @apply text-secondary size-10 shrink-0 border-light-secondary px-2 dark:border-dark-secondary;
     }
 
     .neu-input-group-prepend .neu-form-input {
-        @apply rounded-l-none rounded-r-lg shadow-none focus:shadow-neu-inset-light-xs dark:focus:shadow-neu-inset-dark-xs;
+        @apply m-1 ml-0 rounded-l-none rounded-r-md border-none py-1 shadow-none focus:shadow-neu-inset-light-xs dark:focus:shadow-neu-inset-dark-xs;
     }
 
     .neu-input-group-prepend .neu-input-icon {
-        @apply rounded-l-lg rounded-r-none border-r;
+        @apply rounded-l-md rounded-r-none border-r;
     }
 
     .neu-input-group-append .neu-form-input {
-        @apply rounded-l-lg rounded-r-none shadow-none focus:shadow-neu-inset-light-xs dark:focus:shadow-neu-inset-dark-xs;
+        @apply m-1 mr-0 rounded-l-md rounded-r-none border-none py-1 shadow-none focus:shadow-neu-inset-light-xs dark:focus:shadow-neu-inset-dark-xs;
     }
 
     .neu-input-group-append .neu-input-icon {
-        @apply rounded-l-none rounded-r-lg border-l;
-    }
-
-    .neu-input-group .neu-form-input {
-        @apply my-1 ml-1 rounded-s-md border-none py-1;
+        @apply rounded-l-none rounded-r-md border-l;
     }
 
     .neu-input-group:hover .neu-form-input,
@@ -402,7 +398,7 @@
             opacity 300ms,
             overlay 300ms allow-discrete,
             display 300ms allow-discrete;
-        @apply bg-primary shadow-neu-light-md outline-none dark:shadow-neu-dark-md;
+        @apply bg-primary outline-none;
     }
 
     dialog::backdrop {
@@ -424,11 +420,11 @@
     }
 
     .animation-sideNav::backdrop {
-        @apply -translate-x-full opacity-0;
+        @apply -translate-x-full opacity-65;
     }
 
     .animation-sideNav[open]::backdrop {
-        @apply translate-x-0 opacity-65;
+        @apply translate-x-0;
     }
 
     /* Modal animations */

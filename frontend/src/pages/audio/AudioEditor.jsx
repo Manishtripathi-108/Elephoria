@@ -92,13 +92,7 @@ const AudioEditor = () => {
     }
 
     return (
-        <div className="flex-center m-6 flex-col gap-6">
-            {/* Logo and app name */}
-            <div className="flex-center text-primary gap-2">
-                <Logo className="h-12 w-12" />
-                <AppName className="h-12 w-24" />
-            </div>
-
+        <div className="flex-center mt-20 flex-col gap-6">
             {/* Upload audio form */}
             <form
                 id="upload-audio"

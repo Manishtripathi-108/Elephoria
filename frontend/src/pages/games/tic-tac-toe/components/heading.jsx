@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Link } from 'react-router-dom'
 
-import NeuButton from '../../../../components/common/buttons/neu-button'
+import NeuButton from '../../../../components/common/buttons/ElevateButton'
 
 const Heading = ({ title }) => {
     return (

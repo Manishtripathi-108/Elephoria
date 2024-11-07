@@ -2,7 +2,7 @@ import React, { memo, useState } from 'react'
 
 import { Icon } from '@iconify/react'
 
-import { ModalTrigger } from '../../../components/common/NeuModal'
+import { DialogTrigger } from '../../../components/common/PrimaryModal'
 import { convertMonthNumberToName } from '../constants'
 import AnimeModal from './AnimeModal'
 
@@ -98,11 +98,11 @@ function MediaCard({ mediaItem, isFavouriteList = false }) {
             {/* Modal */}
             {!isFavouriteList && (
                 <>
-                    <ModalTrigger
-                        id={`modal_${media.id}`}
+                    <DialogTrigger
+                        modalId={`modal_${media.id}`}
                         className="bg-secondary text-secondary absolute right-1 top-1 flex items-center justify-center rounded-lg p-0.5">
                         <Icon icon="pepicons-pop:dots-y" className="size-6" />
-                    </ModalTrigger>
+                    </DialogTrigger>
 
                     <AnimeModal
                         modalId={`modal_${media.id}`}

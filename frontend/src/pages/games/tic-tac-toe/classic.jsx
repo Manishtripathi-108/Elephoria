@@ -4,7 +4,7 @@ import { Icon } from '@iconify/react'
 
 import Circle from '../../../assets/svg/circle'
 import Close from '../../../assets/svg/close'
-import NeuButton from '../../../components/common/buttons/neu-button'
+import NeuButton from '../../../components/common/buttons/ElevateButton'
 import { useLoadingBar } from '../../../context/LoadingBarContext'
 import GameOverModal from './components/game-over-modal'
 import Heading from './components/heading'
@@ -203,7 +203,7 @@ export function TicTacToe() {
     const toggleModal = (isOpen) => setIsModalOpen(isOpen)
 
     return (
-        <div className="grid place-items-center">
+        <div className="mt-20 grid place-items-center">
             {/* Heading */}
             <Heading title="Classic Tic-Tac-Toe" />
 

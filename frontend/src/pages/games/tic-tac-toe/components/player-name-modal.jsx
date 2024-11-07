@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Icon } from '@iconify/react'
 
 import Players from '../../../../assets/svg/players'
-import NeuButton from '../../../../components/common/buttons/neu-button'
+import NeuButton from '../../../../components/common/buttons/ElevateButton'
 
 const PlayerNameModal = ({ setPlayerName, playerXName, playerOName, closeModal }) => {
     const [error, setError] = useState(false)
