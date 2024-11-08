@@ -6,6 +6,7 @@ import PrivateRoute from './components/PrivateRoute'
 import RootLayout from './components/layout/RootLayout'
 import { AnimeHubProvider } from './context/AnimeHubContext'
 import { LoadingBarProvider } from './context/LoadingBarContext'
+import { TicTacToeProvider } from './context/TicTacToeContext'
 
 // Lazy-loaded components
 const NotFound = lazy(() => import('./pages/404-page'))
@@ -13,9 +14,9 @@ const Shadows = lazy(() => import('./pages/ShadowsGrid'))
 const AnimeHub = lazy(() => import('./pages/animeHub/AnimeHub'))
 const AnimeHubAuth = lazy(() => import('./pages/animeHub/AnimeHubAuth'))
 const MusicEditor = lazy(() => import('./pages/audio/AudioEditor'))
-const TicTacToeClassic = lazy(() => import('./pages/games/tic-tac-toe/classic'))
-const TicTacToeUltimate = lazy(() => import('./pages/games/tic-tac-toe/ultimate'))
 const TicTacToe = lazy(() => import('./pages/games/tic-tac-toe/TicTacToe'))
+const ClassicTicTacToe = lazy(() => import('./pages/games/tic-tac-toe/ClassicTicTacToe'))
+const UltimateTicTacToe = lazy(() => import('./pages/games/tic-tac-toe/UltimateTicTacToe'))
 
 // Fallback component for Suspense
 const Loading = () => <div>Loading...</div>
@@ -75,16 +76,18 @@ const router = createBrowserRouter([
             {
                 path: '/games/tic-tac-toe',
                 element: (
-                    <Suspense fallback={<Loading />}>
-                        <TicTacToe />
-                    </Suspense>
+                    <TicTacToeProvider>
+                        <Suspense fallback={<Loading />}>
+                            <TicTacToe />
+                        </Suspense>
+                    </TicTacToeProvider>
                 ),
                 children: [
                     {
                         path: 'classic',
                         element: (
                             <Suspense fallback={<Loading />}>
-                                <TicTacToeClassic />
+                                <ClassicTicTacToe />
                             </Suspense>
                         ),
                     },
@@ -92,7 +95,7 @@ const router = createBrowserRouter([
                         path: 'ultimate',
                         element: (
                             <Suspense fallback={<Loading />}>
-                                <TicTacToeUltimate />
+                                <UltimateTicTacToe />
                             </Suspense>
                         ),
                     },

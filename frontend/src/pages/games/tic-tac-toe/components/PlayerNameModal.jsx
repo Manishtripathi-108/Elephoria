@@ -1,41 +1,58 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { Icon } from '@iconify/react'
 
 import { DialogModal } from '../../../../components/common/PrimaryModal'
 import ElevateButton from '../../../../components/common/buttons/ElevateButton'
+import { useTicTacToeContext } from '../../../../context/TicTacToeContext'
 
-const PlayerNameModal = ({ updatePlayerName, playerOName, playerXName }) => {
-    const [validationError, setValidationError] = useState({ hasError: false, message: '' })
-    const playerXInputRef = useRef(null)
-    const playerOInputRef = useRef(null)
+const PlayerNameModal = () => {
+    const [validationError, setValidationError] = useState('')
+    const { state, setPlayerNames } = useTicTacToeContext()
+    const { playerX, playerO } = state
 
+    // Utility function to capitalize the first letter of a string
+    const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
+
+    // Validation Function
     const validateAndSetPlayerName = (player, value) => {
-        updatePlayerName(player, value)
+        const capitalizedValue = capitalize(value)
+        setPlayerNames(player === 'playerX' ? capitalizedValue : playerX.name, player === 'playerO' ? capitalizedValue : playerO.name)
+
         const nameRegex = /^[a-zA-Z0-9 ]+$/
 
-        if (value.trim() === '') {
-            setValidationError({ hasError: true, message: 'Player names cannot be empty! Please enter a name for both players.' })
+        if (!value.trim()) {
+            setValidationError('Player names cannot be empty!')
             return
         }
 
         if (value.length > 30) {
-            setValidationError({ hasError: true, message: 'Player names cannot exceed 30 characters.' })
+            setValidationError('Player names cannot exceed 30 characters.')
             return
         }
 
         if (!nameRegex.test(value)) {
-            setValidationError({ hasError: true, message: 'Player names can only contain letters, numbers, and spaces.' })
+            setValidationError('Player names can only contain letters, numbers, and spaces.')
             return
         }
 
-        setValidationError({ hasError: false, message: '' })
+        setValidationError('')
     }
 
+    // Function to close the modal
     const closePlayerModal = () => {
         const modal = document.getElementById('playerNameModal')
-        if (modal) {
-            modal.close()
+        if (modal && !validationError) modal.close()
+    }
+
+    // Handle Enter key press
+    const handleKeyDown = (e, player) => {
+        if (e.key === 'Enter') {
+            if (player === 'playerX' && !validationError) {
+                document.getElementById('playerOInput').focus()
+            } else if (player === 'playerO' && !validationError) {
+                document.getElementById('closePlayerModalBtn').focus()
+            }
         }
     }
 
@@ -44,42 +61,50 @@ const PlayerNameModal = ({ updatePlayerName, playerOName, playerXName }) => {
             <div className="bg-primary grid gap-5 p-5">
                 <h2 className="text-primary text-center font-indie-flower text-xl font-bold">Set Player Names</h2>
 
+                {/* Player X Input */}
                 <div className="neu-input-group neu-input-group-prepend">
                     <Icon icon="mingcute:close-line" className="neu-input-icon" />
                     <input
-                        ref={playerXInputRef}
+                        id="playerXInput"
+                        name="playerXInput"
                         className="neu-form-input"
                         type="text"
+                        aria-label="Player 1 Name"
                         placeholder="Player 1 Name"
-                        value={playerXName}
+                        value={playerX.name}
                         onChange={(e) => validateAndSetPlayerName('playerX', e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && playerOInputRef.current?.focus()}
+                        onKeyDown={(e) => handleKeyDown(e, 'playerX')}
                         required
                     />
                 </div>
 
+                {/* Player O Input */}
                 <div className="neu-input-group neu-input-group-prepend">
                     <Icon icon="tabler:circle" className="neu-input-icon" />
                     <input
-                        ref={playerOInputRef}
+                        id="playerOInput"
+                        name="playerOInput"
                         className="neu-form-input"
                         type="text"
+                        aria-label="Player 2 Name"
                         placeholder="Player 2 Name"
-                        value={playerOName}
+                        value={playerO.name}
                         onChange={(e) => validateAndSetPlayerName('playerO', e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && !validationError.hasError && closePlayerModal()}
+                        onKeyDown={(e) => handleKeyDown(e, 'playerO')}
                         required
                     />
                 </div>
 
-                <ElevateButton title="Close" onClick={() => !validationError.hasError && closePlayerModal()}>
+                {/* Close Button */}
+                <ElevateButton title="Close" id="closePlayerModalBtn" onClick={closePlayerModal}>
                     <span className="font-indie-flower text-sm font-semibold">Close</span>
                 </ElevateButton>
 
-                {validationError.hasError && (
+                {/* Error Message */}
+                {validationError && (
                     <div className="text-primary flex items-center gap-2 rounded-xl border border-light-secondary bg-red-500 px-3 py-2 font-indie-flower dark:border-dark-secondary">
                         <Icon icon="meteocons:code-yellow-fill" className="size-10 shrink-0" />
-                        <span className="text-xs">{validationError.message}</span>
+                        <span className="text-xs">{validationError}</span>
                     </div>
                 )}
             </div>
