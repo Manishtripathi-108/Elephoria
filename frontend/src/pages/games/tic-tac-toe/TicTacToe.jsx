@@ -39,7 +39,7 @@ const TicTacToe = () => {
             <div className="mt-16 grid grid-cols-2 border-b border-light-secondary py-3 dark:border-dark-secondary">
                 <h1 className="text-primary flex-center font-indie-flower text-lg font-bold tracking-wider md:text-2xl">Tic Tac Toe</h1>
                 <div className="flex-center gap-3">
-                    <Link to="/games/tic-tac-toe" aria-disabled>
+                    <Link to="/games/tic-tac-toe/classic" aria-disabled>
                         <ElevateButton>
                             <span className="font-indie-flower text-sm font-semibold tracking-wider">Classic</span>
                         </ElevateButton>
@@ -63,12 +63,10 @@ const TicTacToe = () => {
                 </div>
 
                 {/* Game Board Placeholder */}
-                <div className="relative z-0 w-fit rounded-xl border border-light-secondary shadow-neu-light-md dark:border-dark-secondary dark:shadow-neu-dark-md">
-                    <div className="m-2 rounded-lg border border-light-secondary p-2 shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-sm">
-                        <Outlet />
+                <div className="relative z-0 w-fit rounded-xl border border-light-secondary p-2 shadow-neu-light-md dark:border-dark-secondary dark:shadow-neu-dark-md">
+                    <Outlet />
 
-                        {isGameOver && <GameOverModal initializeGame={initializeGame} isDraw={isDraw} winner={winner} />}
-                    </div>
+                    {isGameOver && <GameOverModal initializeGame={initializeGame} isDraw={isDraw} winner={winner} />}
                 </div>
 
                 {/* Score Board */}

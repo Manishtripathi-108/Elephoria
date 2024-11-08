@@ -6,9 +6,9 @@ import Circle from '../../../assets/svg/circle'
 import Close from '../../../assets/svg/close'
 import NeuButton from '../../../components/common/buttons/ElevateButton'
 import { useLoadingBar } from '../../../context/LoadingBarContext'
-import GameOverModal from './components/game-over-modal'
+import GameOverModal from './components/GameOverModal'
 import Heading from './components/heading'
-import PlayerNameModal from './components/player-name-modal'
+import PlayerNameModal from './components//PlayerNameModal'
 
 const Ultimate = () => {
     const initialMiniBoard = Array(9).fill(Array(9).fill(null))

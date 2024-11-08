@@ -1,19 +1,15 @@
 import React, { createContext, useContext, useReducer } from 'react'
 
-// Utility function to create new boards
-const createClassicBoard = () => Array(9).fill(null)
-const createUltimateBoard = () => Array(9).fill(Array(9).fill(null))
-
 // Initial State
 const initialState = {
-    mode: 'classic', // 'classic' or 'ultimate'
     isXNext: true,
-    classicBoard: createClassicBoard(),
-    ultimateBoard: createUltimateBoard(),
+    classicBoard: Array(9).fill(null),
+    ultimateBoard: Array(9).fill(Array(9).fill(null)),
     isGameOver: false,
     winner: null,
     winIndexes: null,
     isDraw: false,
+    activeIndex: null,
     playerX: { name: 'Player 1', score: 0 },
     playerO: { name: 'Player 2', score: 0 },
 }
@@ -42,6 +38,18 @@ const gameReducer = (state, action) => {
                 ...state,
                 ...updatedBoard,
                 isXNext: !state.isXNext,
+            }
+
+        case 'UPDATE_CLASSIC_BOARD':
+            return {
+                ...state,
+                classicBoard: action.payload,
+            }
+
+        case 'SET_ACTIVE_INDEX':
+            return {
+                ...state,
+                activeIndex: action.payload,
             }
 
         case 'RESET_GAME':
@@ -93,7 +101,9 @@ export const TicTacToeProvider = ({ children }) => {
     // Utility Functions
     const setMode = (mode) => dispatch({ type: 'SET_MODE', payload: mode })
     const setPlayerNames = (playerX, playerO) => dispatch({ type: 'SET_PLAYER_NAMES', payload: { playerX, playerO } })
+    const setActiveIndex = (index) => dispatch({ type: 'SET_ACTIVE_INDEX', payload: index })
     const updateBoard = (updatedBoard) => dispatch({ type: 'UPDATE_BOARD', payload: updatedBoard })
+    const updateClassicBoard = (updatedBoard) => dispatch({ type: 'UPDATE_CLASSIC_BOARD', payload: updatedBoard })
     const resetGame = () => dispatch({ type: 'RESET_GAME' })
     const initializeGame = () => dispatch({ type: 'INITIALIZE_GAME' })
     const declareWinner = (winner, indexes) => dispatch({ type: 'DECLARE_WINNER', payload: { winner, indexes } })
@@ -105,7 +115,9 @@ export const TicTacToeProvider = ({ children }) => {
                 state,
                 setMode,
                 setPlayerNames,
+                setActiveIndex,
                 updateBoard,
+                updateClassicBoard,
                 resetGame,
                 initializeGame,
                 declareWinner,

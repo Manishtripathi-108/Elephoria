@@ -84,6 +84,14 @@ const router = createBrowserRouter([
                 ),
                 children: [
                     {
+                        path: '/games/tic-tac-toe',
+                        element: (
+                            <Suspense fallback={<Loading />}>
+                                <ClassicTicTacToe />
+                            </Suspense>
+                        ),
+                    },
+                    {
                         path: 'classic',
                         element: (
                             <Suspense fallback={<Loading />}>
