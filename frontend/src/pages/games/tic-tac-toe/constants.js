@@ -1,4 +1,4 @@
-export const WINNING_LINES = {
+const WINNING_PATTERNS = {
     9: [
         [0, 1, 2],
         [3, 4, 5],
@@ -35,4 +35,21 @@ export const WINNING_LINES = {
         [0, 6, 12, 18, 24],
         [4, 8, 12, 16, 20],
     ],
+}
+
+export const ICONS = {
+    X: 'line-md:close',
+    O: 'line-md:circle',
+    D: 'game-icons:crossed-swords',
+}
+
+export const evaluateBoardStatus = (board) => {
+    for (const [a, b, c] of WINNING_PATTERNS[9]) {
+        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+            return { status: 'win', winner: board[a], line: [a, b, c] }
+        }
+    }
+    const isBoardFull = board.every((cell) => cell)
+    if (isBoardFull) return { status: 'draw' }
+    return { status: 'continue' }
 }

@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
 import { Link, Outlet } from 'react-router-dom'
 
 import { Icon } from '@iconify/react'
 
 import ElevateButton from '../../../components/common/buttons/ElevateButton'
-import { useLoadingBar } from '../../../context/LoadingBarContext'
 import { useTicTacToeContext } from '../../../context/TicTacToeContext'
 import GameOverModal from './components/GameOverModal'
 import PlayerNameModal from './components/PlayerNameModal'
@@ -14,12 +13,6 @@ const TicTacToe = () => {
     const { state, resetGame, initializeGame } = useTicTacToeContext()
     const { isDraw, isGameOver, playerX, playerO, winner, isXNext } = state
     console.log('TicTacToe -> state', state)
-
-    const { completeLoading } = useLoadingBar()
-
-    useEffect(() => {
-        completeLoading()
-    }, [completeLoading])
 
     const openPlayerNameModal = () => {
         const modal = document.getElementById('playerNameModal')

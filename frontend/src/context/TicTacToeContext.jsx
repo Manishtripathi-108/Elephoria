@@ -2,6 +2,7 @@ import React, { createContext, useContext, useReducer } from 'react'
 
 // Initial State
 const initialState = {
+    mode: 'classic', // 'classic' or 'ultimate'
     isXNext: true,
     classicBoard: Array(9).fill(null),
     ultimateBoard: Array(9).fill(Array(9).fill(null)),
@@ -18,6 +19,10 @@ const initialState = {
 const gameReducer = (state, action) => {
     switch (action.type) {
         case 'SET_MODE':
+            if (!['classic', 'ultimate'].includes(action.payload)) {
+                console.error('Invalid game mode:', action.payload)
+                return state
+            }
             return {
                 ...initialState,
                 mode: action.payload,
@@ -33,10 +38,10 @@ const gameReducer = (state, action) => {
             }
 
         case 'UPDATE_BOARD':
-            const updatedBoard = state.mode === 'classic' ? { classicBoard: action.payload } : { ultimateBoard: action.payload }
+            const boardKey = state.mode === 'classic' ? 'classicBoard' : 'ultimateBoard'
             return {
                 ...state,
-                ...updatedBoard,
+                [boardKey]: action.payload,
                 isXNext: !state.isXNext,
             }
 

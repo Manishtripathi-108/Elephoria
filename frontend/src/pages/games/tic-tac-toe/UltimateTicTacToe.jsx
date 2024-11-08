@@ -5,45 +5,18 @@ import { Icon } from '@iconify/react'
 import { useLoadingBar } from '../../../context/LoadingBarContext'
 import { useTicTacToeContext } from '../../../context/TicTacToeContext'
 import Square from './components/Square'
-
-const WINNING_PATTERNS = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6],
-]
-
-const ICONS = {
-    X: 'line-md:close',
-    O: 'line-md:circle',
-    D: 'game-icons:crossed-swords',
-}
+import { ICONS, evaluateBoardStatus } from './constants'
 
 const UltimateTicTacToe = () => {
-    const { state, updateBoard, declareDraw, declareWinner, updateClassicBoard, setActiveIndex } = useTicTacToeContext()
+    const { state, setMode, updateBoard, declareDraw, declareWinner, updateClassicBoard, setActiveIndex } = useTicTacToeContext()
     const { classicBoard, ultimateBoard, isGameOver, isXNext, activeIndex, winIndexes } = state
 
     const { completeLoading } = useLoadingBar()
 
     useEffect(() => {
         completeLoading()
-    }, [completeLoading])
-
-    // Function to check for a winner or draw
-    const evaluateBoardStatus = (board) => {
-        for (const [a, b, c] of WINNING_PATTERNS) {
-            if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-                return { status: 'win', winner: board[a], line: [a, b, c] }
-            }
-        }
-        const isBoardFull = board.every((cell) => cell)
-        if (isBoardFull) return { status: 'draw' }
-        return { status: 'continue' }
-    }
+        setMode('ultimate')
+    }, [])
 
     const handleMove = (macroIndex, cellIndex) => {
         if (isGameOver || ultimateBoard[macroIndex][cellIndex] || (activeIndex !== null && activeIndex !== macroIndex) || classicBoard[macroIndex]) {
@@ -93,9 +66,9 @@ const UltimateTicTacToe = () => {
                     {macroBoard.map((cell, cellIndex) => (
                         <Square
                             key={`${macroIndex}-${cellIndex}`}
-                            value={cell}
-                            onClick={() => handleMove(macroIndex, cellIndex)}
-                            activeBg={macroIndex === activeIndex}
+                            squareValue={cell}
+                            handleClick={() => handleMove(macroIndex, cellIndex)}
+                            isActive={macroIndex === activeIndex}
                         />
                     ))}
                     {classicBoard[macroIndex] && (
