@@ -531,29 +531,6 @@
         @apply text-light-secondary dark:text-dark-secondary;
     }
 
-    /* -------------------------------------------------------------------------- */
-    /*                              Svg Shadow Effect                             */
-    /* -------------------------------------------------------------------------- */
-    .svg-shadow-light-xs {
-        filter: drop-shadow(-2px -2px 4px #ffcfd3) drop-shadow(2px 2px 4px #db9d9f);
-    }
-
-    .svg-shadow-dark-xs {
-        filter: drop-shadow(3px 3px 6px #263140) drop-shadow(-3px -3px 6px #394960);
-    }
-
-    .btn {
-        @apply bg-accent-primary rounded-md px-4 py-2 text-light-text-primary shadow-md dark:text-dark-text-secondary;
-    }
-
-    .lineargradient-dark {
-        background: linear-gradient(145deg, #1f2937, #2e3b4d);
-    }
-
-    .lineargradient-light {
-        background: linear-gradient(145deg, #ffc3c6, #e6a4a7);
-    }
-
     /* ----------------------------- Thin Scrollbar ----------------------------- */
     .scrollbar-thin {
         &::-webkit-scrollbar {

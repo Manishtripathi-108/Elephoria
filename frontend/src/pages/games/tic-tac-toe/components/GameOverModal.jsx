@@ -23,7 +23,7 @@ const GameOverModal = ({ initializeGame, isDraw, winner = '' }) => {
 
             <span className="text-accent-primary z-20 text-5xl font-bold tracking-wider">{isDraw ? "It's a draw!" : `${winner} wins!`}</span>
 
-            <Icon icon="grommet-icons:power-reset" className="text-primary size-2/6 shrink-0" />
+            <Icon icon="grommet-icons:power-reset" className="text-primary z-20 size-1/6 shrink-0" />
             <span className="z-20 text-2xl tracking-wider">Play Again</span>
         </div>
     )

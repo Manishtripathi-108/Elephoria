@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { Link, Outlet } from 'react-router-dom'
 
@@ -7,8 +7,8 @@ import { Icon } from '@iconify/react'
 import ElevateButton from '../../../components/common/buttons/ElevateButton'
 import { useLoadingBar } from '../../../context/LoadingBarContext'
 import { useTicTacToeContext } from '../../../context/TicTacToeContext'
-import PlayerNameModal from './components/PlayerNameModal'
 import GameOverModal from './components/GameOverModal'
+import PlayerNameModal from './components/PlayerNameModal'
 
 const TicTacToe = () => {
     const { state, resetGame, initializeGame } = useTicTacToeContext()
@@ -63,10 +63,12 @@ const TicTacToe = () => {
                 </div>
 
                 {/* Game Board Placeholder */}
-                <div className="relative z-0 w-fit p-2 shadow-neu-light-md dark:shadow-neu-dark-md">
-                    <Outlet />
+                <div className="relative z-0 w-fit rounded-xl border border-light-secondary shadow-neu-light-md dark:border-dark-secondary dark:shadow-neu-dark-md">
+                    <div className="m-2 rounded-lg border border-light-secondary p-2 shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-sm">
+                        <Outlet />
 
-                    {isGameOver && <GameOverModal initializeGame={initializeGame} isDraw={isDraw} winner={winner} />}
+                        {isGameOver && <GameOverModal initializeGame={initializeGame} isDraw={isDraw} winner={winner} />}
+                    </div>
                 </div>
 
                 {/* Score Board */}

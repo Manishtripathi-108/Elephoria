@@ -251,7 +251,7 @@ const Ultimate = () => {
                                         <span
                                             className={`text-primary z-20 text-center font-indie-flower text-5xl font-bold tracking-wider ${
                                                 winingLine.includes(macroIndex)
-                                                    ? 'text-light-text-primary *:animate-pulsate dark:text-dark-text-primary'
+                                                    ? '*:animate-pulse-slow text-light-text-primary dark:text-dark-text-primary'
                                                     : ''
                                             }`}>
                                             {largeBoard[macroIndex] === 'X' ? (
