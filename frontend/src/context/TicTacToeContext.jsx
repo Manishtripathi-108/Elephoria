@@ -6,6 +6,7 @@ const initialState = {
     isXNext: true,
     boardClassic: Array(9).fill(null), // Classic 3x3 board
     boardUltimate: Array(9).fill(Array(9).fill(null)), // Ultimate 9x9 board
+    isGameOver: false,
     winner: null,
     isDraw: false,
     playerX: { name: 'Player 1', score: 0 },
@@ -54,6 +55,17 @@ const gameReducer = (state, action) => {
                 playerO: state.playerO,
             }
 
+        case 'INITIALIZE_GAME':
+            return {
+                ...state,
+                isGameOver: false,
+                isDraw: false,
+                winner: null,
+                isXNext: true,
+                boardClassic: Array(9).fill(null),
+                boardUltimate: Array(9).fill(Array(9).fill(null)),
+            }
+
         case 'SET_WINNER':
             return { ...state, winner: action.payload }
 
@@ -77,6 +89,7 @@ export const TicTacToeProvider = ({ children }) => {
     const setPlayerNames = (playerX, playerO) => dispatch({ type: 'SET_PLAYER_NAMES', payload: { playerX, playerO } })
     const makeMove = (index, boardIndex = null) => dispatch({ type: 'MAKE_MOVE', payload: { index, boardIndex } })
     const resetGame = () => dispatch({ type: 'RESET_GAME' })
+    const initializeGame = () => dispatch({ type: 'INITIALIZE_GAME' })
     const setWinner = (winner) => dispatch({ type: 'SET_WINNER', payload: winner })
     const setDraw = () => dispatch({ type: 'SET_DRAW' })
 
@@ -88,6 +101,7 @@ export const TicTacToeProvider = ({ children }) => {
                 setPlayerNames,
                 makeMove,
                 resetGame,
+                initializeGame,
                 setWinner,
                 setDraw,
             }}>

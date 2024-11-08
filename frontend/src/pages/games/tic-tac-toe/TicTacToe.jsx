@@ -8,9 +8,10 @@ import ElevateButton from '../../../components/common/buttons/ElevateButton'
 import { useLoadingBar } from '../../../context/LoadingBarContext'
 import { useTicTacToeContext } from '../../../context/TicTacToeContext'
 import PlayerNameModal from './components/PlayerNameModal'
+import GameOverModal from './components/GameOverModal'
 
 const TicTacToe = () => {
-    const { state, resetGame } = useTicTacToeContext()
+    const { state, resetGame, initializeGame } = useTicTacToeContext()
     const { isDraw, isGameOver, playerX, playerO, winner, isXNext } = state
     console.log('TicTacToe -> state', state)
 
@@ -27,7 +28,7 @@ const TicTacToe = () => {
 
     const renderGameStatus = () => {
         if (isGameOver) {
-            return isDraw ? <span>It's a draw!</span> : <span>{winner === 'X' ? playerX.name : playerO.name} wins!</span>
+            return isDraw ? <span>It's a draw!</span> : <span>{winner} wins!</span>
         }
         return <>{isXNext ? `${playerX.name}'s turn (X)` : `${playerO.name}'s turn (O)`}</>
     }
@@ -62,7 +63,11 @@ const TicTacToe = () => {
                 </div>
 
                 {/* Game Board Placeholder */}
-                <Outlet />
+                <div className="relative z-0 w-fit p-2 shadow-neu-light-md dark:shadow-neu-dark-md">
+                    <Outlet />
+
+                    {isGameOver && <GameOverModal initializeGame={initializeGame} isDraw={isDraw} winner={winner} />}
+                </div>
 
                 {/* Score Board */}
                 <div className="grid grid-cols-2 gap-5 px-4 font-indie-flower tracking-wider">
