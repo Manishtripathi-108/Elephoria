@@ -38,7 +38,7 @@ function AnimeHubAuth() {
     }
 
     return (
-        <div className="bg-primary grid h-screen w-full place-items-center p-4">
+        <div className="bg-primary grid h-[calc(100dvh-4rem)] w-full place-items-center">
             <div className="bg-primary w-full max-w-md rounded-lg border border-light-secondary p-6 shadow-neu-light-md dark:border-dark-secondary dark:shadow-neu-dark-md">
                 <h1 className="text-primary mb-4 text-center font-aladin text-2xl font-semibold tracking-widest">Anime Authorization</h1>
                 <p className="text-secondary mb-4 text-center font-indie-flower tracking-wide">

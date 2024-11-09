@@ -16,7 +16,7 @@ const PlayerNameModal = () => {
 
     // Validation Function
     const validateAndSetPlayerName = (player, value) => {
-        const capitalizedValue = capitalize(value)
+        const capitalizedValue = value
         setPlayerNames(player === 'playerX' ? capitalizedValue : playerX.name, player === 'playerO' ? capitalizedValue : playerO.name)
 
         const nameRegex = /^[a-zA-Z0-9 ]+$/
@@ -74,6 +74,8 @@ const PlayerNameModal = () => {
                         value={playerX.name}
                         onChange={(e) => validateAndSetPlayerName('playerX', e.target.value)}
                         onKeyDown={(e) => handleKeyDown(e, 'playerX')}
+                        maxLength={30}
+                        minLength={1}
                         required
                     />
                 </div>
@@ -91,6 +93,8 @@ const PlayerNameModal = () => {
                         value={playerO.name}
                         onChange={(e) => validateAndSetPlayerName('playerO', e.target.value)}
                         onKeyDown={(e) => handleKeyDown(e, 'playerO')}
+                        maxLength={30}
+                        minLength={1}
                         required
                     />
                 </div>

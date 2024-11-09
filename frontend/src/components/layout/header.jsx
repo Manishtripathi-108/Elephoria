@@ -10,9 +10,7 @@ import Sidenav from './Sidenav'
 
 const Header = () => {
     const [isSidenavOpen, setIsSidenavOpen] = useState(false)
-    const [isHidden, setIsHidden] = useState(false)
     const location = useLocation()
-
     const headerHeight = 64
 
     // Toggle Sidenav visibility
@@ -25,18 +23,20 @@ const Header = () => {
     }
 
     useEffect(() => {
+        const header = document.getElementById('page-header')
         let lastScrollY = window.scrollY
 
         const handleScroll = () => {
             const currentScrollY = window.scrollY
-
             // Show header when scrolling up or back to the top
             if (currentScrollY < lastScrollY || currentScrollY <= headerHeight) {
-                setIsHidden(false)
+                header.style.transform = 'translateY(0)'
+                header.style.opacity = '1'
             }
             // Hide header when scrolling down past the header height
             else if (currentScrollY > headerHeight) {
-                setIsHidden(true)
+                header.style.transform = 'translateY(-100%)'
+                header.style.opacity = '0'
             }
 
             lastScrollY = currentScrollY
@@ -48,6 +48,7 @@ const Header = () => {
         }
 
         window.addEventListener('scroll', debouncedScroll)
+
         return () => {
             window.removeEventListener('scroll', debouncedScroll)
         }
@@ -57,10 +58,7 @@ const Header = () => {
         <>
             <header
                 id="page-header"
-                className={`bg-primary top-0 z-50 flex w-full items-center justify-between p-2 opacity-100 shadow-neu-light-xs transition-transform duration-300 ease-in-out dark:shadow-neu-dark-xs ${
-                    isHidden ? '-translate-y-full opacity-0' : 'translate-y-0'
-                }`}
-                style={{ position: 'sticky' }}>
+                className="bg-primary sticky top-0 z-50 flex w-full items-center justify-between p-2 shadow-neu-light-xs transition-all duration-300 ease-in-out dark:shadow-neu-dark-xs">
                 <NeuToggleButton
                     id="sidenav-toggle"
                     aria-controls="sidenav"

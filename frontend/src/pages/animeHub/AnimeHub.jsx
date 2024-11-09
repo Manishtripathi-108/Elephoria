@@ -36,7 +36,7 @@ function AnimeHub() {
     const contentToDisplay = isFilterApplied && filteredContent.length > 0 ? filteredContent : mediaContent
 
     return (
-        <div>
+        <>
             <Header />
             <NavigationBar />
 
@@ -94,7 +94,7 @@ function AnimeHub() {
                     </div>
                 </>
             )}
-        </div>
+        </>
     )
 }
 
