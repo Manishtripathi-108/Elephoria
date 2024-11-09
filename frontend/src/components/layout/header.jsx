@@ -10,7 +10,10 @@ import Sidenav from './Sidenav'
 
 const Header = () => {
     const [isSidenavOpen, setIsSidenavOpen] = useState(false)
+    const [isHidden, setIsHidden] = useState(false)
     const location = useLocation()
+
+    const headerHeight = 64
 
     // Toggle Sidenav visibility
     const toggleSidenav = () => {
@@ -22,24 +25,31 @@ const Header = () => {
     }
 
     useEffect(() => {
-        const header = document.getElementById('page-header')
         let lastScrollY = window.scrollY
 
         const handleScroll = () => {
-            if (window.scrollY > lastScrollY) {
-                header.style.transform = 'translateY(-100%)'
-                header.style.opacity = '0'
-            } else {
-                header.style.transform = 'translateY(0)'
-                header.style.opacity = '1'
+            const currentScrollY = window.scrollY
+
+            // Show header when scrolling up or back to the top
+            if (currentScrollY < lastScrollY || currentScrollY <= headerHeight) {
+                setIsHidden(false)
             }
-            lastScrollY = window.scrollY
+            // Hide header when scrolling down past the header height
+            else if (currentScrollY > headerHeight) {
+                setIsHidden(true)
+            }
+
+            lastScrollY = currentScrollY
         }
 
-        window.addEventListener('scroll', handleScroll)
+        // Debounce scroll event for better performance
+        const debouncedScroll = () => {
+            window.requestAnimationFrame(handleScroll)
+        }
 
+        window.addEventListener('scroll', debouncedScroll)
         return () => {
-            window.removeEventListener('scroll', handleScroll)
+            window.removeEventListener('scroll', debouncedScroll)
         }
     }, [])
 
@@ -47,7 +57,10 @@ const Header = () => {
         <>
             <header
                 id="page-header"
-                className="bg-primary fixed top-0 z-50 flex w-full items-center justify-between p-2 shadow-neu-light-xs transition-all duration-300 ease-in-out dark:shadow-neu-dark-xs">
+                className={`bg-primary top-0 z-50 flex w-full items-center justify-between p-2 opacity-100 shadow-neu-light-xs transition-transform duration-300 ease-in-out dark:shadow-neu-dark-xs ${
+                    isHidden ? '-translate-y-full opacity-0' : 'translate-y-0'
+                }`}
+                style={{ position: 'sticky' }}>
                 <NeuToggleButton
                     id="sidenav-toggle"
                     aria-controls="sidenav"
