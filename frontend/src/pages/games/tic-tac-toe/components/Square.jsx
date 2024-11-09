@@ -1,11 +1,7 @@
 import React, { memo } from 'react'
 
-import { Icon } from '@iconify/react'
-
-import { ICONS } from '../../../../utils/TicTacToeConst'
-
-const Square = ({ squareValue, handleClick, isActive = false, iconSize = 'size-7 md:size-12', isWinningSquare = false }) => {
-    const baseClasses = 'flex-center rounded-md p-1 md:p-2 transition-all duration-300'
+const Square = ({ squareValue, handleClick, isActive = false, iconSize = 'size-7 md:size-12 text-xl md:text-4xl', isWinningSquare = false }) => {
+    const baseClasses = 'flex-center rounded-md p-1 md:p-2 transition-all duration-300 font-julee'
     const hoverEffect = isActive ? 'hover:scale-105 focus:scale-105' : ''
     const colorClasses = isWinningSquare ? 'text-accent-primary' : isActive ? 'text-white dark:text-black' : 'text-secondary'
     const shadowClasses =
@@ -25,7 +21,7 @@ const Square = ({ squareValue, handleClick, isActive = false, iconSize = 'size-7
             aria-pressed={!!squareValue}
             className={`${baseClasses} ${hoverEffect} ${shadowClasses} ${iconSize} ${colorClasses}`}>
             {squareValue && (
-                <Icon icon={ICONS[squareValue]} className={`size-full ${isWinningSquare ? 'animate-pulse-slow' : ''}`} aria-hidden="true" />
+                <span className={`${isWinningSquare ? 'animate-pulse-slow' : 'animate-push-release-from'} select-none`}>{squareValue}</span>
             )}
         </button>
     )

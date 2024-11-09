@@ -39,6 +39,8 @@ const WINNING_PATTERNS = {
 
 export const evaluateBoardStatus = (board) => {
     for (const [a, b, c] of WINNING_PATTERNS[9]) {
+        if (board[a] === 'D') continue
+
         if (board[a] && board[a] === board[b] && board[a] === board[c]) {
             return { status: 'win', winner: board[a], line: [a, b, c] }
         }
@@ -46,10 +48,4 @@ export const evaluateBoardStatus = (board) => {
     const isBoardFull = board.every((cell) => cell)
     if (isBoardFull) return { status: 'draw' }
     return { status: 'continue' }
-}
-
-export const ICONS = {
-    X: 'line-md:close',
-    O: 'line-md:circle',
-    D: 'game-icons:crossed-swords',
 }

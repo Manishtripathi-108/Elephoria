@@ -22,7 +22,7 @@ const ClassicTicTacToe = () => {
                         key={index}
                         squareValue={cell}
                         handleClick={() => handleMove(index)}
-                        iconSize="size-20 md:size-32"
+                        iconSize="size-20 md:size-32 text-6xl md:text-8xl"
                         isWinningSquare={winIndexes?.includes(index)}
                     />
                 ))}

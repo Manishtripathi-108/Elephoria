@@ -4,7 +4,9 @@ import { Link, Outlet } from 'react-router-dom'
 
 import { Icon } from '@iconify/react'
 
+import { DialogModal } from '../../../components/common/PrimaryModal'
 import ElevateButton from '../../../components/common/buttons/ElevateButton'
+import JelloButton from '../../../components/common/buttons/JelloButton'
 import { useTicTacToeContext } from '../../../context/TicTacToeContext'
 import GameOverModal from './components/GameOverModal'
 import PlayerNameModal from './components/PlayerNameModal'
@@ -24,7 +26,12 @@ const TicTacToe = () => {
         if (isGameOver) {
             return isDraw ? <span>It's a draw!</span> : <span>{winner} wins!</span>
         }
-        return <>{isXNext ? `${playerX.name}'s turn (X)` : `${playerO.name}'s turn (O)`}</>
+        return <>{isXNext ? `${playerX.name}'s turn` : `${playerO.name}'s turn`}</>
+    }
+
+    const handleAction = () => {
+        const modal = document.getElementById('game_action')
+        if (modal) modal.showModal()
     }
 
     return (
@@ -35,11 +42,11 @@ const TicTacToe = () => {
             {/* Game*/}
             <div className="container mx-auto grid place-items-center gap-5 px-2 py-5">
                 <div className="text-primary flex w-full max-w-4xl items-center justify-evenly">
-                    <Icon icon="game-icons:tic-tac-toe" className="size-7" />
+                    <span className="font-julee text-secondary text-4xl">{isXNext ? 'X' : 'O'}</span>
                     <h2 className="text-accent-primary line-clamp-1 text-center font-indie-flower text-2xl font-bold tracking-wider">
                         {renderGameStatus()}
                     </h2>
-                    <button title="Start New Game" className="neu-btn neu-icon-only-square-btn" onClick={StartOver}>
+                    <button title="Clear Board" className="neu-btn neu-icon-only-square-btn" onClick={handleAction}>
                         <Icon icon="game-icons:broom" className="size-7" />
                     </button>
                 </div>
@@ -70,6 +77,23 @@ const TicTacToe = () => {
 
             {/* Player Name Modal */}
             <PlayerNameModal />
+
+            <DialogModal modalId={'game_action'} maxWidthAndClasses="w-fit" closeButton={false}>
+                <div class="relative max-h-full w-full max-w-md p-4">
+                    <div class="p-4 text-center md:p-5">
+                        <Icon icon="solar:danger-triangle-bold" class="mx-auto mb-4 h-12 w-12 text-red-500" />
+                        <h3 class="text-primary mb-5 font-indie-flower text-lg font-normal tracking-wider">
+                            Are you sure you want to clear the board?
+                        </h3>
+                        <button className="neu-btn" title="No, cancel" onClick={() => document.getElementById('game_action').close()}>
+                            No, cancel
+                        </button>
+                        <button onClick={clearBoard} title="Yes, I'm sure" className="neu-btn ml-4 mt-4 text-red-500 dark:text-red-500">
+                            Yes, I'm sure
+                        </button>
+                    </div>
+                </div>
+            </DialogModal>
         </>
     )
 }

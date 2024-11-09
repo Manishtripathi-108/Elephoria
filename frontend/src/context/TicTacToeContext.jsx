@@ -161,6 +161,7 @@ const gameReducer = (state, action) => {
         case 'CLEAR_BOARD':
             return {
                 ...initialState,
+                isXNext: Math.random() < 0.5,
                 mode: state.mode,
                 drawScore: state.drawScore,
                 playerX: state.playerX,

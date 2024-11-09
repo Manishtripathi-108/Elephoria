@@ -20,6 +20,8 @@ export default {
                 zoomIn: 'zoomIn 0.5s 0.5s forwards',
                 zoomOut: 'zoomOut 0.5s forwards',
                 'shimmer-ray': 'shimmer-ray 2.5s cubic-bezier(0, 0, 0.2, 1) infinite',
+                'push-release-from': 'push-release-from 0.3s forwards',
+                'l-zoom-out': 'l-zoom-in 0.3s forwards',
             },
             keyframes: {
                 'shimmer-ray': {
@@ -89,6 +91,13 @@ export default {
                 zoomOut: {
                     '0%': { transform: 'scale(1)' },
                     '100%': { transform: 'scale(0)' },
+                },
+                'push-release-from': {
+                    from: { transform: 'scale(3, 3)', opacity: '0' },
+                    '30%': { transform: 'scale(.5, .5)' },
+                },
+                'l-zoom-in': {
+                    from: { transform: 'scale(10)', opacity: '0' },
                 },
             },
             backgroundImage: {
@@ -162,6 +171,7 @@ export default {
             fontFamily: {
                 'indie-flower': ['"Indie Flower"', 'cursive', 'serif'],
                 aladin: ['"Aladin"', 'system-ui'],
+                julee: ['"Julee"', 'cursive'],
             },
         },
     },

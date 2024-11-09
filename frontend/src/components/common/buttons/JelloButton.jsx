@@ -1,6 +1,6 @@
 import React from 'react'
 
-const JelloButton = ({ onClick, title = '', variant = 'primary', children, ...props }) => {
+const JelloButton = ({ onClick, title = '', variant = 'primary', children = '', className, ...props }) => {
     // Define button variants
     const variants = {
         primary: {
@@ -48,7 +48,7 @@ const JelloButton = ({ onClick, title = '', variant = 'primary', children, ...pr
         <button
             onClick={onClick}
             title={title}
-            className="group/btn relative cursor-pointer border-none bg-transparent p-0 font-indie-flower tracking-wider outline-none"
+            className={`group/btn relative cursor-pointer border-none bg-transparent p-0 font-indie-flower tracking-wider outline-none ${className}`}
             {...props}>
             <span
                 className={`absolute left-0 top-0 h-full w-full translate-y-0.5 rounded-lg bg-black/25 transition-transform duration-[600ms] ease-[cubic-bezier(0.3,0.7,0.4,1)] group-hover/btn:translate-y-1 group-hover/btn:transition-transform group-hover/btn:duration-[250ms] group-hover/btn:ease-[cubic-bezier(0.3,0.7,0.4,1.5)] group-focus/btn:translate-y-1 group-focus/btn:transition-transform group-focus/btn:duration-[250ms] group-focus/btn:ease-[cubic-bezier(0.3,0.7,0.4,1.5)] group-active/btn:translate-y-px group-active/btn:transition-transform group-active/btn:duration-[34ms]`}></span>

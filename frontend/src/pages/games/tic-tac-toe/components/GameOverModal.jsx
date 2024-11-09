@@ -17,14 +17,16 @@ const GameOverModal = ({ clearBoard, isDraw, winner = '' }) => {
             tabIndex={0}
             onClick={clearBoard}
             onKeyDown={handleKeyDown}
-            className="text-secondary flex-center invisible absolute left-0 top-0 z-10 flex h-full w-full animate-puff-in cursor-pointer flex-col items-center justify-center gap-8 rounded-lg border border-light-secondary font-indie-flower dark:border-dark-secondary">
+            className="text-secondary flex-center absolute inset-0 z-10 flex h-full w-full animate-puff-in cursor-pointer flex-col items-center justify-center gap-5 rounded-xl border border-light-secondary font-indie-flower tracking-widest dark:border-dark-secondary">
             {/* Background Overlay */}
-            <div className="bg-primary absolute left-0 top-0 h-full w-full opacity-70 blur-sm saturate-150"></div>
+            <div className="bg-primary absolute inset-0 h-full w-full opacity-70 blur-sm saturate-150"></div>
 
-            <span className="text-accent-primary z-20 text-5xl font-bold tracking-wider">{isDraw ? "It's a draw!" : `${winner} wins!`}</span>
+            <span className="text-accent-primary z-20 px-4 text-center text-4xl font-bold md:text-5xl">
+                {isDraw ? "It's a draw!" : `${winner} wins!`}
+            </span>
 
-            <Icon icon="grommet-icons:power-reset" className="text-secondary z-20 size-1/6 shrink-0" />
-            <span className="z-20 text-2xl tracking-wider">Play Again</span>
+            <Icon icon="grommet-icons:power-reset" className="z-20 size-1/6 shrink-0" />
+            <span className="z-20 text-2xl">Play Again</span>
         </div>
     )
 }

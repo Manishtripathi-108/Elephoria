@@ -1,10 +1,7 @@
 import React, { useEffect } from 'react'
 
-import { Icon } from '@iconify/react'
-
 import { useLoadingBar } from '../../../context/LoadingBarContext'
 import { useTicTacToeContext } from '../../../context/TicTacToeContext'
-import { ICONS } from '../../../utils/TicTacToeConst'
 import Square from './components/Square'
 
 const UltimateTicTacToe = () => {
@@ -36,13 +33,10 @@ const UltimateTicTacToe = () => {
                     ))}
                     {classicBoard[macroIndex] && (
                         <div className="flex-center bg-primary absolute inset-0 z-10 animate-puff-in rounded-md p-5 shadow-neu-inset-light-sm dark:shadow-neu-inset-dark-sm">
-                            <Icon
-                                icon={ICONS[classicBoard[macroIndex]]}
-                                className={`size-full ${
-                                    winIndexes?.includes(macroIndex) ? 'text-accent-primary animate-pulse-slow' : 'text-secondary'
-                                }`}
-                                aria-hidden="true"
-                            />
+                            <span
+                                className={`${winIndexes?.includes(macroIndex) ? 'text-accent-primary animate-pulse-slow' : 'text-secondary animate-push-release-from'} font-julee select-none text-7xl md:text-9xl`}>
+                                {classicBoard[macroIndex]}
+                            </span>
                         </div>
                     )}
                 </div>
