@@ -2,7 +2,7 @@ import React, { memo } from 'react'
 
 import { Icon } from '@iconify/react'
 
-import { ICONS } from '../constants'
+import { ICONS } from '../../../../utils/TicTacToeConst'
 
 const Square = ({ squareValue, handleClick, isActive = false, iconSize = 'size-7 md:size-12', isWinningSquare = false }) => {
     const baseClasses = 'flex-center rounded-md p-1 md:p-2 transition-all duration-300'
