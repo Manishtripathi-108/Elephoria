@@ -21,9 +21,7 @@ const GameOverModal = ({ clearBoard, isDraw, winner = '' }) => {
             {/* Background Overlay */}
             <div className="bg-primary absolute inset-0 h-full w-full opacity-70 blur-sm saturate-150"></div>
 
-            <span className="text-accent-primary z-20 px-4 text-center text-4xl font-bold md:text-5xl">
-                {isDraw ? "It's a draw!" : `${winner} wins!`}
-            </span>
+            <span className="text-accent z-20 px-4 text-center text-4xl font-bold md:text-5xl">{isDraw ? "It's a draw!" : `${winner} wins!`}</span>
 
             <Icon icon="grommet-icons:power-reset" className="z-20 size-1/6 shrink-0" />
             <span className="z-20 text-2xl">Play Again</span>

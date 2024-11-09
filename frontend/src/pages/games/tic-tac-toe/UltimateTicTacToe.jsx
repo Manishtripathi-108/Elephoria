@@ -34,7 +34,7 @@ const UltimateTicTacToe = () => {
                     {classicBoard[macroIndex] && (
                         <div className="flex-center bg-primary absolute inset-0 z-10 animate-puff-in rounded-md p-5 shadow-neu-inset-light-sm dark:shadow-neu-inset-dark-sm">
                             <span
-                                className={`${winIndexes?.includes(macroIndex) ? 'text-accent-primary animate-pulse-slow' : 'text-secondary animate-push-release-from'} font-julee select-none text-7xl md:text-9xl`}>
+                                className={`${winIndexes?.includes(macroIndex) ? 'text-accent animate-pulse-slow' : 'text-secondary animate-push-release-from'} font-julee select-none text-7xl md:text-9xl`}>
                                 {classicBoard[macroIndex]}
                             </span>
                         </div>

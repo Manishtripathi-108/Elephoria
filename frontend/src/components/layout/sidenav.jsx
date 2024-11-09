@@ -37,7 +37,7 @@ const Sidenav = ({ onDismiss }) => {
         <dialog
             id="sidenav"
             onClick={(e) => e.target === e.currentTarget && onDismiss()}
-            className="bg-secondary animation-sideNav my-auto h-dvh w-72 overflow-hidden rounded-e-lg">
+            className="bg-secondary side-nav-animation my-auto h-dvh w-72 overflow-hidden rounded-e-lg">
             <div className="flex flex-col border-l border-dashed border-l-light-primary dark:border-dark-primary">
                 <button
                     aria-label="Close navigation"

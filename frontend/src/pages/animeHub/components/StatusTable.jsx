@@ -23,7 +23,7 @@ const StatusTable = ({ data, title, failed = false }) => {
                 <h2 className="text-primary text-nowrap font-aladin text-xl font-semibold tracking-widest">
                     {title} ({data.length})
                 </h2>
-                <select className="neu-form-select max-w-40" aria-label="Filter by status" onChange={(e) => handleCategoryChange(e.target.value)}>
+                <select className="dropdown-select max-w-40" aria-label="Filter by status" onChange={(e) => handleCategoryChange(e.target.value)}>
                     <option value="All">All</option>
                     {uniqueStatusTexts.map((status, index) => (
                         <option key={index} value={status}>

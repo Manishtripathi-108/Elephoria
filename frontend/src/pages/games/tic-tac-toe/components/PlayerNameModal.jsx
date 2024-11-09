@@ -57,17 +57,17 @@ const PlayerNameModal = () => {
     }
 
     return (
-        <DialogModal modalId="playerNameModal" closeButton={false} maxWidthAndClasses="w-full max-w-80 backdrop:opacity-40 backdrop:bg-secondary">
+        <DialogModal modalId="playerNameModal" closeButton={false} maxWidthAndClasses="w-full max-w-80">
             <div className="bg-primary grid gap-5 p-5">
                 <h2 className="text-primary text-center font-indie-flower text-xl font-bold">Set Player Names</h2>
 
                 {/* Player X Input */}
-                <div className="neu-input-group neu-input-group-prepend">
-                    <Icon icon="mingcute:close-line" className="neu-input-icon" />
+                <div className="input-wrapper input-group-start">
+                    <Icon icon="mingcute:close-line" className="input-icon" />
                     <input
                         id="playerXInput"
                         name="playerXInput"
-                        className="neu-form-input"
+                        className="input-text"
                         type="text"
                         aria-label="Player 1 Name"
                         placeholder="Player 1 Name"
@@ -81,12 +81,12 @@ const PlayerNameModal = () => {
                 </div>
 
                 {/* Player O Input */}
-                <div className="neu-input-group neu-input-group-prepend">
-                    <Icon icon="tabler:circle" className="neu-input-icon" />
+                <div className="input-wrapper input-group-start">
+                    <Icon icon="tabler:circle" className="input-icon" />
                     <input
                         id="playerOInput"
                         name="playerOInput"
-                        className="neu-form-input"
+                        className="input-text"
                         type="text"
                         aria-label="Player 2 Name"
                         placeholder="Player 2 Name"

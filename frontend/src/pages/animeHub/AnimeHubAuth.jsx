@@ -46,7 +46,7 @@ function AnimeHubAuth() {
                 </p>
                 <div className="mb-4 grid w-full place-items-center">
                     <a
-                        className="neu-btn"
+                        className="button"
                         href="https://anilist.co/api/v2/oauth/authorize?client_id=21724&redirect_uri=https://anilist.co/api/v2/oauth/pin&response_type=code"
                         target="_blank"
                         rel="noopener noreferrer">
@@ -57,15 +57,19 @@ function AnimeHubAuth() {
                 <Formik initialValues={{ pin: '' }} validationSchema={validationSchema} onSubmit={handleSubmit}>
                     {({ isSubmitting }) => (
                         <Form id="pinForm" className="space-y-4">
-                            <div className="neu-form-group">
-                                <label htmlFor="pin" className="neu-form-label">
+                            <div className="form-group">
+                                <label htmlFor="pin" className="form-label">
                                     Enter Auth Pin:
                                 </label>
-                                <Field type="text" id="pin" name="pin" className="neu-form-input" placeholder="Enter Auth Pin:" />
-                                <ErrorMessage name="pin" component="div" className="error neu-form-text ml-2 mt-1 font-indie-flower tracking-wide" />
+                                <Field type="text" id="pin" name="pin" className="input-text" placeholder="Enter Auth Pin:" />
+                                <ErrorMessage
+                                    name="pin"
+                                    component="div"
+                                    className="error form-helper-text ml-2 mt-1 font-indie-flower tracking-wide"
+                                />
                             </div>
                             <div className="grid w-full place-items-center">
-                                <button type="submit" className="neu-btn" disabled={isSubmitting}>
+                                <button type="submit" className="button" disabled={isSubmitting}>
                                     {isSubmitting ? 'Submitting...' : 'Submit'}
                                 </button>
                             </div>

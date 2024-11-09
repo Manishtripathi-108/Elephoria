@@ -111,7 +111,7 @@ function AuthComponent() {
                                     )}
                                 </Field>
 
-                                <button className="neu-btn mt-5" type="submit">
+                                <button className="button mt-5" type="submit">
                                     SIGN UP
                                 </button>
                             </Form>
@@ -167,12 +167,12 @@ function AuthComponent() {
                                 </Field>
 
                                 <a
-                                    className="text-secondary hover:text-highlight-primary mb-8 ml-auto mt-2 border-b border-solid border-transparent text-right text-sm transition-colors duration-300 hover:border-b-light-highlight-primary dark:hover:border-b-dark-highlight-primary"
+                                    className="text-secondary hover:text-highlight mb-8 ml-auto mt-2 border-b border-solid border-transparent text-right text-sm transition-colors duration-300 hover:border-b-light-highlight-primary dark:hover:border-b-dark-highlight-primary"
                                     href="#">
                                     Forgot your password?
                                 </a>
 
-                                <button className="neu-btn mt-5" type="submit">
+                                <button className="button mt-5" type="submit">
                                     SIGN IN
                                 </button>
                             </Form>
@@ -196,7 +196,7 @@ function AuthComponent() {
                         <p className="text-secondary px-2 text-center text-sm leading-relaxed tracking-wide">
                             To stay connected with us, please log in with your personal details.
                         </p>
-                        <button className="neu-btn mt-5" onClick={toggleForm}>
+                        <button className="button mt-5" onClick={toggleForm}>
                             SIGN IN
                         </button>
                     </div>
@@ -209,7 +209,7 @@ function AuthComponent() {
                         <p className="text-secondary px-2 text-center text-sm leading-relaxed tracking-wide">
                             Create an account to start your journey with us. Let’s get started by filling out the form.
                         </p>
-                        <button className="neu-btn mt-5" onClick={toggleForm}>
+                        <button className="button mt-5" onClick={toggleForm}>
                             SIGN UP
                         </button>
                     </div>

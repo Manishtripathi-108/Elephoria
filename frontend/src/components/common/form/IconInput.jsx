@@ -34,16 +34,16 @@ const IconInput = ({
     }
 
     return (
-        <div className={`neu-form-group ${containerClass}`}>
-            <label htmlFor={id} className="neu-form-label">
+        <div className={`form-group ${containerClass}`}>
+            <label htmlFor={id} className="form-label">
                 {placeholder}
             </label>
-            <div className={`neu-input-group ${isIconAtEnd ? 'neu-input-group-append' : 'neu-input-group-prepend'} ${error ? 'error' : ''}`}>
+            <div className={`input-wrapper ${isIconAtEnd ? 'input-group-end' : 'input-group-start'} ${error ? 'error' : ''}`}>
                 {!isIconAtEnd && (
                     <Icon
                         icon={iconToDisplay()}
                         onClick={type === 'password' ? () => setIsPasswordVisible(!isPasswordVisible) : null}
-                        className={`neu-input-icon ${error ? 'error' : ''}`}
+                        className={`input-icon ${error ? 'error' : ''}`}
                     />
                 )}
 
@@ -53,7 +53,7 @@ const IconInput = ({
                     value={value}
                     placeholder={placeholder}
                     onChange={onChange}
-                    className={`neu-form-input ${inputClass}`}
+                    className={`input-text ${inputClass}`}
                     type={isPasswordVisible && type === 'password' ? 'text' : type}
                     {...props}
                 />
@@ -62,11 +62,11 @@ const IconInput = ({
                     <Icon
                         icon={iconToDisplay()}
                         onClick={type === 'password' ? () => setIsPasswordVisible(!isPasswordVisible) : null}
-                        className={`neu-input-icon ${error ? 'error' : ''}`}
+                        className={`input-icon ${error ? 'error' : ''}`}
                     />
                 )}
             </div>
-            {error && <small className="neu-form-text error">{error}</small>}
+            {error && <small className="form-helper-text error">{error}</small>}
         </div>
     )
 }

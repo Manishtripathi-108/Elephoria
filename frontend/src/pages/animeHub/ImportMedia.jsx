@@ -355,7 +355,7 @@ const ImportMedia = () => {
                     <div className="mt-5 grid w-full place-items-center gap-5">
                         <ProgressBar total={progressData.totalToProcess} current={progressData.currentProcessed} name={progressData.currentMedia} />
                         <button
-                            className="neu-btn neu-icon-btn text-red-500 hover:text-red-700 dark:text-red-500 dark:hover:text-red-700"
+                            className="button button-with-icon text-red-500 hover:text-red-700 dark:text-red-500 dark:hover:text-red-700"
                             onClick={handleCancel}>
                             Cancel
                         </button>
@@ -369,12 +369,12 @@ const ImportMedia = () => {
                         {correctedStatusRef.current.map((item, index) => (
                             <div
                                 key={index}
-                                className="bg-primary neu-form-group rounded-md border border-light-secondary p-4 shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-sm">
-                                <label className="neu-form-label">
+                                className="bg-primary form-group rounded-md border border-light-secondary p-4 shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-sm">
+                                <label className="form-label">
                                     Invalid Status: <span className="error font-bold">{item.status}</span>
                                 </label>
                                 <select
-                                    className="neu-form-select"
+                                    className="dropdown-select"
                                     value={item.corrected}
                                     onChange={(e) => handleStatusCorrection(index, e.target.value)}>
                                     <option value="">Select valid status</option>
@@ -389,7 +389,7 @@ const ImportMedia = () => {
                     </div>
 
                     <button
-                        className="neu-btn neu-icon-btn mx-auto mt-5 text-red-500 hover:text-red-700 dark:text-red-500 dark:hover:text-red-700"
+                        className="button button-with-icon mx-auto mt-5 text-red-500 hover:text-red-700 dark:text-red-500 dark:hover:text-red-700"
                         onClick={handleCancel}>
                         Cancel
                     </button>
@@ -400,35 +400,35 @@ const ImportMedia = () => {
                     <UploadInput id="Upload_input" file={file} setFile={setFile} />
 
                     {/* Radio Buttons for Media Type */}
-                    <div className="neu-form-group-radio">
-                        <label className="neu-form-radio-label">
+                    <div className="radio-group">
+                        <label className="radio-label">
                             <input
-                                className="neu-form-radio"
+                                className="radio-input"
                                 type="radio"
                                 name="mediaType"
                                 value="ANIME"
                                 checked={mediaType === 'ANIME'}
                                 onChange={(e) => setMediaType(e.target.value)}
                             />
-                            <div className="neu-form-radio-indicator"></div>
-                            <span className="neu-form-radio-text">Anime</span>
+                            <div className="radio-indicator"></div>
+                            <span className="radio-text">Anime</span>
                         </label>
-                        <label className="neu-form-radio-label">
+                        <label className="radio-label">
                             <input
-                                className="neu-form-radio"
+                                className="radio-input"
                                 type="radio"
                                 name="mediaType"
                                 value="MANGA"
                                 checked={mediaType === 'MANGA'}
                                 onChange={(e) => setMediaType(e.target.value)}
                             />
-                            <div className="neu-form-radio-indicator"></div>
-                            <span className="neu-form-radio-text">Manga</span>
+                            <div className="radio-indicator"></div>
+                            <span className="radio-text">Manga</span>
                         </label>
                     </div>
 
                     {/* Import Button */}
-                    <button onClick={() => processMediaList(jsonData)} className="neu-btn w-full md:col-span-2">
+                    <button onClick={() => processMediaList(jsonData)} className="button w-full md:col-span-2">
                         Import {mediaType}
                     </button>
                 </div>
@@ -443,7 +443,7 @@ const ImportMedia = () => {
                 {failedImports.length > 0 && (
                     <div className="w-full max-w-2xl">
                         <StatusTable data={failedImports} title="Failed Imports" failed />
-                        <button className="neu-btn mt-5 w-full" onClick={() => processMediaList(failedImports, true)}>
+                        <button className="button mt-5 w-full" onClick={() => processMediaList(failedImports, true)}>
                             Retry Failed Imports
                         </button>
                     </div>

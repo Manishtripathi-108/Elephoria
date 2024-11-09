@@ -103,7 +103,7 @@ const AudioEditor = () => {
 
                 <UploadInput id="upload_audio" file={file} setFile={setFile} />
 
-                <button type="submit" title="Upload Audio" className="neu-btn flex-shrink-0" onClick={handleFileUpload}>
+                <button type="submit" title="Upload Audio" className="button flex-shrink-0" onClick={handleFileUpload}>
                     Upload Audio
                 </button>
             </form>
@@ -129,15 +129,15 @@ const AudioEditor = () => {
                         {Object.entries(metaData)
                             .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
                             .map(([key, value]) => (
-                                <div key={key} className="neu-form-group mb-4 w-fit">
-                                    <label className="neu-form-label" htmlFor={key}>
+                                <div key={key} className="form-group mb-4 w-fit">
+                                    <label className="form-label" htmlFor={key}>
                                         {key
                                             .split('_')
                                             .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
                                             .join(' ')}
                                     </label>
                                     <input
-                                        className="neu-form-input"
+                                        className="input-text"
                                         id={key}
                                         type="text"
                                         placeholder={key
@@ -152,7 +152,7 @@ const AudioEditor = () => {
                     </div>
                 )}
 
-                <button type="submit" className="neu-btn">
+                <button type="submit" className="button">
                     Edit Metadata
                 </button>
             </form>

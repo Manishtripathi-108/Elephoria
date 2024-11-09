@@ -95,7 +95,7 @@ export default function AnimeModal({ entryId, modalId, media, mediaStatus = '', 
         <DialogModal modalId={modalId}>
             {/* Banner image */}
             <div
-                className="after:bg-secondary relative h-44 rounded-lg bg-cover bg-center after:absolute after:size-full after:rounded-lg after:opacity-40 md:h-64"
+                className="after:bg-secondary relative h-44 rounded-t-lg bg-cover bg-center after:absolute after:size-full after:rounded-t-lg after:opacity-40 md:h-64"
                 style={bannerStyle}></div>
 
             {/* Cover image */}
@@ -116,7 +116,7 @@ export default function AnimeModal({ entryId, modalId, media, mediaStatus = '', 
             {/* Favourite button */}
             <button
                 type="button"
-                className={`neu-btn neu-icon-only-btn absolute right-6 top-2/4 ${isLiked ? 'active' : ''}`}
+                className={`button button-icon-only absolute right-8 top-2/4 ${isLiked ? 'active' : ''}`}
                 onClick={toggleLike}
                 disabled={isToggling}>
                 <Icon icon="icomoon-free:heart" className={`size-5 ${isLiked ? 'text-[#ff4545]' : ''}`} />
@@ -124,14 +124,14 @@ export default function AnimeModal({ entryId, modalId, media, mediaStatus = '', 
 
             <Formik initialValues={{ status: mediaStatus, progress: mediaProgress }} validationSchema={validationSchema} onSubmit={handleSave}>
                 {({ isSubmitting }) => (
-                    <Form>
+                    <Form className="px-4 pb-4">
                         {/* Status and Progress fields */}
                         <div className="flex-center gap-4">
-                            <div className="neu-form-group">
-                                <label htmlFor="status" className="neu-form-label">
+                            <div className="form-group">
+                                <label htmlFor="status" className="form-label">
                                     Status:
                                 </label>
-                                <Field as="select" name="status" className="neu-form-select">
+                                <Field as="select" name="status" className="dropdown-select">
                                     <option value="">Select Status</option>
                                     {validStatus.map((option) => (
                                         <option key={option} value={option}>
@@ -139,15 +139,15 @@ export default function AnimeModal({ entryId, modalId, media, mediaStatus = '', 
                                         </option>
                                     ))}
                                 </Field>
-                                <ErrorMessage name="status" component="div" className="neu-form-text error" />
+                                <ErrorMessage name="status" component="div" className="form-helper-text error" />
                             </div>
 
-                            <div className="neu-form-group">
-                                <label htmlFor="progress" className="neu-form-label">
+                            <div className="form-group">
+                                <label htmlFor="progress" className="form-label">
                                     Episode Progress:
                                 </label>
-                                <Field type="number" name="progress" min="0" max={maxProgress} className="neu-form-input text-center" />
-                                <ErrorMessage name="progress" component="div" className="neu-form-text error" />
+                                <Field type="number" name="progress" min="0" max={maxProgress} className="input-text text-center" />
+                                <ErrorMessage name="progress" component="div" className="form-helper-text error" />
                             </div>
                         </div>
 

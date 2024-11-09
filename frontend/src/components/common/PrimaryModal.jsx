@@ -12,7 +12,7 @@ const DialogModal = ({ modalId, maxWidthAndClasses = 'w-full max-w-2xl', closeBu
         <dialog
             id={modalId}
             onClick={(e) => e.target === e.currentTarget && closeModal()}
-            className={`animation-modal rounded-lg border border-light-secondary p-5 dark:border-dark-secondary ${maxWidthAndClasses}`}>
+            className={`modal-animation rounded-xl border border-light-secondary p-5 shadow-neu-inset-light-md dark:border-dark-secondary dark:shadow-neu-inset-dark-md ${maxWidthAndClasses}`}>
             <div className="overflow-hidden rounded-lg border border-light-secondary shadow-neu-light-md dark:border-dark-secondary dark:shadow-neu-dark-md">
                 {closeButton && (
                     <button

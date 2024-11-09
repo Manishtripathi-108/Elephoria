@@ -51,14 +51,14 @@ function AnimeHub() {
                     {/* Toggle between List and Card view modes */}
                     <div className="container mx-auto flex items-center justify-end px-4">
                         <button
-                            className={`text-primary neu-btn ${viewMode === 'list' ? 'active' : ''} rounded-lg rounded-e-none p-2 shadow-none dark:shadow-none`}
+                            className={`text-primary button ${viewMode === 'list' ? 'active' : ''} rounded-lg rounded-e-none p-2 shadow-none dark:shadow-none`}
                             aria-pressed={viewMode === 'list'}
                             aria-label="List View"
                             onClick={() => setViewMode('list')}>
                             <Icon icon="tabler:list" className="size-4" />
                         </button>
                         <button
-                            className={`text-primary neu-btn ${viewMode === 'card' ? 'active' : ''} rounded-lg rounded-s-none p-2 shadow-none dark:shadow-none`}
+                            className={`text-primary button ${viewMode === 'card' ? 'active' : ''} rounded-lg rounded-s-none p-2 shadow-none dark:shadow-none`}
                             aria-pressed={viewMode === 'card'}
                             aria-label="Card View"
                             onClick={() => setViewMode('card')}>

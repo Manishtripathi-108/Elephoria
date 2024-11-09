@@ -3,7 +3,7 @@ import React, { memo } from 'react'
 const Square = ({ squareValue, handleClick, isActive = false, iconSize = 'size-7 md:size-12 text-xl md:text-4xl', isWinningSquare = false }) => {
     const baseClasses = 'flex-center rounded-md p-1 md:p-2 transition-all duration-300 font-julee'
     const hoverEffect = isActive ? 'hover:scale-105 focus:scale-105' : ''
-    const colorClasses = isWinningSquare ? 'text-accent-primary' : isActive ? 'text-white dark:text-black' : 'text-secondary'
+    const colorClasses = isWinningSquare ? 'text-accent' : isActive ? 'text-white dark:text-black' : 'text-secondary'
     const shadowClasses =
         squareValue === null
             ? isActive

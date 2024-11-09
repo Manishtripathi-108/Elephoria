@@ -131,19 +131,19 @@ const FilterPanel = ({ data = [], onFilterUpdate, onFilterStatusChange, onFilter
         <div className="bg-primary text-primary h-full w-full p-2 md:max-w-64">
             {/* Search Input */}
             <div className="flex items-center justify-between gap-3 md:mb-4">
-                <div className="neu-input-group neu-input-group-append">
+                <div className="input-wrapper input-group-end">
                     <label htmlFor="media-search" className="sr-only">
                         Search Media
                     </label>
                     <input
                         id="media-search"
-                        className="neu-form-input"
+                        className="input-text"
                         type="text"
                         placeholder="Search"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
-                    <Icon icon="mingcute:search-fill" className="neu-input-icon" aria-hidden="true" />
+                    <Icon icon="mingcute:search-fill" className="input-icon" aria-hidden="true" />
                 </div>
 
                 <NeuToggleButton
@@ -158,13 +158,13 @@ const FilterPanel = ({ data = [], onFilterUpdate, onFilterStatusChange, onFilter
             {/* Filter Panel */}
             <div className={`${!isFilterMenuOpen ? 'animate-wipe-out-down' : 'animate-wipe-in-down'} p-2`}>
                 <div className="mt-4">
-                    <h3 className="neu-form-label mb-2 text-base">Lists:</h3>
+                    <h3 className="form-label mb-2 text-base">Lists:</h3>
                     <div className="space-y-2">
                         {listOptions.map((list) => (
                             <button
                                 key={list}
                                 onClick={() => setSelectedList(list)}
-                                className={`neu-btn w-full text-left ${selectedList === list ? 'active' : ''}`}>
+                                className={`button w-full text-left ${selectedList === list ? 'active' : ''}`}>
                                 {list}
                             </button>
                         ))}
@@ -172,7 +172,7 @@ const FilterPanel = ({ data = [], onFilterUpdate, onFilterStatusChange, onFilter
                 </div>
 
                 <div className="mt-4">
-                    <h3 className="neu-form-label mb-2 text-base">Filters:</h3>
+                    <h3 className="form-label mb-2 text-base">Filters:</h3>
                     {filterOptions.map((option) => (
                         <div className="mb-2" key={option.name}>
                             <label htmlFor={`${option.name}-filter`} className="sr-only">
@@ -182,7 +182,7 @@ const FilterPanel = ({ data = [], onFilterUpdate, onFilterStatusChange, onFilter
                                 id={`${option.name}-filter`}
                                 onChange={(e) => handleFilterChange(option.name.toLowerCase(), e.target.value)}
                                 value={filters[option.name.toLowerCase()]}
-                                className="neu-form-select capitalize">
+                                className="dropdown-select capitalize">
                                 <option value="">{option.name}</option>
                                 {option.options.map((item) => (
                                     <option key={item} value={item}>
@@ -194,8 +194,8 @@ const FilterPanel = ({ data = [], onFilterUpdate, onFilterStatusChange, onFilter
                     ))}
                 </div>
 
-                <div className="neu-form-range-group mt-4">
-                    <label htmlFor="filter-year" className="neu-form-label text-secondary flex items-center justify-between text-base">
+                <div className="range-slider-group mt-4">
+                    <label htmlFor="filter-year" className="form-label text-secondary flex items-center justify-between text-base">
                         <span>Year: {filters.year}</span>
                         <button
                             aria-label="Reset Year Filter"
@@ -213,19 +213,19 @@ const FilterPanel = ({ data = [], onFilterUpdate, onFilterStatusChange, onFilter
                         step="1"
                         value={filters.year}
                         onChange={(e) => handleFilterChange('year', parseInt(e.target.value, 10))}
-                        className="neu-form-range w-full"
+                        className="range-slider w-full"
                     />
                 </div>
 
-                <div className="neu-form-group mt-4 w-full">
-                    <label className="neu-form-label text-base" htmlFor="sort_by">
+                <div className="form-group mt-4 w-full">
+                    <label className="form-label text-base" htmlFor="sort_by">
                         Sort By:
                     </label>
                     <select
                         value={filters.sort}
                         id="sort_by"
                         onChange={(e) => handleFilterChange('sort', e.target.value)}
-                        className="neu-form-select"
+                        className="dropdown-select"
                         aria-label="Sort media by">
                         <option value="">Sort By</option>
                         {sortOptions.map((option) => (
@@ -237,7 +237,7 @@ const FilterPanel = ({ data = [], onFilterUpdate, onFilterStatusChange, onFilter
                 </div>
 
                 {/* Reset Filters Button */}
-                <button type="button" onClick={resetFilters} className="neu-btn neu-icon-btn mt-4 w-full" aria-label="Reset all filters">
+                <button type="button" onClick={resetFilters} className="button button-with-icon mt-4 w-full" aria-label="Reset all filters">
                     <Icon icon="grommet-icons:power-reset" className="size-6" /> Reset Filters
                 </button>
             </div>

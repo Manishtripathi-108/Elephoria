@@ -40,77 +40,77 @@
     /* -------------------------------------------------------------------------- */
     /*                                  neu-form                                  */
     /* -------------------------------------------------------------------------- */
-    .neu-form-group,
-    .neu-form-file-group {
+    .form-group,
+    .file-input-group {
         @apply flex w-full flex-col gap-2;
     }
 
-    .neu-form-label,
-    .neu-form-text {
+    .form-label,
+    .form-helper-text {
         @apply text-secondary font-indie-flower text-sm leading-3 tracking-wider;
     }
 
-    /*-- ------------------------- neu-form-input ------------------------- */
-    .neu-form-select,
-    .neu-form-textarea,
-    .neu-form-input {
+    /*-- ------------------------- input-text ------------------------- */
+    .dropdown-select,
+    .input-textarea,
+    .input-text {
         @apply bg-primary text-primary active:placeholder:text-primary focus:placeholder:text-primary placeholder:text-secondary w-full appearance-none rounded-lg border border-light-secondary px-3 py-2 font-indie-flower shadow-neu-light-xs outline-none transition duration-300 placeholder:tracking-wide focus:shadow-neu-inset-light-xs dark:border-dark-secondary dark:shadow-neu-dark-xs dark:focus:shadow-neu-inset-dark-xs;
     }
 
-    /* ------------------------- neu-input-group & Icon ------------------------- */
-    .neu-input-group {
+    /* ------------------------- input-wrapper & Icon ------------------------- */
+    .input-wrapper {
         @apply flex w-full items-center rounded-lg border border-light-secondary shadow-neu-light-xs dark:border-dark-secondary dark:shadow-neu-dark-xs;
     }
 
-    .neu-input-icon {
+    .input-icon {
         @apply text-secondary size-10 shrink-0 border-light-secondary px-2 dark:border-dark-secondary;
     }
 
-    .neu-input-group-prepend .neu-form-input {
+    .input-group-start .input-text {
         @apply m-1 ml-0 rounded-l-none rounded-r-md border-none py-1 shadow-none focus:shadow-neu-inset-light-xs dark:focus:shadow-neu-inset-dark-xs;
     }
 
-    .neu-input-group-prepend .neu-input-icon {
+    .input-group-start .input-icon {
         @apply rounded-l-md rounded-r-none border-r;
     }
 
-    .neu-input-group-append .neu-form-input {
+    .input-group-end .input-text {
         @apply m-1 mr-0 rounded-l-md rounded-r-none border-none py-1 shadow-none focus:shadow-neu-inset-light-xs dark:focus:shadow-neu-inset-dark-xs;
     }
 
-    .neu-input-group-append .neu-input-icon {
+    .input-group-end .input-icon {
         @apply rounded-l-none rounded-r-md border-l;
     }
 
-    .neu-input-group:hover .neu-form-input,
-    .neu-input-group:focus .neu-form-input,
-    .neu-input-group:hover .neu-input-icon,
-    .neu-input-group:focus-within .neu-input-icon {
+    .input-wrapper:hover .input-text,
+    .input-wrapper:focus .input-text,
+    .input-wrapper:hover .input-icon,
+    .input-wrapper:focus-within .input-icon {
         @apply placeholder:text-primary text-primary;
     }
 
-    .neu-input-group:focus-within .neu-input-icon.error {
+    .input-wrapper:focus-within .input-icon.error {
         @apply border border-red-500 dark:border-red-500;
     }
 
-    /* ------------------------- neu-inset-outset-input ------------------------- */
-    .neu-inset-outset-input {
+    /* ------------------------- input-inset-outset ------------------------- */
+    .input-inset-outset {
         @apply bg-primary appearance-none rounded-xl border-none shadow-neu-inset-light-sm outline-none placeholder:tracking-wide dark:shadow-neu-inset-dark-sm;
     }
 
-    .neu-inset-outset-input:focus,
-    .neu-inset-outset-input:hover,
-    .neu-inset-outset-input:active {
+    .input-inset-outset:focus,
+    .input-inset-outset:hover,
+    .input-inset-outset:active {
         @apply placeholder:text-primary shadow-neu-light-md dark:shadow-neu-dark-md;
     }
 
-    /* ---------------------------- neu-form-textarea --------------------------- */
-    .neu-form-textarea {
+    /* ---------------------------- input-textarea --------------------------- */
+    .input-textarea {
         @apply transition-all duration-300;
     }
 
-    /* ----------------------------- neu-form-select ---------------------------- */
-    .neu-form-select {
+    /* ----------------------------- dropdown-select ---------------------------- */
+    .dropdown-select {
         @apply cursor-pointer appearance-none bg-no-repeat pr-10 ring-black focus:ring-1 dark:ring-white;
 
         background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="%23767676" d="M8.037 11.166L14.5 22.36c.825 1.43 2.175 1.43 3 0l6.463-11.195c.826-1.43.15-2.598-1.5-2.598H9.537c-1.65 0-2.326 1.17-1.5 2.6z"/></svg>');
@@ -118,131 +118,131 @@
         background-size: 1.5rem 1.5rem;
     }
 
-    /* ------------------------------- neu-form-file ---------------------------- */
-    .neu-form-file {
+    /* ------------------------------- file-upload ---------------------------- */
+    .file-upload {
         @apply hidden;
     }
 
-    .neu-form-file-group label {
+    .file-upload-group label {
         @apply bg-primary text-secondary hover:text-primary relative cursor-pointer overflow-hidden rounded-lg border border-light-secondary px-4 py-2 font-indie-flower shadow-neu-light-xs transition duration-300 ease-in-out active:shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-dark-xs dark:active:shadow-neu-inset-dark-sm;
     }
 
-    .neu-form-file-group label:after {
+    .file-upload-group label:after {
         content: 'Browse';
         @apply text-secondary bg-secondary absolute right-0 top-0 px-4 py-2 font-indie-flower;
     }
 
-    .neu-form-file-preview {
+    .file-preview {
         @apply bg-primary mx-auto size-fit rounded-lg border border-light-secondary p-3 shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-sm;
     }
 
-    /* ----------------------------- neu-form-checkbox -------------------------- */
-    .neu-form-group-checkbox {
+    /* ----------------------------- checkbox-input -------------------------- */
+    .checkbox-group {
         @apply bg-primary flex flex-col items-start gap-2 rounded-2xl px-16 py-12 shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs;
     }
 
-    .neu-form-checkbox-label {
+    .checkbox-label {
         @apply inline-flex cursor-pointer items-center;
     }
 
-    .neu-form-checkbox {
+    .checkbox-input {
         @apply bg-primary flex-center disabled:text-secondary size-4 appearance-none rounded border border-light-secondary shadow-neu-inset-light-xs outline-none transition-all duration-300 ease-in-out placeholder:tracking-wide dark:border-dark-secondary dark:shadow-neu-inset-dark-xs;
     }
 
-    .neu-form-checkbox:checked {
+    .checkbox-input:checked {
         @apply bg-primary text-primary flex-center;
     }
 
-    .neu-form-checkbox:checked:after {
+    .checkbox-input:checked:after {
         content: '\2713';
         @apply text-primary flex-center size-full font-bold transition-all;
     }
 
-    .neu-form-checkbox:checked:after {
+    .checkbox-input:checked:after {
         transform: scale(0.8);
     }
 
-    .neu-form-checkbox-text {
+    .checkbox-text {
         @apply text-secondary ml-2 font-indie-flower text-sm transition-all duration-500;
     }
 
-    .neu-form-checkbox-label:hover .neu-form-checkbox-text,
-    .neu-form-checkbox:checked ~ .neu-form-checkbox-text {
+    .checkbox-label:hover .checkbox-text,
+    .checkbox-input:checked ~ .checkbox-text {
         @apply text-primary translate-x-2;
     }
 
-    /* ------------------------------- neu-form-radio --------------------------- */
-    .neu-form-group-radio {
+    /* ------------------------------- radio-input --------------------------- */
+    .radio-group {
         @apply bg-primary flex flex-col items-start gap-2 rounded-2xl px-16 py-12 shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs;
     }
 
-    .neu-form-radio-label {
+    .radio-label {
         @apply relative inline-flex cursor-pointer items-center;
     }
 
-    .neu-form-radio {
+    .radio-input {
         @apply sr-only;
     }
 
-    .neu-form-radio-indicator {
+    .radio-indicator {
         @apply relative size-5 overflow-hidden rounded-full shadow-neu-light-xs before:absolute before:left-[10%] before:top-[10%] before:size-4/5 before:rounded-full before:shadow-neu-light-md dark:shadow-neu-dark-xs dark:before:shadow-neu-dark-md;
     }
 
-    .neu-form-radio-text {
+    .radio-text {
         @apply text-secondary ml-2 font-indie-flower transition-all duration-500;
     }
 
-    .neu-form-radio-label:hover .neu-form-radio-text,
-    .neu-form-radio:checked ~ .neu-form-radio-text {
+    .radio-label:hover .radio-text,
+    .radio-input:checked ~ .radio-text {
         @apply text-primary translate-x-2;
     }
 
-    .neu-form-radio:checked ~ .neu-form-radio-indicator:before {
+    .radio-input:checked ~ .radio-indicator:before {
         @apply shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs;
     }
 
     /* ------------------------------- neu-switch ------------------------------- */
 
-    .neu-form-switch-label {
+    .switch-label {
         @apply relative inline-flex cursor-pointer items-center;
     }
 
-    .neu-form-switch {
+    .toggle-switch {
         @apply sr-only;
     }
 
-    .neu-form-switch-indicator {
+    .switch-indicator {
         @apply bg-primary h-12 w-24 rounded-full shadow-neu-inset-light-sm outline-none ring-0;
         @apply dark:shadow-neu-inset-dark-sm;
     }
 
-    .neu-form-switch-indicator:after {
+    .switch-indicator:after {
         @apply bg-primary ease-Out-back absolute left-1 top-1 flex size-10 -rotate-180 items-center justify-center rounded-full shadow-neu-light-xs outline-none duration-300 content-['✖️'];
         @apply dark:shadow-neu-dark-xs;
     }
 
-    .neu-form-switch:hover ~ .neu-form-switch-indicator:after {
+    .toggle-switch:hover ~ .switch-indicator:after {
         @apply scale-95;
     }
 
-    .neu-form-switch:checked ~ .neu-form-switch-indicator:after {
+    .toggle-switch:checked ~ .switch-indicator:after {
         @apply translate-x-12 rotate-0 content-['✔️'];
     }
 
     /* ------------------------------- neu-slider ------------------------------- */
-    .neu-form-range-group {
+    .range-slider-group {
         @apply w-full;
     }
 
-    .neu-form-range {
+    .range-slider {
         @apply bg-primary relative h-2 w-full appearance-none rounded-full shadow-neu-light-xs outline-none dark:shadow-neu-dark-xs;
     }
 
-    .neu-form-range::-webkit-slider-thumb {
+    .range-slider::-webkit-slider-thumb {
         @apply bg-accent-primary h-6 w-6 cursor-pointer appearance-none rounded-full shadow-neu-light-xs transition duration-300 ease-in-out dark:shadow-neu-dark-xs;
     }
 
-    .neu-form-range::-moz-range-thumb {
+    .range-slider::-moz-range-thumb {
         @apply bg-accent-primary relative h-6 w-6 cursor-pointer appearance-none rounded-full shadow-neu-light-xs transition duration-300 ease-in-out;
     }
 
@@ -251,140 +251,140 @@
     }
 
     /* -------------------------------------------------------------------------- */
-    /*                                neu-calendar                                */
+    /*                                calendar                                */
     /* -------------------------------------------------------------------------- */
-    .neu-calendar-container {
+    .calendar-container {
         @apply relative w-72;
     }
 
-    .neu-calendar {
+    .calendar {
         @apply bg-primary absolute left-0 top-12 z-50 mt-2 w-full overflow-hidden rounded-lg shadow-neu-light-xs dark:shadow-neu-dark-xs;
     }
 
-    .neu-calendar-header {
+    .calendar-header-button {
         @apply flex items-center justify-between px-4 py-2 shadow-neu-light-xs dark:shadow-neu-dark-sm;
     }
 
-    .neu-calendar-header-btn {
-        @apply neu-btn p-1.5;
+    .calendar-header-button-btn {
+        @apply button p-1.5;
     }
 
-    .neu-calendar-header-title {
-        @apply neu-btn mx-3 w-full text-nowrap px-4 py-1.5 text-sm;
+    .calendar-header-title {
+        @apply button mx-3 w-full text-nowrap px-4 py-1.5 text-sm;
     }
 
-    .neu-calendar-body,
-    .neu-calendar-body-days,
-    .neu-calendar-body-months,
-    .neu-calendar-body-years {
+    .calendar-body,
+    .calendar-body-days,
+    .calendar-body-months,
+    .calendar-body-years {
         @apply m-1 grid gap-1 p-4 text-sm shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs;
     }
 
-    .neu-calendar-body-days {
+    .calendar-body-days {
         @apply grid-cols-7;
     }
 
-    .neu-calendar-body-months {
+    .calendar-body-months {
         @apply grid-cols-3;
     }
 
-    .neu-calendar-body-years {
+    .calendar-body-years {
         @apply grid-cols-4;
     }
 
-    .neu-calendar-item {
+    .calendar-item {
         @apply text-primary hover:bg-secondary flex cursor-pointer items-center justify-center rounded-lg p-2 transition hover:text-white hover:shadow-neu-light-xs dark:hover:shadow-neu-dark-xs;
     }
 
-    .neu-calendar-item.active {
+    .calendar-item.active {
         @apply bg-secondary text-white shadow-neu-light-xs dark:shadow-neu-dark-xs;
     }
 
     /* -------------------------------------------------------------------------- */
-    /*                                  neu-badge                                 */
+    /*                                  badge                                 */
     /* -------------------------------------------------------------------------- */
-    .neu-badge {
+    .badge {
         @apply text-secondary rounded-full border border-light-secondary px-2 py-1 text-center font-indie-flower text-sm shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-xs;
     }
 
-    .neu-badge-primary {
+    .badge-primary {
         @apply text-primary;
     }
 
-    .neu-badge-secondary {
+    .badge-secondary {
         @apply text-secondary;
     }
 
-    .neu-badge-accent {
+    .badge-accent {
         @apply text-accent;
     }
 
-    .neu-badge-highlight {
+    .badge-highlight {
         @apply text-highlight;
     }
 
-    .neu-badge-md {
+    .badge-md {
         @apply px-3 py-2;
     }
 
-    .neu-badge-lg {
+    .badge-lg {
         @apply px-4 py-3 text-base;
     }
 
-    .neu-badge-xl {
+    .badge-xl {
         @apply px-5 py-4 text-lg;
     }
 
     /* -------------------------------------------------------------------------- */
-    /*                                   neu-btn                                  */
+    /*                                   button                                  */
     /* -------------------------------------------------------------------------- */
 
-    .neu-btn {
+    .button {
         @apply text-secondary bg-primary rounded-lg border border-light-secondary px-4 py-2 text-center font-indie-flower tracking-wider shadow-neu-light-xs transition-all duration-300 dark:border-dark-secondary dark:shadow-neu-dark-xs;
     }
 
-    .neu-btn.active,
-    .neu-btn:active {
+    .button.active,
+    .button:active {
         @apply text-primary shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs;
     }
 
-    .neu-btn:hover:not(.active),
-    .neu-btn:focus:not(.active) {
+    .button:hover:not(.active),
+    .button:focus:not(.active) {
         @apply text-primary scale-105 transform;
     }
 
-    /*-- -------------------------------- neu-btn-pill -------------------------------- */
-    .neu-btn-pill {
+    /*-- -------------------------------- button-pill -------------------------------- */
+    .button-pill {
         @apply rounded-l-full rounded-r-full;
     }
 
-    /*-- -------------------------------- neu-icon-btn -------------------------------- */
-    .neu-icon-btn {
+    /*-- -------------------------------- button-with-icon -------------------------------- */
+    .button-with-icon {
         @apply flex items-center justify-center gap-2 text-sm;
     }
 
-    /*-- -------------------------------- neu-icon-only-btn ------------------------------*/
-    .neu-icon-only-btn {
+    /*-- -------------------------------- button-icon-only ------------------------------*/
+    .button-icon-only {
         @apply rounded-full p-2 shadow-neu-light-md dark:bg-none dark:shadow-neu-dark-md;
     }
 
-    .neu-icon-only-square-btn {
+    .button-icon-only-square {
         @apply rounded-lg p-2 shadow-neu-light-md;
 
         /* dark mode    */
         @apply dark:bg-none dark:shadow-neu-dark-md;
     }
 
-    /*-- -------------------------------- neu-btn Sizes -------------------------------- */
-    .neu-btn-sm {
+    /*-- -------------------------------- button Sizes -------------------------------- */
+    .button-sm {
         @apply px-2 py-1 text-xs;
     }
 
-    .neu-btn-lg {
+    .button-lg {
         @apply px-4 py-3 text-base;
     }
 
-    .neu-btn-xl {
+    .button-xl {
         @apply px-5 py-4 text-lg;
     }
 
@@ -411,52 +411,52 @@
     }
 
     /* Side navigation animations */
-    .animation-sideNav {
+    .side-nav-animation {
         @apply -translate-x-full -translate-y-full scale-0 opacity-0;
     }
 
-    .animation-sideNav[open] {
+    .side-nav-animation[open] {
         @apply translate-x-0 translate-y-0 scale-100 opacity-100;
     }
 
-    .animation-sideNav::backdrop {
+    .side-nav-animation::backdrop {
         @apply -translate-x-full opacity-65;
     }
 
-    .animation-sideNav[open]::backdrop {
+    .side-nav-animation[open]::backdrop {
         @apply translate-x-0;
     }
 
     /* Modal animations */
-    .animation-modal {
+    .modal-animation {
         @apply m-auto hidden scale-0 opacity-0 ease-in-out;
     }
 
-    .animation-modal::backdrop {
+    .modal-animation::backdrop {
         @apply scale-x-100 scale-y-0 opacity-65 ease-in-out;
     }
 
     /* Visible state for modal */
-    .animation-modal[open] {
+    .modal-animation[open] {
         @apply block scale-100 opacity-100 delay-300;
     }
 
-    .animation-modal[open]::backdrop {
+    .modal-animation[open]::backdrop {
         @apply scale-x-100 scale-y-100;
     }
 
     /* Initial styles for smooth entry transition */
     @starting-style {
-        .animation-modal[open] {
+        .modal-animation[open] {
             @apply scale-0 opacity-0;
         }
-        .animation-modal[open]::backdrop {
+        .modal-animation[open]::backdrop {
             @apply scale-x-100 scale-y-0;
         }
-        .animation-sideNav[open] {
+        .side-nav-animation[open] {
             @apply -translate-x-full -translate-y-full scale-0 opacity-0;
         }
-        .animation-sideNav[open]::backdrop {
+        .side-nav-animation[open]::backdrop {
             @apply -translate-x-full opacity-0;
         }
     }
@@ -515,11 +515,11 @@
         @apply text-light-text-secondary dark:text-dark-text-secondary;
     }
 
-    .text-accent-primary {
+    .text-accent {
         @apply text-light-accent-primary dark:text-dark-accent-primary;
     }
 
-    .text-highlight-primary {
+    .text-highlight {
         @apply text-light-highlight-primary dark:text-dark-highlight-primary;
     }
 
