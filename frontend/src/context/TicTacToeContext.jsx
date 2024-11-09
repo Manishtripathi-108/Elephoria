@@ -12,6 +12,7 @@ const initialState = {
     winner: null,
     winIndexes: null,
     isDraw: false,
+    drawScore: 0,
     activeIndex: null,
     playerX: { name: 'Player 1', score: 0 },
     playerO: { name: 'Player 2', score: 0 },
@@ -68,6 +69,10 @@ const gameReducer = (state, action) => {
                     }
                 }
 
+                if (result.status === 'draw') {
+                    newState.drawScore = state.drawScore + 1
+                }
+
                 return newState
             } else {
                 const { macroIndex, cellIndex } = action.payload
@@ -120,6 +125,10 @@ const gameReducer = (state, action) => {
                     }
                 }
 
+                if (largeBoardStatus.status === 'draw') {
+                    newState.drawScore = state.drawScore + 1
+                }
+
                 return newState
             }
 
@@ -153,6 +162,7 @@ const gameReducer = (state, action) => {
             return {
                 ...initialState,
                 mode: state.mode,
+                drawScore: state.drawScore,
                 playerX: state.playerX,
                 playerO: state.playerO,
             }
@@ -174,6 +184,7 @@ const gameReducer = (state, action) => {
             return {
                 ...state,
                 isDraw: true,
+                drawScore: state.drawScore + 1,
                 isGameOver: true,
             }
 

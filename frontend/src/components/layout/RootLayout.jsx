@@ -9,9 +9,14 @@ import Header from './Header'
 function RootLayout() {
     const location = useLocation()
     const { startContinuous } = useLoadingBar()
+    const [prevPath, setPrevPath] = React.useState('')
 
     useEffect(() => {
-        startContinuous(10, 500)
+        // if the location path is different from the previous one, start the loading bar
+        if (location.pathname !== prevPath) {
+            startContinuous(10, 500)
+            setPrevPath(location.pathname)
+        }
     }, [location])
 
     return (

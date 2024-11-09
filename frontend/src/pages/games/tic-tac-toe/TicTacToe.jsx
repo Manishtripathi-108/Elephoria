@@ -8,10 +8,12 @@ import ElevateButton from '../../../components/common/buttons/ElevateButton'
 import { useTicTacToeContext } from '../../../context/TicTacToeContext'
 import GameOverModal from './components/GameOverModal'
 import PlayerNameModal from './components/PlayerNameModal'
+import ScoreBoard from './components/ScoreBoard'
+import TicTacToeHeader from './components/TicTacToeHeader'
 
 const TicTacToe = () => {
     const { state, StartOver, clearBoard } = useTicTacToeContext()
-    const { isDraw, isGameOver, playerX, playerO, winner, isXNext } = state
+    const { mode, isDraw, isGameOver, playerX, playerO, winner, isXNext, drawScore } = state
 
     const openPlayerNameModal = () => {
         const modal = document.getElementById('playerNameModal')
@@ -26,26 +28,12 @@ const TicTacToe = () => {
     }
 
     return (
-        <div className="container mx-auto py-5">
+        <>
             {/* Header Section */}
-            <div className="mt-16 grid grid-cols-2 border-b border-light-secondary py-3 dark:border-dark-secondary">
-                <h1 className="text-primary flex-center font-indie-flower text-lg font-bold tracking-wider md:text-2xl">Tic Tac Toe</h1>
-                <div className="flex-center gap-3">
-                    <Link to="/games/tic-tac-toe/classic" aria-disabled>
-                        <ElevateButton>
-                            <span className="font-indie-flower text-sm font-semibold tracking-wider">Classic</span>
-                        </ElevateButton>
-                    </Link>
-                    <Link to="/games/tic-tac-toe/ultimate">
-                        <ElevateButton>
-                            <span className="font-indie-flower text-sm font-semibold tracking-wider">Ultimate</span>
-                        </ElevateButton>
-                    </Link>
-                </div>
-            </div>
+            <TicTacToeHeader title={mode} />
 
-            {/* Game Status Section */}
-            <div className="mx-2 grid place-items-center gap-5 py-5">
+            {/* Game*/}
+            <div className="container mx-auto grid place-items-center gap-5 px-2 py-5">
                 <div className="text-primary flex w-full max-w-4xl items-center justify-evenly">
                     <Icon icon="game-icons:tic-tac-toe" className="size-7" />
                     <h2 className="text-accent-primary line-clamp-1 text-center font-indie-flower text-2xl font-bold tracking-wider">
@@ -63,25 +51,7 @@ const TicTacToe = () => {
                     {isGameOver && <GameOverModal clearBoard={clearBoard} isDraw={isDraw} winner={winner} />}
                 </div>
 
-                {/* Score Board */}
-                <div className="flex w-full flex-wrap items-center justify-center gap-5 px-4 font-indie-flower tracking-wider">
-                    <div className="text-highlight-primary order-1 w-36 rounded-lg p-4 text-center shadow-neu-inset-light-sm dark:shadow-neu-inset-dark-sm sm:w-60">
-                        <h3 className="mb-2 rounded-lg p-3 font-bold shadow-neu-light-xs dark:shadow-neu-dark-xs">
-                            <span className="line-clamp-1">{playerX.name}</span> (X)
-                        </h3>
-                        <div className="text-primary rounded-lg text-2xl shadow-neu-light-xs dark:shadow-neu-dark-xs">{playerX.score}</div>
-                    </div>
-                    <div className="text-highlight-primary order-3 w-36 rounded-lg p-4 text-center shadow-neu-inset-light-sm dark:shadow-neu-inset-dark-sm sm:order-2 sm:w-60">
-                        <h3 className="mb-2 rounded-lg p-3 font-bold shadow-neu-light-xs dark:shadow-neu-dark-xs">Draws</h3>
-                        <div className="text-primary rounded-lg text-2xl shadow-neu-light-xs dark:shadow-neu-dark-xs">{playerO.score}</div>
-                    </div>
-                    <div className="text-highlight-primary order-2 w-36 rounded-lg p-4 text-center shadow-neu-inset-light-sm dark:shadow-neu-inset-dark-sm sm:order-3 sm:w-60">
-                        <h3 className="mb-2 rounded-lg p-3 font-bold shadow-neu-light-xs dark:shadow-neu-dark-xs">
-                            <span className="line-clamp-1">{playerO.name}</span> (O)
-                        </h3>
-                        <div className="text-primary rounded-lg text-2xl shadow-neu-light-xs dark:shadow-neu-dark-xs">{playerO.score}</div>
-                    </div>
-                </div>
+                <ScoreBoard playerX={playerX} playerO={playerO} drawScore={drawScore} />
 
                 {/* Action Buttons */}
                 <div className="mt-5 grid grid-cols-2 gap-4">
@@ -100,7 +70,7 @@ const TicTacToe = () => {
 
             {/* Player Name Modal */}
             <PlayerNameModal />
-        </div>
+        </>
     )
 }
 
