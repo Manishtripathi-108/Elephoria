@@ -5,18 +5,20 @@ import axios from 'axios'
 import AppName from '../../assets/svg/app-name'
 import Logo from '../../assets/svg/logo'
 import UploadInput from '../../components/common/form/upload-input'
-import Toast from '../../components/common/notifications/toast'
+import Toast from '../../components/common/notifications/Toast'
+import { useLoadingBar } from '../../context/LoadingBarContext'
 
 const AudioEditor = () => {
     const [file, setFile] = useState(null)
     const [metaData, setMetadata] = useState(null)
+    const [coverImage, setCoverImage] = useState(null)
 
-    const [fileName, setFileName] = useState('Upload File')
     const [toast, setToast] = useState(null)
+    const { completeLoading } = useLoadingBar()
 
     useEffect(() => {
-        console.log('metaData:', metaData)
-    }, [metaData])
+        completeLoading()
+    }, [])
 
     const showToast = (message, type) => {
         setToast({ message, type })
@@ -43,7 +45,9 @@ const AudioEditor = () => {
                 },
             })
 
+            // Set metadata and cover image URL
             setMetadata(response.data?.metadata?.format?.tags)
+            setCoverImage(response.data?.coverImage) // Set the full URL of the cover image
 
             showToast('File uploaded and metadata extracted successfully!', 'success')
         } catch (error) {
@@ -88,24 +92,18 @@ const AudioEditor = () => {
     }
 
     return (
-        <div className="m-6 flex-center gap-6 flex-col">
-            {/* Logo and app name */}
-            <div className="flex-center gap-2 text-primary">
-                <Logo className="w-12 h-12" />
-                <AppName className="w-24 h-12" />
-            </div>
-
+        <div className="flex-center flex-col gap-6">
             {/* Upload audio form */}
             <form
                 id="upload-audio"
                 onSubmit={handleFileUpload}
-                className="w-full max-w-2xl flex-center flex-col rounded-lg p-6 shadow-neu-light-md dark:shadow-neu-dark-md">
-                <h2 className="text-primary font-aladin tracking-wider text-2xl mb-2">Upload Audio</h2>
-                <p className="text-primary text-center mb-6">Upload an audio file to edit metadata, convert format, and more!</p>
+                className="flex-center w-full max-w-2xl flex-col rounded-lg p-6 shadow-neu-light-md dark:shadow-neu-dark-md">
+                <h2 className="text-primary mb-2 font-aladin text-2xl tracking-wider">Upload Audio</h2>
+                <p className="text-primary mb-6 text-center">Upload an audio file to edit metadata, convert format, and more!</p>
 
-                <UploadInput id="upload_audio" file={file} setFile={setFile} fileName={fileName} setFileName={setFileName} />
+                <UploadInput id="upload_audio" file={file} setFile={setFile} />
 
-                <button type="submit" title="Upload Audio" className="neu-btn flex-shrink-0" onClick={handleFileUpload}>
+                <button type="submit" title="Upload Audio" className="button flex-shrink-0" onClick={handleFileUpload}>
                     Upload Audio
                 </button>
             </form>
@@ -113,37 +111,48 @@ const AudioEditor = () => {
             {/* Edit metadata form */}
             <form
                 id="edit-metadata"
-                className="w-full max-w-2xl flex-center flex-col rounded-lg gap-6 p-6 shadow-neu-light-md dark:shadow-neu-dark-md"
+                className="flex-center w-full max-w-2xl flex-col gap-6 rounded-lg p-6 shadow-neu-light-md dark:shadow-neu-dark-md"
                 onSubmit={handleEditMetadata}>
-                <h2 className="text-primary font-aladin tracking-wider text-2xl">Edit Metadata</h2>
+                <h2 className="text-primary font-aladin text-2xl tracking-wider">Edit Metadata</h2>
 
-                {metaData && (
-                    <div className="w-full flex flex-wrap gap-5">
-                        {Object.entries(metaData).map(([key, value]) => (
-                            <div key={key} className="neu-form-group mb-4 w-fit">
-                                <label className="neu-form-label" htmlFor={key}>
-                                    {key
-                                        .split('_')
-                                        .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-                                        .join(' ')}
-                                </label>
-                                <input
-                                    className="neu-form-input"
-                                    id={key}
-                                    type="text"
-                                    placeholder={key
-                                        .split('_')
-                                        .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-                                        .join(' ')}
-                                    value={value}
-                                    onChange={(e) => setMetadata({ ...metaData, [key]: e.target.value })}
-                                />
-                            </div>
-                        ))}
+                {/* Display cover image if available */}
+                {coverImage && (
+                    <div className="size-72 overflow-hidden rounded-lg p-3 shadow-neu-inset-light-sm dark:shadow-neu-inset-dark-sm">
+                        <div className="w-full overflow-hidden rounded-md">
+                            <img src={coverImage} alt="Cover Image" className="h-full w-full object-cover" />
+                        </div>
                     </div>
                 )}
 
-                <button type="submit" className="neu-btn">
+                {metaData && (
+                    <div className="flex w-full flex-wrap gap-x-5">
+                        {Object.entries(metaData)
+                            .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
+                            .map(([key, value]) => (
+                                <div key={key} className="form-group mb-4 w-fit">
+                                    <label className="form-label" htmlFor={key}>
+                                        {key
+                                            .split('_')
+                                            .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                                            .join(' ')}
+                                    </label>
+                                    <input
+                                        className="input-text"
+                                        id={key}
+                                        type="text"
+                                        placeholder={key
+                                            .split('_')
+                                            .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                                            .join(' ')}
+                                        value={value}
+                                        onChange={(e) => setMetadata({ ...metaData, [key]: e.target.value })}
+                                    />
+                                </div>
+                            ))}
+                    </div>
+                )}
+
+                <button type="submit" className="button">
                     Edit Metadata
                 </button>
             </form>

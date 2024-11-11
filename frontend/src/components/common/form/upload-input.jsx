@@ -1,9 +1,10 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { Icon } from '@iconify/react'
 
-const UploadInput = ({ id, file, setFile, fileName, setFileName }) => {
+const UploadInput = ({ id, file, setFile }) => {
     const fileInputRef = useRef(null)
+    const [fileName, setFileName] = useState('Upload File')
 
     const handleFileChange = (e) => {
         const file = e.target.files[0]
@@ -22,20 +23,29 @@ const UploadInput = ({ id, file, setFile, fileName, setFileName }) => {
         setFile(null)
     }
 
+    useEffect(() => {
+        // Reset file input value on unmount
+        return () => {
+            if (fileInputRef.current) {
+                fileInputRef.current.value = ''
+            }
+        }
+    }, [])
+
     return (
-        <div className="size-80 mb-6 shadow-neu-light-sm dark:shadow-neu-dark-sm font-indie-flower flex flex-col items-center justify-between gap-2 bg-primary p-2.5 rounded-lg">
+        <div className="bg-primary mb-6 flex size-80 flex-col items-center justify-between gap-2 rounded-lg p-2.5 font-indie-flower shadow-neu-light-sm dark:shadow-neu-dark-sm">
             <label
                 htmlFor={id}
-                className="flex-1 w-full flex items-center justify-center flex-col rounded-lg border-2 border-dashed border-light-highlight-primary dark:border-dark-highlight-primary text-highlight-primary">
+                className="text-highlight flex w-full flex-1 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-light-highlight-primary dark:border-dark-highlight-primary">
                 <Icon icon="line-md:cloud-alt-upload-filled-loop" className="size-28" />
-                <p className="text-center text-primary tracking-wider p-1">
+                <p className="text-primary p-1 text-center tracking-wider">
                     {fileName !== 'Upload File' ? 'File Uploaded! Click on the button below to upload!' : 'Browse File to upload!'}
                 </p>
             </label>
-            <div className="flex w-full gap-2 items-center justify-center">
+            <div className="flex w-full items-center justify-center gap-2">
                 <label
                     htmlFor={id}
-                    className="bg-secondary w-full h-10 cursor-pointer flex items-center justify-end text-highlight-primary p-2 rounded-lg border-none">
+                    className="bg-secondary text-highlight flex h-10 w-full cursor-pointer items-center justify-end rounded-lg border-none p-2">
                     <Icon icon="line-md:file-plus-filled" className="size-6 cursor-pointer" />
                     <p className="flex-1 text-center tracking-wider">{fileName}</p>
                 </label>
@@ -44,7 +54,7 @@ const UploadInput = ({ id, file, setFile, fileName, setFileName }) => {
                         type="button"
                         title="Remove File"
                         onClick={handleFileRemove}
-                        className="neu-btn neu-icon-only-square-btn shadow-none flex-1">
+                        className="button button-icon-only-square flex-1 shadow-none">
                         <Icon icon="entypo:trash" className="size-5" />
                     </button>
                 )}

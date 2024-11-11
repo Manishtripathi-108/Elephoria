@@ -1,10 +1,18 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { Link } from 'react-router-dom'
 
+import { useLoadingBar } from '../context/LoadingBarContext'
+
 const NotFound = () => {
+    const { completeLoading } = useLoadingBar()
+
+    useEffect(() => {
+        completeLoading()
+    }, [])
+
     return (
-        <section className="bg-primary grid place-items-center h-dvh">
+        <section className="bg-primary grid h-dvh place-items-center">
             <div className="grid place-items-center">
                 <svg
                     className="mt-24 animate-bounce"
@@ -74,14 +82,14 @@ const NotFound = () => {
                 </svg>
 
                 <div className="mt-4 text-center tracking-widest">
-                    <span className="block text-6xl text-primary font-aladin">4 0 4</span>
-                    <span className="text-xl text-primary font-indie-flower">Sorry, We couldn't find what you are looking for!</span>
+                    <span className="text-primary block font-aladin text-6xl">4 0 4</span>
+                    <span className="text-primary font-indie-flower text-xl">Sorry, We couldn't find what you are looking for!</span>
                 </div>
 
                 <div className="inline-flex items-center rounded-md shadow-sm">
                     <button
                         type="submit"
-                        className="cursor-pointer rounded-lg border-b-4 border-[#bf2121] dark:border-[#cc573e] bg-accent-primary px-6 py-2 text-white transition-all hover:-translate-y-0.5 hover:border-b-8 hover:brightness-110 active:translate-y-1 active:border-b-2 active:brightness-90 mt-6">
+                        className="bg-accent-primary mt-6 cursor-pointer rounded-lg border-b-4 border-[#bf2121] px-6 py-2 text-white transition-all hover:-translate-y-0.5 hover:border-b-8 hover:brightness-110 active:translate-y-1 active:border-b-2 active:brightness-90 dark:border-[#cc573e]">
                         <Link to={'/'} className="font-karla text-center text-xl tracking-wide">
                             Go back
                         </Link>
