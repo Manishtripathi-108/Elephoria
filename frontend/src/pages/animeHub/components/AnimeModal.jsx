@@ -8,7 +8,7 @@ import { deleteMediaEntry, saveMediaEntry, toggleFavourite } from '../../../api/
 import { DialogModal } from '../../../components/common/PrimaryModal'
 import JelloButton from '../../../components/common/buttons/JelloButton'
 import { useAnimeHubContext } from '../../../context/AnimeHubContext'
-import { validStatus } from '../constants'
+import { validStatusOptions } from '../constants'
 
 export default function AnimeModal({ entryId, modalId, media, mediaStatus = '', mediaProgress = '0' }) {
     const bannerStyle = { backgroundImage: `url(${media?.bannerImage})` }
@@ -26,7 +26,7 @@ export default function AnimeModal({ entryId, modalId, media, mediaStatus = '', 
 
     // Form validation schema
     const validationSchema = Yup.object({
-        status: Yup.string().oneOf(validStatus).required('Status is required'),
+        status: Yup.string().oneOf(validStatusOptions).required('Status is required'),
         progress: Yup.number()
             .min(0, 'Progress must be zero or more')
             .max(maxProgress, `Progress must be less than ${maxProgress}`)
@@ -133,7 +133,7 @@ export default function AnimeModal({ entryId, modalId, media, mediaStatus = '', 
                                 </label>
                                 <Field as="select" name="status" className="dropdown-select">
                                     <option value="">Select Status</option>
-                                    {validStatus.map((option) => (
+                                    {validStatusOptions.map((option) => (
                                         <option key={option} value={option}>
                                             {option}
                                         </option>

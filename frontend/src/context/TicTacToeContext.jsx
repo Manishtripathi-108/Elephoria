@@ -203,12 +203,13 @@ export const TicTacToeProvider = ({ children }) => {
 
     const setMode = (mode) => dispatch({ type: 'SET_MODE', payload: mode })
     const setPlayerNames = (playerX, playerO) => dispatch({ type: 'SET_PLAYER_NAMES', payload: { playerX, playerO } })
-    const setActiveIndex = (index) => dispatch({ type: 'SET_ACTIVE_INDEX', payload: index })
-    const updateBoard = (updatedBoard) => dispatch({ type: 'UPDATE_BOARD', payload: updatedBoard })
-    const updateClassicBoard = (updatedBoard) => dispatch({ type: 'UPDATE_CLASSIC_BOARD', payload: updatedBoard })
     const handleMove = (macroIndex, cellIndex) => dispatch({ type: 'HANDLE_MOVE', payload: { macroIndex, cellIndex } })
     const StartOver = () => dispatch({ type: 'START_OVER' })
     const clearBoard = () => dispatch({ type: 'CLEAR_BOARD' })
+
+    const setActiveIndex = (index) => dispatch({ type: 'SET_ACTIVE_INDEX', payload: index })
+    const updateBoard = (updatedBoard) => dispatch({ type: 'UPDATE_BOARD', payload: updatedBoard })
+    const updateClassicBoard = (updatedBoard) => dispatch({ type: 'UPDATE_CLASSIC_BOARD', payload: updatedBoard })
     const declareWinner = (winner, indexes) => dispatch({ type: 'DECLARE_WINNER', payload: { winner, indexes } })
     const declareDraw = () => dispatch({ type: 'DECLARE_DRAW' })
 
@@ -218,12 +219,13 @@ export const TicTacToeProvider = ({ children }) => {
                 state,
                 setMode,
                 setPlayerNames,
-                setActiveIndex,
-                updateBoard,
-                updateClassicBoard,
                 handleMove,
                 StartOver,
                 clearBoard,
+
+                setActiveIndex,
+                updateBoard,
+                updateClassicBoard,
                 declareWinner,
                 declareDraw,
             }}>
