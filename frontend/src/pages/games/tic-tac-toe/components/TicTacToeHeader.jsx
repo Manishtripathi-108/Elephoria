@@ -19,6 +19,13 @@ const TicTacToeHeader = ({ title }) => {
                         <span className="font-indie-flower text-sm font-semibold tracking-wider">Ultimate</span>
                     </ElevateButton>
                 </Link>
+                <ElevateButton
+                    onClick={() => {
+                        const playModal = document.getElementById('play_online')
+                        if (playModal) playModal.showModal()
+                    }}>
+                    <span className="font-indie-flower text-sm font-semibold tracking-wider">Play Online</span>
+                </ElevateButton>
             </div>
         </div>
     )

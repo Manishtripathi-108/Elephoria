@@ -1,19 +1,32 @@
-import React, { createContext, useContext, useReducer } from 'react'
+import React, { createContext, useContext, useEffect, useReducer, useRef } from 'react'
+
+import { io } from 'socket.io-client'
 
 import { evaluateBoardStatus } from '../utils/TicTacToeConst'
 
 // Initial State
 const initialState = {
+    // Game mode and boards
     mode: 'classic', // 'classic' or 'ultimate'
-    isXNext: true,
     classicBoard: Array(9).fill(null),
     ultimateBoard: Array(9).fill(Array(9).fill(null)),
+
+    // Online play
+    isPlayingOnline: false,
+    playerSymbol: null,
+    roomId: null,
+    onlineName: null,
+
+    // Game state
+    isXNext: true,
     isGameOver: false,
     winner: null,
     winIndexes: null,
     isDraw: false,
     drawScore: 0,
     activeIndex: null,
+
+    // Player details
     playerX: { name: 'Player 1', score: 0 },
     playerO: { name: 'Player 2', score: 0 },
 }
@@ -132,24 +145,16 @@ const gameReducer = (state, action) => {
                 return newState
             }
 
-        case 'UPDATE_BOARD':
-            const boardKey = state.mode === 'classic' ? 'classicBoard' : 'ultimateBoard'
+        case 'IS_PLAYING_ONLINE':
             return {
                 ...state,
-                [boardKey]: action.payload,
-                isXNext: !state.isXNext,
+                isPlayingOnline: action.payload,
             }
 
-        case 'UPDATE_CLASSIC_BOARD':
+        case 'UPDATE_GAME':
             return {
                 ...state,
-                classicBoard: action.payload,
-            }
-
-        case 'SET_ACTIVE_INDEX':
-            return {
-                ...state,
-                activeIndex: action.payload,
+                ...action.payload,
             }
 
         case 'START_OVER':
@@ -162,31 +167,11 @@ const gameReducer = (state, action) => {
             return {
                 ...initialState,
                 isXNext: Math.random() < 0.5,
+                isPlayingOnline: state.isPlayingOnline,
                 mode: state.mode,
                 drawScore: state.drawScore,
                 playerX: state.playerX,
                 playerO: state.playerO,
-            }
-
-        case 'DECLARE_WINNER':
-            const winnerKey = action.payload.winner === 'X' ? 'playerX' : 'playerO'
-            return {
-                ...state,
-                isGameOver: true,
-                winner: state[winnerKey].name,
-                winIndexes: action.payload.indexes,
-                [winnerKey]: {
-                    ...state[winnerKey],
-                    score: state[winnerKey].score + 1,
-                },
-            }
-
-        case 'DECLARE_DRAW':
-            return {
-                ...state,
-                isDraw: true,
-                drawScore: state.drawScore + 1,
-                isGameOver: true,
             }
 
         default:
@@ -199,6 +184,7 @@ const TicTacToeContext = createContext()
 
 // Context Provider
 export const TicTacToeProvider = ({ children }) => {
+    const socketRef = useRef(null)
     const [state, dispatch] = useReducer(gameReducer, initialState)
 
     const setMode = (mode) => dispatch({ type: 'SET_MODE', payload: mode })
@@ -207,11 +193,88 @@ export const TicTacToeProvider = ({ children }) => {
     const StartOver = () => dispatch({ type: 'START_OVER' })
     const clearBoard = () => dispatch({ type: 'CLEAR_BOARD' })
 
-    const setActiveIndex = (index) => dispatch({ type: 'SET_ACTIVE_INDEX', payload: index })
-    const updateBoard = (updatedBoard) => dispatch({ type: 'UPDATE_BOARD', payload: updatedBoard })
-    const updateClassicBoard = (updatedBoard) => dispatch({ type: 'UPDATE_CLASSIC_BOARD', payload: updatedBoard })
-    const declareWinner = (winner, indexes) => dispatch({ type: 'DECLARE_WINNER', payload: { winner, indexes } })
-    const declareDraw = () => dispatch({ type: 'DECLARE_DRAW' })
+    const connectPlayer = () => {
+        socketRef.current = io(import.meta.env.VITE_SERVER_URL)
+
+        // Listen for connection and log the socket ID
+        socketRef.current.on('connect', () => {
+            console.log('User connected with ID:', socketRef.current.id)
+            dispatch({ type: 'IS_PLAYING_ONLINE', payload: true })
+            clearBoard()
+        })
+
+        // Receive game updates from the server
+        socketRef.current.on('updateGame', (moveData) => {
+            console.log('Game updated:', moveData)
+            dispatch({ type: 'UPDATE_GAME', payload: moveData })
+        })
+
+        // Listen for disconnection and log the socket ID
+        socketRef.current.on('disconnect', () => {
+            console.log('User disconnected')
+            dispatch({ type: 'IS_PLAYING_ONLINE', payload: false })
+            clearBoard()
+        })
+    }
+
+    const disconnectPlayer = () => {
+        if (socketRef.current) {
+            socketRef.current.disconnect()
+        }
+    }
+
+    const joinRoom = (roomId, playerName, roomName = 'default') => {
+        if (!state.isPlayingOnline) {
+            connectPlayer()
+            console.log('connect')
+        }
+
+        socketRef.current.emit('joinRoom', { roomId, playerName, roomName }, (response) => {
+            if (response.success) {
+                // dispatch({ type: 'JOIN_ROOM', payload: { symbol: response.symbol, roomId } })
+                console.log(response)
+            } else {
+                window.addToast(response.message, 'error')
+                disconnectPlayer()
+            }
+        })
+    }
+
+    const createRoom = (roomName, playerName) => {
+        if (!state.isPlayingOnline) {
+            connectPlayer()
+            console.log('connect')
+        }
+        
+        socketRef.current.emit('getRoomId', (response) => {
+            if (response.success) {
+                console.log(response)
+                joinRoom(response.roomId, playerName, roomName)
+            } else {
+                window.addToast(response.message, 'error')
+                disconnectPlayer()
+            }
+        })
+    }
+
+    const handleOnlineMove = (macroIndex, cellIndex) => {
+        handleMove(macroIndex, cellIndex)
+
+        socketRef.current.emit('move', {
+            roomId: state.roomId,
+            moveData: { macroIndex, cellIndex, isXNext: state.isXNext },
+        })
+    }
+
+    useEffect(() => {
+        // Ensure socket is cleaned up when the component unmounts
+        return () => {
+            if (socketRef.current) {
+                socketRef.current.disconnect()
+                console.log('Socket disconnected on cleanup')
+            }
+        }
+    }, [])
 
     return (
         <TicTacToeContext.Provider
@@ -222,12 +285,11 @@ export const TicTacToeProvider = ({ children }) => {
                 handleMove,
                 StartOver,
                 clearBoard,
-
-                setActiveIndex,
-                updateBoard,
-                updateClassicBoard,
-                declareWinner,
-                declareDraw,
+                connectPlayer,
+                disconnectPlayer,
+                handleOnlineMove,
+                joinRoom,
+                createRoom,
             }}>
             {children}
         </TicTacToeContext.Provider>
