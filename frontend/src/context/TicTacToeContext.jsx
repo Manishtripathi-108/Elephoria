@@ -15,7 +15,8 @@ const initialState = {
     isPlayingOnline: false,
     playerSymbol: null,
     roomId: null,
-    onlineName: null,
+    roomName: null,
+    gameStarted: false,
 
     // Game state
     isXNext: true,
@@ -39,22 +40,31 @@ const gameReducer = (state, action) => {
                 console.error('Invalid game mode:', action.payload)
                 return state
             }
-            return {
+
+            const newState = {
                 ...initialState,
                 mode: action.payload,
                 playerX: state.playerX,
                 playerO: state.playerO,
             }
 
+            if (state.isPlayingOnline) {
+                newState.isPlayingOnline = state.isPlayingOnline
+                newState.roomId = state.roomId
+                newState.roomName = state.roomName
+                newState.gameStarted = state.gameStarted
+                newState.playerSymbol = state.playerSymbol
+            }
+
+            return newState
+
         case 'SET_PLAYER_NAMES':
             return {
                 ...state,
-                playerX: { ...state.playerX, name: action.payload.playerX },
-                playerO: { ...state.playerO, name: action.payload.playerO },
+                [action.payload.player]: { ...state[action.payload.player], name: action.payload.name },
             }
 
         case 'HANDLE_MOVE':
-            // debugger
             if (state.mode === 'classic') {
                 const { macroIndex } = action.payload
                 const { classicBoard, isGameOver, isXNext } = state
@@ -147,8 +157,24 @@ const gameReducer = (state, action) => {
 
         case 'IS_PLAYING_ONLINE':
             return {
-                ...state,
+                ...initialState,
+                mode: state.mode,
                 isPlayingOnline: action.payload,
+            }
+
+        case 'JOIN_ROOM':
+            return {
+                ...state,
+                ...action.payload,
+            }
+
+        case 'START_GAME':
+            return {
+                ...state,
+                isXNext: true,
+                gameStarted: true,
+                playerX: { ...state.playerX, score: 0 },
+                playerO: { ...state.playerO, score: 0 },
             }
 
         case 'UPDATE_GAME':
@@ -167,11 +193,14 @@ const gameReducer = (state, action) => {
             return {
                 ...initialState,
                 isXNext: Math.random() < 0.5,
-                isPlayingOnline: state.isPlayingOnline,
                 mode: state.mode,
                 drawScore: state.drawScore,
                 playerX: state.playerX,
                 playerO: state.playerO,
+                isPlayingOnline: state.isPlayingOnline,
+                roomId: state.roomId,
+                roomName: state.roomName,
+                gameStarted: state.gameStarted,
             }
 
         default:
@@ -188,7 +217,8 @@ export const TicTacToeProvider = ({ children }) => {
     const [state, dispatch] = useReducer(gameReducer, initialState)
 
     const setMode = (mode) => dispatch({ type: 'SET_MODE', payload: mode })
-    const setPlayerNames = (playerX, playerO) => dispatch({ type: 'SET_PLAYER_NAMES', payload: { playerX, playerO } })
+    const startGame = () => dispatch({ type: 'START_GAME' })
+    const setPlayerNames = (player, name) => dispatch({ type: 'SET_PLAYER_NAMES', payload: { player, name } })
     const handleMove = (macroIndex, cellIndex) => dispatch({ type: 'HANDLE_MOVE', payload: { macroIndex, cellIndex } })
     const StartOver = () => dispatch({ type: 'START_OVER' })
     const clearBoard = () => dispatch({ type: 'CLEAR_BOARD' })
@@ -200,7 +230,13 @@ export const TicTacToeProvider = ({ children }) => {
         socketRef.current.on('connect', () => {
             console.log('User connected with ID:', socketRef.current.id)
             dispatch({ type: 'IS_PLAYING_ONLINE', payload: true })
-            clearBoard()
+        })
+
+        socketRef.current.on('startGame', (roomState) => {
+            const opponentId = Object.keys(roomState.players).find((playerId) => playerId !== socketRef.current.id)
+            setPlayerNames(`player${roomState.players[opponentId].symbol}`, roomState.players[opponentId].name)
+            startGame()
+            console.log('Game started:', roomState)
         })
 
         // Receive game updates from the server
@@ -213,6 +249,7 @@ export const TicTacToeProvider = ({ children }) => {
         socketRef.current.on('disconnect', () => {
             console.log('User disconnected')
             dispatch({ type: 'IS_PLAYING_ONLINE', payload: false })
+            socketRef.current = null
             clearBoard()
         })
     }
@@ -224,15 +261,21 @@ export const TicTacToeProvider = ({ children }) => {
     }
 
     const joinRoom = (roomId, playerName, roomName = 'default') => {
-        if (!state.isPlayingOnline) {
-            connectPlayer()
-            console.log('connect')
-        }
+        if (!state.isPlayingOnline) connectPlayer()
 
         socketRef.current.emit('joinRoom', { roomId, playerName, roomName }, (response) => {
             if (response.success) {
-                // dispatch({ type: 'JOIN_ROOM', payload: { symbol: response.symbol, roomId } })
-                console.log(response)
+                dispatch({
+                    type: 'JOIN_ROOM',
+                    payload: {
+                        roomId,
+                        playerSymbol: response.symbol,
+                        roomName: response.roomState.name,
+                    },
+                })
+
+                setPlayerNames(`player${response.symbol}`, response.roomState.players[socketRef.current.id].name)
+                console.log('Room joined:', response)
             } else {
                 window.addToast(response.message, 'error')
                 disconnectPlayer()
@@ -241,14 +284,11 @@ export const TicTacToeProvider = ({ children }) => {
     }
 
     const createRoom = (roomName, playerName) => {
-        if (!state.isPlayingOnline) {
-            connectPlayer()
-            console.log('connect')
-        }
-        
+        if (!state.isPlayingOnline) connectPlayer()
+
         socketRef.current.emit('getRoomId', (response) => {
             if (response.success) {
-                console.log(response)
+                console.log('Room created:', response)
                 joinRoom(response.roomId, playerName, roomName)
             } else {
                 window.addToast(response.message, 'error')
@@ -258,8 +298,6 @@ export const TicTacToeProvider = ({ children }) => {
     }
 
     const handleOnlineMove = (macroIndex, cellIndex) => {
-        handleMove(macroIndex, cellIndex)
-
         socketRef.current.emit('move', {
             roomId: state.roomId,
             moveData: { macroIndex, cellIndex, isXNext: state.isXNext },
@@ -269,10 +307,9 @@ export const TicTacToeProvider = ({ children }) => {
     useEffect(() => {
         // Ensure socket is cleaned up when the component unmounts
         return () => {
-            if (socketRef.current) {
-                socketRef.current.disconnect()
-                console.log('Socket disconnected on cleanup')
-            }
+            disconnectPlayer()
+
+            console.log('Socket disconnected on cleanup')
         }
     }, [])
 

@@ -17,7 +17,6 @@ const handleJoinRoom =
 		if (result.success) {
 			socket.join(roomId);
 			callback(result);
-			console.log("result", result);
 
 			// Notify both players to start the game if room is full
 			if (Object.keys(result.roomState.players).length === 2) {

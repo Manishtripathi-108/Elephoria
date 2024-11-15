@@ -16,6 +16,8 @@ const PlayOnlineForm = () => {
         setSubmitting(true)
         isJoinForm ? joinRoom(values.roomId, values.playerName) : createRoom(values.roomName, values.playerName)
         setSubmitting(false)
+        const modal = document.getElementById('play_online')
+        if (modal) modal.close()
     }
 
     const renderFormContent = (isJoin) => (

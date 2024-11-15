@@ -16,8 +16,7 @@ const PlayerNameModal = () => {
 
     // Validation Function
     const validateAndSetPlayerName = (player, value) => {
-        const capitalizedValue = value
-        setPlayerNames(player === 'playerX' ? capitalizedValue : playerX.name, player === 'playerO' ? capitalizedValue : playerO.name)
+        setPlayerNames(player, value)
 
         const nameRegex = /^[a-zA-Z0-9 ]+$/
 

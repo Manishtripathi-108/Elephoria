@@ -9,13 +9,18 @@ const generateRoomId = () => {
 };
 
 const joinRoom = (roomId, playerName, roomName, socketId) => {
-	const room = rooms[roomId];
+	let room = rooms[roomId];
+
 	if (!room) {
-		rooms[roomId] = room = {
+		room = {
+			roomId,
+			name: roomName,
 			players: {},
-			gameState: null,
-			name: roomName === "default" ? `Room ${roomId}` : roomName,
+			gameState: {
+				isXNext: true,
+			},
 		};
+		rooms[roomId] = room;
 	}
 
 	const existingPlayer = room.players[socketId];
@@ -28,6 +33,7 @@ const joinRoom = (roomId, playerName, roomName, socketId) => {
 
 	const playerCount = Object.keys(room.players).length;
 	const playerSymbol = playerCount === 0 ? "X" : "O";
+
 	if (playerCount < 2) {
 		room.players[socketId] = { name: playerName, symbol: playerSymbol };
 		return { success: true, symbol: playerSymbol, roomState: room };

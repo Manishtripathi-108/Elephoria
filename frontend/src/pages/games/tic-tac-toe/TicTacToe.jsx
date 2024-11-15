@@ -15,7 +15,7 @@ import TicTacToeHeader from './components/TicTacToeHeader'
 
 const TicTacToe = () => {
     const { state, StartOver, clearBoard } = useTicTacToeContext()
-    const { mode, isDraw, isGameOver, playerX, playerO, winner, isXNext, drawScore } = state
+    const { mode, isDraw, isGameOver, playerX, playerO, winner, isXNext, drawScore, isPlayingOnline, playerSymbol, roomId, roomName } = state
 
     const openPlayerNameModal = () => {
         const modal = document.getElementById('playerNameModal')
@@ -37,13 +37,15 @@ const TicTacToe = () => {
     return (
         <>
             {/* Header Section */}
-            <TicTacToeHeader title={mode} />
+            <TicTacToeHeader title={isPlayingOnline ? `Welcome, to ${roomName} ${roomId} (${mode})` : mode} playingOnline={isPlayingOnline} />
 
             {/* Game*/}
             <div className="container mx-auto grid place-items-center gap-5 px-2 py-5">
                 <div className="text-primary flex w-full max-w-4xl items-center justify-evenly">
                     <span className="text-secondary font-julee text-4xl">{isXNext ? 'X' : 'O'}</span>
-                    <h2 className="text-accent line-clamp-1 text-center font-indie-flower text-2xl font-bold tracking-wider">{renderGameStatus()}</h2>
+                    <h2 className="text-accent line-clamp-1 text-center font-indie-flower text-2xl font-bold capitalize tracking-wider">
+                        {renderGameStatus()}
+                    </h2>
                     <button title="Clear Board" className="button button-icon-only-square" onClick={handleAction}>
                         <Icon icon="game-icons:broom" className="size-7" />
                     </button>
@@ -59,41 +61,47 @@ const TicTacToe = () => {
                 <ScoreBoard playerX={playerX} playerO={playerO} drawScore={drawScore} />
 
                 {/* Action Buttons */}
-                <div className="mt-5 grid grid-cols-2 gap-4">
-                    <ElevateButton onClick={StartOver}>
-                        <Icon icon="emojione-monotone:video-game" className="size-6" />
-                        <span className="font-indie-flower text-sm font-semibold">Start Over</span>
-                    </ElevateButton>
-                    <ElevateButton onClick={openPlayerNameModal}>
-                        <Icon icon="wpf:name" className="size-5" />
-                        <span className="font-indie-flower text-sm font-semibold">
-                            Change <span className="hidden md:inline">Player</span> Name
-                        </span>
-                    </ElevateButton>
-                </div>
+                {!isPlayingOnline && (
+                    <div className="mt-5 grid grid-cols-2 gap-4">
+                        <ElevateButton onClick={StartOver}>
+                            <Icon icon="emojione-monotone:video-game" className="size-6" />
+                            <span className="font-indie-flower text-sm font-semibold">Start Over</span>
+                        </ElevateButton>
+                        <ElevateButton onClick={openPlayerNameModal}>
+                            <Icon icon="wpf:name" className="size-5" />
+                            <span className="font-indie-flower text-sm font-semibold">
+                                Change <span className="hidden md:inline">Player</span> Name
+                            </span>
+                        </ElevateButton>
+                    </div>
+                )}
             </div>
 
             {/* Player Name Modal */}
-            <PlayerNameModal />
+            {!isPlayingOnline && (
+                <>
+                    <PlayerNameModal />
 
-            <DialogModal modalId={'game_action'} maxWidthAndClasses="w-fit" closeButton={false}>
-                <div className="relative max-h-full w-full max-w-md p-8 text-center md:p-10">
-                    <Icon icon="solar:danger-triangle-bold" className="mx-auto mb-4 h-12 w-12 text-red-500" />
-                    <h3 className="text-primary mb-5 font-indie-flower text-lg font-normal tracking-wider">
-                        Are you sure you want to clear the board?
-                    </h3>
-                    <button className="button" title="No, cancel" onClick={() => document.getElementById('game_action').close()}>
-                        No, cancel
-                    </button>
-                    <button onClick={clearBoard} title="Yes, I'm sure" className="button ml-4 mt-4 text-red-500 dark:text-red-500">
-                        Yes, I'm sure
-                    </button>
-                </div>
-            </DialogModal>
+                    <DialogModal modalId={'game_action'} maxWidthAndClasses="w-fit" closeButton={false}>
+                        <div className="relative max-h-full w-full max-w-md p-8 text-center md:p-10">
+                            <Icon icon="solar:danger-triangle-bold" className="mx-auto mb-4 h-12 w-12 text-red-500" />
+                            <h3 className="text-primary mb-5 font-indie-flower text-lg font-normal tracking-wider">
+                                Are you sure you want to clear the board?
+                            </h3>
+                            <button className="button" title="No, cancel" onClick={() => document.getElementById('game_action').close()}>
+                                No, cancel
+                            </button>
+                            <button onClick={clearBoard} title="Yes, I'm sure" className="button ml-4 mt-4 text-red-500 dark:text-red-500">
+                                Yes, I'm sure
+                            </button>
+                        </div>
+                    </DialogModal>
 
-            <DialogModal modalId={'play_online'} maxWidthAndClasses="w-fit">
-                <PlayOnlineForm />
-            </DialogModal>
+                    <DialogModal modalId={'play_online'} maxWidthAndClasses="w-fit">
+                        <PlayOnlineForm />
+                    </DialogModal>
+                </>
+            )}
         </>
     )
 }

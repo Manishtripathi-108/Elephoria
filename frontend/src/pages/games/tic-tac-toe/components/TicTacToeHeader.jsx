@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom'
 
 import ElevateButton from '../../../../components/common/buttons/ElevateButton'
 
-const TicTacToeHeader = ({ title }) => {
+const TicTacToeHeader = ({ title, playingOnline }) => {
     return (
         <div className="grid grid-cols-2 border-b border-light-secondary py-3 dark:border-dark-secondary">
-            <h1 className="text-primary flex-center font-indie-flower text-lg font-bold tracking-wider md:text-2xl">{title}</h1>
+            <h1 className="text-primary flex-center text-center font-indie-flower text-lg font-bold tracking-wider md:text-2xl">{title}</h1>
             <div className="flex-center gap-3">
                 <Link to="/games/tic-tac-toe/classic" aria-disabled>
                     <ElevateButton>
@@ -19,13 +19,15 @@ const TicTacToeHeader = ({ title }) => {
                         <span className="font-indie-flower text-sm font-semibold tracking-wider">Ultimate</span>
                     </ElevateButton>
                 </Link>
-                <ElevateButton
-                    onClick={() => {
-                        const playModal = document.getElementById('play_online')
-                        if (playModal) playModal.showModal()
-                    }}>
-                    <span className="font-indie-flower text-sm font-semibold tracking-wider">Play Online</span>
-                </ElevateButton>
+                {!playingOnline && (
+                    <ElevateButton
+                        onClick={() => {
+                            const playModal = document.getElementById('play_online')
+                            if (playModal) playModal.showModal()
+                        }}>
+                        <span className="font-indie-flower text-sm font-semibold tracking-wider">Play Online</span>
+                    </ElevateButton>
+                )}
             </div>
         </div>
     )
