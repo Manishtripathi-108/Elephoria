@@ -15,7 +15,8 @@ import TicTacToeHeader from './components/TicTacToeHeader'
 
 const TicTacToe = () => {
     const { state, StartOver, clearBoard } = useTicTacToeContext()
-    const { mode, isDraw, isGameOver, playerX, playerO, winner, isXNext, drawScore, isPlayingOnline, playerSymbol, roomId, roomName } = state
+    const { mode, isDraw, isGameOver, playerX, playerO, winner, isXNext, drawScore, isPlayingOnline, playerSymbol, gameStarted, roomId, roomName } =
+        state
 
     const openPlayerNameModal = () => {
         const modal = document.getElementById('playerNameModal')
@@ -40,42 +41,55 @@ const TicTacToe = () => {
             <TicTacToeHeader title={isPlayingOnline ? `Welcome, to ${roomName} ${roomId} (${mode})` : mode} playingOnline={isPlayingOnline} />
 
             {/* Game*/}
-            <div className="container mx-auto grid place-items-center gap-5 px-2 py-5">
-                <div className="text-primary flex w-full max-w-4xl items-center justify-evenly">
-                    <span className="text-secondary font-julee text-4xl">{isXNext ? 'X' : 'O'}</span>
-                    <h2 className="text-accent line-clamp-1 text-center font-indie-flower text-2xl font-bold capitalize tracking-wider">
-                        {renderGameStatus()}
-                    </h2>
-                    <button title="Clear Board" className="button button-icon-only-square" onClick={handleAction}>
-                        <Icon icon="game-icons:broom" className="size-7" />
-                    </button>
-                </div>
-
-                {/* Game Board Placeholder */}
-                <div className="relative z-0 w-fit rounded-xl border border-light-secondary p-2 shadow-neu-light-md dark:border-dark-secondary dark:shadow-neu-dark-md">
-                    <Outlet />
-
-                    {isGameOver && <GameOverModal clearBoard={clearBoard} isDraw={isDraw} winner={winner} />}
-                </div>
-
-                <ScoreBoard playerX={playerX} playerO={playerO} drawScore={drawScore} />
-
-                {/* Action Buttons */}
-                {!isPlayingOnline && (
-                    <div className="mt-5 grid grid-cols-2 gap-4">
-                        <ElevateButton onClick={StartOver}>
-                            <Icon icon="emojione-monotone:video-game" className="size-6" />
-                            <span className="font-indie-flower text-sm font-semibold">Start Over</span>
-                        </ElevateButton>
-                        <ElevateButton onClick={openPlayerNameModal}>
-                            <Icon icon="wpf:name" className="size-5" />
-                            <span className="font-indie-flower text-sm font-semibold">
-                                Change <span className="hidden md:inline">Player</span> Name
-                            </span>
-                        </ElevateButton>
+            {isPlayingOnline && !gameStarted ? (
+                <PlayOnlineForm />
+            ) : (
+                <div className="container mx-auto grid place-items-center gap-5 px-2 py-5">
+                    <div className="text-primary flex w-full max-w-4xl items-center justify-evenly">
+                        <span className="text-secondary font-julee text-4xl">{isXNext ? 'X' : 'O'}</span>
+                        <h2 className="text-accent line-clamp-1 text-center font-indie-flower text-2xl font-bold capitalize tracking-wider">
+                            {renderGameStatus()}
+                        </h2>
+                        <button title="Clear Board" className="button button-icon-only-square" onClick={handleAction}>
+                            <Icon icon="game-icons:broom" className="size-7" />
+                        </button>
                     </div>
-                )}
-            </div>
+
+                    {/* Game Board Placeholder */}
+                    <div className="relative z-0 w-fit rounded-xl border border-light-secondary p-2 shadow-neu-light-md dark:border-dark-secondary dark:shadow-neu-dark-md">
+                        <Outlet />
+
+                        {isGameOver && <GameOverModal clearBoard={clearBoard} isDraw={isDraw} winner={winner} />}
+                    </div>
+
+                    <ScoreBoard playerX={playerX} playerO={playerO} drawScore={drawScore} />
+
+                    {/* Action Buttons */}
+                    <div className="mt-5 grid grid-cols-2 gap-4">
+                        {!isPlayingOnline ? (
+                            <>
+                                <ElevateButton onClick={StartOver}>
+                                    <Icon icon="emojione-monotone:video-game" className="size-6" />
+                                    <span className="font-indie-flower text-sm font-semibold">Start Over</span>
+                                </ElevateButton>
+                                <ElevateButton onClick={openPlayerNameModal}>
+                                    <Icon icon="wpf:name" className="size-5" />
+                                    <span className="font-indie-flower text-sm font-semibold">
+                                        Change <span className="hidden md:inline">Player</span> Name
+                                    </span>
+                                </ElevateButton>
+                            </>
+                        ) : (
+                            <ElevateButton onClick={openPlayerNameModal} className="col-span-2">
+                                <Icon icon="majesticons:logout" className="size-5" />
+                                <span className="font-indie-flower text-sm font-semibold">
+                                    Leave <span className="hidden md:inline">Room</span>
+                                </span>
+                            </ElevateButton>
+                        )}
+                    </div>
+                </div>
+            )}
 
             {/* Player Name Modal */}
             {!isPlayingOnline && (
