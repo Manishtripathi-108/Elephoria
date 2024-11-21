@@ -8,6 +8,7 @@ import { deleteMediaEntry, saveMediaEntry, toggleFavourite } from '../../../api/
 import { DialogModal } from '../../../components/common/PrimaryModal'
 import JelloButton from '../../../components/common/buttons/JelloButton'
 import { useAnimeHubContext } from '../../../context/AnimeHubContext'
+import { iconMap } from '../../../utils/globalConstants'
 import { validStatusOptions } from '../constants'
 
 export default function AnimeModal({ entryId, modalId, media, mediaStatus = '', mediaProgress = '0' }) {
@@ -119,7 +120,7 @@ export default function AnimeModal({ entryId, modalId, media, mediaStatus = '', 
                 className={`button button-icon-only absolute right-8 top-2/4 ${isLiked ? 'active' : ''}`}
                 onClick={toggleLike}
                 disabled={isToggling}>
-                <Icon icon="icomoon-free:heart" className={`size-5 ${isLiked ? 'text-[#ff4545]' : ''}`} />
+                <Icon icon={iconMap.heart} className={`size-5 ${isLiked ? 'text-[#ff4545]' : ''}`} />
             </button>
 
             <Formik initialValues={{ status: mediaStatus, progress: mediaProgress }} validationSchema={validationSchema} onSubmit={handleSave}>
@@ -154,10 +155,10 @@ export default function AnimeModal({ entryId, modalId, media, mediaStatus = '', 
                         {/* Action buttons */}
                         <div className="mt-8 flex justify-end space-x-2">
                             <JelloButton title="Delete" variant="danger" type="button" onClick={deleteEntry} disabled={isToggling}>
-                                {isToggling ? <Icon icon="line-md:loading-loop" className="mx-2 size-5" /> : 'Delete'}
+                                {isToggling ? <Icon icon={iconMap.loading} className="mx-2 size-5" /> : 'Delete'}
                             </JelloButton>
                             <JelloButton title="Save" variant="info" type="submit" disabled={isSubmitting}>
-                                {isSubmitting ? <Icon icon="line-md:loading-loop" className="mx-2 size-5" /> : 'Save'}
+                                {isSubmitting ? <Icon icon={iconMap.loading} className="mx-2 size-5" /> : 'Save'}
                             </JelloButton>
                         </div>
                     </Form>

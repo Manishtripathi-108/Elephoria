@@ -6,6 +6,7 @@ import { Icon } from '@iconify/react'
 
 import warriorImage from '../../assets/images/landscape/man-warrior.png'
 import avatarImage from '../../assets/images/square/logo.png'
+import { iconMap } from '../../utils/globalConstants'
 
 const menuItems = [
     {
@@ -44,7 +45,7 @@ const Sidenav = ({ onDismiss }) => {
                     className="text-secondary hover:text-primary bg-secondary dark:bg-secondary-dark absolute right-2 top-2 rounded-full border border-light-primary p-1 dark:border-dark-primary"
                     title="Close navigation"
                     onClick={onDismiss}>
-                    <Icon icon="iconamoon:close" className="size-6" />
+                    <Icon icon={iconMap.close} className="size-6" />
                 </button>
 
                 <h2 id="sidenav-heading" className="sr-only">

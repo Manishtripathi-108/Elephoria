@@ -5,6 +5,7 @@ import { Icon } from '@iconify/react'
 import NoContentCard from '../../components/common/NoContentCard'
 import { useAnimeHubContext } from '../../context/AnimeHubContext'
 import { useLoadingBar } from '../../context/LoadingBarContext'
+import { iconMap } from '../../utils/globalConstants'
 import ImportMedia from './ImportMedia'
 import CardView from './components/CardView'
 import FilterPanel from './components/FilterPanel'
@@ -55,14 +56,14 @@ function AnimeHub() {
                             aria-pressed={viewMode === 'list'}
                             aria-label="List View"
                             onClick={() => setViewMode('list')}>
-                            <Icon icon="tabler:list" className="size-4" />
+                            <Icon icon={iconMap.list} className="size-4" />
                         </button>
                         <button
                             className={`text-primary button ${viewMode === 'card' ? 'active' : ''} rounded-lg rounded-s-none p-2 shadow-none dark:shadow-none`}
                             aria-pressed={viewMode === 'card'}
                             aria-label="Card View"
                             onClick={() => setViewMode('card')}>
-                            <Icon icon="material-symbols:cards-outline-rounded" className="size-4" />
+                            <Icon icon={iconMap.card} className="size-4" />
                         </button>
                     </div>
 

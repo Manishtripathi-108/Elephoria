@@ -6,6 +6,7 @@ import { Icon } from '@iconify/react'
 import { signInWithPopup } from 'firebase/auth'
 
 import { auth, provider } from '../../firebase'
+import { iconMap } from '../../utils/globalConstants'
 
 const GoogleLogin = () => {
     const navigate = useNavigate()
@@ -21,7 +22,7 @@ const GoogleLogin = () => {
 
     return (
         <div>
-            <Icon icon="logos:google-icon" className="size-7 cursor-pointer" onClick={handleGoogleLogin} />
+            <Icon icon={iconMap.google} className="size-7 cursor-pointer" onClick={handleGoogleLogin} />
         </div>
     )
 }

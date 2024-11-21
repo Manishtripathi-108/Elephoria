@@ -2,6 +2,8 @@ import React from 'react'
 
 import { Icon } from '@iconify/react'
 
+import { iconMap } from '../../../utils/globalConstants'
+
 const Progress = ({ percentage, timeLeft }) => {
     return (
         <div
@@ -12,7 +14,7 @@ const Progress = ({ percentage, timeLeft }) => {
             <div className="flex gap-x-3 p-4">
                 <div className="shrink-0">
                     <span className="m-1 inline-flex size-8 items-center justify-center rounded-full bg-gray-100 text-gray-800 dark:bg-neutral-700 dark:text-neutral-200">
-                        <Icon icon="line-md:cloud-alt-upload-filled-loop" className="size-5" />
+                        <Icon icon={iconMap.upload} className="size-5" />
                     </span>
 
                     <button
@@ -20,7 +22,7 @@ const Progress = ({ percentage, timeLeft }) => {
                         className="absolute right-3 top-3 inline-flex size-5 shrink-0 items-center justify-center rounded-lg text-gray-800 opacity-50 hover:opacity-100 focus:opacity-100 focus:outline-none dark:text-white"
                         aria-label="Close">
                         <span className="sr-only">Close</span>
-                        <Icon icon="line-md:close-small" className="size-5" />
+                        <Icon icon={iconMap.closeAnimated} className="size-5" />
                     </button>
                 </div>
 

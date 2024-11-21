@@ -3,6 +3,7 @@ import React, { useEffect } from 'react'
 import { Icon } from '@iconify/react'
 
 import useThemeMode from '../../../hooks/useThemeMode'
+import { iconMap } from '../../../utils/globalConstants'
 
 const ThemeToggleBtn = () => {
     const { theme, handleThemeChange } = useThemeMode()
@@ -19,7 +20,7 @@ const ThemeToggleBtn = () => {
                 data-state={theme === 'dark' ? 'active' : ''}
                 role="button"
                 type="button">
-                <Icon icon="meteocons:clear-night-fill" className="size-6" />
+                <Icon icon={iconMap.moon} className="size-6" />
             </button>
             <button
                 className={`${buttonClass}`}
@@ -28,7 +29,7 @@ const ThemeToggleBtn = () => {
                 data-state={theme === 'system' ? 'active' : ''}
                 role="button"
                 type="button">
-                <Icon icon="noto:desktop-computer" className="size-4" />
+                <Icon icon={iconMap.desktop} className="size-4" />
             </button>
             <button
                 className={`${buttonClass}`}
@@ -37,7 +38,7 @@ const ThemeToggleBtn = () => {
                 data-state={theme === 'light' ? 'active' : ''}
                 role="button"
                 type="button">
-                <Icon icon="meteocons:clear-day-fill" className="size-6" />
+                <Icon icon={iconMap.sun} className="size-6" />
             </button>
         </div>
     )

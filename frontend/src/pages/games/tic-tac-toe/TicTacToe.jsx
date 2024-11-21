@@ -7,6 +7,7 @@ import { Icon } from '@iconify/react'
 import { DialogModal } from '../../../components/common/PrimaryModal'
 import ElevateButton from '../../../components/common/buttons/ElevateButton'
 import { useTicTacToeContext } from '../../../context/TicTacToeContext'
+import { iconMap } from '../../../utils/globalConstants'
 import GameOverModal from './components/GameOverModal'
 import PlayOnlineForm from './components/PlayOnlineForm'
 import PlayerNameModal from './components/PlayerNameModal'
@@ -51,7 +52,7 @@ const TicTacToe = () => {
                             {renderGameStatus()}
                         </h2>
                         <button title="Clear Board" className="button button-icon-only-square" onClick={handleAction}>
-                            <Icon icon="game-icons:broom" className="size-7" />
+                            <Icon icon={iconMap.broom} className="size-7" />
                         </button>
                     </div>
 
@@ -69,11 +70,11 @@ const TicTacToe = () => {
                         {!isPlayingOnline ? (
                             <>
                                 <ElevateButton onClick={StartOver}>
-                                    <Icon icon="emojione-monotone:video-game" className="size-6" />
+                                    <Icon icon={iconMap.gamePad} className="size-6" />
                                     <span className="font-indie-flower text-sm font-semibold">Start Over</span>
                                 </ElevateButton>
                                 <ElevateButton onClick={openPlayerNameModal}>
-                                    <Icon icon="wpf:name" className="size-5" />
+                                    <Icon icon={iconMap.player} className="size-5" />
                                     <span className="font-indie-flower text-sm font-semibold">
                                         Change <span className="hidden md:inline">Player</span> Name
                                     </span>
@@ -81,7 +82,7 @@ const TicTacToe = () => {
                             </>
                         ) : (
                             <ElevateButton onClick={openPlayerNameModal} className="col-span-2">
-                                <Icon icon="majesticons:logout" className="size-5" />
+                                <Icon icon={iconMap.logOut} className="size-5" />
                                 <span className="font-indie-flower text-sm font-semibold">
                                     Leave <span className="hidden md:inline">Room</span>
                                 </span>
@@ -98,7 +99,7 @@ const TicTacToe = () => {
 
                     <DialogModal modalId={'game_action'} maxWidthAndClasses="w-fit" closeButton={false}>
                         <div className="relative max-h-full w-full max-w-md p-8 text-center md:p-10">
-                            <Icon icon="solar:danger-triangle-bold" className="mx-auto mb-4 h-12 w-12 text-red-500" />
+                            <Icon icon={iconMap.error} className="error mx-auto mb-4 size-12" />
                             <h3 className="text-primary mb-5 font-indie-flower text-lg font-normal tracking-wider">
                                 Are you sure you want to clear the board?
                             </h3>

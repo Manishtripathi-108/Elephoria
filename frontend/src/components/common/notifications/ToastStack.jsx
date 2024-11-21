@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 
+import { AnimatePresence } from 'motion/react'
+
 import Toast from './Toast'
 
 const ToastStack = () => {
@@ -7,7 +9,8 @@ const ToastStack = () => {
 
     // Function to add a new toast
     const addToast = useCallback((message, type = 'success', duration = 3000) => {
-        const id = Date.now() // Generate unique ID for each toast
+        // Generate a unique ID for the toast
+        const id = self.crypto.randomUUID() || Math.random().toString(36).substring(2, 9)
         setToasts((prevToasts) => [...prevToasts, { id, message, type, duration }])
     }, [])
 
@@ -22,16 +25,12 @@ const ToastStack = () => {
     }, [addToast])
 
     return (
-        <div className="fixed bottom-5 right-5 z-50 space-y-2">
-            {toasts.map(({ id, message, type, duration }) => (
-                <Toast
-                    key={id}
-                    message={message}
-                    type={type}
-                    duration={duration}
-                    onDismiss={() => removeToast(id)} // Pass the remove function to Toast
-                />
-            ))}
+        <div className="fixed bottom-5 right-5 z-50 flex flex-col justify-end gap-y-2">
+            <AnimatePresence>
+                {toasts.map(({ id, message, type, duration }) => (
+                    <Toast key={id} message={message} duration={duration} type={type} onDismiss={() => removeToast(id)} />
+                ))}
+            </AnimatePresence>
         </div>
     )
 }

@@ -3,6 +3,7 @@ import React, { memo, useState } from 'react'
 import { Icon } from '@iconify/react'
 
 import { DialogTrigger } from '../../../components/common/PrimaryModal'
+import { iconMap } from '../../../utils/globalConstants'
 import { convertMonthNumberToName } from '../constants'
 import AnimeModal from './AnimeModal'
 
@@ -53,7 +54,7 @@ function MediaCard({ mediaItem, isFavouriteList = false }) {
                 popovertarget={`description-popover-${media.id}`}
                 popovertargetaction="toggle"
                 aria-label="Show Description">
-                <Icon icon="carbon:information" className="text-primary size-5" />
+                <Icon icon={iconMap.infoOutlined} className="text-primary size-5" />
             </button>
 
             {/* Description Popover */}
@@ -101,7 +102,7 @@ function MediaCard({ mediaItem, isFavouriteList = false }) {
                     <DialogTrigger
                         modalId={`modal_${media.id}`}
                         className="bg-secondary text-secondary absolute right-1 top-1 flex items-center justify-center rounded-lg p-0.5">
-                        <Icon icon="pepicons-pop:dots-y" className="size-6" />
+                        <Icon icon={iconMap.moreDots} className="size-6" />
                     </DialogTrigger>
 
                     <AnimeModal

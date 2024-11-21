@@ -2,6 +2,8 @@ import React from 'react'
 
 import { Icon } from '@iconify/react'
 
+import { iconMap } from '../../../../utils/globalConstants'
+
 const GameOverModal = ({ clearBoard, isDraw, winner = '' }) => {
     const handleKeyDown = (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -23,7 +25,7 @@ const GameOverModal = ({ clearBoard, isDraw, winner = '' }) => {
 
             <span className="text-accent z-20 px-4 text-center text-4xl font-bold md:text-5xl">{isDraw ? "It's a draw!" : `${winner} wins!`}</span>
 
-            <Icon icon="grommet-icons:power-reset" className="z-20 size-1/6 shrink-0" />
+            <Icon icon={iconMap.refresh} className="z-20 size-1/6 shrink-0" />
             <span className="z-20 text-2xl">Play Again</span>
         </div>
     )

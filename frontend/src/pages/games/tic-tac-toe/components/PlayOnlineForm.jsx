@@ -5,6 +5,7 @@ import { ErrorMessage, Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
 import { useTicTacToeContext } from '../../../../context/TicTacToeContext'
+import { iconMap } from '../../../../utils/globalConstants'
 
 const PlayOnlineForm = () => {
     const [isJoinForm, setIsJoinForm] = useState(true)
@@ -75,7 +76,7 @@ const PlayOnlineForm = () => {
 
     return (
         <div className="relative max-h-full w-full max-w-md p-8 md:p-10">
-            <Icon icon="arcticons:gameturbo" className="mx-auto mb-4 h-12 w-12 text-red-500" />
+            <Icon icon={iconMap.gamePadTurbo} className="mx-auto mb-4 h-12 w-12 text-red-500" />
             <h2 className="text-highlight mb-3 text-center font-aladin text-4xl font-bold tracking-widest">Play Online</h2>
             <h3 className="text-primary mb-5 text-center font-indie-flower font-normal tracking-wider">
                 Join a room or create a new one to start playing

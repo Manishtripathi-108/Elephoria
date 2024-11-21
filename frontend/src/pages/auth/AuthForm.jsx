@@ -4,6 +4,7 @@ import { Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
 import IconInput from '../../components/common/form/icon-input'
+import { iconMap } from '../../utils/globalConstants'
 import GoogleLogin from './GoogleLogin'
 
 const validationSchema = Yup.object({
@@ -78,7 +79,7 @@ function AuthComponent() {
                                             groupClass="my-3 w-3/4"
                                             type="text"
                                             placeholder="Enter your full name"
-                                            icon="line-md:person-filled"
+                                            icon={iconMap.person}
                                             {...field}
                                             error={form.errors.name && form.touched.name ? form.errors.name : ''}
                                         />
