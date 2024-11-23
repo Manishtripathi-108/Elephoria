@@ -83,7 +83,7 @@ const NotFound = () => {
 
                 <div className="mt-4 text-center tracking-widest">
                     <span className="text-primary block font-aladin text-6xl">4 0 4</span>
-                    <span className="text-primary font-indie-flower text-xl">Sorry, We couldn't find what you are looking for!</span>
+                    <span className="text-primary text-xl">Sorry, We couldn't find what you are looking for!</span>
                 </div>
 
                 <div className="inline-flex items-center rounded-md shadow-sm">

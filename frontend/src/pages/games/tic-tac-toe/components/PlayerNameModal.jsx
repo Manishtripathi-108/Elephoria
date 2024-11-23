@@ -59,11 +59,11 @@ const PlayerNameModal = () => {
     return (
         <DialogModal modalId="playerNameModal" closeButton={false} maxWidthAndClasses="w-full max-w-96">
             <div className="bg-primary grid gap-5 p-5">
-                <h2 className="text-primary text-center font-indie-flower text-xl font-bold">Set Player Names</h2>
+                <h2 className="text-primary text-center text-xl font-bold">Set Player Names</h2>
 
                 {/* Error Message */}
                 {validationError && (
-                    <div className="flex gap-2 rounded-xl pl-2 font-indie-flower tracking-wider">
+                    <div className="flex gap-2 rounded-xl pl-2 tracking-wider">
                         <Icon icon={iconMap.error} className="error size-5 shrink-0" />
                         <span className="error text-sm">{validationError}</span>
                     </div>
@@ -109,7 +109,7 @@ const PlayerNameModal = () => {
 
                 {/* Close Button */}
                 <ElevateButton title="Close" id="closePlayerModalBtn" onClick={closePlayerModal}>
-                    <span className="font-indie-flower text-sm font-semibold">Close</span>
+                    <span className="text-sm font-semibold">Close</span>
                 </ElevateButton>
             </div>
         </DialogModal>

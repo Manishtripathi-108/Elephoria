@@ -36,7 +36,7 @@ const Toast = ({ message, duration = 3000, type = 'success', onDismiss }) => {
             </svg>
 
             <Icon icon={iconMap[type]} className="size-7 shrink-0" />
-            <p className="m-0 line-clamp-3 cursor-default select-none font-indie-flower text-sm tracking-wider">{message}</p>
+            <p className="m-0 line-clamp-3 cursor-default select-none   text-sm tracking-wider">{message}</p>
 
             <Icon icon={iconMap.close} className="size-6 shrink-0 cursor-pointer text-gray-500" onClick={onDismiss} />
         </motion.div>

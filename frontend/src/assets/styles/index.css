@@ -8,6 +8,10 @@
     padding: 0;
     box-sizing: border-box;
 }
+body {
+    font-family: 'Indie Flower', cursive;
+    letter-spacing: 0.05em;
+}
 
 /* Reset styles */
 .reset {

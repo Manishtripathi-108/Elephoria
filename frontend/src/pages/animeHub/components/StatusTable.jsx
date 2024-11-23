@@ -36,13 +36,13 @@ const StatusTable = ({ data, title, failed = false }) => {
                 <div className="relative">
                     <div className="scrollbar-thin h-80 overflow-y-scroll">
                         <table className="w-full table-auto">
-                            <thead className="text-secondary text-left font-indie-flower tracking-wide">
+                            <thead className="text-secondary text-left tracking-wide">
                                 <tr>
                                     <th className="bg-secondary sticky top-0 z-10 px-5 py-2 first:rounded-l-lg last:rounded-r-lg">Item</th>
                                     <th className="bg-secondary sticky top-0 z-10 px-5 py-2 first:rounded-l-lg last:rounded-r-lg">Status</th>
                                 </tr>
                             </thead>
-                            <tbody className="text-primary font-indie-flower text-sm tracking-wide">
+                            <tbody className="text-primary text-sm tracking-wide">
                                 {displayData.map((item, index) => (
                                     <tr
                                         key={index}

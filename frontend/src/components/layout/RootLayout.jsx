@@ -4,7 +4,7 @@ import { Outlet, useLocation } from 'react-router-dom'
 
 import { useLoadingBar } from '../../context/LoadingBarContext'
 import ToastStack from '../common/notifications/ToastStack'
-import Header from './Header_2'
+import Header from './Header'
 
 function RootLayout() {
     const location = useLocation()

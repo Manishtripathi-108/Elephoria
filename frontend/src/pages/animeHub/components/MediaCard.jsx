@@ -28,7 +28,7 @@ function MediaCard({ mediaItem, isFavouriteList = false }) {
                     {media?.title?.english || media?.title?.native || media?.title?.romaji || 'Unknown Title'}
                 </h2>
                 {!isFavouriteList && (
-                    <span className="text-secondary shrink-0 font-indie-flower text-xs tracking-wider">
+                    <span className="text-secondary shrink-0 text-xs tracking-wider">
                         {media?.format || 'Unknown Format'}
                         {media?.type === 'ANIME' ? (
                             media?.format === 'MOVIE' ? (
@@ -69,12 +69,12 @@ function MediaCard({ mediaItem, isFavouriteList = false }) {
                 </div>
 
                 {/* Description Section */}
-                <p className="text-secondary mb-3 line-clamp-5 font-indie-flower text-sm" aria-live="polite">
+                <p className="text-secondary mb-3 line-clamp-5 text-sm" aria-live="polite">
                     {media?.description || 'No description available.'}
                 </p>
 
                 {/* Additional Info */}
-                <div className="text-secondary mb-4 space-y-1 font-indie-flower text-xs">
+                <div className="text-secondary mb-4 space-y-1 text-xs">
                     <p>
                         <strong className="text-primary">Japanese: </strong> {media?.title?.native || 'N/A'}
                     </p>

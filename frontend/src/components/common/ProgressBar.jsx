@@ -24,7 +24,7 @@ const ProgressBar = ({ total, current, percentage = '', name = '' }) => {
             </span>
 
             {/* Name/Label Display */}
-            {name && <p className="text-primary h-10 text-center font-indie-flower font-medium capitalize tracking-wide">{name}</p>}
+            {name && <p className="text-primary h-10 text-center font-medium capitalize tracking-wide">{name}</p>}
         </div>
     )
 }

@@ -112,8 +112,6 @@ export default {
                     'linear-gradient(to left, rgba(220,38,38,1) 0%, rgba(239,68,68,1) 10%, rgba(239,68,68,1) 90%, rgba(220,38,38,1) 100%)',
                 'shimmer-ray-accent': 'radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,99,71,1) 100%)',
                 'shimmer-ray-highlight': 'radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(30,144,255,1) 100%)',
-                'linear-dark': 'linear-gradient(145deg, #1f2937, #2e3b4d)',
-                'linear-light': 'linear-gradient(145deg, #ffc3c6, #e6a4a7)',
             },
             colors: {
                 // Light Mode Colors
