@@ -6,7 +6,7 @@ import AppName from '../../assets/svg/app-name'
 import Logo from '../../assets/svg/logo'
 import NeuToggleButton from '../common/buttons/NeuToggleButton'
 import ThemeToggleBtn from '../common/buttons/ThemeToggleBtn'
-import Sidenav from './Sidenav_2'
+import Sidenav from './Sidenav'
 
 const Header = () => {
     const [isSidenavOpen, setIsSidenavOpen] = useState(false)
