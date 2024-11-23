@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useReducer, useRef } from 
 
 import { io } from 'socket.io-client'
 
-import { evaluateBoardStatus } from '../utils/TicTacToeConst'
+import { evaluateBoardStatus } from '../pages/games/tic-tac-toe/constants'
 
 // Initial State
 const initialState = {

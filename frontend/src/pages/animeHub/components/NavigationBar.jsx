@@ -77,7 +77,7 @@ function NavigationBar() {
                     type="button"
                     title="Log Out"
                     onClick={() => handleLogOut()}
-                    className="button button-with-icon error gap-1 text-nowrap px-2 py-2 md:gap-2 md:px-4 md:py-2 md:text-base">
+                    className="button button-with-icon gap-1 text-nowrap px-2 py-2 text-red-500 dark:text-red-500 md:gap-2 md:px-4 md:py-2 md:text-base">
                     <Icon icon={iconMap.logOut} className="size-4 shrink-0 md:size-5" />
                     Log Out
                 </button>

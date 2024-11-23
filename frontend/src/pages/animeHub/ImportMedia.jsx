@@ -4,7 +4,7 @@ import axios from 'axios'
 
 import { fetchAniListIds, fetchUserMediaListIDs, saveMediaEntry } from '../../api/animeHubApi'
 import ProgressBar from '../../components/common/ProgressBar'
-import UploadInput from '../../components/common/form/upload-input'
+import UploadInput from '../../components/common/form/UploadInput'
 import { chunkArray, filterExistingMalIds, handleError, handleRateLimits, isValidFormat, validateAndMapMedia } from '../../utils/importAnimeUtils'
 import CorrectInvalidStatuses from './components/CorrectInvalidStatuses'
 import StatusTable from './components/statusTable'

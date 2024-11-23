@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 
 import { AnimatePresence } from 'motion/react'
 
-import Toast from './Toast'
+import Toast from './Toast_2'
 
 const ToastStack = () => {
     const [toasts, setToasts] = useState([])

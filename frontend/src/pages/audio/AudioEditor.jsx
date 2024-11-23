@@ -4,8 +4,8 @@ import axios from 'axios'
 
 import AppName from '../../assets/svg/app-name'
 import Logo from '../../assets/svg/logo'
-import UploadInput from '../../components/common/form/upload-input'
-import Toast from '../../components/common/notifications/Toast'
+import UploadInput from '../../components/common/form/UploadInput'
+import Toast from '../../components/common/notifications/Toast_2'
 import { useLoadingBar } from '../../context/LoadingBarContext'
 
 const AudioEditor = () => {

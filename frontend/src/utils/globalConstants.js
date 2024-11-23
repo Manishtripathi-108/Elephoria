@@ -16,6 +16,7 @@ export const iconMap = {
     list: 'tabler:list',
     loading: 'line-md:loading-loop',
     logOut: 'majesticons:logout',
+    moon: 'meteocons:clear-night-fill',
     moreDots: 'pepicons-pop:dots-y',
     password: 'line-md:watch-loop',
     person: 'line-md:person-filled',
