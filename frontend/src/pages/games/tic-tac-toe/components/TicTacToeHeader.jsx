@@ -6,9 +6,10 @@ import ElevateButton from '../../../../components/common/buttons/ElevateButton'
 
 const TicTacToeHeader = ({ title, playingOnline }) => {
     return (
-        <div className="grid grid-cols-4 border-b border-light-secondary py-3 dark:border-dark-secondary md:grid-cols-2">
+        <div
+            className={`grid border-b border-light-secondary py-3 dark:border-dark-secondary md:grid-cols-2 ${playingOnline ? 'grid-cols-2' : 'grid-cols-4'}`}>
             <h1 className="text-primary flex-center text-center text-lg font-bold capitalize tracking-wider md:text-2xl">{title}</h1>
-            <div className="flex-center col-span-3 flex-wrap gap-3 md:col-span-1">
+            <div className={`flex-center flex-wrap gap-3 md:col-span-1 ${playingOnline ? '' : 'col-span-3'}`}>
                 <Link to="/games/tic-tac-toe/classic" aria-disabled>
                     <ElevateButton>Classic</ElevateButton>
                 </Link>

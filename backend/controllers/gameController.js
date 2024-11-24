@@ -13,8 +13,17 @@ const getRoomId = (socket, io) => (callback) =>
 
 const handleJoinRoom =
 	(socket, io) =>
-	({ roomId, playerName, roomName }, callback) => {
-		const result = joinRoom(roomId, playerName, roomName, socket.id);
+	({ roomId, playerName, roomName, isCreateRoom }, callback) => {
+		const result = joinRoom(
+			roomId,
+			playerName,
+			roomName,
+			isCreateRoom,
+			socket.id
+		);
+
+		console.log(result);
+
 		if (result.success) {
 			socket.join(roomId);
 

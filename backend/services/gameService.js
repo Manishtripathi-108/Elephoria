@@ -8,10 +8,14 @@ const generateRoomId = () => {
 	return roomId;
 };
 
-const joinRoom = (roomId, playerName, roomName, socketId) => {
+const joinRoom = (roomId, playerName, roomName, isCreateRoom, socketId) => {
 	let room = rooms[roomId];
 
 	if (!room) {
+		if (!isCreateRoom) {
+			return { success: false, message: "Room Does Not Exist" };
+		}
+
 		room = {
 			roomId,
 			name: roomName,

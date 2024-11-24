@@ -77,7 +77,7 @@ const WaitingRoom = ({ onExit, onStart, playerO = '', playerX = '', roomId, room
                 className="rounded-lg border border-inherit p-6 shadow-neu-light-md dark:shadow-neu-dark-md">
                 <div
                     className={`flex-center mx-auto size-20 rounded-full border border-inherit p-4 text-6xl shadow-neu-inset-light-md dark:shadow-neu-inset-dark-md md:size-44 md:text-8xl ${
-                        player ? 'text-highlight' : 'animate-blob text-secondary'
+                        player ? 'text-highlight' : 'text-secondary animate-blob'
                     }`}>
                     {label}
                 </div>

@@ -165,7 +165,11 @@ const gameReducer = (state, action) => {
         case 'JOIN_ROOM':
             return {
                 ...state,
-                ...action.payload,
+                roomId: action.payload.roomId,
+                playerSymbol: action.payload.symbol,
+                roomName: action.payload.roomName,
+                [`player${action.payload.symbol}`]: { name: action.payload.playerName, score: 0 },
+                [`player${action.payload.symbol === 'X' ? 'O' : 'X'}`]: { name: action.payload.opponentName, score: 0 },
             }
 
         case 'START_GAME':
@@ -270,25 +274,23 @@ export const TicTacToeProvider = ({ children }) => {
         }
     }
 
-    const joinRoom = (roomId, playerName, roomName = 'default') => {
+    const joinRoom = (roomId, playerName, roomName = 'default', isCreateRoom = false) => {
         if (!state.isPlayingOnline) connectPlayer()
 
-        socketRef.current.emit('joinRoom', { roomId, playerName, roomName }, ({ success, symbol, roomState }) => {
+        socketRef.current.emit('joinRoom', { roomId, playerName, roomName, isCreateRoom }, ({ success, symbol, roomState, message }) => {
             if (success) {
+                const opponentId = Object.keys(roomState.players).find((playerId) => playerId !== socketRef.current.id)
+
                 dispatch({
                     type: 'JOIN_ROOM',
                     payload: {
                         roomId,
-                        playerSymbol: symbol,
+                        symbol,
                         roomName: roomState.name,
+                        playerName: roomState.players[socketRef.current.id].name,
+                        opponentName: opponentId ? roomState.players[opponentId].name : null,
                     },
                 })
-
-                setPlayerNames(`player${symbol}`, roomState.players[socketRef.current.id].name)
-                const opponentId = Object.keys(roomState.players).find((playerId) => playerId !== socketRef.current.id)
-                if (opponentId) setPlayerNames(`player${roomState.players[opponentId].symbol}`, roomState.players[opponentId].name)
-                else setPlayerNames(`player${symbol === 'X' ? 'O' : 'X'}`, '')
-                console.log('Room joined:', roomState)
             } else {
                 window.addToast(message, 'error')
                 disconnectPlayer()
@@ -299,12 +301,12 @@ export const TicTacToeProvider = ({ children }) => {
     const createRoom = (roomName, playerName) => {
         if (!state.isPlayingOnline) connectPlayer()
 
-        socketRef.current.emit('getRoomId', (response) => {
-            if (response.success) {
-                console.log('Room created:', response)
-                joinRoom(response.roomId, playerName, roomName)
+        connectPlayer()
+        socketRef.current.emit('getRoomId', ({ success, roomId, message }) => {
+            if (success) {
+                joinRoom(roomId, playerName, roomName, true)
             } else {
-                window.addToast(response.message, 'error')
+                window.addToast(message, 'error')
                 disconnectPlayer()
             }
         })
@@ -317,11 +319,10 @@ export const TicTacToeProvider = ({ children }) => {
         })
     }
 
+    // Ensure socket is cleaned up when the component unmounts
     useEffect(() => {
-        // Ensure socket is cleaned up when the component unmounts
         return () => {
             disconnectPlayer()
-
             console.log('Socket disconnected on cleanup')
         }
     }, [])
