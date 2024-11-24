@@ -6,6 +6,7 @@ const path = require("path");
 const http = require("http");
 const { Server } = require("socket.io");
 const gameRoutes = require("./routes/gameRoutes");
+const { backendLogger } = require("./utils/logger");
 
 const app = express();
 
@@ -34,9 +35,9 @@ app.use(cookieParser());
 app.use("/api", routes);
 gameRoutes(io);
 io.on("connection", (socket) => {
-	console.log("A user connected");
+	backendLogger.info("A user connected", { socketId: socket.id });
 	socket.on("disconnect", () => {
-		console.log("A user disconnected");
+		backendLogger.info("A user disconnected", { socketId: socket.id });
 	});
 });
 

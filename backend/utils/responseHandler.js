@@ -1,14 +1,14 @@
-const { logger } = require("./logger");
+const { backendLogger } = require("./logger");
 
 exports.successResponse = (res, data) =>
 	res.status(200).json({ success: true, data });
 
 exports.errorResponse = (res, message, error) => {
-	logger(message, error);
+	backendLogger.error(message, error);
 	res.status(500).json({ success: false, message, error });
 };
 exports.anilistErrorResponse = (res, message, error) => {
-	logger(message, error);
+	backendLogger.error(message, error);
 
 	const retryAfterSeconds = error.response?.headers["retry-after"];
 	const remainingRateLimit = error.response?.headers["x-ratelimit-remaining"];

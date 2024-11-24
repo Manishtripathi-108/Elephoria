@@ -3,12 +3,13 @@ import React from 'react'
 import { signOut } from 'firebase/auth'
 
 import { auth } from '../../firebase'
+import logger from '../../utils/logger'
 
 const Logout = () => {
     const handleLogout = async () => {
         try {
             await signOut(auth)
-            console.log('User signed out')
+            logger.info('User signed out')
         } catch (error) {
             console.error('Error signing out:', error)
         }
