@@ -24,6 +24,7 @@ export const iconMap = {
     refresh: 'grommet-icons:power-reset',
     search: 'line-md:search',
     settings: 'carbon:settings',
+    share: 'solar:share-bold-duotone',
     showPassword: 'line-md:watch-off-loop',
     success: 'ep:success-filled',
     sun: 'meteocons:clear-day-fill',

@@ -2,14 +2,15 @@ import React from 'react'
 
 import { cn } from '../../../utils/cn'
 
-const ElevateButton = React.forwardRef(({ children, onClick, title = '', className = '', variant = 'primary', ...props }, ref) => {
+const ElevateButton = React.forwardRef(({ children, onClick, title = '', className = '', variant = 'primary', disabled = false, ...props }, ref) => {
     return (
         <button
             type="button"
             title={title}
             onClick={onClick}
+            disabled={disabled}
             className={cn(
-                `group inline-flex items-center justify-center overflow-hidden rounded-full border bg-[linear-gradient(145deg,var(--gradient-start),var(--gradient-end))] p-1.5 shadow-neu-light-xs duration-500 hover:scale-105 dark:shadow-neu-dark-xs ${className}`,
+                `group inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full border bg-[linear-gradient(145deg,var(--gradient-start),var(--gradient-end))] p-1.5 shadow-neu-light-xs duration-500 hover:scale-105 dark:shadow-neu-dark-xs ${className}`,
                 {
                     'text-secondary border-light-secondary [--gradient-end:#e6a4a7] [--gradient-start:#ffc3c6] [--sh-end:#ffcfd3] [--sh-start:#db9d9f] dark:border-dark-secondary dark:[--gradient-end:#364253] dark:[--gradient-start:#1f2937] dark:[--sh-end:#324258] dark:[--sh-start:#0c1016]':
                         variant === 'primary',
@@ -27,7 +28,8 @@ const ElevateButton = React.forwardRef(({ children, onClick, title = '', classNa
             )}
             ref={ref}
             {...props}>
-            <div className="flex size-full shrink-0 grow-0 items-center justify-center gap-2 rounded-full bg-inherit px-2 py-1 font-medium shadow-[3px_3px_5px_var(--sh-start),-3px_-3px_5px_var(--sh-end)] transition-all group-active:shadow-none">
+            <div
+                className={`flex size-full shrink-0 grow-0 items-center justify-center gap-2 rounded-full bg-inherit px-2 py-1 font-medium shadow-[3px_3px_5px_var(--sh-start),-3px_-3px_5px_var(--sh-end)] transition-all ${disabled ? '' : 'group-active:shadow-none'}`}>
                 {children}
             </div>
         </button>

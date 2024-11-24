@@ -42,6 +42,19 @@ const joinRoom = (roomId, playerName, roomName, socketId) => {
 	return { success: false, message: "Room is full" };
 };
 
+const startGame = (roomId) => {
+	const room = rooms[roomId];
+
+	if (room && Object.keys(room.players).length === 2) {
+		return { success: true, roomState: room };
+	}
+
+	return {
+		success: false,
+		message: room ? "Players not found" : "Room does not exist",
+	};
+};
+
 const updateGameState = (roomId, moveData) => {
 	const room = rooms[roomId];
 	if (room) {
@@ -65,6 +78,7 @@ const handleDisconnect = (socketId) => {
 module.exports = {
 	generateRoomId,
 	joinRoom,
+	startGame,
 	updateGameState,
 	handleDisconnect,
 };

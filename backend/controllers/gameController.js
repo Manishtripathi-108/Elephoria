@@ -1,6 +1,7 @@
 const {
 	generateRoomId,
 	joinRoom,
+	startGame,
 	updateGameState,
 	playerDisconnect,
 } = require("../services/gameService.js");
@@ -16,15 +17,25 @@ const handleJoinRoom =
 		const result = joinRoom(roomId, playerName, roomName, socket.id);
 		if (result.success) {
 			socket.join(roomId);
-			callback(result);
 
-			// Notify both players to start the game if room is full
+			// Notify both players the game if room is full
 			if (Object.keys(result.roomState.players).length === 2) {
-				io.to(roomId).emit("startGame", result.roomState);
+				io.to(roomId).emit("roomFull", result.roomState);
 			}
-		} else {
-			callback(result);
 		}
+
+		callback(result);
+	};
+
+// handle start Game
+const handleStartGame =
+	(socket, io) =>
+	({ roomId }, callback) => {
+		const result = startGame(roomId);
+		if (result.success) {
+			io.to(roomId).emit("gameStarted", result.roomState);
+		}
+		callback(result);
 	};
 
 const handleMove =
@@ -45,4 +56,10 @@ const handleDisconnect = (socket, io) => () => {
 	// }
 };
 
-module.exports = { getRoomId, handleJoinRoom, handleMove, handleDisconnect };
+module.exports = {
+	getRoomId,
+	handleJoinRoom,
+	handleMove,
+	handleDisconnect,
+	handleStartGame,
+};

@@ -364,19 +364,16 @@ body {
 
     /*-- -------------------------------- button-with-icon -------------------------------- */
     .button-with-icon {
-        @apply flex items-center justify-center gap-2 text-sm;
+        @apply inline-flex items-center justify-center gap-2 text-sm;
     }
 
     /*-- -------------------------------- button-icon-only ------------------------------*/
     .button-icon-only {
-        @apply rounded-full p-2 shadow-neu-light-md dark:bg-none dark:shadow-neu-dark-md;
+        @apply rounded-full p-2 shadow-neu-light-md dark:shadow-neu-dark-md;
     }
 
     .button-icon-only-square {
-        @apply rounded-lg p-2 shadow-neu-light-md;
-
-        /* dark mode    */
-        @apply dark:bg-none dark:shadow-neu-dark-md;
+        @apply rounded-lg p-2 shadow-neu-light-md dark:shadow-neu-dark-md;
     }
 
     /*-- -------------------------------- button Sizes -------------------------------- */

@@ -6,18 +6,14 @@ import ElevateButton from '../../../../components/common/buttons/ElevateButton'
 
 const TicTacToeHeader = ({ title, playingOnline }) => {
     return (
-        <div className="grid grid-cols-2 border-b border-light-secondary py-3 dark:border-dark-secondary">
-            <h1 className="text-primary flex-center text-center text-lg font-bold tracking-wider md:text-2xl">{title}</h1>
-            <div className="flex-center gap-3">
+        <div className="grid grid-cols-4 border-b border-light-secondary py-3 dark:border-dark-secondary md:grid-cols-2">
+            <h1 className="text-primary flex-center text-center text-lg font-bold capitalize tracking-wider md:text-2xl">{title}</h1>
+            <div className="flex-center col-span-3 flex-wrap gap-3 md:col-span-1">
                 <Link to="/games/tic-tac-toe/classic" aria-disabled>
-                    <ElevateButton>
-                        <span className="text-sm font-semibold tracking-wider">Classic</span>
-                    </ElevateButton>
+                    <ElevateButton>Classic</ElevateButton>
                 </Link>
                 <Link to="/games/tic-tac-toe/ultimate">
-                    <ElevateButton>
-                        <span className="text-sm font-semibold tracking-wider">Ultimate</span>
-                    </ElevateButton>
+                    <ElevateButton>Ultimate</ElevateButton>
                 </Link>
                 {!playingOnline && (
                     <ElevateButton
@@ -25,7 +21,7 @@ const TicTacToeHeader = ({ title, playingOnline }) => {
                             const playModal = document.getElementById('play_online')
                             if (playModal) playModal.showModal()
                         }}>
-                        <span className="text-sm font-semibold tracking-wider">Play Online</span>
+                        Play Online
                     </ElevateButton>
                 )}
             </div>

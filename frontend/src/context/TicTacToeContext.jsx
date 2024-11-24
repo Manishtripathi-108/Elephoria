@@ -217,11 +217,17 @@ export const TicTacToeProvider = ({ children }) => {
     const [state, dispatch] = useReducer(gameReducer, initialState)
 
     const setMode = (mode) => dispatch({ type: 'SET_MODE', payload: mode })
-    const startGame = () => dispatch({ type: 'START_GAME' })
     const setPlayerNames = (player, name) => dispatch({ type: 'SET_PLAYER_NAMES', payload: { player, name } })
     const handleMove = (macroIndex, cellIndex) => dispatch({ type: 'HANDLE_MOVE', payload: { macroIndex, cellIndex } })
     const StartOver = () => dispatch({ type: 'START_OVER' })
     const clearBoard = () => dispatch({ type: 'CLEAR_BOARD' })
+    const startGame = () => (
+        console.log('id', state.roomId),
+        socketRef.current.emit('startGame', { roomId: state.roomId }, ({ success, message }) => {
+            if (success) dispatch({ type: 'START_GAME' })
+            else window.addToast(message, 'error')
+        })
+    )
 
     const connectPlayer = () => {
         socketRef.current = io(import.meta.env.VITE_SERVER_URL)
@@ -232,11 +238,15 @@ export const TicTacToeProvider = ({ children }) => {
             dispatch({ type: 'IS_PLAYING_ONLINE', payload: true })
         })
 
-        socketRef.current.on('startGame', (roomState) => {
+        socketRef.current.on('roomFull', (roomState) => {
+            console.log('Room is full:', roomState)
+
             const opponentId = Object.keys(roomState.players).find((playerId) => playerId !== socketRef.current.id)
             setPlayerNames(`player${roomState.players[opponentId].symbol}`, roomState.players[opponentId].name)
-            startGame()
-            console.log('Game started:', roomState)
+        })
+
+        socketRef.current.on('gameStarted', () => {
+            dispatch({ type: 'START_GAME' })
         })
 
         // Receive game updates from the server
@@ -263,21 +273,24 @@ export const TicTacToeProvider = ({ children }) => {
     const joinRoom = (roomId, playerName, roomName = 'default') => {
         if (!state.isPlayingOnline) connectPlayer()
 
-        socketRef.current.emit('joinRoom', { roomId, playerName, roomName }, (response) => {
-            if (response.success) {
+        socketRef.current.emit('joinRoom', { roomId, playerName, roomName }, ({ success, symbol, roomState }) => {
+            if (success) {
                 dispatch({
                     type: 'JOIN_ROOM',
                     payload: {
                         roomId,
-                        playerSymbol: response.symbol,
-                        roomName: response.roomState.name,
+                        playerSymbol: symbol,
+                        roomName: roomState.name,
                     },
                 })
 
-                setPlayerNames(`player${response.symbol}`, response.roomState.players[socketRef.current.id].name)
-                console.log('Room joined:', response)
+                setPlayerNames(`player${symbol}`, roomState.players[socketRef.current.id].name)
+                const opponentId = Object.keys(roomState.players).find((playerId) => playerId !== socketRef.current.id)
+                if (opponentId) setPlayerNames(`player${roomState.players[opponentId].symbol}`, roomState.players[opponentId].name)
+                else setPlayerNames(`player${symbol === 'X' ? 'O' : 'X'}`, '')
+                console.log('Room joined:', roomState)
             } else {
-                window.addToast(response.message, 'error')
+                window.addToast(message, 'error')
                 disconnectPlayer()
             }
         })
@@ -316,17 +329,18 @@ export const TicTacToeProvider = ({ children }) => {
     return (
         <TicTacToeContext.Provider
             value={{
-                state,
-                setMode,
-                setPlayerNames,
-                handleMove,
                 StartOver,
                 clearBoard,
                 connectPlayer,
+                createRoom,
                 disconnectPlayer,
+                handleMove,
                 handleOnlineMove,
                 joinRoom,
-                createRoom,
+                setMode,
+                setPlayerNames,
+                startGame,
+                state,
             }}>
             {children}
         </TicTacToeContext.Provider>

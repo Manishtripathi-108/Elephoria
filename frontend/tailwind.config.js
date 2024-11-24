@@ -22,6 +22,7 @@ export default {
                 'shimmer-ray': 'shimmer-ray 2.5s cubic-bezier(0, 0, 0.2, 1) infinite',
                 'push-release-from': 'push-release-from 0.3s forwards',
                 'l-zoom-out': 'l-zoom-in 0.3s forwards',
+                blob: 'blob 10s infinite cubic-bezier(0.68, -0.55, 0.27, 1.55)',
             },
             keyframes: {
                 'shimmer-ray': {
@@ -98,6 +99,24 @@ export default {
                 },
                 'l-zoom-in': {
                     from: { transform: 'scale(10)', opacity: '0' },
+                },
+
+                blob: {
+                    '0%': {
+                        borderRadius: '40% 60% 55% 45% / 50% 45% 55% 50%',
+                    },
+                    '25%': {
+                        borderRadius: '60% 40% 45% 55% / 55% 60% 40% 45%',
+                    },
+                    '50%': {
+                        borderRadius: '50% 50% 60% 40% / 45% 55% 50% 60%',
+                    },
+                    '75%': {
+                        borderRadius: '45% 55% 50% 50% / 60% 40% 55% 45%',
+                    },
+                    '100%': {
+                        borderRadius: '40% 60% 55% 45% / 50% 45% 55% 50%',
+                    },
                 },
             },
             backgroundImage: {
