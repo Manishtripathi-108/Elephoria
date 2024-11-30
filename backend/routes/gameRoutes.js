@@ -8,8 +8,6 @@ const {
 
 const gameRoutes = (io) => {
 	io.on("connection", (socket) => {
-		console.log("A user connected", socket.id);
-
 		socket.on("getRoomId", getRoomId(socket, io));
 		socket.on("joinRoom", handleJoinRoom(socket, io));
 		socket.on("startGame", handleStartGame(socket, io));

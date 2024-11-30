@@ -22,8 +22,6 @@ const handleJoinRoom =
 			socket.id
 		);
 
-		console.log(result);
-
 		if (result.success) {
 			socket.join(roomId);
 

@@ -7,7 +7,7 @@ import { AnimatePresence } from 'motion/react'
 
 import { DialogModal, DialogTrigger } from '../../../components/common/PrimaryModal'
 import ElevateButton from '../../../components/common/buttons/ElevateButton'
-import { useTicTacToeContext } from '../../../context/TicTacToeContext'
+import { useTicTacToeContext } from '../../../context/TicTacToe/TicTacToeContext'
 import { iconMap } from '../../../utils/globalConstants'
 import GameOverModal from './components/GameOverModal'
 import PlayOnlineForm from './components/PlayOnlineForm'
@@ -17,7 +17,7 @@ import TicTacToeHeader from './components/TicTacToeHeader'
 import WaitingRoom from './components/WaitingRoom'
 
 const TicTacToe = () => {
-    const { state, StartOver, startGame, clearBoard } = useTicTacToeContext()
+    const { state, startOver, startGame, clearBoard } = useTicTacToeContext()
     const { mode, isDraw, isGameOver, playerX, playerO, winner, isXNext, drawScore, isPlayingOnline, playerSymbol, gameStarted, roomId, roomName } =
         state
 
@@ -42,7 +42,7 @@ const TicTacToe = () => {
                     playerO={playerO.name}
                     playerX={playerX.name}
                     onStart={startGame}
-                    onExit={StartOver}
+                    onExit={startOver}
                 />
             ) : (
                 <>
@@ -72,7 +72,7 @@ const TicTacToe = () => {
                         <div className="mt-5 grid grid-cols-2 gap-4">
                             {!isPlayingOnline ? (
                                 <>
-                                    <ElevateButton onClick={StartOver}>
+                                    <ElevateButton onClick={startOver}>
                                         <Icon icon={iconMap.gamePad} className="size-6" />
                                         <span className="text-sm font-semibold">Start Over</span>
                                     </ElevateButton>

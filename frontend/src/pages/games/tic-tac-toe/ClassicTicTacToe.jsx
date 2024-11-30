@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 
 import { useLoadingBar } from '../../../context/LoadingBarContext'
-import { useTicTacToeContext } from '../../../context/TicTacToeContext'
+import { useTicTacToeContext } from '../../../context/TicTacToe/TicTacToeContext'
 import Square from './components/Square'
 
 const ClassicTicTacToe = () => {

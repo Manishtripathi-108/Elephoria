@@ -4,7 +4,7 @@ import { Icon } from '@iconify/react'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
-import { useTicTacToeContext } from '../../../../context/TicTacToeContext'
+import { useTicTacToeContext } from '../../../../context/TicTacToe/TicTacToeContext'
 import { iconMap } from '../../../../utils/globalConstants'
 
 const PlayOnlineForm = () => {
