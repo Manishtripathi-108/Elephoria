@@ -46,13 +46,14 @@ const updateScore = (state, winner) => {
 const resetState = (state, overrides = {}) => ({
     ...initialState,
     mode: state.mode,
+    roomId: state.roomId,
+    roomName: state.roomName,
+    playerSymbol: state.playerSymbol,
+    isPlayingOnline: state.isPlayingOnline,
+    gameStarted: state.gameStarted,
     drawScore: state.drawScore,
     playerX: state.playerX,
     playerO: state.playerO,
-    isPlayingOnline: state.isPlayingOnline,
-    roomId: state.roomId,
-    roomName: state.roomName,
-    gameStarted: state.gameStarted,
     ...overrides,
 })
 
@@ -134,33 +135,22 @@ export const TicTacToeReducer = (state, action) => {
         }
 
         case ActionTypes.IS_PLAYING_ONLINE:
-            return resetState(state, { isPlayingOnline: action.payload })
+            return resetState(initialState, { isPlayingOnline: action.payload })
 
-        case ActionTypes.JOIN_ROOM:
-            const { roomId, symbol, roomName, playerName, opponentName } = action.payload
-            return {
-                ...state,
-                roomId,
-                playerSymbol: symbol,
-                roomName,
-                [`player${symbol}`]: { name: playerName, score: 0 },
-                [`player${symbol === 'X' ? 'O' : 'X'}`]: { name: opponentName, score: 0 },
-            }
-
-        case ActionTypes.START_GAME:
-            return {
-                ...state,
-                gameStarted: true,
-                isXNext: true,
-                playerX: { ...state.playerX, score: 0 },
-                playerO: { ...state.playerO, score: 0 },
-            }
-
-        case ActionTypes.UPDATE_GAME:
+        case ActionTypes.UPDATE_STATE:
             return {
                 ...state,
                 ...action.payload,
             }
+
+        case ActionTypes.START_GAME:
+            return resetState(state, {
+                gameStarted: true,
+                mode: initialState.mode,
+                drawScore: initialState.drawScore,
+                playerX: { ...state.playerX, score: 0 },
+                playerO: { ...state.playerO, score: 0 },
+            })
 
         case ActionTypes.START_OVER:
             return {

@@ -26,7 +26,7 @@ const handleJoinRoom =
 			socket.join(roomId);
 
 			// Notify both players the game if room is full
-			if (Object.keys(result.roomState.players).length === 2) {
+			if (result.isRoomFull) {
 				io.to(roomId).emit("roomFull", result.roomState);
 			}
 		}
@@ -48,10 +48,10 @@ const handleStartGame =
 const handleMove =
 	(socket, io) =>
 	({ roomId, moveData }) => {
-		const room = updateGameState(roomId, moveData);
-		if (room) {
-			io.to(roomId).emit("updateGame", moveData);
-		}
+		// const room = updateGameState(roomId, moveData);
+		// if (room) {
+		// 	io.to(roomId).emit("updateGame", moveData);
+		// }
 	};
 
 const handleDisconnect = (socket, io) => () => {

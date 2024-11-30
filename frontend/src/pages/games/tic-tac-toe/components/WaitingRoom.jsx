@@ -129,7 +129,7 @@ const WaitingRoom = ({ onExit, onStart, playerO = '', playerX = '', roomId, room
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.5, ease: 'easeOut' }}
                 className="text-accent mb-8 text-xl font-bold capitalize">
-                {!(playerX && playerO) ? 'Waiting for another player to join...' : 'Ready to Start!'}
+                {!(playerX.id && playerO.id) ? 'Waiting for another player to join...' : 'Ready to Start!'}
             </motion.h1>
 
             {/* Players Section */}
@@ -139,7 +139,7 @@ const WaitingRoom = ({ onExit, onStart, playerO = '', playerX = '', roomId, room
                 exit={{ opacity: 0 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
                 className="flex-center w-full flex-col gap-8 md:flex-row">
-                <PlayerBlock player={playerX} label="X" />
+                <PlayerBlock player={playerX.name} label="X" />
                 <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
@@ -148,7 +148,7 @@ const WaitingRoom = ({ onExit, onStart, playerO = '', playerX = '', roomId, room
                     className="text-highlight text-3xl font-bold">
                     VS
                 </motion.div>
-                <PlayerBlock player={playerO} label="O" />
+                <PlayerBlock player={playerO.name} label="O" />
             </motion.div>
 
             {/* Buttons */}
@@ -159,7 +159,10 @@ const WaitingRoom = ({ onExit, onStart, playerO = '', playerX = '', roomId, room
                 transition={{ delay: 0.4, duration: 0.5, ease: 'easeOut' }}
                 className="flex-center mt-10 w-full gap-4"
                 title="Start Game">
-                <ElevateButton onClick={onStart} disabled={!(playerX && playerO)} className={`${!(playerX && playerO) ? 'cursor-not-allowed' : ''}`}>
+                <ElevateButton
+                    onClick={onStart}
+                    disabled={!(playerX.id && playerO.id)}
+                    className={`${!(playerX.id && playerO.id) ? 'cursor-not-allowed' : ''}`}>
                     Start Game
                 </ElevateButton>
                 <ElevateButton onClick={onExit} variant="danger" title="Exit Room">

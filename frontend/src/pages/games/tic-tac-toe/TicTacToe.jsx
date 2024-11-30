@@ -36,14 +36,7 @@ const TicTacToe = () => {
     return (
         <>
             {isPlayingOnline && !gameStarted ? (
-                <WaitingRoom
-                    roomId={roomId}
-                    roomName={roomName}
-                    playerO={playerO.name}
-                    playerX={playerX.name}
-                    onStart={startGame}
-                    onExit={startOver}
-                />
+                <WaitingRoom roomId={roomId} roomName={roomName} playerO={playerO} playerX={playerX} onStart={startGame} onExit={startOver} />
             ) : (
                 <>
                     <TicTacToeHeader title={isPlayingOnline ? `Welcome, to ${roomName} ${roomId} (${mode})` : mode} playingOnline={isPlayingOnline} />
