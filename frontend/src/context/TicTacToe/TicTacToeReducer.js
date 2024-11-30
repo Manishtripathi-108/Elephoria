@@ -91,7 +91,7 @@ export const TicTacToeReducer = (state, action) => {
                     classicBoard: updatedBoard,
                     isXNext: !isXNext,
                     isGameOver: result.status !== 'continue',
-                    winner: result.status === 'win' ? result.winner : null,
+                    winner: result.status === 'win' ? state[`player${result.winner}`].name : null,
                     winIndexes: result.status === 'win' ? result.line : null,
                     isDraw: result.status === 'draw',
                 }
@@ -121,7 +121,7 @@ export const TicTacToeReducer = (state, action) => {
                     classicBoard: updatedClassicBoard,
                     isXNext: !isXNext,
                     isGameOver: largeResult.status !== 'continue',
-                    winner: largeResult.status === 'win' ? largeResult.winner : null,
+                    winner: largeResult.status === 'win' ? state[`player${largeResult.winner}`].name : null,
                     winIndexes: largeResult.status === 'win' ? largeResult.line : null,
                     isDraw: largeResult.status === 'draw',
                     activeIndex: updatedClassicBoard[cellIndex] ? null : cellIndex,

@@ -5,13 +5,12 @@ import { useTicTacToeContext } from '../../../context/TicTacToe/TicTacToeContext
 import Square from './components/Square'
 
 const ClassicTicTacToe = () => {
-    const { state, setMode, handleMove } = useTicTacToeContext()
+    const { state, handleMove } = useTicTacToeContext()
     const { classicBoard, winIndexes } = state
     const { completeLoading } = useLoadingBar()
 
     useEffect(() => {
         completeLoading()
-        setMode('classic')
     }, [])
 
     return (
