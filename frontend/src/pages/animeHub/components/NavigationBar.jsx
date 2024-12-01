@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { Icon } from '@iconify/react'
 
 import { useAnimeHubContext } from '../../../context/AnimeHubContext'
+import { iconMap } from '../../../utils/globalConstants'
 
 function NavigationBar() {
     const { activeTab, setActiveTab } = useAnimeHubContext()
@@ -61,7 +62,7 @@ function NavigationBar() {
                     title="Favourite List"
                     onClick={() => handleTabChange('FAVOURITES')}
                     className={`button ${activeTab === 'FAVOURITES' ? 'active' : ''} button-with-icon gap-1 text-nowrap px-2 py-2 md:gap-2 md:px-4 md:py-2 md:text-base`}>
-                    <Icon icon="icomoon-free:heart" className="size-4 shrink-0 md:size-5" />
+                    <Icon icon={iconMap.heart} className="size-4 shrink-0 md:size-5" />
                     Favourites
                 </button>
                 <button
@@ -69,7 +70,7 @@ function NavigationBar() {
                     title="Favourite List"
                     onClick={() => handleTabChange('IMPORT')}
                     className={`button ${activeTab === 'IMPORT' ? 'active' : ''} button-with-icon gap-1 text-nowrap px-2 py-2 md:gap-2 md:px-4 md:py-2 md:text-base`}>
-                    <Icon icon="icomoon-free:heart" className="size-4 shrink-0 md:size-5" />
+                    <Icon icon={iconMap.upload} className="size-4 shrink-0 md:size-5" />
                     Import List
                 </button>
                 <button
@@ -77,7 +78,7 @@ function NavigationBar() {
                     title="Log Out"
                     onClick={() => handleLogOut()}
                     className="button button-with-icon gap-1 text-nowrap px-2 py-2 text-red-500 dark:text-red-500 md:gap-2 md:px-4 md:py-2 md:text-base">
-                    <Icon icon="majesticons:logout" className="size-4 shrink-0 md:size-5" />
+                    <Icon icon={iconMap.logOut} className="size-4 shrink-0 md:size-5" />
                     Log Out
                 </button>
             </div>

@@ -2,7 +2,7 @@ import React from 'react'
 
 const ScoreBoard = ({ playerX, playerO, drawScore }) => {
     return (
-        <div className="flex w-full flex-wrap items-center justify-center gap-5 px-4 font-indie-flower tracking-wider">
+        <div className="flex w-full flex-wrap items-center justify-center gap-5 px-4 tracking-wider">
             <div className="text-highlight order-1 w-36 rounded-lg p-4 text-center shadow-neu-inset-light-sm dark:shadow-neu-inset-dark-sm sm:w-60">
                 <h3 className="mb-2 rounded-lg p-3 font-bold shadow-neu-light-xs dark:shadow-neu-dark-xs">
                     <span className="line-clamp-1">{playerX.name}</span> (X)

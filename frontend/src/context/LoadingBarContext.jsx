@@ -58,7 +58,7 @@ export const LoadingBarProvider = ({ children }) => {
                 ref={loadingBarRef}
                 height={3}
                 waitingTime={300}
-                className="after:animate-shimmer-ray relative overflow-hidden rounded-e-full after:absolute after:left-[-30%] after:top-0 after:h-full after:w-0 after:bg-shimmer-ray-accent"
+                className="relative overflow-hidden rounded-e-full after:absolute after:left-[-30%] after:top-0 after:h-full after:w-0 after:animate-shimmer-ray after:bg-shimmer-ray-accent"
             />
             <LoadingBar
                 color="#1E90FF"
@@ -67,7 +67,7 @@ export const LoadingBarProvider = ({ children }) => {
                 onLoaderFinished={() => setProgress(0)}
                 height={3}
                 waitingTime={300}
-                className="after:animate-shimmer-ray relative overflow-hidden rounded-e-full after:absolute after:left-[-30%] after:top-0 after:h-full after:w-0 after:bg-shimmer-ray-highlight"
+                className="relative overflow-hidden rounded-e-full after:absolute after:left-[-30%] after:top-0 after:h-full after:w-0 after:animate-shimmer-ray after:bg-shimmer-ray-highlight"
             />
             {children}
         </LoadingBarContext.Provider>

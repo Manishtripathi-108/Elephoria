@@ -1,4 +1,5 @@
 const anilistApi = require("../config/anilistConfig");
+const { backendLogger } = require("../utils/logger");
 
 // const fetchAnimeList = async (req) => {
 // 	const response = await anilistApi.post("/", {
@@ -38,7 +39,9 @@ const renewAniListToken = async (refreshToken) => {
 		}
 	);
 
-	console.log(response);
+	backendLogger.info("Renewed AniList token", {
+		userId: response.data.user_id,
+	});
 
 	const userId = await fetchUserId(response.data.access_token);
 	response.data.user_id = userId;

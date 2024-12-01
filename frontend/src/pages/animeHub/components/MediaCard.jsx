@@ -3,6 +3,7 @@ import React, { memo, useState } from 'react'
 import { Icon } from '@iconify/react'
 
 import { DialogTrigger } from '../../../components/common/PrimaryModal'
+import { iconMap } from '../../../utils/globalConstants'
 import { convertMonthNumberToName } from '../constants'
 import AnimeModal from './AnimeModal'
 
@@ -27,7 +28,7 @@ function MediaCard({ mediaItem, isFavouriteList = false }) {
                     {media?.title?.english || media?.title?.native || media?.title?.romaji || 'Unknown Title'}
                 </h2>
                 {!isFavouriteList && (
-                    <span className="text-secondary shrink-0 font-indie-flower text-xs tracking-wider">
+                    <span className="text-secondary shrink-0 text-xs tracking-wider">
                         {media?.format || 'Unknown Format'}
                         {media?.type === 'ANIME' ? (
                             media?.format === 'MOVIE' ? (
@@ -53,7 +54,7 @@ function MediaCard({ mediaItem, isFavouriteList = false }) {
                 popovertarget={`description-popover-${media.id}`}
                 popovertargetaction="toggle"
                 aria-label="Show Description">
-                <Icon icon="carbon:information" className="text-primary size-5" />
+                <Icon icon={iconMap.infoOutlined} className="text-primary size-5" />
             </button>
 
             {/* Description Popover */}
@@ -68,12 +69,12 @@ function MediaCard({ mediaItem, isFavouriteList = false }) {
                 </div>
 
                 {/* Description Section */}
-                <p className="text-secondary mb-3 line-clamp-5 font-indie-flower text-sm" aria-live="polite">
+                <p className="text-secondary mb-3 line-clamp-5 text-sm" aria-live="polite">
                     {media?.description || 'No description available.'}
                 </p>
 
                 {/* Additional Info */}
-                <div className="text-secondary mb-4 space-y-1 font-indie-flower text-xs">
+                <div className="text-secondary mb-4 space-y-1 text-xs">
                     <p>
                         <strong className="text-primary">Japanese: </strong> {media?.title?.native || 'N/A'}
                     </p>
@@ -101,7 +102,7 @@ function MediaCard({ mediaItem, isFavouriteList = false }) {
                     <DialogTrigger
                         modalId={`modal_${media.id}`}
                         className="bg-secondary text-secondary absolute right-1 top-1 flex items-center justify-center rounded-lg p-0.5">
-                        <Icon icon="pepicons-pop:dots-y" className="size-6" />
+                        <Icon icon={iconMap.moreDots} className="size-6" />
                     </DialogTrigger>
 
                     <AnimeModal

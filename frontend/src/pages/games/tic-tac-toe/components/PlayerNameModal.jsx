@@ -4,7 +4,8 @@ import { Icon } from '@iconify/react'
 
 import { DialogModal } from '../../../../components/common/PrimaryModal'
 import ElevateButton from '../../../../components/common/buttons/ElevateButton'
-import { useTicTacToeContext } from '../../../../context/TicTacToeContext'
+import { useTicTacToeContext } from '../../../../context/TicTacToe/TicTacToeContext'
+import { iconMap } from '../../../../utils/globalConstants'
 
 const PlayerNameModal = () => {
     const [validationError, setValidationError] = useState('')
@@ -16,8 +17,7 @@ const PlayerNameModal = () => {
 
     // Validation Function
     const validateAndSetPlayerName = (player, value) => {
-        const capitalizedValue = value
-        setPlayerNames(player === 'playerX' ? capitalizedValue : playerX.name, player === 'playerO' ? capitalizedValue : playerO.name)
+        setPlayerNames(player, value)
 
         const nameRegex = /^[a-zA-Z0-9 ]+$/
 
@@ -57,13 +57,21 @@ const PlayerNameModal = () => {
     }
 
     return (
-        <DialogModal modalId="playerNameModal" closeButton={false} maxWidthAndClasses="w-full max-w-80">
+        <DialogModal modalId="playerNameModal" closeButton={false} maxWidthAndClasses="w-full max-w-96">
             <div className="bg-primary grid gap-5 p-5">
-                <h2 className="text-primary text-center font-indie-flower text-xl font-bold">Set Player Names</h2>
+                <h2 className="text-primary text-center text-xl font-bold">Set Player Names</h2>
+
+                {/* Error Message */}
+                {validationError && (
+                    <div className="flex gap-2 rounded-xl pl-2 tracking-wider">
+                        <Icon icon={iconMap.error} className="error size-5 shrink-0" />
+                        <span className="error text-sm">{validationError}</span>
+                    </div>
+                )}
 
                 {/* Player X Input */}
                 <div className="input-wrapper input-group-start">
-                    <Icon icon="mingcute:close-line" className="input-icon" />
+                    <span className="input-icon flex-center text-center font-julee text-2xl">X</span>
                     <input
                         id="playerXInput"
                         name="playerXInput"
@@ -82,7 +90,7 @@ const PlayerNameModal = () => {
 
                 {/* Player O Input */}
                 <div className="input-wrapper input-group-start">
-                    <Icon icon="tabler:circle" className="input-icon" />
+                    <span className="input-icon flex-center text-center font-julee text-2xl">O</span>
                     <input
                         id="playerOInput"
                         name="playerOInput"
@@ -101,16 +109,8 @@ const PlayerNameModal = () => {
 
                 {/* Close Button */}
                 <ElevateButton title="Close" id="closePlayerModalBtn" onClick={closePlayerModal}>
-                    <span className="font-indie-flower text-sm font-semibold">Close</span>
+                    <span className="text-sm font-semibold">Close</span>
                 </ElevateButton>
-
-                {/* Error Message */}
-                {validationError && (
-                    <div className="text-primary flex items-center gap-2 rounded-xl border border-light-secondary bg-red-500 px-3 py-2 font-indie-flower dark:border-dark-secondary">
-                        <Icon icon="meteocons:code-yellow-fill" className="size-10 shrink-0" />
-                        <span className="text-xs">{validationError}</span>
-                    </div>
-                )}
             </div>
         </DialogModal>
     )

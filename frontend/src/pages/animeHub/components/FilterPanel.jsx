@@ -3,6 +3,7 @@ import React, { useCallback, useDeferredValue, useEffect, useState } from 'react
 import { Icon } from '@iconify/react'
 
 import NeuToggleButton from '../../../components/common/buttons/NeuToggleButton'
+import { iconMap } from '../../../utils/globalConstants'
 import { filterOptions, sortOptions } from '../constants'
 
 const currentYear = new Date().getFullYear()
@@ -131,10 +132,11 @@ const FilterPanel = ({ data = [], onFilterUpdate, onFilterStatusChange, onFilter
         <div className="bg-primary text-primary h-full w-full p-2 md:max-w-64">
             {/* Search Input */}
             <div className="flex items-center justify-between gap-3 md:mb-4">
-                <div className="input-wrapper input-group-end">
+                <div className="input-wrapper input-group-start">
                     <label htmlFor="media-search" className="sr-only">
                         Search Media
                     </label>
+                    <Icon icon={iconMap.search} className="input-icon" aria-hidden="true" />
                     <input
                         id="media-search"
                         className="input-text"
@@ -143,7 +145,6 @@ const FilterPanel = ({ data = [], onFilterUpdate, onFilterStatusChange, onFilter
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
-                    <Icon icon="mingcute:search-fill" className="input-icon" aria-hidden="true" />
                 </div>
 
                 <NeuToggleButton
@@ -238,7 +239,7 @@ const FilterPanel = ({ data = [], onFilterUpdate, onFilterStatusChange, onFilter
 
                 {/* Reset Filters Button */}
                 <button type="button" onClick={resetFilters} className="button button-with-icon mt-4 w-full" aria-label="Reset all filters">
-                    <Icon icon="grommet-icons:power-reset" className="size-6" /> Reset Filters
+                    <Icon icon={iconMap.refresh} className="size-6" /> Reset Filters
                 </button>
             </div>
         </div>

@@ -2,6 +2,8 @@ import React from 'react'
 
 import { Icon } from '@iconify/react'
 
+import { iconMap } from '../../utils/globalConstants'
+
 const DialogModal = ({ modalId, maxWidthAndClasses = 'w-full max-w-2xl', closeButton = true, children }) => {
     const closeModal = () => {
         const modalElement = document.getElementById(modalId)
@@ -19,7 +21,7 @@ const DialogModal = ({ modalId, maxWidthAndClasses = 'w-full max-w-2xl', closeBu
                         className="text-secondary hover:text-primary absolute right-2 top-2 z-20 select-none rounded-full bg-light-secondary p-1 text-lg dark:bg-dark-secondary"
                         onClick={closeModal}
                         aria-label="Close Modal">
-                        <Icon icon="iconamoon:close" className="size-6" />
+                        <Icon icon={iconMap.close} className="size-6" />
                     </button>
                 )}
                 <div className="w-full">{children}</div>

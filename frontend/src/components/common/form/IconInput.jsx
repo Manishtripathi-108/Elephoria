@@ -2,12 +2,7 @@ import React, { useState } from 'react'
 
 import { Icon } from '@iconify/react'
 
-const ICONS = {
-    email: 'line-md:email-alt-filled',
-    password: 'line-md:watch-loop',
-    showPassword: 'line-md:watch-off-loop',
-    default: 'line-md:emoji-angry-filled',
-}
+import { iconMap } from '../../../utils/globalConstants'
 
 const IconInput = ({
     type = 'text',
@@ -27,10 +22,10 @@ const IconInput = ({
 
     const iconToDisplay = () => {
         if (type === 'password') {
-            return isPasswordVisible ? ICONS.showPassword : ICONS.password
+            return isPasswordVisible ? iconMap.showPassword : iconMap.password
         }
-        if (type === 'email') return ICONS.email
-        return customIcon || ICONS.default
+        if (type === 'email') return iconMap.email
+        return customIcon || 'line-md:emoji-angry-filled'
     }
 
     return (

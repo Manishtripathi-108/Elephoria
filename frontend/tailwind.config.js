@@ -22,6 +22,7 @@ export default {
                 'shimmer-ray': 'shimmer-ray 2.5s cubic-bezier(0, 0, 0.2, 1) infinite',
                 'push-release-from': 'push-release-from 0.3s forwards',
                 'l-zoom-out': 'l-zoom-in 0.3s forwards',
+                blob: 'blob 10s infinite cubic-bezier(0.68, -0.55, 0.27, 1.55)',
             },
             keyframes: {
                 'shimmer-ray': {
@@ -99,6 +100,24 @@ export default {
                 'l-zoom-in': {
                     from: { transform: 'scale(10)', opacity: '0' },
                 },
+
+                blob: {
+                    '0%': {
+                        borderRadius: '40% 60% 55% 45% / 50% 45% 55% 50%',
+                    },
+                    '25%': {
+                        borderRadius: '60% 40% 45% 55% / 55% 60% 40% 45%',
+                    },
+                    '50%': {
+                        borderRadius: '50% 50% 60% 40% / 45% 55% 50% 60%',
+                    },
+                    '75%': {
+                        borderRadius: '45% 55% 50% 50% / 60% 40% 55% 45%',
+                    },
+                    '100%': {
+                        borderRadius: '40% 60% 55% 45% / 50% 45% 55% 50%',
+                    },
+                },
             },
             backgroundImage: {
                 'primary-gradient':
@@ -112,8 +131,6 @@ export default {
                     'linear-gradient(to left, rgba(220,38,38,1) 0%, rgba(239,68,68,1) 10%, rgba(239,68,68,1) 90%, rgba(220,38,38,1) 100%)',
                 'shimmer-ray-accent': 'radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,99,71,1) 100%)',
                 'shimmer-ray-highlight': 'radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(30,144,255,1) 100%)',
-                'linear-dark': 'linear-gradient(145deg, #1f2937, #2e3b4d)',
-                'linear-light': 'linear-gradient(145deg, #ffc3c6, #e6a4a7)',
             },
             colors: {
                 // Light Mode Colors

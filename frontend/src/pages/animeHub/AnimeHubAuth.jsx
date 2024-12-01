@@ -41,13 +41,13 @@ function AnimeHubAuth() {
         <div className="bg-primary grid h-[calc(100dvh-4rem)] w-full place-items-center">
             <div className="bg-primary w-full max-w-md rounded-lg border border-light-secondary p-6 shadow-neu-light-md dark:border-dark-secondary dark:shadow-neu-dark-md">
                 <h1 className="text-primary mb-4 text-center font-aladin text-2xl font-semibold tracking-widest">Anime Authorization</h1>
-                <p className="text-secondary mb-4 text-center font-indie-flower tracking-wide">
+                <p className="text-secondary mb-4 text-center tracking-wide">
                     Please go to the AniList page, authorize the application, and paste your Auth Pin below.
                 </p>
                 <div className="mb-4 grid w-full place-items-center">
                     <a
                         className="button"
-                        href="https://anilist.co/api/v2/oauth/authorize?client_id=21724&redirect_uri=https://anilist.co/api/v2/oauth/pin&response_type=code"
+                        href={`https://anilist.co/api/v2/oauth/authorize?client_id=${import.meta.env.VITE_ANILIST_CLIENT_ID}&redirect_uri=${import.meta.env.VITE_ANILIST_REDIRECT_URI}&response_type=code`}
                         target="_blank"
                         rel="noopener noreferrer">
                         Get Anilist Auth Pin
@@ -62,11 +62,7 @@ function AnimeHubAuth() {
                                     Enter Auth Pin:
                                 </label>
                                 <Field type="text" id="pin" name="pin" className="input-text" placeholder="Enter Auth Pin:" />
-                                <ErrorMessage
-                                    name="pin"
-                                    component="div"
-                                    className="error form-helper-text ml-2 mt-1 font-indie-flower tracking-wide"
-                                />
+                                <ErrorMessage name="pin" component="div" className="error form-helper-text ml-2 mt-1" />
                             </div>
                             <div className="grid w-full place-items-center">
                                 <button type="submit" className="button" disabled={isSubmitting}>

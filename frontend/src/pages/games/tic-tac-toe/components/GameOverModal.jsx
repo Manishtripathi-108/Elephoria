@@ -1,31 +1,39 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 
-import { Icon } from '@iconify/react'
+import { motion } from 'motion/react'
 
-const GameOverModal = ({ clearBoard, isDraw, winner = '' }) => {
-    const handleKeyDown = (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-            clearBoard()
+import ElevateButton from '../../../../components/common/buttons/ElevateButton'
+
+const GameOverModal = ({ clearBoard, status }) => {
+    const playRef = useRef(null)
+
+    useEffect(() => {
+        if (playRef.current) {
+            playRef.current.focus()
         }
-    }
+    }, [])
 
     return (
-        <div
+        <motion.div
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
             role="dialog"
-            aria-label={isDraw ? "It's a draw!" : `${winner} wins!`}
+            aria-label={status}
             aria-live="assertive"
-            tabIndex={0}
-            onClick={clearBoard}
-            onKeyDown={handleKeyDown}
-            className="text-secondary flex-center absolute inset-0 z-10 flex h-full w-full animate-puff-in cursor-pointer flex-col items-center justify-center gap-5 rounded-xl border border-light-secondary font-indie-flower tracking-widest dark:border-dark-secondary">
-            {/* Background Overlay */}
-            <div className="bg-primary absolute inset-0 h-full w-full opacity-70 blur-sm saturate-150"></div>
+            className="before:bg-primary text-primary absolute inset-0 z-10 flex h-full w-full flex-col items-center justify-center rounded-xl border border-light-secondary bg-opacity-10 text-center tracking-widest before:absolute before:inset-0 before:-z-10 before:size-full before:opacity-70 before:blur-sm before:saturate-150 dark:border-dark-secondary">
+            <h2 className="text-accent text-4xl font-bold capitalize md:text-5xl">{status}</h2>
+            <p className="text-primary mb-3 mt-10 text-lg">Would you like to play again?</p>
 
-            <span className="text-accent z-20 px-4 text-center text-4xl font-bold md:text-5xl">{isDraw ? "It's a draw!" : `${winner} wins!`}</span>
-
-            <Icon icon="grommet-icons:power-reset" className="z-20 size-1/6 shrink-0" />
-            <span className="z-20 text-2xl">Play Again</span>
-        </div>
+            <div className="flex justify-center gap-x-5">
+                <ElevateButton ref={playRef} onClick={clearBoard} tabIndex={0}>
+                    Play Again
+                </ElevateButton>
+                <ElevateButton variant="danger" onClick={() => alert('Thanks for playing!')} tabIndex={1}>
+                    Exit
+                </ElevateButton>
+            </div>
+        </motion.div>
     )
 }
 

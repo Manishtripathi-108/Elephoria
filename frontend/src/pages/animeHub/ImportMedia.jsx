@@ -4,7 +4,7 @@ import axios from 'axios'
 
 import { fetchAniListIds, fetchUserMediaListIDs, saveMediaEntry } from '../../api/animeHubApi'
 import ProgressBar from '../../components/common/ProgressBar'
-import UploadInput from '../../components/common/form/upload-input'
+import UploadInput from '../../components/common/form/UploadInput'
 import { chunkArray, filterExistingMalIds, handleError, handleRateLimits, isValidFormat, validateAndMapMedia } from '../../utils/importAnimeUtils'
 import CorrectInvalidStatuses from './components/CorrectInvalidStatuses'
 import StatusTable from './components/statusTable'
@@ -322,9 +322,7 @@ const ImportMedia = () => {
             {importState.importStatus === 'IN_PROGRESS' && (
                 <>
                     <h2 className="text-primary text-center font-aladin text-2xl font-semibold tracking-widest">Import Media</h2>
-                    <p className="text-secondary text-center font-indie-flower tracking-wide">
-                        Import your anime or manga list from a JSON file to AniList
-                    </p>
+                    <p className="text-secondary text-center tracking-wide">Import your anime or manga list from a JSON file to AniList</p>
                     <div className="mt-5 grid w-full place-items-center gap-5">
                         <ProgressBar total={importState.totalItems} current={importState.itemsProcessed} name={importState.currentItem} />
                         <button

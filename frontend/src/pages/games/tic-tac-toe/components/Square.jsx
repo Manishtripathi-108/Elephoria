@@ -1,5 +1,9 @@
 import React, { memo } from 'react'
 
+import { AnimatePresence, motion } from 'motion/react'
+
+import { squareAnim } from '../constants'
+
 const Square = ({ squareValue, handleClick, isActive = false, iconSize = 'size-7 md:size-12 text-xl md:text-4xl', isWinningSquare = false }) => {
     const baseClasses = 'flex-center rounded-md p-1 md:p-2 transition-all duration-300 font-julee'
     const hoverEffect = isActive ? 'hover:scale-105 focus:scale-105' : ''
@@ -20,9 +24,18 @@ const Square = ({ squareValue, handleClick, isActive = false, iconSize = 'size-7
             aria-label={`Square ${squareValue || 'empty'}`}
             aria-pressed={!!squareValue}
             className={`${baseClasses} ${hoverEffect} ${shadowClasses} ${iconSize} ${colorClasses}`}>
-            {squareValue && (
-                <span className={`${isWinningSquare ? 'animate-pulse-slow' : 'animate-push-release-from'} select-none`}>{squareValue}</span>
-            )}
+            <AnimatePresence>
+                {squareValue && (
+                    <motion.span
+                        className="select-none"
+                        variants={squareAnim}
+                        initial="hidden"
+                        animate={isWinningSquare ? 'winner' : 'visible'}
+                        exit="exit">
+                        {squareValue}
+                    </motion.span>
+                )}
+            </AnimatePresence>
         </button>
     )
 }

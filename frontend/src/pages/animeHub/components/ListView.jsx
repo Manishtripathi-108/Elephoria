@@ -29,7 +29,7 @@ function ListView({ data = [], isFavourite = false }) {
                         list.entries.map((mediaItem) => <MediaRow key={mediaItem.media?.id} mediaItem={mediaItem} />)
                     ) : (
                         <tr>
-                            <td className="p-4 text-center font-indie-flower tracking-wider text-red-500" colSpan="4">
+                            <td className="p-4 text-center tracking-wider text-red-500" colSpan="4">
                                 No data available
                             </td>
                         </tr>
@@ -52,7 +52,7 @@ function ListView({ data = [], isFavourite = false }) {
                         media.map((mediaItem) => <MediaRow key={mediaItem.id} mediaItem={mediaItem} isFavourite={true} />)
                     ) : (
                         <tr>
-                            <td className="p-4 text-center font-indie-flower tracking-wider text-red-500" colSpan="4">
+                            <td className="p-4 text-center tracking-wider text-red-500" colSpan="4">
                                 No {type.toLowerCase()} favourites available
                             </td>
                         </tr>

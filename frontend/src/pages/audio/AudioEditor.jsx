@@ -4,7 +4,7 @@ import axios from 'axios'
 
 import AppName from '../../assets/svg/app-name'
 import Logo from '../../assets/svg/logo'
-import UploadInput from '../../components/common/form/upload-input'
+import UploadInput from '../../components/common/form/UploadInput'
 import Toast from '../../components/common/notifications/Toast'
 import { useLoadingBar } from '../../context/LoadingBarContext'
 
