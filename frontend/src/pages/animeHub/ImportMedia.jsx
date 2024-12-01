@@ -7,7 +7,7 @@ import ProgressBar from '../../components/common/ProgressBar'
 import UploadInput from '../../components/common/form/UploadInput'
 import { chunkArray, filterExistingMalIds, handleError, handleRateLimits, isValidFormat, validateAndMapMedia } from '../../utils/importAnimeUtils'
 import CorrectInvalidStatuses from './components/CorrectInvalidStatuses'
-import StatusTable from './components/statusTable'
+import StatusTable from './components/StatusTable'
 import { validStatusOptions } from './constants'
 
 const ImportMedia = () => {
