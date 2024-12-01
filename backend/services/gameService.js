@@ -198,6 +198,8 @@ const changeMode = (roomId, mode) => {
 };
 
 const clearBoard = (roomId) => {
+	console.log(roomId);
+	
 	const room = rooms[roomId];
 	if (!room) {
 		backendLogger.warn(`Room ${roomId} does not exist.`);

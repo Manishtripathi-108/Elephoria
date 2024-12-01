@@ -7,8 +7,17 @@ import { io } from 'socket.io-client'
 import { ActionTypes } from './TicTacToeActions'
 import { TicTacToeReducer, initialState } from './TicTacToeReducer'
 
-// Context for the TicTacToe game
+// Create Context
 const TicTacToeContext = createContext()
+
+// Custom Hook for Context
+export const useTicTacToeContext = () => {
+    const context = useContext(TicTacToeContext)
+    if (!context) {
+        throw new Error('useTicTacToeContext must be used within a TicTacToeProvider')
+    }
+    return context
+}
 
 // Provider Component
 export const TicTacToeProvider = ({ children }) => {
@@ -16,67 +25,16 @@ export const TicTacToeProvider = ({ children }) => {
     const socketRef = useRef(null)
     const navigate = useNavigate()
 
-    // Actions
-    const setMode = useCallback(
-        (mode) => {
-            if (state.mode !== mode) {
-                state.isPlayingOnline && socketRef.current
-                    ? socketRef.current.emit('setMode', { roomId: state.roomId, mode })
-                    : dispatch({ type: ActionTypes.SET_MODE, payload: mode })
-            }
-        },
-        [state.isPlayingOnline, state.roomId, state.mode]
-    )
+    // --- Utility Functions ---
 
-    const setPlayerNames = useCallback((player, name) => dispatch({ type: ActionTypes.SET_PLAYER_NAMES, payload: { player, name } }), [])
-
-    const handleMove = useCallback(
-        (macroIndex, cellIndex = null) => {
-            const { isPlayingOnline, isXNext, playerSymbol, roomId, classicBoard, ultimateBoard, activeIndex } = state
-
-            // Common validation for both online and offline modes
-            if (ultimateBoard[macroIndex]?.[cellIndex] || classicBoard[macroIndex] || (activeIndex !== null && activeIndex !== macroIndex)) {
-                window.addToast('Invalid move', 'error')
-                return
-            }
-
-            if (isPlayingOnline && socketRef.current) {
-                const isPlayerTurn = isXNext === (playerSymbol === 'X')
-
-                if (isPlayerTurn) {
-                    // Emit move to server
-                    const movePayload = {
-                        roomId,
-                        playerSymbol,
-                        macroIndex,
-                        ...(cellIndex !== null && { cellIndex }),
-                    }
-
-                    socketRef.current.emit('playerMove', movePayload)
-                } else {
-                    window.addToast('It is not your turn', 'error')
-                }
-            } else {
-                // Dispatch local move for offline play
-                dispatch({ type: ActionTypes.HANDLE_MOVE, payload: { macroIndex, cellIndex } })
-            }
-        },
-        [state, dispatch]
-    )
-
-    const startOver = useCallback(() => dispatch({ type: ActionTypes.START_OVER }), [])
-
-    const clearBoard = useCallback(() => {
-        state.isPlayingOnline && socketRef.current ? socketRef.current.emit('clearBoard', state.roomId) : dispatch({ type: ActionTypes.CLEAR_BOARD })
-    }, [state.isPlayingOnline, state.roomId])
-
+    // Establish Socket Connection
     const connectPlayer = useCallback(() => {
         if (socketRef.current) return
 
         socketRef.current = io(import.meta.env.VITE_SERVER_URL)
 
         socketRef.current.on('connect', () => {
-            console.log('User connected with ID:', socketRef.current.id)
+            console.log('Connected:', socketRef.current.id)
             dispatch({ type: ActionTypes.IS_PLAYING_ONLINE, payload: true })
         })
 
@@ -85,47 +43,98 @@ export const TicTacToeProvider = ({ children }) => {
         })
 
         socketRef.current.on('updateGame', (roomState) => {
-            console.log('Game updated:', roomState)
+            console.log('updateGame', roomState)
             dispatch({ type: ActionTypes.UPDATE_STATE, payload: { ...roomState } })
         })
 
-        socketRef.current.on('disconnect', () => {
-            console.log('User disconnected')
-            socketRef.current = null
-            startOver()
-        })
-
-        socketRef.current.on('roomLeft', () => {
-            disconnectPlayer()
-            window.addToast('Room left', 'error')
-        })
-
         socketRef.current.on('gameError', (message) => {
-            console.log('Game error:', message)
             window.addToast(message, 'error')
         })
-    }, [setPlayerNames, startOver])
 
+        socketRef.current.on('disconnect', () => {
+            console.log('Disconnected from server')
+            socketRef.current = null
+            dispatch({ type: ActionTypes.START_OVER })
+        })
+    }, [])
+
+    // Disconnect Player
     const disconnectPlayer = useCallback(() => {
         if (socketRef.current) {
             socketRef.current.disconnect()
+            socketRef.current = null
         }
     }, [])
 
-    const startGame = useCallback(() => {
-        socketRef.current.emit('startGame', { roomId: state.roomId })
-    }, [state.roomId])
+    // Emit Events
+    const emitEvent = useCallback((event, payload) => {
+        if (socketRef.current) {
+            socketRef.current.emit(event, payload)
+        }
+    }, [])
 
+    // --- Actions ---
+
+    // Set Game Mode
+    const setMode = useCallback(
+        (mode) => {
+            if (state.mode !== mode) {
+                state.isPlayingOnline ? emitEvent('setMode', { roomId: state.roomId, mode }) : dispatch({ type: ActionTypes.SET_MODE, payload: mode })
+            }
+        },
+        [state.isPlayingOnline, state.roomId, state.mode, emitEvent]
+    )
+
+    // Set Player Names
+    const setPlayerNames = useCallback((player, name) => {
+        dispatch({ type: ActionTypes.SET_PLAYER_NAMES, payload: { player, name } })
+    }, [])
+
+    // Handle Player Move
+    const handleMove = useCallback(
+        (macroIndex, cellIndex = null) => {
+            const { isPlayingOnline, isXNext, playerSymbol, roomId, classicBoard, ultimateBoard, activeIndex } = state
+
+            // Validate Move
+            if (ultimateBoard[macroIndex]?.[cellIndex] || classicBoard[macroIndex] || (activeIndex !== null && activeIndex !== macroIndex)) {
+                window.addToast('Invalid move', 'error')
+                return
+            }
+
+            if (isPlayingOnline) {
+                const isPlayerTurn = isXNext === (playerSymbol === 'X')
+                if (isPlayerTurn) {
+                    emitEvent('playerMove', {
+                        roomId,
+                        playerSymbol,
+                        macroIndex,
+                        ...(cellIndex !== null && { cellIndex }),
+                    })
+                } else {
+                    window.addToast('It is not your turn', 'error')
+                }
+            } else {
+                dispatch({ type: ActionTypes.HANDLE_MOVE, payload: { macroIndex, cellIndex } })
+            }
+        },
+        [state, emitEvent]
+    )
+
+    // Start Game
+    const startGame = useCallback(() => {
+        emitEvent('startGame', { roomId: state.roomId })
+    }, [state.roomId, emitEvent])
+
+    // Join Room
     const joinRoom = useCallback(
         (roomId, playerName, roomName = 'default', isCreateRoom = false) => {
             if (!state.isPlayingOnline) connectPlayer()
-
-            socketRef.current.emit('joinRoom', { roomId, playerName, roomName, isCreateRoom })
+            emitEvent('joinRoom', { roomId, playerName, roomName, isCreateRoom })
         },
-
-        [state.isPlayingOnline, connectPlayer, disconnectPlayer]
+        [state.isPlayingOnline, connectPlayer, emitEvent]
     )
 
+    // Create Room
     const createRoom = useCallback(
         (roomName, playerName) => {
             if (!state.isPlayingOnline) connectPlayer()
@@ -135,57 +144,61 @@ export const TicTacToeProvider = ({ children }) => {
                     joinRoom(roomId, playerName, roomName, true)
                 } else {
                     window.addToast(message, 'error')
-                    disconnectPlayer()
                 }
             })
         },
-        [connectPlayer, joinRoom, disconnectPlayer]
+        [connectPlayer, joinRoom, emitEvent]
     )
 
+    // Leave Room
     const leaveRoom = useCallback(() => {
-        if (socketRef.current) socketRef.current.emit('leaveRoom', state.roomId)
-    }, [state.roomId])
+        emitEvent('leaveRoom', state.roomId)
+    }, [state.roomId, emitEvent])
 
-    // Cleanup on unmount
+    // Clear Board
+    const clearBoard = useCallback(() => {
+        state.isPlayingOnline ? emitEvent('clearBoard', state.roomId) : dispatch({ type: ActionTypes.CLEAR_BOARD })
+    }, [state.isPlayingOnline, state.roomId, emitEvent])
+
+    // Start Over
+    const startOver = useCallback(() => {
+        dispatch({ type: ActionTypes.START_OVER })
+    }, [])
+
+    // --- Lifecycle Hooks ---
+
+    // Cleanup on Component Unmount
     useEffect(() => {
         return () => {
             disconnectPlayer()
-            console.log('Socket disconnected on cleanup')
         }
     }, [disconnectPlayer])
 
+    // Navigate on Game Start
     useEffect(() => {
         if (state.isPlayingOnline && state.gameStarted) {
             navigate(`/games/tic-tac-toe/${state.mode}`)
         }
-    }, [state.mode])
+    }, [state.isPlayingOnline, state.gameStarted, state.mode, navigate])
 
+    // --- Provider ---
     return (
         <TicTacToeContext.Provider
             value={{
-                clearBoard,
-                connectPlayer,
-                createRoom,
-                disconnectPlayer,
-                handleMove,
-                joinRoom,
-                leaveRoom,
                 setMode,
                 setPlayerNames,
+                handleMove,
                 startGame,
+                joinRoom,
+                createRoom,
+                leaveRoom,
+                clearBoard,
                 startOver,
+                connectPlayer,
+                disconnectPlayer,
                 state,
             }}>
             {children}
         </TicTacToeContext.Provider>
     )
-}
-
-// Custom Hook
-export const useTicTacToeContext = () => {
-    const context = useContext(TicTacToeContext)
-    if (!context) {
-        throw new Error('useTicTacToeContext must be used within a TicTacToeProvider')
-    }
-    return context
 }

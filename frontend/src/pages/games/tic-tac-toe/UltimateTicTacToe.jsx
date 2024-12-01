@@ -8,13 +8,14 @@ import Square from './components/Square'
 import { squareAnim } from './constants'
 
 const UltimateTicTacToe = () => {
-    const { state, handleMove } = useTicTacToeContext()
-    const { classicBoard, ultimateBoard, activeIndex, winIndexes } = state
+    const { state, handleMove, setMode } = useTicTacToeContext()
+    const { classicBoard, ultimateBoard, activeIndex, winIndexes, isPlayingOnline } = state
 
     const { completeLoading } = useLoadingBar()
 
     useEffect(() => {
         completeLoading()
+        setMode('ultimate')
     }, [])
 
     return (

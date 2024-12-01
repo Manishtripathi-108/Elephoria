@@ -11,9 +11,7 @@ const ClassicTicTacToe = () => {
 
     useEffect(() => {
         completeLoading()
-        if (!isPlayingOnline) {
-            setMode('classic')
-        }
+        setMode('classic')
     }, [])
 
     return (
