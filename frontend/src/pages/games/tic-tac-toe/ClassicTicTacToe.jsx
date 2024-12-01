@@ -5,12 +5,15 @@ import { useTicTacToeContext } from '../../../context/TicTacToe/TicTacToeContext
 import Square from './components/Square'
 
 const ClassicTicTacToe = () => {
-    const { state, handleMove } = useTicTacToeContext()
-    const { classicBoard, winIndexes } = state
+    const { state, setMode, handleMove } = useTicTacToeContext()
+    const { classicBoard, winIndexes, isPlayingOnline } = state
     const { completeLoading } = useLoadingBar()
 
     useEffect(() => {
         completeLoading()
+        if (!isPlayingOnline) {
+            setMode('classic')
+        }
     }, [])
 
     return (

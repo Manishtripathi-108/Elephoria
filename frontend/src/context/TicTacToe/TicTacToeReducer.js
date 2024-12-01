@@ -143,15 +143,6 @@ export const TicTacToeReducer = (state, action) => {
                 ...action.payload,
             }
 
-        case ActionTypes.START_GAME:
-            return resetState(state, {
-                gameStarted: true,
-                mode: initialState.mode,
-                drawScore: initialState.drawScore,
-                playerX: { ...state.playerX, score: 0 },
-                playerO: { ...state.playerO, score: 0 },
-            })
-
         case ActionTypes.START_OVER:
             return {
                 ...initialState,

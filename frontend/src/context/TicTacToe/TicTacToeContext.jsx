@@ -155,7 +155,9 @@ export const TicTacToeProvider = ({ children }) => {
     }, [disconnectPlayer])
 
     useEffect(() => {
-        navigate(`/games/tic-tac-toe/${state.mode}`)
+        if (state.isPlayingOnline && state.gameStarted) {
+            navigate(`/games/tic-tac-toe/${state.mode}`)
+        }
     }, [state.mode])
 
     return (
