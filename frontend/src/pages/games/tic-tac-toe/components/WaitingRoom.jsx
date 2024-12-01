@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { Icon } from '@iconify/react'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 
 import ElevateButton from '../../../../components/common/buttons/ElevateButton'
 import { iconMap } from '../../../../utils/globalConstants'
