@@ -66,9 +66,11 @@ const router = createBrowserRouter([
                     {
                         path: 'auth',
                         element: (
-                            <Suspense fallback={<Loading />}>
-                                <AnimeHubAuth />
-                            </Suspense>
+                            <AnimeHubProvider>
+                                <Suspense fallback={<Loading />}>
+                                    <AnimeHubAuth />
+                                </Suspense>
+                            </AnimeHubProvider>
                         ),
                     },
                 ],

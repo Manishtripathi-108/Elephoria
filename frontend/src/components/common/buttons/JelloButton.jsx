@@ -2,6 +2,15 @@ import React from 'react'
 
 import { twMerge } from 'tailwind-merge'
 
+/**
+ * JelloButton is a customizable button component with animated hover and focus effects.
+ *
+ * @param {Function} onClick - The function to call when the button is clicked.
+ * @param {string} title - The title attribute for the button, used for accessibility and tooltips.
+ * @param {string} variant - The visual style variant of the button. Options include 'primary', 'secondary', 'danger', 'warning', 'success', and 'info'.
+ * @param {React.ReactNode} children - The content to display inside the button.
+ * @param {string} className - Additional CSS classes to apply to the button.
+ */
 const JelloButton = ({ onClick, title = '', variant = 'primary', children = '', className }) => {
     const variants = {
         primary: ['bg-primary', 'bg-primary-gradient', 'text-primary', 'border-light-secondary dark:border-dark-secondary'],

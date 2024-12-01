@@ -208,3 +208,29 @@ exports.deleteMedia = async (req, res) => {
 		);
 	}
 };
+
+exports.logoutUser = (req, res) => {
+	const { anilistToken, anilistRefreshToken, aniListUserId } = req.cookies;
+
+	if (!anilistToken && !anilistRefreshToken && !aniListUserId) {
+		return res.status(200).json({ message: "Already logged out." });
+	}
+
+	res.clearCookie("anilistToken", {
+		httpOnly: true,
+		secure: true,
+		sameSite: "strict",
+	});
+	res.clearCookie("anilistRefreshToken", {
+		httpOnly: true,
+		secure: true,
+		sameSite: "strict",
+	});
+	res.clearCookie("aniListUserId", {
+		httpOnly: true,
+		secure: true,
+		sameSite: "strict",
+	});
+
+	res.status(200).json({ message: "Logged out successfully." });
+};

@@ -57,7 +57,7 @@ const PlayerNameModal = () => {
     }
 
     return (
-        <DialogModal modalId="playerNameModal" closeButton={false} maxWidthAndClasses="w-full max-w-96">
+        <DialogModal modalId="playerNameModal" showCloseButton={false} maxWidthAndClasses="w-full max-w-96">
             <div className="bg-primary grid gap-5 p-5">
                 <h2 className="text-primary text-center text-xl font-bold">Set Player Names</h2>
 

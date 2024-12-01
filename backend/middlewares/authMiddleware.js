@@ -46,7 +46,7 @@ const verifyAuth = async (req, res, next) => {
 			if (!userId)
 				return handleUnauthorized(
 					res,
-					"Unauthorized: Please log in again, user ID not found."
+					"Unauthorized: Please log in again."
 				);
 			setCookie(res, "anilistUserId", userId);
 		} catch (error) {

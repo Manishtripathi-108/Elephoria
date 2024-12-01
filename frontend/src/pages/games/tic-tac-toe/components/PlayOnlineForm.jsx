@@ -15,64 +15,15 @@ const PlayOnlineForm = () => {
 
     const handleSubmit = (values, { setSubmitting }) => {
         setSubmitting(true)
-        isJoinForm ? joinRoom(values.roomId, values.playerName) : createRoom(values.roomName, values.playerName)
+        if (isJoinForm) {
+            joinRoom(values.roomId, values.playerName)
+        } else {
+            createRoom(values.roomName, values.playerName)
+        }
         setSubmitting(false)
         const modal = document.getElementById('play_online')
         if (modal) modal.close()
     }
-
-    const renderFormContent = (isJoin) => (
-        <Formik
-            initialValues={{ [isJoin ? 'roomId' : 'roomName']: '', playerName: '' }}
-            validationSchema={Yup.object().shape({
-                [isJoin ? 'roomId' : 'roomName']: Yup.string()
-                    .required(isJoin ? 'Room ID is required' : 'Room Name is required')
-                    .max(isJoin ? '6' : '10', isJoin ? 'Room ID must not exceed 6 characters' : 'Room Name must not exceed 10 characters'),
-                playerName: Yup.string().required('Player Name is required').max(20, 'Player Name must not exceed 20 characters'),
-            })}
-            onSubmit={handleSubmit}>
-            {({ isSubmitting }) => (
-                <Form id={isJoin ? 'joinRoomForm' : 'createRoomForm'} className="space-y-4">
-                    <div className="form-group">
-                        <label className="form-label" htmlFor={isJoin ? 'roomId' : 'roomName'}>
-                            {isJoin ? 'Enter Room ID' : 'Room Name'}
-                        </label>
-                        <Field
-                            type="text"
-                            id={isJoin ? 'roomId' : 'roomName'}
-                            name={isJoin ? 'roomId' : 'roomName'}
-                            placeholder={isJoin ? 'Room ID' : 'Enter a room name'}
-                            className="input-text"
-                            required
-                            disabled={isSubmitting}
-                            maxLength={isJoin ? '6' : '10'}
-                        />
-                        <ErrorMessage component="div" className="form-helper-text error" name={isJoin ? 'roomId' : 'roomName'} />
-                    </div>
-
-                    <div className="form-group">
-                        <label className="form-label" htmlFor="playerName">
-                            Player Name
-                        </label>
-                        <Field
-                            type="text"
-                            id="playerName"
-                            name="playerName"
-                            placeholder="Enter your name"
-                            className="input-text"
-                            required
-                            disabled={isSubmitting}
-                            maxLength={20}
-                        />
-                        <ErrorMessage component="div" className="form-helper-text error" name="playerName" />
-                    </div>
-                    <button type="submit" className="button w-full" disabled={isSubmitting}>
-                        {isJoin ? 'Join Room' : 'Create Room'}
-                    </button>
-                </Form>
-            )}
-        </Formik>
-    )
 
     return (
         <div className="relative max-h-full w-full max-w-md p-8 md:p-10">
@@ -89,7 +40,78 @@ const PlayOnlineForm = () => {
                 </button>
             </div>
 
-            {renderFormContent(isJoinForm)}
+            <Formik
+                initialValues={{
+                    roomId: '',
+                    roomName: '',
+                    playerName: '',
+                }}
+                validationSchema={Yup.object().shape({
+                    roomId: isJoinForm ? Yup.string().required('Room ID is required').max(6, 'Room ID must not exceed 6 characters') : null,
+                    roomName: !isJoinForm ? Yup.string().required('Room Name is required').max(10, 'Room Name must not exceed 10 characters') : null,
+                    playerName: Yup.string().required('Player Name is required').max(20, 'Player Name must not exceed 20 characters'),
+                })}
+                onSubmit={handleSubmit}>
+                {({ isSubmitting }) => (
+                    <Form id={isJoinForm ? 'joinRoomForm' : 'createRoomForm'} className="space-y-4">
+                        {isJoinForm && (
+                            <div className="form-group">
+                                <label className="form-label" htmlFor="roomId">
+                                    Enter Room ID
+                                </label>
+                                <Field
+                                    type="text"
+                                    id="roomId"
+                                    name="roomId"
+                                    placeholder="Room ID"
+                                    className="input-text"
+                                    disabled={isSubmitting}
+                                    maxLength={6}
+                                />
+                                <ErrorMessage component="div" className="form-helper-text error" name="roomId" />
+                            </div>
+                        )}
+
+                        {!isJoinForm && (
+                            <div className="form-group">
+                                <label className="form-label" htmlFor="roomName">
+                                    Room Name
+                                </label>
+                                <Field
+                                    type="text"
+                                    id="roomName"
+                                    name="roomName"
+                                    placeholder="Enter a room name"
+                                    className="input-text"
+                                    disabled={isSubmitting}
+                                    maxLength={10}
+                                />
+                                <ErrorMessage component="div" className="form-helper-text error" name="roomName" />
+                            </div>
+                        )}
+
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="playerName">
+                                Player Name
+                            </label>
+                            <Field
+                                type="text"
+                                id="playerName"
+                                name="playerName"
+                                placeholder="Enter your name"
+                                className="input-text"
+                                disabled={isSubmitting}
+                                maxLength={20}
+                            />
+                            <ErrorMessage component="div" className="form-helper-text error" name="playerName" />
+                        </div>
+
+                        <button type="submit" className="button w-full" disabled={isSubmitting}>
+                            {isJoinForm ? 'Join Room' : 'Create Room'}
+                        </button>
+                    </Form>
+                )}
+            </Formik>
         </div>
     )
 }

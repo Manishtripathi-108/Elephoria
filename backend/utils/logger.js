@@ -1,13 +1,27 @@
 const { createLogger, format, transports } = require("winston");
 const path = require("path");
 
+// Safe JSON stringify to handle circular references
+function safeStringify(obj) {
+	const seen = new WeakSet();
+	return JSON.stringify(obj, (key, value) => {
+		if (typeof value === "object" && value !== null) {
+			if (seen.has(value)) {
+				return "[Circular]";
+			}
+			seen.add(value);
+		}
+		return value;
+	});
+}
+
 // Custom log format
 const logFormat = format.combine(
 	format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
 	format.printf(({ timestamp, level, message, ...metadata }) => {
 		let logMessage = `${timestamp} [${level.toUpperCase()}]: ${message}`;
 		if (metadata) {
-			logMessage += ` | Metadata: ${JSON.stringify(metadata)}`;
+			logMessage += ` | Metadata: ${safeStringify(metadata)}`;
 		}
 		return logMessage;
 	})

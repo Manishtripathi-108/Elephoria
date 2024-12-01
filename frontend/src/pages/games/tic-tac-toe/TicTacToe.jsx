@@ -5,7 +5,7 @@ import { Outlet } from 'react-router-dom'
 import { Icon } from '@iconify/react'
 import { AnimatePresence } from 'motion/react'
 
-import { DialogModal, DialogTrigger } from '../../../components/common/PrimaryModal'
+import { ConfirmationModal, DialogModal, openModal } from '../../../components/common/PrimaryModal'
 import ElevateButton from '../../../components/common/buttons/ElevateButton'
 import { useTicTacToeContext } from '../../../context/TicTacToe/TicTacToeContext'
 import { iconMap } from '../../../utils/globalConstants'
@@ -20,11 +20,6 @@ const TicTacToe = () => {
     const { state, startOver, startGame, leaveRoom, clearBoard } = useTicTacToeContext()
     const { mode, isDraw, isGameOver, playerX, playerO, winner, isXNext, drawScore, isPlayingOnline, playerSymbol, gameStarted, roomId, roomName } =
         state
-
-    const openPlayerNameModal = () => {
-        const modal = document.getElementById('playerNameModal')
-        if (modal) modal.showModal()
-    }
 
     const renderGameStatus = () => {
         if (isGameOver) {
@@ -47,9 +42,13 @@ const TicTacToe = () => {
                             <h2 className="text-accent line-clamp-1 text-center text-2xl font-bold capitalize tracking-wider">
                                 {renderGameStatus()}
                             </h2>
-                            <DialogTrigger modalId="game_action" title="Clear Board" className="button button-icon-only-square">
+                            <button
+                                onClick={() => openModal('game_action')}
+                                type="button"
+                                title="Clear Board"
+                                className="button button-icon-only-square">
                                 <Icon icon={iconMap.broom} className="size-6" />
-                            </DialogTrigger>
+                            </button>
                         </div>
 
                         {/* Game Board Placeholder */}
@@ -69,7 +68,7 @@ const TicTacToe = () => {
                                         <Icon icon={iconMap.gamePad} className="size-6" />
                                         <span className="text-sm font-semibold">Start Over</span>
                                     </ElevateButton>
-                                    <ElevateButton onClick={openPlayerNameModal}>
+                                    <ElevateButton onClick={() => openModal('playerNameModal')}>
                                         <Icon icon={iconMap.player} className="size-5" />
                                         <span className="text-sm font-semibold">
                                             Change <span className="hidden md:inline">Player</span> Name
@@ -94,24 +93,15 @@ const TicTacToe = () => {
                 <>
                     <PlayerNameModal />
 
-                    <DialogModal modalId={'game_action'} maxWidthAndClasses="w-fit" closeButton={false}>
-                        <div className="relative max-h-full w-full max-w-md p-8 text-center md:p-10">
-                            <Icon icon={iconMap.error} className="error mx-auto mb-4 size-12" />
-                            <h3 className="text-primary mb-5 text-lg font-normal">Are you sure you want to clear the board?</h3>
-                            <ElevateButton
-                                onClick={() => {
-                                    clearBoard()
-                                    document.getElementById('game_action').close()
-                                }}
-                                title="Yes, I'm sure"
-                                variant="danger">
-                                Yes, I'm sure
-                            </ElevateButton>
-                            <ElevateButton title="No, cancel" className="ml-4 mt-4" onClick={() => document.getElementById('game_action').close()}>
-                                No, cancel
-                            </ElevateButton>
-                        </div>
-                    </DialogModal>
+                    <ConfirmationModal
+                        modalId={'game_action'}
+                        icon={iconMap.error}
+                        onConfirm={clearBoard}
+                        cancelText="Cancel"
+                        confirmText="Clear Board"
+                        isConfirmDanger={true}>
+                        Are you sure you want to clear the board?
+                    </ConfirmationModal>
 
                     <DialogModal modalId={'play_online'} maxWidthAndClasses="w-fit">
                         <PlayOnlineForm />

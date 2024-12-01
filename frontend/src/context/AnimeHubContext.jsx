@@ -1,6 +1,8 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react'
 
-import { fetchUserMediaList } from '../api/animeHubApi'
+import { useNavigate } from 'react-router-dom'
+
+import { fetchUserMediaList, isAuthenticated } from '../api/animeHubApi'
 
 const AnimeHubContext = createContext()
 
@@ -11,18 +13,26 @@ export const AnimeHubProvider = ({ children }) => {
     const [activeTab, setActiveTab] = useState('ANIME')
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState(null)
+    const [isUserAuthenticated, setIsUserAuthenticated] = useState(false)
+
+    const navigate = useNavigate()
 
     const fetchMediaContent = useCallback(
         async (reload = false) => {
+            if (!isUserAuthenticated) {
+                console.warn('User is not authenticated. Skipping media fetch.')
+                return
+            }
+
             setIsLoading(reload)
             setError(null)
 
             try {
-                // Call API with the active tab for media type and favourite flag
+                // Fetch media content for the active tab
                 const result = await fetchUserMediaList(activeTab, activeTab === 'FAVOURITES')
 
                 if (result.success) {
-                    // Sort the mediaList by 'name'
+                    // Sort mediaList alphabetically by 'name', except for FAVOURITES
                     const sortedMediaList =
                         activeTab !== 'FAVOURITES' ? result.mediaList.sort((a, b) => a.name.localeCompare(b.name)) : result.mediaList
 
@@ -40,19 +50,46 @@ export const AnimeHubProvider = ({ children }) => {
                 setIsLoading(false)
             }
         },
-        [activeTab]
+        [activeTab, isUserAuthenticated]
     )
 
+    // Check user authentication on load
     useEffect(() => {
-        if (['ANIME', 'MANGA', 'FAVOURITES'].includes(activeTab)) {
+        const checkAuthentication = async () => {
+            const isAuth = await isAuthenticated()
+            setIsUserAuthenticated(isAuth)
+
+            if (isAuth) {
+                console.log('User is authenticated')
+                navigate('/anime-hub')
+            } else {
+                console.log('User is not authenticated')
+                navigate('/anime-hub/auth')
+            }
+        }
+
+        checkAuthentication()
+    }, [navigate])
+
+    // Fetch media content when the active tab changes and the user is authenticated
+    useEffect(() => {
+        if (isUserAuthenticated && ['ANIME', 'MANGA', 'FAVOURITES'].includes(activeTab)) {
             fetchMediaContent(true)
         }
-    }, [activeTab, fetchMediaContent])
+    }, [activeTab, fetchMediaContent, isUserAuthenticated])
 
     const refetchMedia = () => fetchMediaContent()
 
     return (
-        <AnimeHubContext.Provider value={{ mediaContent, activeTab, setActiveTab, isLoading, refetchMedia, error }}>
+        <AnimeHubContext.Provider
+            value={{
+                mediaContent,
+                activeTab,
+                setActiveTab,
+                isLoading,
+                refetchMedia,
+                error,
+            }}>
             {children}
         </AnimeHubContext.Provider>
     )

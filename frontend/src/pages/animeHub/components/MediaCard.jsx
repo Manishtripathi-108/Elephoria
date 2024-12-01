@@ -2,7 +2,7 @@ import React, { memo, useState } from 'react'
 
 import { Icon } from '@iconify/react'
 
-import { DialogTrigger } from '../../../components/common/PrimaryModal'
+import { openModal } from '../../../components/common/PrimaryModal'
 import { iconMap } from '../../../utils/globalConstants'
 import { convertMonthNumberToName } from '../constants'
 import AnimeModal from './AnimeModal'
@@ -99,11 +99,12 @@ function MediaCard({ mediaItem, isFavouriteList = false }) {
             {/* Modal */}
             {!isFavouriteList && (
                 <>
-                    <DialogTrigger
-                        modalId={`modal_${media.id}`}
+                    <button
+                        type="button"
+                        onClick={() => openModal(`modal_${media.id}`)}
                         className="bg-secondary text-secondary absolute right-1 top-1 flex items-center justify-center rounded-lg p-0.5">
                         <Icon icon={iconMap.moreDots} className="size-6" />
-                    </DialogTrigger>
+                    </button>
 
                     <AnimeModal
                         modalId={`modal_${media.id}`}

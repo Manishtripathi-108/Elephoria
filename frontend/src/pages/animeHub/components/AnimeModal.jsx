@@ -5,7 +5,7 @@ import { ErrorMessage, Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
 import { deleteMediaEntry, saveMediaEntry, toggleFavourite } from '../../../api/animeHubApi'
-import { DialogModal } from '../../../components/common/PrimaryModal'
+import { DialogModal, closeModal } from '../../../components/common/PrimaryModal'
 import JelloButton from '../../../components/common/buttons/JelloButton'
 import { useAnimeHubContext } from '../../../context/AnimeHubContext'
 import { iconMap } from '../../../utils/globalConstants'
@@ -17,13 +17,6 @@ export default function AnimeModal({ entryId, modalId, media, mediaStatus = '', 
     const [isToggling, setIsToggling] = useState(false)
     const { refetchMedia } = useAnimeHubContext()
     const maxProgress = media?.episodes || media?.chapters || 100000
-
-    const closeModal = () => {
-        const modal = document.getElementById(modalId)
-        if (modal) {
-            modal.close()
-        }
-    }
 
     // Form validation schema
     const validationSchema = Yup.object({
@@ -38,7 +31,7 @@ export default function AnimeModal({ entryId, modalId, media, mediaStatus = '', 
     const handleSave = async (values) => {
         if (values.status === mediaStatus && values.progress === mediaProgress) {
             window.addToast('No changes to save.', 'info')
-            closeModal()
+            closeModal(modalId)
             return
         }
         const result = await saveMediaEntry(media.id, values.status, values.progress)
@@ -51,7 +44,7 @@ export default function AnimeModal({ entryId, modalId, media, mediaStatus = '', 
         if (result.success) {
             window.addToast('Entry updated successfully', 'success')
             refetchMedia()
-            closeModal()
+            closeModal(modalId)
         } else if (result.retryAfterSeconds > 0) {
             window.addToast(`Rate limit exceeded. Please try again in ${result.retryAfterSeconds} seconds.`, 'error')
         } else {
@@ -84,7 +77,7 @@ export default function AnimeModal({ entryId, modalId, media, mediaStatus = '', 
         if (result.success) {
             window.addToast('Entry deleted successfully', 'success')
             refetchMedia()
-            closeModal()
+            closeModal(modalId)
         } else if (result.retryAfterSeconds > 0) {
             window.addToast(`Rate limit exceeded. Please try again in ${result.retryAfterSeconds} seconds.`, 'error')
         } else {
