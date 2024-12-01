@@ -5,19 +5,22 @@ const {
 	changeMode,
 	leaveRoom,
 	updateGameState,
-	playerDisconnect,
 	clearBoard,
 } = require("../services/gameService.js");
 const { frontendLogger } = require("../utils/logger.js");
 
-const getRoomId = (socket, io) => (callback) =>
-	generateRoomId()
-		? callback({ success: true, roomId })
-		: callback({ success: false, message: "Unable to create room." });
+const getRoomId = (socket) => (callback) => {
+	const roomId = generateRoomId();
+	callback(
+		roomId
+			? { success: true, roomId }
+			: { success: false, message: "Unable to create room." }
+	);
+};
 
 const handleJoinRoom =
 	(socket, io) =>
-	({ roomId, playerName, roomName, isCreateRoom }, callback) => {
+	({ roomId, playerName, roomName, isCreateRoom }) => {
 		const result = joinRoom(
 			roomId,
 			playerName,
@@ -29,80 +32,120 @@ const handleJoinRoom =
 		if (result.success) {
 			socket.join(roomId);
 
-			// Notify both players the game if room is full
-			if (result.isRoomFull) {
-				io.to(roomId).emit("roomFull", result.roomState);
-			}
-		}
+			// Notify the player who joined the room
+			socket.emit("updateGame", {
+				playerSymbol: result.symbol,
+				isPlayingOnline: true,
+				...result.roomState,
+			});
 
-		callback(result);
+			// Notify players if the room becomes full
+			if (result.isRoomFull) {
+				io.to(roomId).emit("updateGame", result.roomState);
+			}
+		} else {
+			socket.emit(
+				"gameError",
+				result.message || "Unable to join the room."
+			);
+
+			socket.emit("updateGame", { isPlayingOnline: false });
+
+			frontendLogger.warn(`Unable to join room: ${roomId}:`, {
+				message: result.message || "Unable to join the room.",
+			});
+		}
 	};
 
-// handle start Game
 const handleStartGame =
 	(socket, io) =>
-	({ roomId }, callback) => {
+	({ roomId }) => {
 		const result = startGame(roomId);
+
 		if (result.success) {
-			io.to(roomId).emit("gameStarted", result.roomState);
+			io.to(roomId).emit("updateGame", result.roomState);
+		} else {
+			socket.emit(
+				"gameError",
+				result.message || "Unable to start the game."
+			);
 		}
-		callback(result);
 	};
 
 const handleMove = (socket, io) => (movePayload) => {
 	const result = updateGameState(movePayload);
 
-	const event = result.success ? "updateGame" : "gameError";
-	io.to(roomId).emit(
-		event,
-		result.success
-			? result.roomState
-			: result.message || "Unable to update game state"
-	);
+	if (result.success) {
+		io.to(movePayload.roomId).emit("updateGame", result.roomState);
+	} else {
+		socket.emit("gameError", result.message || "Invalid move.");
+	}
 };
 
 const handleModeChange =
 	(socket, io) =>
 	({ roomId, mode }) => {
 		const result = changeMode(roomId, mode);
-		const event = result.success ? "updateGame" : "gameError";
-		io.to(roomId).emit(
-			event,
-			result.success ? result.roomState : result.message
-		);
+
+		if (result.success) {
+			io.to(roomId).emit("updateGame", result.roomState);
+		} else {
+			socket.emit(
+				"gameError",
+				result.message || "Unable to change game mode."
+			);
+		}
 	};
 
 const handleClearBoard = (socket, io) => (roomId) => {
 	const result = clearBoard(roomId);
-	const event = result.success ? "updateGame" : "gameError";
-	io.to(roomId).emit(
-		event,
-		result.success ? result.roomState : result.message
-	);
+
+	if (result.success) {
+		io.to(roomId).emit("updateGame", result.roomState);
+	} else {
+		// Send error only to the requesting player
+		socket.emit(
+			"gameError",
+			result.message || "Unable to clear the board."
+		);
+	}
 };
 
 const handleDisconnect = (socket, io) => () => {
-	const roomId = playerDisconnect(socket.id);
-	if (roomId) {
-		io.to(roomId).emit("playerDisconnected", { socketId: socket.id });
-	}
+	// const roomId = playerDisconnect(socket.id);
+	// if (roomId) {
+	// 	io.to(roomId).emit("playerDisconnected", { socketId: socket.id });
+	// 	frontendLogger.info(
+	// 		`Player disconnected: ${socket.id}, room: ${roomId}`
+	// 	);
+	// }
 };
 
 const handleLeaveRoom = (socket, io) => (roomId) => {
 	const result = leaveRoom(roomId, socket.id);
-	result.success
-		? socket.leave(roomId)
-		: socket.emit(socket.id).emit("gameError", "Unable to leave room");
-	frontendLogger.info(`Player left room: ${roomId}`);
+	if (result.success) {
+		socket.leave(roomId);
+		result.roomState
+			? io.to(roomId).emit("updateGame", result.roomState)
+			: null;
+		socket.emit("roomLeft");
+		frontendLogger.info(`Player left room: ${roomId}`);
+	} else {
+		// Send error only to the player trying to leave
+		socket.emit("gameError", result.message || "Unable to leave room.");
+		frontendLogger.warn(`Unable to leave room: ${roomId}:`, {
+			message: result.message || "Unable to leave room.",
+		});
+	}
 };
 
 module.exports = {
 	getRoomId,
+	handleJoinRoom,
+	handleStartGame,
+	handleMove,
+	handleModeChange,
 	handleClearBoard,
 	handleDisconnect,
-	handleJoinRoom,
 	handleLeaveRoom,
-	handleModeChange,
-	handleMove,
-	handleStartGame,
 };

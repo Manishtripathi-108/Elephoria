@@ -36,7 +36,7 @@ export const TicTacToeProvider = ({ children }) => {
 
             // Common validation for both online and offline modes
             if (ultimateBoard[macroIndex]?.[cellIndex] || classicBoard[macroIndex] || (activeIndex !== null && activeIndex !== macroIndex)) {
-                window.addToast('Invalid move: Cell already occupied or inactive', 'error')
+                window.addToast('Invalid move', 'error')
                 return
             }
 
@@ -49,7 +49,7 @@ export const TicTacToeProvider = ({ children }) => {
                         roomId,
                         playerSymbol,
                         macroIndex,
-                        ...(cellIndex !== null && { cellIndex }), // Ultimate board requires cellIndex
+                        ...(cellIndex !== null && { cellIndex }),
                     }
 
                     socketRef.current.emit('playerMove', movePayload)
@@ -80,13 +80,8 @@ export const TicTacToeProvider = ({ children }) => {
             dispatch({ type: ActionTypes.IS_PLAYING_ONLINE, payload: true })
         })
 
-        socketRef.current.on('roomFull', (roomState) => {
-            console.log('Room is full:', roomState)
-            dispatch({ type: ActionTypes.UPDATE_STATE, payload: { ...roomState } })
-        })
-
-        socketRef.current.on('gameStarted', () => {
-            dispatch({ type: ActionTypes.UPDATE_STATE, payload: { gameStarted: true } })
+        socketRef.current.on('gameStarted', (roomState) => {
+            dispatch({ type: ActionTypes.UPDATE_STATE, payload: { gameStarted: true, ...roomState } })
         })
 
         socketRef.current.on('updateGame', (roomState) => {
@@ -98,7 +93,11 @@ export const TicTacToeProvider = ({ children }) => {
             console.log('User disconnected')
             socketRef.current = null
             startOver()
-            window.addToast('Disconnected from server', 'error')
+        })
+
+        socketRef.current.on('roomLeft', () => {
+            disconnectPlayer()
+            window.addToast('Room left', 'error')
         })
 
         socketRef.current.on('gameError', (message) => {
@@ -110,35 +109,20 @@ export const TicTacToeProvider = ({ children }) => {
     const disconnectPlayer = useCallback(() => {
         if (socketRef.current) {
             socketRef.current.disconnect()
-            socketRef.current = null
         }
     }, [])
 
     const startGame = useCallback(() => {
-        socketRef.current.emit('startGame', { roomId: state.roomId }, ({ success, message }) => {
-            success ? window.addToast('Game started...', 'success') : window.addToast(message, 'error')
-        })
+        socketRef.current.emit('startGame', { roomId: state.roomId })
     }, [state.roomId])
 
     const joinRoom = useCallback(
         (roomId, playerName, roomName = 'default', isCreateRoom = false) => {
             if (!state.isPlayingOnline) connectPlayer()
 
-            socketRef.current.emit('joinRoom', { roomId, playerName, roomName, isCreateRoom }, ({ success, symbol, roomState, message }) => {
-                if (success) {
-                    dispatch({
-                        type: ActionTypes.UPDATE_STATE,
-                        payload: {
-                            playerSymbol: symbol,
-                            ...roomState,
-                        },
-                    })
-                } else {
-                    window.addToast(message, 'error')
-                    disconnectPlayer()
-                }
-            })
+            socketRef.current.emit('joinRoom', { roomId, playerName, roomName, isCreateRoom })
         },
+
         [state.isPlayingOnline, connectPlayer, disconnectPlayer]
     )
 
@@ -177,17 +161,18 @@ export const TicTacToeProvider = ({ children }) => {
     return (
         <TicTacToeContext.Provider
             value={{
-                state,
+                clearBoard,
+                connectPlayer,
+                createRoom,
+                disconnectPlayer,
+                handleMove,
+                joinRoom,
+                leaveRoom,
                 setMode,
                 setPlayerNames,
-                handleMove,
-                startOver,
-                clearBoard,
                 startGame,
-                connectPlayer,
-                disconnectPlayer,
-                createRoom,
-                joinRoom,
+                startOver,
+                state,
             }}>
             {children}
         </TicTacToeContext.Provider>

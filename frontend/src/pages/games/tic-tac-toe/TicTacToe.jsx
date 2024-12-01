@@ -17,7 +17,7 @@ import TicTacToeHeader from './components/TicTacToeHeader'
 import WaitingRoom from './components/WaitingRoom'
 
 const TicTacToe = () => {
-    const { state, startOver, startGame, clearBoard } = useTicTacToeContext()
+    const { state, startOver, startGame, leaveRoom, clearBoard } = useTicTacToeContext()
     const { mode, isDraw, isGameOver, playerX, playerO, winner, isXNext, drawScore, isPlayingOnline, playerSymbol, gameStarted, roomId, roomName } =
         state
 
@@ -36,7 +36,7 @@ const TicTacToe = () => {
     return (
         <>
             {isPlayingOnline && !gameStarted ? (
-                <WaitingRoom roomId={roomId} roomName={roomName} playerO={playerO} playerX={playerX} onStart={startGame} onExit={startOver} />
+                <WaitingRoom roomId={roomId} roomName={roomName} playerO={playerO} playerX={playerX} onStart={startGame} onExit={leaveRoom} />
             ) : (
                 <>
                     <TicTacToeHeader title={isPlayingOnline ? `Welcome, to ${roomName} ${roomId} (${mode})` : mode} playingOnline={isPlayingOnline} />
@@ -77,7 +77,7 @@ const TicTacToe = () => {
                                     </ElevateButton>
                                 </>
                             ) : (
-                                <ElevateButton onClick={openPlayerNameModal} variant="danger" title="Exit Room" className="col-span-2">
+                                <ElevateButton onClick={leaveRoom} variant="danger" title="Exit Room" className="col-span-2">
                                     <Icon icon={iconMap.logOut} className="size-5" />
                                     <span className="text-sm font-semibold">
                                         Leave <span className="hidden md:inline">Room</span>

@@ -1,113 +1,13 @@
 const { backendLogger } = require("../utils/logger");
-
-const WINNING_PATTERNS = {
-	9: [
-		[0, 1, 2],
-		[3, 4, 5],
-		[6, 7, 8],
-		[0, 3, 6],
-		[1, 4, 7],
-		[2, 5, 8],
-		[0, 4, 8],
-		[2, 4, 6],
-	],
-	16: [
-		[0, 1, 2, 3],
-		[4, 5, 6, 7],
-		[8, 9, 10, 11],
-		[12, 13, 14, 15],
-		[0, 4, 8, 12],
-		[1, 5, 9, 13],
-		[2, 6, 10, 14],
-		[3, 7, 11, 15],
-		[0, 5, 10, 15],
-		[3, 6, 9, 12],
-	],
-	25: [
-		[0, 1, 2, 3, 4],
-		[5, 6, 7, 8, 9],
-		[10, 11, 12, 13, 14],
-		[15, 16, 17, 18, 19],
-		[20, 21, 22, 23, 24],
-		[0, 5, 10, 15, 20],
-		[1, 6, 11, 16, 21],
-		[2, 7, 12, 17, 22],
-		[3, 8, 13, 18, 23],
-		[4, 9, 14, 19, 24],
-		[0, 6, 12, 18, 24],
-		[4, 8, 12, 16, 20],
-	],
-};
-
-const evaluateBoardStatus = (board) => {
-	for (const [a, b, c] of WINNING_PATTERNS[9]) {
-		if (board[a] === "D") continue;
-
-		if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-			return { status: "win", winner: board[a], line: [a, b, c] };
-		}
-	}
-	const isBoardFull = board.every((cell) => cell);
-	if (isBoardFull) return { status: "draw" };
-	return { status: "continue" };
-};
-
-// Utility to create new scores for a winner
-const updateScore = (state, winner) => {
-	if (!winner) return state;
-	const playerKey = winner === "X" ? "playerX" : "playerO";
-	return {
-		...state,
-		[playerKey]: {
-			...state[playerKey],
-			score: state[playerKey].score + 1,
-		},
-	};
-};
-
-// Utility to reset game but retain necessary properties
-const resetState = (state, overrides = {}) => ({
-	...initialRoom,
-	mode: state.mode,
-	roomId: state.roomId,
-	roomName: state.roomName,
-	drawScore: state.drawScore,
-	playerX: state.playerX,
-	playerO: state.playerO,
-	...overrides,
-});
+const { evaluateBoardStatus, initialRoom } = require("../utils/ticTacToeUtils");
 
 const rooms = {};
 
-const initialRoom = {
-	// Game mode and boards
-	mode: "classic", // 'classic' or 'ultimate'
-	classicBoard: Array(9).fill(null),
-	ultimateBoard: Array(9).fill(Array(9).fill(null)),
-
-	// Online play
-	roomId: null,
-	roomName: null,
-
-	// Game state
-	isXNext: true,
-	isGameOver: false,
-	winner: null,
-	winIndexes: null,
-	isDraw: false,
-	drawScore: 0,
-	activeIndex: null,
-
-	// Player details
-	playerX: { id: null, name: null, score: 0 },
-	playerO: { id: null, name: null, score: 0 },
-};
-
 const generateRoomId = () => {
+	let roomId;
 	do {
 		roomId = Math.random().toString(36).substring(2, 8);
-	} while (Object.keys(rooms).includes(roomId));
-
+	} while (rooms[roomId]);
 	return roomId;
 };
 
@@ -115,11 +15,15 @@ const joinRoom = (roomId, playerName, roomName, isCreateRoom, socketId) => {
 	let room = rooms[roomId];
 
 	if (!room) {
-		if (!isCreateRoom)
-			return { success: false, message: "Room Does Not Exist" };
+		if (!isCreateRoom) {
+			backendLogger.warn(`Room ${roomId} does not exist.`);
+			return { success: false, message: "Room does not exist" };
+		}
 
-		room = { ...initialRoom, roomId, roomName };
+		// Create a deep copy of initialRoom
+		room = { ...JSON.parse(JSON.stringify(initialRoom)), roomId, roomName };
 		rooms[roomId] = room;
+		backendLogger.info(`Room ${roomId} created.`, { room });
 	}
 
 	if (room.playerX.id === socketId || room.playerO.id === socketId) {
@@ -130,209 +34,220 @@ const joinRoom = (roomId, playerName, roomName, isCreateRoom, socketId) => {
 		};
 	}
 
-	// If both players have already joined the room, don't allow another player to join.
 	if (room.playerX.id && room.playerO.id) {
-		return {
-			success: false,
-			message: "Room is already full. Please try another room.",
-		};
+		backendLogger.warn(`Room ${roomId} is already full.`);
+		return { success: false, message: "Room is already full." };
 	}
 
-	const playerSymbol = room.playerX.id ? "O" : "X";
+	const symbol = room.playerX.id ? "O" : "X";
+	room[`player${symbol}`] = { id: socketId, name: playerName, score: 0 };
 
-	room[`player${playerSymbol}`] = {
-		id: socketId,
-		name: playerName,
-		score: 0,
-	};
-
+	backendLogger.info(
+		`Player ${playerName} joined Room ${roomId} as ${symbol}.`,
+		{ room }
+	);
 	return {
 		success: true,
-		symbol: playerSymbol,
+		symbol,
 		roomState: room,
-		isRoomFull: room.playerX.id && room.playerO.id,
+		isRoomFull: !!(room.playerX.id && room.playerO.id),
 	};
 };
 
 const startGame = (roomId) => {
 	const room = rooms[roomId];
-
-	if (room && room.playerX.id && room.playerO.id) {
-		return { success: true, roomState: room };
+	if (!room || !room.playerX.id || !room.playerO.id) {
+		const message = room ? "Players not found" : "Room does not exist";
+		backendLogger.warn(`Cannot start game in Room ${roomId}: ${message}`);
+		return { success: false, message };
 	}
-
-	return {
-		success: false,
-		message: room ? "Players not found" : "Room does not exist",
-	};
+	room.gameStarted = true;
+	backendLogger.info(`Game started in Room ${roomId}.`);
+	return { success: true, roomState: room };
 };
 
 const updateGameState = (movePayload) => {
 	const { roomId, playerSymbol, macroIndex, cellIndex } = movePayload;
-	const state = rooms[roomId];
+	const room = rooms[roomId];
 
-	if (!state) return { success: false, message: "Room does not exist" };
+	if (!room) {
+		backendLogger.warn(`Room ${roomId} does not exist.`);
+		return { success: false, message: "Room does not exist" };
+	}
 
 	const {
 		mode,
 		isXNext,
-		isGameOver,
 		classicBoard,
 		ultimateBoard,
+		isGameOver,
 		activeIndex,
-	} = state;
+	} = room;
 
 	if (
 		isGameOver ||
 		classicBoard[macroIndex] ||
-		isXNext !== (playerSymbol === "X")
-	)
+		(mode === "ultimate" && ultimateBoard[macroIndex][cellIndex]) ||
+		(activeIndex !== null && activeIndex !== macroIndex)
+	) {
+		backendLogger.warn(`Invalid move in Room ${roomId}.`, { movePayload });
 		return { success: false, message: "Invalid move" };
+	}
+
+	if (isXNext !== (playerSymbol === "X")) {
+		backendLogger.warn(`Not ${playerSymbol}'s turn in Room ${roomId}.`);
+		return { success: false, message: "Not your turn" };
+	}
 
 	if (mode === "classic") {
 		const updatedBoard = classicBoard.map((cell, i) =>
-			i === macroIndex ? (isXNext ? "X" : "O") : cell
+			i === macroIndex ? playerSymbol : cell
 		);
 		const result = evaluateBoardStatus(updatedBoard);
 
-		let newState = {
-			...state,
+		Object.assign(room, {
 			classicBoard: updatedBoard,
 			isXNext: !isXNext,
 			isGameOver: result.status !== "continue",
 			winner:
 				result.status === "win"
-					? state[`player${result.winner}`].name
+					? room[`player${result.winner}`].name
 					: null,
 			winIndexes: result.status === "win" ? result.line : null,
 			isDraw: result.status === "draw",
-		};
+		});
 
-		newState = updateScore(newState, result.winner);
-		if (result.status === "draw") newState.drawScore += 1;
+		if (result.status === "win") room[`player${playerSymbol}`].score++;
+		if (result.status === "draw") room.drawScore++;
 
-		rooms[roomId] = newState;
-
-		return { success: true, roomState: newState };
-	} else {
-		if (
-			ultimateBoard[macroIndex][cellIndex] ||
-			(activeIndex !== null && activeIndex !== macroIndex) ||
-			isXNext !== (playerSymbol === "X")
-		)
-			return { success: false, message: "Invalid move" };
-
-		const updatedUltimateBoard = ultimateBoard.map((board, i) =>
+		backendLogger.info(`Classic board updated in Room ${roomId}.`, {
+			room,
+		});
+		return { success: true, roomState: room };
+	} else if (mode === "ultimate") {
+		const updatedUltimateBoard = ultimateBoard.map((macro, i) =>
 			i === macroIndex
-				? board.map((cell, j) =>
-						j === cellIndex ? (isXNext ? "X" : "O") : cell
+				? macro.map((cell, j) =>
+						j === cellIndex ? playerSymbol : cell
 				  )
-				: board
+				: macro
 		);
 
-		const miniResult = evaluateBoardStatus(
+		const miniBoardStatus = evaluateBoardStatus(
 			updatedUltimateBoard[macroIndex]
 		);
-		const updatedClassicBoard = [...classicBoard];
-		if (miniResult.status === "win")
-			updatedClassicBoard[macroIndex] = miniResult.winner;
-		else if (miniResult.status === "draw")
-			updatedClassicBoard[macroIndex] = "D";
+		if (miniBoardStatus.status === "win")
+			classicBoard[macroIndex] = miniBoardStatus.winner;
+		else if (miniBoardStatus.status === "draw")
+			classicBoard[macroIndex] = "D";
 
-		const largeResult = evaluateBoardStatus(updatedClassicBoard);
+		const largeBoardStatus = evaluateBoardStatus(classicBoard);
 
-		let newState = {
-			...state,
+		Object.assign(room, {
 			ultimateBoard: updatedUltimateBoard,
-			classicBoard: updatedClassicBoard,
+			classicBoard: classicBoard,
 			isXNext: !isXNext,
-			isGameOver: largeResult.status !== "continue",
-			winner: largeResult.status === "win" ? largeResult.winner : null,
-			winIndexes: largeResult.status === "win" ? largeResult.line : null,
-			isDraw: largeResult.status === "draw",
-			activeIndex: updatedClassicBoard[cellIndex] ? null : cellIndex,
-		};
+			isGameOver: largeBoardStatus.status !== "continue",
+			winner:
+				largeBoardStatus.status === "win"
+					? room[`player${largeBoardStatus.winner}`].name
+					: null,
+			winIndexes:
+				largeBoardStatus.status === "win"
+					? largeBoardStatus.line
+					: null,
+			isDraw: largeBoardStatus.status === "draw",
+			activeIndex:
+				largeBoardStatus.status === "continue" &&
+				!classicBoard[cellIndex]
+					? cellIndex
+					: null,
+		});
 
-		newState = updateScore(newState, largeResult.winner);
-		if (largeResult.status === "draw") newState.drawScore += 1;
+		if (largeBoardStatus.status === "win")
+			room[`player${largeBoardStatus.winner}`].score++;
+		if (largeBoardStatus.status === "draw") room.drawScore++;
 
-		rooms[roomId] = newState;
-		return { success: true, roomState: newState };
+		backendLogger.info(`Ultimate board updated in Room ${roomId}.`, {
+			room,
+		});
+		return { success: true, roomState: room };
 	}
 };
 
-/**
- * Resets the room state to the given mode (classic or ultimate)
- *
- * @param {string} roomId - Room ID
- * @param {string} mode - Mode to change to (classic or ultimate)
- * @returns {object} - Success status and the new room state if successful
- */
 const changeMode = (roomId, mode) => {
-	const state = rooms[roomId];
-	if (!state) return { success: false, message: "Room does not exist" };
-	const newState = resetState(state, { mode });
-	rooms[roomId] = newState;
-	return { success: true, roomState: newState };
-};
-
-/**
- * Resets the board of the given room to its initial state
- *
- * @param {string} roomId - Room ID
- * @returns {object} - Success status and the new room state if successful
- */
-const clearBoard = (roomId) => {
-	if (!rooms[roomId])
+	const room = rooms[roomId];
+	if (!room) {
+		backendLogger.warn(`Room ${roomId} does not exist.`);
 		return { success: false, message: "Room does not exist" };
+	}
 
-	const newState = resetState(rooms[roomId], {
-		isXNext: Math.random() < 0.5,
+	Object.assign(room, {
+		...JSON.parse(JSON.stringify(initialRoom)),
+		mode,
+		gameStarted: room.gameStarted,
+		roomId: room.roomId,
+		roomName: room.roomName,
+		playerX: room.playerX,
+		playerO: room.playerO,
+		drawScore: room.drawScore,
 	});
-	rooms[roomId] = newState;
-	return { success: true, roomState: newState };
+
+	backendLogger.info(`Mode changed to ${mode} in Room ${roomId}.`, { room });
+	return { success: true, roomState: room };
 };
 
-const handleDisconnect = (socketId) => {
-	for (const roomId in rooms) {
-		const room = rooms[roomId];
-		if (room.players[socketId]) {
-			delete room.players[socketId];
-			return roomId;
-		}
+const clearBoard = (roomId) => {
+	const room = rooms[roomId];
+	if (!room) {
+		backendLogger.warn(`Room ${roomId} does not exist.`);
+		return { success: false, message: "Room does not exist" };
 	}
-	return null;
+
+	Object.assign(room, {
+		...JSON.parse(JSON.stringify(initialRoom)),
+		mode: room.mode,
+		isXNext: Math.random() < 0.5,
+		gameStarted: room.gameStarted,
+		roomId: room.roomId,
+		roomName: room.roomName,
+		playerX: room.playerX,
+		playerO: room.playerO,
+		drawScore: room.drawScore,
+	});
+
+	backendLogger.info(`Board cleared in Room ${roomId}.`, { room });
+	return { success: true, roomState: room };
 };
 
 const leaveRoom = (roomId, socketId) => {
 	const room = rooms[roomId];
-	if (!room) return { success: false, message: "Room does not exist" };
-
-	if (room.playerX.id === socketId || room.playerO.id === socketId) {
-		if (room.playerX.id === socketId) {
-			room.playerX = { id: null, name: null, score: 0 };
-			return { success: true };
-		}
-
-		if (room.playerO.id === socketId) {
-			room.playerO = { id: null, name: null, score: 0 };
-			return { success: true };
-		}
-
-		// If both players have left the room, delete the room
-		if (!room.playerX.id && !room.playerO.id) delete rooms[roomId];
+	if (!room) {
+		backendLogger.warn(`Room ${roomId} does not exist.`);
+		return { success: false, message: "Room does not exist" };
 	}
 
-	return { success: false, message: "Player not found" };
+	if (room.playerX.id === socketId)
+		room.playerX = { id: null, name: null, score: 0 };
+	else if (room.playerO.id === socketId)
+		room.playerO = { id: null, name: null, score: 0 };
+	room.gameStarted = false;
+
+	if (!room.playerX.id && !room.playerO.id) {
+		delete rooms[roomId];
+		backendLogger.info(`Room ${roomId} deleted as all players left.`);
+		return { success: true };
+	}
+
+	return { success: true, roomState: clearBoard(roomId).roomState };
 };
 
 module.exports = {
 	generateRoomId,
 	joinRoom,
 	startGame,
+	updateGameState,
 	changeMode,
 	leaveRoom,
-	updateGameState,
-	handleDisconnect,
 	clearBoard,
 };
