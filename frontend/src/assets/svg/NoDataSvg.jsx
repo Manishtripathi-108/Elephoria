@@ -3,26 +3,26 @@ import React from 'react'
 function NoDataSvg(props) {
     return (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" {...props}>
-            <g id="freepik--Floor--inject-63">
-                <ellipse id="freepik--floor--inject-63" cx="250.11" cy="316.94" rx="236.67" ry="136.64" fill="#f5f5f5"></ellipse>
+            <g id="Floor--inject-63">
+                <ellipse id="floor--inject-63" cx="250.11" cy="316.94" rx="236.67" ry="136.64" fill="#f5f5f5"></ellipse>
             </g>
-            <g id="freepik--Shadows--inject-63">
-                <ellipse id="freepik--Shadow--inject-63" cx="428.84" cy="396.29" rx="47.07" ry="27.17" fill="#e6e6e6"></ellipse>
+            <g id="Shadows--inject-63">
+                <ellipse id="Shadow--inject-63" cx="428.84" cy="396.29" rx="47.07" ry="27.17" fill="#e6e6e6"></ellipse>
                 <path
-                    id="freepik--shadow--inject-63"
+                    id="shadow--inject-63"
                     d="M129.09,343.48l119.83,69.19a9.49,9.49,0,0,0,8.56,0l156.35-90c2.36-1.36,2.36-3.56,0-4.92L293.44,248.42a9.49,9.49,0,0,0-8.56,0L129.09,338.54C126.73,339.91,126.73,342.12,129.09,343.48Z"
                     fill="#e6e6e6"></path>
                 <path
-                    id="freepik--shadow--inject-63"
+                    id="shadow--inject-63"
                     d="M103.61,326.57,43.21,291.7c-2.39-1.38-2.39-3.63,0-5,15-8.73,64.11-37.21,64.74-37.36s49.86,28.63,64.9,37.43c2.38,1.4,2.37,3.64,0,5l-60.55,34.79A9.57,9.57,0,0,1,103.61,326.57Z"
                     fill="#e6e6e6"></path>
                 <path
-                    id="freepik--shadow--inject-63"
+                    id="shadow--inject-63"
                     d="M311.3,219.16c13.35-7.7,35-7.7,48.33,0,11.31,6.53,13,16.5,5.16,24.08a5.74,5.74,0,0,1,1.27.52l42.16,24.34c1.79,1,1.79,2.71,0,3.74l-2.64,1.52a6.62,6.62,0,0,1-6.37-.18L360,247.49a2.37,2.37,0,0,1-.45-.36c-13.36,7.63-34.9,7.61-48.2-.07S298,226.87,311.3,219.16Z"
                     fill="#e6e6e6"></path>
             </g>
-            <g id="freepik--magnifying-glass--inject-63">
-                <g id="freepik--magnifying-glass--inject-63">
+            <g id="magnifying-glass--inject-63">
+                <g id="magnifying-glass--inject-63">
                     <path
                         d="M305.55,224.18v8.3c0,4.5,3,9,8.93,12.45,11.91,6.87,31.22,6.87,43.13,0,5.95-3.44,8.93-8,8.93-12.45v-8.3h0c0-4.51-3-9-8.93-12.45-11.91-6.88-31.22-6.88-43.13,0-6,3.43-8.93,7.94-8.93,12.45Zm58,0c0,3.6-2.65,7.12-7.45,9.89-5.32,3.07-12.46,4.76-20.09,4.76s-14.78-1.69-20.09-4.76c-4.81-2.77-7.46-6.29-7.46-9.89s2.65-7.12,7.46-9.9c5.31-3.07,12.45-4.76,20.09-4.76s14.77,1.69,20.09,4.76C360.94,217.06,363.59,220.57,363.59,224.18Z"
                         fill="#407BFF"></path>
@@ -63,8 +63,8 @@ function NoDataSvg(props) {
                     </g>
                 </g>
             </g>
-            <g id="freepik--Lines--inject-63">
-                <g id="freepik--lines--inject-63">
+            <g id="Lines--inject-63">
+                <g id="lines--inject-63">
                     <path
                         d="M172.93,385.59a5.81,5.81,0,0,1-2.85-.69L77.79,331.61a2.07,2.07,0,0,1,0-3.86l21.76-12.57.5.87L78.29,328.61a1.37,1.37,0,0,0-.83,1.07,1.4,1.4,0,0,0,.83,1.07L170.58,384a5.25,5.25,0,0,0,4.7,0L193,373.8l.5.87L175.78,384.9A5.84,5.84,0,0,1,172.93,385.59Z"
                         fill="#407BFF"></path>
@@ -76,8 +76,8 @@ function NoDataSvg(props) {
                         fill="#407BFF"></path>
                 </g>
             </g>
-            <g id="freepik--Server--inject-63">
-                <g id="freepik--server--inject-63">
+            <g id="Server--inject-63">
+                <g id="server--inject-63">
                     <polygon points="42.94 268.7 107.94 306.23 172.93 268.7 107.94 231.18 42.94 268.7" fill="#263238"></polygon>
                     <path
                         d="M107.93,306.22v17.3a8.84,8.84,0,0,1-4.32-1h0L75.44,306.23,45.54,289a5.73,5.73,0,0,1-2.6-4.5V268.7l63.2,36.49Z"
@@ -843,9 +843,9 @@ function NoDataSvg(props) {
                         fill="#407BFF"></path>
                 </g>
             </g>
-            <g id="freepik--Device--inject-63">
-                <g id="freepik--Laptop--inject-63">
-                    <g id="freepik--laptop--inject-63">
+            <g id="Device--inject-63">
+                <g id="Laptop--inject-63">
+                    <g id="laptop--inject-63">
                         <path
                             d="M134.91,338.6a8.43,8.43,0,0,0,3.94,6.54l110.29,63.68a8.75,8.75,0,0,0,7.88,0l150.91-87.13a7.4,7.4,0,0,0,0-13.08l-110.3-63.67a8.67,8.67,0,0,0-7.87,0L138.85,332.07A8.42,8.42,0,0,0,134.91,338.6Z"
                             fill="#407BFF"></path>
@@ -915,7 +915,7 @@ function NoDataSvg(props) {
                             opacity="0.8"
                             fill="#fff"></path>
                     </g>
-                    <g id="freepik--Window--inject-63">
+                    <g id="Window--inject-63">
                         <path
                             d="M144.37,303.34c0,1.86,1.31,2.61,2.92,1.68L280.78,228a6.45,6.45,0,0,0,2.92-5V133L144.37,213.47Z"
                             fill="#37474f"></path>
@@ -966,7 +966,7 @@ function NoDataSvg(props) {
                     </g>
                 </g>
             </g>
-            <g id="freepik--Character--inject-63">
+            <g id="Character--inject-63">
                 <path
                     d="M458.41,276.92c1.42-28.8-.73-35.76-8.29-41.21l-3.34,16.63s3.05,19.75,2.52,26.3c-.45,5.75-1.18,12.94-2.64,17.56a3.55,3.55,0,0,1-1.57,1.94c-2,1.18-2.8,2.41-4.31,3.92-1.18,1.18-2.16,1.46-2,1.85a1.9,1.9,0,0,0,2.41.91,13.08,13.08,0,0,0,2.8-1.44,17.63,17.63,0,0,1-2.94,4.81c-2.82,3.3-3,5.36,2.54,5.53,3.47.11,6.28-2,9.06-9.54a61.67,61.67,0,0,0,2.63-8.52C456.75,288.13,458.18,281.55,458.41,276.92Z"
                     fill="#a35b5a"></path>

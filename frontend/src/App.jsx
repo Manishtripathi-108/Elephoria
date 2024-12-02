@@ -7,6 +7,7 @@ import RootLayout from './components/layout/RootLayout'
 import { AnimeHubProvider } from './context/AnimeHubContext'
 import { LoadingBarProvider } from './context/LoadingBarContext'
 import { TicTacToeProvider } from './context/TicTacToe/TicTacToeContext'
+import './utils/iconUtils'
 
 // Lazy-loaded components
 const NotFound = lazy(() => import('./pages/404-page'))

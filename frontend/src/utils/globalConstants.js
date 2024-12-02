@@ -1,4 +1,5 @@
 export const iconMap = {
+    anime: 'custom:anime',
     broom: 'game-icons:broom',
     card: 'material-symbols:cards-outline-rounded',
     close: 'iconamoon:close',
@@ -17,6 +18,7 @@ export const iconMap = {
     list: 'tabler:list',
     loading: 'line-md:loading-loop',
     logOut: 'majesticons:logout',
+    manga: 'custom:manga',
     moon: 'meteocons:clear-night-fill',
     moreDots: 'pepicons-pop:dots-y',
     music: 'solar:music-note-bold',
@@ -36,3 +38,40 @@ export const iconMap = {
     user: 'carbon:user-avatar-filled',
     warning: 'solar:shield-warning-bold',
 }
+
+export const sidenavMenuItems = [
+    {
+        title: 'Anime Hub',
+        icon: iconMap.anime,
+        children: [
+            { name: 'Anime Hub', link: '/anime-hub' },
+            { name: 'Authorize', link: '/anime-hub/auth' },
+        ],
+    },
+    {
+        title: 'Games',
+        icon: iconMap.gamePad,
+        children: [
+            {
+                name: 'Tic Tac Toe',
+                children: [
+                    { name: 'Classic', link: '/games/tic-tac-toe/classic' },
+                    { name: 'Ultimate', link: '/games/tic-tac-toe/ultimate' },
+                ],
+            },
+            { name: 'Snake', link: '/games/snake' },
+            { name: 'Ludo', link: '/games/ludo' },
+        ],
+    },
+    {
+        title: 'Audio',
+        icon: iconMap.music,
+        children: [{ name: 'Music Editor', link: '/audio' }],
+    },
+    {
+        title: 'Profile',
+        badge: 14,
+        icon: iconMap.person,
+        link: '/profile',
+    },
+]

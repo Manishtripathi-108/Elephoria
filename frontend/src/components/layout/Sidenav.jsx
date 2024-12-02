@@ -5,44 +5,7 @@ import { Link } from 'react-router-dom'
 import { Icon } from '@iconify/react'
 
 import avatarImage from '../../assets/images/square/logo.png'
-import { iconMap } from '../../utils/globalConstants'
-
-const menuItems = [
-    {
-        title: 'Anime Hub',
-        icon: iconMap.gamePad,
-        children: [
-            { name: 'Anime Hub', link: '/anime-hub' },
-            { name: 'Authorize', link: '/anime-hub/auth' },
-        ],
-    },
-    {
-        title: 'Games',
-        icon: iconMap.gamePad,
-        children: [
-            {
-                name: 'Tic Tac Toe',
-                children: [
-                    { name: 'Classic', link: '/games/tic-tac-toe/classic' },
-                    { name: 'Ultimate', link: '/games/tic-tac-toe/ultimate' },
-                ],
-            },
-            { name: 'Snake', link: '/games/snake' },
-            { name: 'Ludo', link: '/games/ludo' },
-        ],
-    },
-    {
-        title: 'Audio',
-        icon: iconMap.music,
-        children: [{ name: 'Music Editor', link: '/audio' }],
-    },
-    {
-        title: 'Profile',
-        badge: 14,
-        icon: iconMap.person,
-        link: '/profile',
-    },
-]
+import { iconMap, sidenavMenuItems } from '../../utils/globalConstants'
 
 const Sidenav = ({ onDismiss }) => {
     return (
@@ -66,7 +29,7 @@ const Sidenav = ({ onDismiss }) => {
 
             {/* Navigation Section */}
             <nav className="scrollbar-thin space-y-1 overflow-y-auto p-4">
-                {menuItems.map((item, index) => (
+                {sidenavMenuItems.map((item, index) => (
                     <div key={index}>
                         {/* Parent Item */}
                         <div className="group">
