@@ -9,7 +9,7 @@ import { DialogModal, closeModal } from '../../../components/common/PrimaryModal
 import JelloButton from '../../../components/common/buttons/JelloButton'
 import { useAnimeHubContext } from '../../../context/AnimeHubContext'
 import { iconMap } from '../../../utils/globalConstants'
-import { validStatusOptions } from '../constants'
+import { validStatusOptions } from '../utils/constants'
 
 export default function AnimeModal({ entryId, modalId, media, mediaStatus = '', mediaProgress = '0' }) {
     const bannerStyle = { backgroundImage: `url(${media?.bannerImage})` }

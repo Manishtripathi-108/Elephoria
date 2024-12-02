@@ -1,10 +1,10 @@
-import React, { memo, useState } from 'react'
+import React, { memo } from 'react'
 
 import { Icon } from '@iconify/react'
 
 import { openModal } from '../../../components/common/PrimaryModal'
 import { iconMap } from '../../../utils/globalConstants'
-import { convertMonthNumberToName } from '../constants'
+import { convertMonthNumberToName } from '../utils/constants'
 import AnimeModal from './AnimeModal'
 
 function MediaCard({ mediaItem, isFavouriteList = false }) {

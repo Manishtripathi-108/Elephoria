@@ -1,10 +1,3 @@
-export const TabEnum = {
-    ANIME: 'anime',
-    MANGA: 'manga',
-    FAVOURITES: 'favourites',
-    LOGOUT: 'logout',
-}
-
 export const filterOptions = [
     {
         name: 'format',
