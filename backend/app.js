@@ -24,7 +24,10 @@ const io = new Server(server, {
 // Middleware configuration
 app.use(
 	cors({
-		origin: "*",
+		origin:
+			process.env.NODE_ENV === "production"
+				? process.env.CLIENT_URL
+				: "http://localhost",
 		credentials: true,
 	})
 );
