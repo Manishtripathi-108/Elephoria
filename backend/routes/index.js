@@ -5,7 +5,10 @@ const logs = require("./logs");
 const router = express.Router();
 
 router.get("/", (req, res) => {
-    res.status(200).json({ success: true });
+	res.status(200).json({
+		success: true,
+		message: "Welcome to the Elephoria API!",
+	});
 });
 router.use("/anime-hub", animeRoutes);
 router.use("/audio", audioRoutes);

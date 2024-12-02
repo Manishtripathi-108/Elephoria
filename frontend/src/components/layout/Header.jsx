@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 
 import { Link, useLocation } from 'react-router-dom'
 
-import AppName from '../../assets/svg/AppName'
 import AppLogo from '../../assets/svg/AppLogo'
+import AppName from '../../assets/svg/AppName'
 import NeuToggleButton from '../common/buttons/NeuToggleButton'
 import ThemeToggleBtn from '../common/buttons/ThemeToggleBtn'
 import Sidenav from './Sidenav'

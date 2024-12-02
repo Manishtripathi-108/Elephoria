@@ -9,6 +9,8 @@ import { LoadingBarProvider } from './context/LoadingBarContext'
 import { TicTacToeProvider } from './context/TicTacToe/TicTacToeContext'
 import './utils/iconUtils'
 
+console.log(import.meta.env.VITE_SERVER_URL)
+
 // Lazy-loaded components
 const NotFound = lazy(() => import('./pages/404-page'))
 const Shadows = lazy(() => import('./pages/ShadowsGrid'))
