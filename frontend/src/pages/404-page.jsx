@@ -89,7 +89,7 @@ const NotFound = () => {
                 <div className="inline-flex items-center rounded-md shadow-sm">
                     <button
                         type="submit"
-                        className="bg-accent-primary mt-6 cursor-pointer rounded-lg border-b-4 border-[#bf2121] px-6 py-2 text-white transition-all hover:-translate-y-0.5 hover:border-b-8 hover:brightness-110 active:translate-y-1 active:border-b-2 active:brightness-90 dark:border-[#cc573e]">
+                        className="bg-accent mt-6 cursor-pointer rounded-lg border-b-4 border-[#bf2121] px-6 py-2 text-white transition-all hover:-translate-y-0.5 hover:border-b-8 hover:brightness-110 active:translate-y-1 active:border-b-2 active:brightness-90 dark:border-[#cc573e]">
                         <Link to={'/'} className="font-karla text-center text-xl tracking-wide">
                             Go back
                         </Link>

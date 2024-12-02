@@ -24,7 +24,7 @@ const UltimateTicTacToe = () => {
                 <div
                     key={macroIndex}
                     className={`relative grid grid-cols-3 gap-2 rounded-md p-2 shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs md:gap-3 md:p-3 ${
-                        macroIndex === activeIndex ? 'bg-highlight-primary' : ''
+                        macroIndex === activeIndex ? 'bg-highlight' : ''
                     }`}>
                     {macroBoard.map((cell, cellIndex) => (
                         <Square

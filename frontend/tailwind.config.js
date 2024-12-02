@@ -138,16 +138,16 @@ export default {
                 'light-secondary': '#FFE6E6',
                 'light-text-primary': '#333333',
                 'light-text-secondary': '#666666',
-                'light-accent-primary': '#dc2626',
-                'light-highlight-primary': '#4169E1',
+                'light-accent': '#dc2626',
+                'light-highlight': '#4169E1',
 
                 // Dark Mode Colors
                 'dark-primary': '#1f2937',
                 'dark-secondary': '#334155',
                 'dark-text-primary': '#ffffff',
                 'dark-text-secondary': '#cbd5e1',
-                'dark-accent-primary': '#FF6347',
-                'dark-highlight-primary': '#1E90FF',
+                'dark-accent': '#FF6347',
+                'dark-highlight': '#1E90FF',
             },
             boxShadow: {
                 // Light Mode Shadows

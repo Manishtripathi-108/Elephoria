@@ -243,11 +243,11 @@ body {
     }
 
     .range-slider::-webkit-slider-thumb {
-        @apply bg-accent-primary h-6 w-6 cursor-pointer appearance-none rounded-full shadow-neu-light-xs transition duration-300 ease-in-out dark:shadow-neu-dark-xs;
+        @apply bg-accent h-6 w-6 cursor-pointer appearance-none rounded-full shadow-neu-light-xs transition duration-300 ease-in-out dark:shadow-neu-dark-xs;
     }
 
     .range-slider::-moz-range-thumb {
-        @apply bg-accent-primary relative h-6 w-6 cursor-pointer appearance-none rounded-full shadow-neu-light-xs transition duration-300 ease-in-out;
+        @apply bg-accent relative h-6 w-6 cursor-pointer appearance-none rounded-full shadow-neu-light-xs transition duration-300 ease-in-out;
     }
 
     .neu-form-double-range-group {
@@ -499,12 +499,12 @@ body {
         @apply bg-light-secondary dark:bg-dark-secondary;
     }
 
-    .bg-accent-primary {
-        @apply bg-light-accent-primary dark:bg-dark-accent-primary;
+    .bg-accent {
+        @apply bg-light-accent dark:bg-dark-accent;
     }
 
-    .bg-highlight-primary {
-        @apply bg-light-highlight-primary dark:bg-dark-highlight-primary;
+    .bg-highlight {
+        @apply bg-light-highlight dark:bg-dark-highlight;
     }
 
     /* ------------------------------- Text Colors ------------------------------ */
@@ -517,11 +517,11 @@ body {
     }
 
     .text-accent {
-        @apply text-light-accent-primary dark:text-dark-accent-primary;
+        @apply text-light-accent dark:text-dark-accent;
     }
 
     .text-highlight {
-        @apply text-light-highlight-primary dark:text-dark-highlight-primary;
+        @apply text-light-highlight dark:text-dark-highlight;
     }
 
     .text-theme-primary {
@@ -535,10 +535,8 @@ body {
     /* ----------------------------- Thin Scrollbar ----------------------------- */
     .scrollbar-thin {
         &::-webkit-scrollbar {
-            width: 4px;
-            /* Set the width of the scrollbar */
-            height: 4px;
-            /* Set the height of the scrollbar for vertical scrollbar */
+            width: 6px; /* Set the width of the scrollbar */
+            height: 6px; /* Set the height of the scrollbar for vertical scrollbar */
         }
 
         /* Set the color of the scrollbar thumb */
@@ -548,10 +546,10 @@ body {
 
         /* Set the color of the scrollbar thumb on hover */
         &::-webkit-scrollbar-thumb:hover {
-            @apply bg-dark-primary dark:bg-light-primary;
+            @apply bg-highlight;
         }
         &::-webkit-scrollbar-track {
-            @apply bg-gray-50 dark:bg-gray-500;
+            @apply bg-gray-50 dark:bg-gray-700;
         }
     }
 }

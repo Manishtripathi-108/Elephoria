@@ -38,7 +38,7 @@ const UploadInput = ({ id, file, setFile }) => {
         <div className="bg-primary mb-6 flex size-80 flex-col items-center justify-between gap-2 rounded-lg p-2.5 shadow-neu-light-sm dark:shadow-neu-dark-sm">
             <label
                 htmlFor={id}
-                className="text-highlight flex w-full flex-1 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-light-highlight-primary dark:border-dark-highlight-primary">
+                className="text-highlight flex w-full flex-1 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-light-highlight dark:border-dark-highlight">
                 <Icon icon={iconMap.upload} className="size-28" />
                 <p className="text-primary p-1 text-center tracking-wider">
                     {fileName !== 'Upload File' ? 'File Uploaded! Click on the button below to upload!' : 'Browse File to upload!'}

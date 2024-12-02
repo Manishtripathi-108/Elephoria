@@ -168,7 +168,7 @@ function AuthComponent() {
                                 </Field>
 
                                 <a
-                                    className="text-secondary hover:text-highlight mb-8 ml-auto mt-2 border-b border-solid border-transparent text-right text-sm transition-colors duration-300 hover:border-b-light-highlight-primary dark:hover:border-b-dark-highlight-primary"
+                                    className="text-secondary hover:text-highlight mb-8 ml-auto mt-2 border-b border-solid border-transparent text-right text-sm transition-colors duration-300 hover:border-b-light-highlight dark:hover:border-b-dark-highlight"
                                     href="#">
                                     Forgot your password?
                                 </a>

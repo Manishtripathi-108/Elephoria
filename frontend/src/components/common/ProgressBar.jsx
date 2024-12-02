@@ -10,7 +10,7 @@ const ProgressBar = ({ total, current, percentage = '', name = '' }) => {
             {/* Progress Bar */}
             <div className="flex h-5 w-full items-center justify-start rounded-3xl shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs">
                 <div
-                    className="bg-accent-primary h-full w-20 animate-pulse rounded-3xl"
+                    className="bg-accent h-full w-20 animate-pulse rounded-3xl"
                     style={{ width: `${percentage || 0}%` }}
                     aria-valuenow={percentage}
                     aria-valuemin="0"

@@ -4,32 +4,43 @@ import { Link } from 'react-router-dom'
 
 import { Icon } from '@iconify/react'
 
-import warriorImage from '../../assets/images/landscape/man-warrior.png'
 import avatarImage from '../../assets/images/square/logo.png'
 import { iconMap } from '../../utils/globalConstants'
 
 const menuItems = [
     {
-        category: 'Game',
-        items: [
-            { name: 'Tic Tac Toe', url: '/games/tic-tac-toe' },
-            { name: 'Tic Tac Toe Ultimate', url: '/games/tic-tac-toe/Ultimate' },
+        title: 'Anime Hub',
+        icon: iconMap.gamePad,
+        children: [
+            { name: 'Anime Hub', link: '/anime-hub' },
+            { name: 'Authorize', link: '/anime-hub/auth' },
         ],
     },
     {
-        category: 'Shadows',
-        items: [{ name: 'Shadows Grid', url: '/shadows' }],
-    },
-    {
-        category: 'Audio',
-        items: [{ name: 'Music Editor', url: '/audio' }],
-    },
-    {
-        category: 'Anime Hub',
-        items: [
-            { name: 'Anime Hub', url: '/anime-hub' },
-            { name: 'Authorize', url: '/anime-hub/auth' },
+        title: 'Games',
+        icon: iconMap.gamePad,
+        children: [
+            {
+                name: 'Tic Tac Toe',
+                children: [
+                    { name: 'Classic', link: '/games/tic-tac-toe/classic' },
+                    { name: 'Ultimate', link: '/games/tic-tac-toe/ultimate' },
+                ],
+            },
+            { name: 'Snake', link: '/games/snake' },
+            { name: 'Ludo', link: '/games/ludo' },
         ],
+    },
+    {
+        title: 'Audio',
+        icon: iconMap.music,
+        children: [{ name: 'Music Editor', link: '/audio' }],
+    },
+    {
+        title: 'Profile',
+        badge: 14,
+        icon: iconMap.person,
+        link: '/profile',
     },
 ]
 
@@ -37,81 +48,130 @@ const Sidenav = ({ onDismiss }) => {
     return (
         <dialog
             id="sidenav"
-            onClick={(e) => e.target === e.currentTarget && onDismiss()}
-            className="bg-secondary side-nav-animation my-auto h-dvh w-72 overflow-hidden rounded-e-lg">
-            <div className="flex flex-col border-l border-dashed border-l-light-primary dark:border-dark-primary">
-                <button
-                    aria-label="Close navigation"
-                    className="text-secondary hover:text-primary bg-secondary dark:bg-secondary-dark absolute right-2 top-2 rounded-full border border-light-primary p-1 dark:border-dark-primary"
-                    title="Close navigation"
-                    onClick={onDismiss}>
+            className="side-nav-animation bg-primary my-auto flex h-screen w-72 flex-col overflow-hidden rounded-e-lg shadow-neu-light-md dark:shadow-neu-dark-md"
+            onClick={(e) => e.target === e.currentTarget && onDismiss()}>
+            {/* Profile Section */}
+            <div className="flex items-center justify-between gap-4 border-b border-dotted border-light-secondary p-4 dark:border-dark-secondary">
+                <div className="flex items-center gap-3">
+                    <img className="h-12 w-12 rounded-full" src={avatarImage} alt="Avatar" />
+                    <div>
+                        <p className="text-primary font-semibold">Roronoa Zoro</p>
+                        <p className="text-secondary text-sm">Sword Master</p>
+                    </div>
+                </div>
+                <button className="text-secondary hover:text-primary" onClick={onDismiss}>
                     <Icon icon={iconMap.close} className="size-6" />
                 </button>
+            </div>
 
-                <h2 id="sidenav-heading" className="sr-only">
-                    Main Navigation
-                </h2>
+            {/* Navigation Section */}
+            <nav className="scrollbar-thin space-y-1 overflow-y-auto p-4">
+                {menuItems.map((item, index) => (
+                    <div key={index}>
+                        {/* Parent Item */}
+                        <div className="group">
+                            {item.link ? (
+                                <Link
+                                    to={item.link}
+                                    onClick={onDismiss}
+                                    className="hover:text-primary text-secondary flex w-full cursor-pointer items-center justify-between rounded-lg border border-transparent bg-inherit p-3 text-left font-aladin tracking-widest transition hover:border-light-secondary hover:shadow-neu-light-xs dark:hover:border-dark-secondary dark:hover:shadow-neu-dark-xs">
+                                    <div className="flex items-center gap-3">
+                                        <Icon icon={item.icon} className="size-6" />
+                                        <span className="flex-1">{item.title}</span>
+                                    </div>
+                                    {item.badge && <span className="ml-2 rounded-full bg-red-500 px-2 py-1 text-xs text-white">{item.badge}</span>}
+                                </Link>
+                            ) : (
+                                <>
+                                    <input type="radio" name="menu" id={`menu-${index}`} className="peer hidden" />
+                                    <label
+                                        htmlFor={`menu-${index}`}
+                                        className="peer-checked:text-primary hover:text-primary text-secondary flex w-full cursor-pointer items-center justify-between rounded-lg border border-transparent bg-inherit p-3 text-left font-aladin tracking-widest transition hover:border-light-secondary hover:shadow-neu-light-xs peer-checked:border-light-secondary peer-checked:shadow-neu-light-xs dark:hover:border-dark-secondary dark:hover:shadow-neu-dark-xs dark:peer-checked:border-dark-secondary dark:peer-checked:shadow-neu-dark-xs">
+                                        <div className="flex items-center gap-3">
+                                            <Icon icon={item.icon} className="size-6" />
+                                            <span className="flex-1">{item.title}</span>
+                                        </div>
+                                        {item.children && (
+                                            <Icon icon={iconMap.down} className="size-5 transition-transform peer-checked:rotate-180" />
+                                        )}
+                                        {item.badge && (
+                                            <span className="ml-2 rounded-full bg-red-500 px-2 py-1 text-xs text-white">{item.badge}</span>
+                                        )}
+                                    </label>
+                                </>
+                            )}
 
-                {/* Warrior Image */}
-                <div className="flex h-28 w-full shrink-0 items-center justify-between">
-                    <a className="h-full w-full transition-colors duration-200 ease-in-out" href="#">
-                        <img className="size-full overflow-hidden object-cover object-center" src={warriorImage} alt="Warrior" loading="lazy" />
-                    </a>
-                </div>
+                            {/* Child Items */}
+                            {item.children && (
+                                <div className="max-h-0 overflow-hidden rounded-lg transition-all duration-300 ease-in-out peer-checked:max-h-screen peer-checked:px-1 peer-checked:py-2">
+                                    {item.children.map((child, idx) => (
+                                        <div key={idx} className="group pl-4">
+                                            {child.link ? (
+                                                <Link
+                                                    to={child.link}
+                                                    onClick={onDismiss}
+                                                    className="text-secondary hover:text-primary flex w-full items-center gap-3 rounded-lg border border-transparent bg-inherit p-2 text-sm transition hover:border-light-secondary hover:shadow-neu-light-xs dark:hover:border-dark-secondary dark:hover:shadow-neu-dark-xs">
+                                                    {child.name}
+                                                </Link>
+                                            ) : (
+                                                <>
+                                                    <input type="radio" name="sub-menu" id={`sub-menu-${index}`} className="peer hidden" />
+                                                    <label
+                                                        htmlFor={`sub-menu-${index}`}
+                                                        className="peer-checked:text-primary hover:text-primary text-secondary flex w-full cursor-pointer items-center justify-between rounded-lg border border-transparent bg-inherit p-2 text-left text-sm transition hover:border-light-secondary hover:shadow-neu-light-xs peer-checked:border-light-secondary peer-checked:shadow-neu-light-xs dark:hover:border-dark-secondary dark:hover:shadow-neu-dark-xs dark:peer-checked:border-dark-secondary dark:peer-checked:shadow-neu-dark-xs">
+                                                        <div className="flex-1">{child.name}</div>
+                                                        {child.children && (
+                                                            <Icon
+                                                                icon={iconMap.down}
+                                                                className="size-5 transition-transform peer-checked:rotate-180"
+                                                            />
+                                                        )}
+                                                    </label>
+                                                </>
+                                            )}
 
-                <div className="border-b border-dashed border-light-primary dark:border-dark-primary lg:block"></div>
-
-                {/* User Info */}
-                <div className="flex items-center justify-between gap-x-4 p-4">
-                    <div className="inline-flex items-start gap-x-4">
-                        <div className="block shrink-0">
-                            <div className="cursor-pointer">
-                                <img className="size-11 rounded-lg" src={avatarImage} alt="Avatar Image" />
-                            </div>
-                        </div>
-                        <div className="mr-2">
-                            <a className="text-primary text-base font-medium" href="">
-                                Roronoa Zoro
-                            </a>
-                            <span className="text-secondary block text-xs font-medium">Sword Master</span>
-                        </div>
-                    </div>
-                    <a
-                        className="hover:text-primary mr-2 cursor-pointer border-0 text-center align-middle text-sm font-medium text-red-500 transition-colors duration-150 ease-in-out"
-                        href="">
-                        Logout
-                    </a>
-                </div>
-
-                <div className="border-b border-dashed border-light-primary dark:border-dark-primary lg:block"></div>
-
-                {/* Menu Items */}
-                <div className="scrollbar-thin relative my-5 overflow-y-scroll md:pl-3">
-                    <div className="flex w-full flex-col font-medium">
-                        {menuItems
-                            .sort((a, b) => a.category.localeCompare(b.category))
-                            .map((menu, menuIndex) => (
-                                <div key={menuIndex} className="block px-4 pb-2">
-                                    {/* Section Heading */}
-                                    <span className="text-secondary-dark text-primary font-semibold uppercase">{menu.category}</span>
-
-                                    {/* Sub Links */}
-                                    {menu.items.map((item, itemIndex) => (
-                                        <div key={itemIndex} className="my-1 flex cursor-pointer select-none items-center py-2">
-                                            <Link
-                                                onClick={onDismiss}
-                                                aria-current={window.location.pathname === item.url ? 'page' : undefined}
-                                                className="text-secondary flex flex-grow items-center text-sm hover:text-dark-primary dark:hover:text-light-primary"
-                                                to={item.url}>
-                                                {item.name}
-                                            </Link>
+                                            {/* Sub-Children */}
+                                            {child.children && (
+                                                <div className="max-h-0 overflow-hidden rounded-lg transition-all duration-300 ease-in-out peer-checked:max-h-screen peer-checked:px-1 peer-checked:py-2">
+                                                    {child.children.map((subChild, subIdx) => (
+                                                        <Link
+                                                            key={subIdx}
+                                                            to={subChild.link}
+                                                            onClick={onDismiss}
+                                                            className="text-secondary hover:text-primary ml-4 block rounded-lg border border-transparent bg-inherit p-2 text-sm transition hover:border-light-secondary hover:shadow-neu-light-xs dark:hover:border-dark-secondary dark:hover:shadow-neu-dark-xs">
+                                                            {subChild.name}
+                                                        </Link>
+                                                    ))}
+                                                </div>
+                                            )}
                                         </div>
                                     ))}
                                 </div>
-                            ))}
+                            )}
+                        </div>
                     </div>
-                </div>
-            </div>
+                ))}
+
+                <div className="border-t border-dotted border-light-secondary dark:border-dark-secondary"></div>
+
+                <Link
+                    onClick={onDismiss}
+                    className="hover:text-primary text-secondary flex w-full cursor-pointer items-center justify-between rounded-lg border border-transparent bg-inherit p-3 text-left font-aladin tracking-widest transition hover:border-light-secondary hover:shadow-neu-light-xs dark:hover:border-dark-secondary dark:hover:shadow-neu-dark-xs">
+                    <div className="flex items-center gap-3">
+                        <Icon icon={iconMap.settings} className="size-6" />
+                        <span className="flex-1">Settings</span>
+                    </div>
+                </Link>
+
+                <Link
+                    onClick={onDismiss}
+                    className="flex w-full cursor-pointer items-center justify-between rounded-lg border border-transparent bg-inherit p-3 text-left font-aladin tracking-widest text-red-500 transition hover:border-light-secondary hover:text-red-600 hover:shadow-neu-light-xs dark:hover:border-dark-secondary dark:hover:shadow-neu-dark-xs">
+                    <div className="flex items-center gap-3">
+                        <Icon icon={iconMap.logOut} className="size-6" />
+                        <span className="flex-1">Log Out</span>
+                    </div>
+                </Link>
+            </nav>
         </dialog>
     )
 }

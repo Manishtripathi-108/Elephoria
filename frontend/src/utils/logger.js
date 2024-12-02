@@ -28,7 +28,7 @@ export const logger = {
 }
 
 // Function to send logs to the backend
-async function logToServer(level, message, metadata) {    
+async function logToServer(level, message, metadata) {
     try {
         await axios.post('/api/logs/frontend', {
             level,
