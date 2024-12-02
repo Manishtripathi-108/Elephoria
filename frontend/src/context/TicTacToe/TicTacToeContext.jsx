@@ -56,13 +56,18 @@ export const TicTacToeProvider = ({ children }) => {
             socketRef.current = null
             dispatch({ type: ActionTypes.START_OVER })
         })
+
+        socketRef.current.on('roomLeft', () => {
+            console.log('Player left the room')
+            window.addToast('You left the room', 'info')
+            dispatch({ type: ActionTypes.START_OVER })
+        })
     }, [])
 
     // Disconnect Player
     const disconnectPlayer = useCallback(() => {
         if (socketRef.current) {
             socketRef.current.disconnect()
-            socketRef.current = null
         }
     }, [])
 

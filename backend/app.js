@@ -24,10 +24,7 @@ const io = new Server(server, {
 // Middleware configuration
 app.use(
 	cors({
-		origin:
-			process.env.NODE_ENV === "production"
-				? process.env.CLIENT_URL
-				: "http://localhost",
+		origin: [process.env.CLIENT_URL, "http://localhost"],
 		credentials: true,
 	})
 );
@@ -37,12 +34,6 @@ app.use(cookieParser());
 // API routes
 app.use("/api", routes);
 gameRoutes(io);
-io.on("connection", (socket) => {
-	backendLogger.info("A user connected", { socketId: socket.id });
-	socket.on("disconnect", () => {
-		backendLogger.info("A user disconnected", { socketId: socket.id });
-	});
-});
 
 /* ------------------ Serve Static Files for Uploaded Images ---------------- */
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));

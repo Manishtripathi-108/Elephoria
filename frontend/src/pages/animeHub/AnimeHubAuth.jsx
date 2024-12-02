@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 
 import { useNavigate } from 'react-router-dom'
 
+import axios from 'axios'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
@@ -20,6 +21,7 @@ function AnimeHubAuth() {
 
     useEffect(() => {
         completeLoading()
+        checkServerIsAlive()
     }, [])
 
     const handleSubmit = async (values, { setSubmitting }) => {
@@ -35,6 +37,26 @@ function AnimeHubAuth() {
             }
         }
         setSubmitting(false)
+    }
+
+    const checkServerIsAlive = async () => {
+        try {
+            const response = await axios.get('/api', { withCredentials: true })
+            console.log(response)
+
+            if (response.data?.success) {
+                window.addToast(response.data.message || 'Server is alive and ready to receive requests.', 'success')
+            } else {
+                window.addToast('Server is not reachable.', 'error')
+            }
+
+            if (response.status === 200) {
+                window.addToast('Server is alive and ready to receive requests from ok.', 'success')
+            }
+        } catch (error) {
+            window.addToast('Server is not reachable from catch.', 'error')
+            console.log(error)
+        }
     }
 
     return (

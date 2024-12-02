@@ -6,7 +6,6 @@ import ElevateButton from '../../../../components/common/buttons/ElevateButton'
 import { useTicTacToeContext } from '../../../../context/TicTacToe/TicTacToeContext'
 
 const TicTacToeHeader = ({ title, playingOnline }) => {
-    const { setMode } = useTicTacToeContext()
     return (
         <div
             className={`grid border-b border-light-secondary py-3 dark:border-dark-secondary md:grid-cols-2 ${playingOnline ? 'grid-cols-2' : 'grid-cols-4'}`}>

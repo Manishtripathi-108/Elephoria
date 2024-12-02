@@ -16,14 +16,14 @@ const joinRoom = (roomId, playerName, roomName, isCreateRoom, socketId) => {
 
 	if (!room) {
 		if (!isCreateRoom) {
-			backendLogger.warn(`Room ${roomId} does not exist.`);
+			// backendLogger.warn(`Room ${roomId} does not exist.`);
 			return { success: false, message: "Room does not exist" };
 		}
 
 		// Create a deep copy of initialRoom
 		room = { ...JSON.parse(JSON.stringify(initialRoom)), roomId, roomName };
 		rooms[roomId] = room;
-		backendLogger.info(`Room ${roomId} created.`, { room });
+		// backendLogger.info(`Room ${roomId} created.`, { room });
 	}
 
 	if (room.playerX.id === socketId || room.playerO.id === socketId) {
@@ -35,17 +35,17 @@ const joinRoom = (roomId, playerName, roomName, isCreateRoom, socketId) => {
 	}
 
 	if (room.playerX.id && room.playerO.id) {
-		backendLogger.warn(`Room ${roomId} is already full.`);
+		// backendLogger.warn(`Room ${roomId} is already full.`);
 		return { success: false, message: "Room is already full." };
 	}
 
 	const symbol = room.playerX.id ? "O" : "X";
 	room[`player${symbol}`] = { id: socketId, name: playerName, score: 0 };
 
-	backendLogger.info(
-		`Player ${playerName} joined Room ${roomId} as ${symbol}.`,
-		{ room }
-	);
+	// backendLogger.info(
+	// 	`Player ${playerName} joined Room ${roomId} as ${symbol}.`,
+	// 	{ room }
+	// );
 	return {
 		success: true,
 		symbol,
@@ -58,11 +58,11 @@ const startGame = (roomId) => {
 	const room = rooms[roomId];
 	if (!room || !room.playerX.id || !room.playerO.id) {
 		const message = room ? "Players not found" : "Room does not exist";
-		backendLogger.warn(`Cannot start game in Room ${roomId}: ${message}`);
+		// backendLogger.warn(`Cannot start game in Room ${roomId}: ${message}`);
 		return { success: false, message };
 	}
 	room.gameStarted = true;
-	backendLogger.info(`Game started in Room ${roomId}.`);
+	// backendLogger.info(`Game started in Room ${roomId}.`);
 	return { success: true, roomState: room };
 };
 
@@ -71,7 +71,7 @@ const updateGameState = (movePayload) => {
 	const room = rooms[roomId];
 
 	if (!room) {
-		backendLogger.warn(`Room ${roomId} does not exist.`);
+		// backendLogger.warn(`Room ${roomId} does not exist.`);
 		return { success: false, message: "Room does not exist" };
 	}
 
@@ -90,12 +90,12 @@ const updateGameState = (movePayload) => {
 		(mode === "ultimate" && ultimateBoard[macroIndex][cellIndex]) ||
 		(activeIndex !== null && activeIndex !== macroIndex)
 	) {
-		backendLogger.warn(`Invalid move in Room ${roomId}.`, { movePayload });
+		// backendLogger.warn(`Invalid move in Room ${roomId}.`, { movePayload });
 		return { success: false, message: "Invalid move" };
 	}
 
 	if (isXNext !== (playerSymbol === "X")) {
-		backendLogger.warn(`Not ${playerSymbol}'s turn in Room ${roomId}.`);
+		// backendLogger.warn(`Not ${playerSymbol}'s turn in Room ${roomId}.`);
 		return { success: false, message: "Not your turn" };
 	}
 
@@ -120,9 +120,9 @@ const updateGameState = (movePayload) => {
 		if (result.status === "win") room[`player${playerSymbol}`].score++;
 		if (result.status === "draw") room.drawScore++;
 
-		backendLogger.info(`Classic board updated in Room ${roomId}.`, {
-			room,
-		});
+		// backendLogger.info(`Classic board updated in Room ${roomId}.`, {
+		// 	room,
+		// });
 		return { success: true, roomState: room };
 	} else if (mode === "ultimate") {
 		const updatedUltimateBoard = ultimateBoard.map((macro, i) =>
@@ -168,9 +168,9 @@ const updateGameState = (movePayload) => {
 			room[`player${largeBoardStatus.winner}`].score++;
 		if (largeBoardStatus.status === "draw") room.drawScore++;
 
-		backendLogger.info(`Ultimate board updated in Room ${roomId}.`, {
-			room,
-		});
+		// backendLogger.info(`Ultimate board updated in Room ${roomId}.`, {
+		// 	room,
+		// });
 		return { success: true, roomState: room };
 	}
 };
@@ -178,7 +178,7 @@ const updateGameState = (movePayload) => {
 const changeMode = (roomId, mode) => {
 	const room = rooms[roomId];
 	if (!room) {
-		backendLogger.warn(`Room ${roomId} does not exist.`);
+		// backendLogger.warn(`Room ${roomId} does not exist.`);
 		return { success: false, message: "Room does not exist" };
 	}
 
@@ -193,16 +193,16 @@ const changeMode = (roomId, mode) => {
 		drawScore: room.drawScore,
 	});
 
-	backendLogger.info(`Mode changed to ${mode} in Room ${roomId}.`, { room });
+	// backendLogger.info(`Mode changed to ${mode} in Room ${roomId}.`, { room });
 	return { success: true, roomState: room };
 };
 
 const clearBoard = (roomId) => {
 	console.log(roomId);
-	
+
 	const room = rooms[roomId];
 	if (!room) {
-		backendLogger.warn(`Room ${roomId} does not exist.`);
+		// backendLogger.warn(`Room ${roomId} does not exist.`);
 		return { success: false, message: "Room does not exist" };
 	}
 
@@ -218,7 +218,7 @@ const clearBoard = (roomId) => {
 		drawScore: room.drawScore,
 	});
 
-	backendLogger.info(`Board cleared in Room ${roomId}.`, { room });
+	// backendLogger.info(`Board cleared in Room ${roomId}.`, { room });
 	return { success: true, roomState: room };
 };
 
@@ -240,6 +240,8 @@ const leaveRoom = (roomId, socketId) => {
 		backendLogger.info(`Room ${roomId} deleted as all players left.`);
 		return { success: true };
 	}
+
+	backendLogger.info(`Player left Room ${roomId}.`);
 
 	return { success: true, roomState: clearBoard(roomId).roomState };
 };

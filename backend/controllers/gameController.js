@@ -7,7 +7,7 @@ const {
 	updateGameState,
 	clearBoard,
 } = require("../services/gameService.js");
-const { frontendLogger } = require("../utils/logger.js");
+const { backendLogger } = require("../utils/logger.js");
 
 const getRoomId = (socket) => (callback) => {
 	const roomId = generateRoomId();
@@ -51,7 +51,7 @@ const handleJoinRoom =
 
 			socket.emit("updateGame", { isPlayingOnline: false });
 
-			frontendLogger.warn(`Unable to join room: ${roomId}:`, {
+			backendLogger.warn(`Unable to join room: ${roomId}:`, {
 				message: result.message || "Unable to join the room.",
 			});
 		}
@@ -111,31 +111,23 @@ const handleClearBoard = (socket, io) => (roomId) => {
 	}
 };
 
-const handleDisconnect = (socket, io) => () => {
-	// const roomId = playerDisconnect(socket.id);
-	// if (roomId) {
-	// 	io.to(roomId).emit("playerDisconnected", { socketId: socket.id });
-	// 	frontendLogger.info(
-	// 		`Player disconnected: ${socket.id}, room: ${roomId}`
-	// 	);
-	// }
-};
+const handleLeaveRoom = (roomId, socketId, io) => {
+	if (!roomId || !socketId || roomId === socketId) {
+		return;
+	}
+	const result = leaveRoom(roomId, socketId);
 
-const handleLeaveRoom = (socket, io) => (roomId) => {
-	const result = leaveRoom(roomId, socket.id);
 	if (result.success) {
-		socket.leave(roomId);
-		result.roomState
-			? io.to(roomId).emit("updateGame", result.roomState)
-			: null;
-		socket.emit("roomLeft");
-		frontendLogger.info(`Player left room: ${roomId}`);
+		// Notify others in the room about the updated state
+		if (result.roomState) {
+			io.to(roomId).emit("updateGame", result.roomState);
+		}
 	} else {
-		// Send error only to the player trying to leave
-		socket.emit("gameError", result.message || "Unable to leave room.");
-		frontendLogger.warn(`Unable to leave room: ${roomId}:`, {
-			message: result.message || "Unable to leave room.",
-		});
+		// Send error message to the disconnected socket
+		io.to(socketId).emit(
+			"gameError",
+			result.message || "Error during room cleanup."
+		);
 	}
 };
 
@@ -146,6 +138,5 @@ module.exports = {
 	handleMove,
 	handleModeChange,
 	handleClearBoard,
-	handleDisconnect,
 	handleLeaveRoom,
 };

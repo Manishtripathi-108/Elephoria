@@ -4,7 +4,6 @@ import { defineConfig, loadEnv, searchForWorkspaceRoot } from 'vite'
 export default defineConfig(({ mode }) => {
     // Load environment variables
     const env = loadEnv(mode, process.cwd())
-    console.log(env.VITE_SERVER_URL)
 
     return {
         server: {
