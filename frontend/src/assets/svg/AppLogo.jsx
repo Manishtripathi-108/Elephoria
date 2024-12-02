@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function Logo(props) {
+export default function AppLogo(props) {
     return (
         <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" {...props}>
             <path

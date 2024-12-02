@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
 import AppName from '../../assets/svg/AppName'
-import Logo from '../../assets/svg/Logo'
+import AppLogo from '../../assets/svg/AppLogo'
 import NeuToggleButton from '../common/buttons/NeuToggleButton'
 import ThemeToggleBtn from '../common/buttons/ThemeToggleBtn'
 import Sidenav from './Sidenav'
@@ -71,7 +71,7 @@ const Header = () => {
                 />
 
                 <Link to="/" aria-current={location.pathname === '/' ? 'page' : undefined} className="text-primary ml-5 flex items-center gap-2">
-                    <Logo className="w-12" />
+                    <AppLogo className="w-12" />
                     <AppName className="w-20" />
                 </Link>
 
