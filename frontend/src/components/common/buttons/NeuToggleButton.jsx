@@ -1,6 +1,6 @@
 import React from 'react'
 
-function NeuToggleButton({ handleClick, active, alignment = 'center', additionalClasses, ...props }) {
+const NeuToggleButton = ({ handleClick, active, alignment = 'center', additionalClasses, ...props }) => {
     const alignmentStyles = {
         left: 'items-start',
         center: 'items-center',

@@ -67,6 +67,7 @@ const PlayOnlineForm = () => {
                                     className="input-text"
                                     disabled={isSubmitting}
                                     maxLength={6}
+                                    autoComplete="off"
                                 />
                                 <ErrorMessage component="div" className="form-helper-text error" name="roomId" />
                             </div>
@@ -85,6 +86,7 @@ const PlayOnlineForm = () => {
                                     className="input-text"
                                     disabled={isSubmitting}
                                     maxLength={10}
+                                    autoComplete="off"
                                 />
                                 <ErrorMessage component="div" className="form-helper-text error" name="roomName" />
                             </div>
@@ -102,6 +104,7 @@ const PlayOnlineForm = () => {
                                 className="input-text"
                                 disabled={isSubmitting}
                                 maxLength={20}
+                                autoComplete="off"
                             />
                             <ErrorMessage component="div" className="form-helper-text error" name="playerName" />
                         </div>

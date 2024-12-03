@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import { fetchUserData } from '../../../api/animeHubApi'
 
-function Header() {
+const Header = () => {
     const [userData, setUserData] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)

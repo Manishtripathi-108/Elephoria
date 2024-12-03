@@ -7,7 +7,7 @@ import { iconMap } from '../../../utils/globalConstants'
 import { convertMonthNumberToName } from '../utils/constants'
 import AnimeModal from './AnimeModal'
 
-function MediaCard({ mediaItem, isFavouriteList = false }) {
+const MediaCard = ({ mediaItem, isFavouriteList = false }) => {
     // Handle favourites, which don't have the `media` nesting.
     const media = isFavouriteList ? mediaItem : mediaItem?.media
 

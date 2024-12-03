@@ -1,6 +1,6 @@
 import React from 'react'
 
-function MediaRow({ mediaItem, isFavourite = false }) {
+const MediaRow = ({ mediaItem, isFavourite = false }) => {
     // Handle favourites, which don't have the `media` nesting.
     const media = isFavourite ? mediaItem : mediaItem?.media
 

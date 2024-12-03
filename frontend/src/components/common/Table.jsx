@@ -13,7 +13,7 @@ import NeuButton from './buttons/neu-button'
 //     ]}
 // />
 
-function Table({ heading, columns, rows }) {
+const Table = ({ heading, columns, rows }) => {
     return (
         <div className="bg-primary w-full max-w-2xl rounded-2xl shadow-xl">
             {/* Table heading */}

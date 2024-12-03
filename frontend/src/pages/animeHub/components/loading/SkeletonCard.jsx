@@ -1,6 +1,6 @@
 import React from 'react'
 
-function SkeletonCard() {
+const SkeletonCard = () => {
     return (
         <div className="mb-5 w-full">
             <div className="bg-secondary mb-2 rounded-t-xl p-3 shadow-neu-light-sm dark:shadow-neu-dark-sm">

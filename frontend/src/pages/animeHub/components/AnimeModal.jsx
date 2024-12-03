@@ -11,7 +11,7 @@ import { useAnimeHubContext } from '../../../context/AnimeHubContext'
 import { iconMap } from '../../../utils/globalConstants'
 import { validStatusOptions } from '../utils/constants'
 
-export default function AnimeModal({ entryId, modalId, media, mediaStatus = '', mediaProgress = '0' }) {
+const AnimeModal = ({ entryId, modalId, media, mediaStatus = '', mediaProgress = '0' }) => {
     const bannerStyle = { backgroundImage: `url(${media?.bannerImage})` }
     const [isLiked, setIsLiked] = useState(media.isFavourite || false)
     const [isToggling, setIsToggling] = useState(false)
@@ -160,3 +160,5 @@ export default function AnimeModal({ entryId, modalId, media, mediaStatus = '', 
         </DialogModal>
     )
 }
+
+export default AnimeModal

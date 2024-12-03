@@ -1,6 +1,6 @@
 import React from 'react'
 
-function NoDataSvg(props) {
+const NoDataSvg = (props) => {
     return (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" {...props}>
             <g id="Floor--inject-63">

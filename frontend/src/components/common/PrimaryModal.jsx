@@ -48,7 +48,7 @@ const DialogModal = ({ modalId, maxWidthAndClasses = 'w-full max-w-2xl', showClo
                 {showCloseButton && (
                     <button
                         className="text-secondary hover:text-primary absolute right-2 top-2 z-20 select-none rounded-full bg-light-secondary p-1 text-lg dark:bg-dark-secondary"
-                        onClick={closeModal(modalId)}
+                        onClick={() => closeModal(modalId)}
                         aria-label="Close Modal">
                         <Icon icon={iconMap.close} className="size-6" />
                     </button>

@@ -36,6 +36,7 @@ const handleJoinRoom =
 			socket.emit("updateGame", {
 				playerSymbol: result.symbol,
 				isPlayingOnline: true,
+				isWaiting: true,
 				...result.roomState,
 			});
 
@@ -63,7 +64,10 @@ const handleStartGame =
 		const result = startGame(roomId);
 
 		if (result.success) {
-			io.to(roomId).emit("updateGame", result.roomState);
+			io.to(roomId).emit("updateGame", {
+				...result.roomState,
+				isWaiting: false,
+			});
 		} else {
 			socket.emit(
 				"gameError",
@@ -120,7 +124,12 @@ const handleLeaveRoom = (roomId, socketId, io) => {
 	if (result.success) {
 		// Notify others in the room about the updated state
 		if (result.roomState) {
-			io.to(roomId).emit("updateGame", result.roomState);
+			io.to(roomId).emit("gameError", "Opponent left the room.");
+
+			io.to(roomId).emit("updateGame", {
+				isWaiting: true,
+				...result.roomState,
+			});
 		}
 	} else {
 		// Send error message to the disconnected socket

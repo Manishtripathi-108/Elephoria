@@ -15,13 +15,12 @@ const validationSchema = Yup.object().shape({
         .matches(/^[0-9a-fA-F]+$/, 'Auth Pin must be a valid hexadecimal string'),
 })
 
-function AnimeHubAuth() {
+const AnimeHubAuth = () => {
     const navigate = useNavigate()
     const { completeLoading } = useLoadingBar()
 
     useEffect(() => {
         completeLoading()
-        checkServerIsAlive()
     }, [])
 
     const handleSubmit = async (values, { setSubmitting }) => {
@@ -37,26 +36,6 @@ function AnimeHubAuth() {
             }
         }
         setSubmitting(false)
-    }
-
-    const checkServerIsAlive = async () => {
-        try {
-            const response = await axios.get('/api', { withCredentials: true })
-            console.log(response)
-
-            if (response.data?.success) {
-                window.addToast(response.data.message || 'Server is alive and ready to receive requests.', 'success')
-            } else {
-                window.addToast('Server is not reachable.', 'error')
-            }
-
-            if (response.status === 200) {
-                window.addToast('Server is alive and ready to receive requests from ok.', 'success')
-            }
-        } catch (error) {
-            window.addToast('Server is not reachable from catch.', 'error')
-            console.log(error)
-        }
     }
 
     return (
@@ -83,7 +62,7 @@ function AnimeHubAuth() {
                                 <label htmlFor="pin" className="form-label">
                                     Enter Auth Pin:
                                 </label>
-                                <Field type="text" id="pin" name="pin" className="input-text" placeholder="Enter Auth Pin:" />
+                                <Field type="text" id="pin" name="pin" className="input-text" placeholder="Enter Auth Pin:" autoComplete="off" />
                                 <ErrorMessage name="pin" component="div" className="error form-helper-text ml-2 mt-1" />
                             </div>
                             <div className="grid w-full place-items-center">

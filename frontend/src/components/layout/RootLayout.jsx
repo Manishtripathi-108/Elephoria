@@ -6,7 +6,7 @@ import { useLoadingBar } from '../../context/LoadingBarContext'
 import ToastStack from '../common/notifications/ToastStack'
 import Header from './Header'
 
-function RootLayout() {
+const RootLayout = () => {
     const location = useLocation()
     const { startContinuous } = useLoadingBar()
     const [prevPath, setPrevPath] = React.useState('')

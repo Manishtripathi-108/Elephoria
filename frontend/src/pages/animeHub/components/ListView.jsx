@@ -3,7 +3,7 @@ import React from 'react'
 import NoContentCard from '../../../components/common/NoContentCard'
 import MediaRow from './MediaRow'
 
-function ListView({ data = [], isFavourite = false }) {
+const ListView = ({ data = [], isFavourite = false }) => {
     // Render Table Header for media list
     const renderTableHeader = () => (
         <thead className="bg-primary text-secondary border-x border-b border-light-secondary dark:border-dark-secondary">

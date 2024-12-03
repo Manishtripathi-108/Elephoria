@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function AppName(props) {
+const AppName = (props) => {
     return (
         <svg viewBox="0 0 323.5 102.3" xmlns="http://www.w3.org/2000/svg " {...props}>
             <g strokeLinecap="round" fillRule="evenodd" fontSize="9pt" stroke="currentColor" fill="currentColor">
@@ -9,3 +9,5 @@ export default function AppName(props) {
         </svg>
     )
 }
+
+export default AppName

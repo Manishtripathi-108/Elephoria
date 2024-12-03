@@ -1,4 +1,3 @@
-// src/contexts/LoadingBarContext.js
 import React, { createContext, useCallback, useContext, useRef, useState } from 'react'
 
 import LoadingBar from 'react-top-loading-bar'

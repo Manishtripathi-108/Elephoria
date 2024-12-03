@@ -9,7 +9,7 @@ import { ConfirmationModal, openModal } from '../../../components/common/Primary
 import { useAnimeHubContext } from '../../../context/AnimeHubContext'
 import { iconMap } from '../../../utils/globalConstants'
 
-function NavigationBar() {
+const NavigationBar = () => {
     const { activeTab, setActiveTab } = useAnimeHubContext()
     const navigate = useNavigate()
 

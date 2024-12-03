@@ -9,7 +9,7 @@ import { squareAnim } from './constants'
 
 const UltimateTicTacToe = () => {
     const { state, handleMove, setMode } = useTicTacToeContext()
-    const { classicBoard, ultimateBoard, activeIndex, winIndexes, isPlayingOnline } = state
+    const { classicBoard, ultimateBoard, activeIndex, winIndexes } = state
 
     const { completeLoading } = useLoadingBar()
 

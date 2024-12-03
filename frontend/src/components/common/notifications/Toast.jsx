@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 import { Icon } from '@iconify/react'
 import { motion } from 'motion/react'
 
-import { cn } from '../../../utils/cn'
+import cn from '../../../utils/cn'
 import { iconMap } from '../../../utils/globalConstants'
 
 const Toast = ({ message, duration = 3000, type = 'success', onDismiss }) => {

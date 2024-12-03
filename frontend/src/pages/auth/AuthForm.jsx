@@ -13,7 +13,7 @@ const validationSchema = Yup.object({
     password: Yup.string().min(6, 'Password must be at least 6 characters').required('Required'),
 })
 
-function AuthComponent() {
+const AuthComponent = () => {
     const switchContainerRef = useRef(null)
     const registerContainerRef = useRef(null)
     const loginContainerRef = useRef(null)

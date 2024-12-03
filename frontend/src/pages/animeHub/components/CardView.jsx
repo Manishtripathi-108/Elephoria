@@ -3,7 +3,7 @@ import React from 'react'
 import NoContentCard from '../../../components/common/NoContentCard'
 import MediaCard from './MediaCard'
 
-function CardView({ data = [], isFavourite = false }) {
+const CardView = ({ data = [], isFavourite = false }) => {
     // Render Favourite List (Anime and Manga)
     if (isFavourite) {
         return data?.anime?.length > 0 || data?.manga?.length > 0 ? (

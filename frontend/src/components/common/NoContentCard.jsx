@@ -2,7 +2,7 @@ import React from 'react'
 
 import NoDataSvg from '../../assets/svg/NoDataSvg'
 
-function NoContentCard({ title, message, className }) {
+const NoContentCard = ({ title, message, className }) => {
     return (
         <div className={`bg-primary mx-auto flex max-w-lg flex-col items-center justify-center rounded-lg p-6 ${className ? className : ''}`}>
             <NoDataSvg className="mb-4 size-11/12" />

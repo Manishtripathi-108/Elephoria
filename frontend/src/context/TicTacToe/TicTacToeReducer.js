@@ -10,6 +10,7 @@ export const initialState = {
 
     // Online play
     isPlayingOnline: false,
+    isWaiting: false,
     playerSymbol: null,
     roomId: null,
     roomName: null,

@@ -1,6 +1,6 @@
 import React from 'react'
 
-function SkeletonList() {
+const SkeletonList = () => {
     return (
         <div className="w-full overflow-hidden rounded-xl shadow-neu-light-sm dark:shadow-neu-dark-sm">
             <div className="bg-secondary block rounded-t-xl border border-light-secondary dark:border-dark-secondary">

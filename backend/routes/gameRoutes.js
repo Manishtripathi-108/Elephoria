@@ -20,11 +20,14 @@ const gameRoutes = (io) => {
 		socket.on("leaveRoom", (roomId) => {
 			socket.leave(roomId);
 			socket.emit("roomLeft");
-			backendLogger.info(`User simply left room: ${roomId}`);
 		});
 		socket.on("playerMove", handleMove(socket, io));
 		socket.on("setMode", handleModeChange(socket, io));
 		socket.on("startGame", handleStartGame(socket, io));
+
+		socket.on("disconnect", () => {
+			backendLogger.info(`User disconnected: ${socket.id}`);
+		});
 	});
 
 	// Handle cleanup via `leave-room` adapter event

@@ -1,6 +1,6 @@
 import React from 'react'
 
-function SkeletonFilter() {
+const SkeletonFilter = () => {
     return (
         <div className="bg-primary text-primary h-full w-full p-2 md:max-w-64">
             {/* Search Section Skeleton */}

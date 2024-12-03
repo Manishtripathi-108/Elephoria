@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { cn } from '../../../utils/cn'
+import cn from '../../../utils/cn'
 
 const ElevateButton = React.forwardRef(({ children, onClick, title = '', className = '', variant = 'primary', disabled = false, ...props }, ref) => {
     return (

@@ -14,7 +14,7 @@ import ListView from './components/ListView'
 import NavigationBar from './components/NavigationBar'
 import LoadingSkeleton from './components/loading/LoadingSkeleton'
 
-function AnimeHub() {
+const AnimeHub = () => {
     const [viewMode, setViewMode] = useState('card')
     const [filteredContent, setFilteredContent] = useState([])
     const [isFilterApplied, setIsFilterApplied] = useState(false)

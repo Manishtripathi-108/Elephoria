@@ -1,16 +1,13 @@
 import React, { useEffect } from 'react'
 
-import { useLoadingBar } from '../../../context/LoadingBarContext'
 import { useTicTacToeContext } from '../../../context/TicTacToe/TicTacToeContext'
 import Square from './components/Square'
 
 const ClassicTicTacToe = () => {
     const { state, setMode, handleMove } = useTicTacToeContext()
-    const { classicBoard, winIndexes, isPlayingOnline } = state
-    const { completeLoading } = useLoadingBar()
+    const { classicBoard, winIndexes } = state
 
     useEffect(() => {
-        completeLoading()
         setMode('classic')
     }, [])
 

@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function AppLogo(props) {
+const AppLogo = (props) => {
     return (
         <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" {...props}>
             <path
@@ -83,3 +83,5 @@ export default function AppLogo(props) {
         </svg>
     )
 }
+
+export default AppLogo

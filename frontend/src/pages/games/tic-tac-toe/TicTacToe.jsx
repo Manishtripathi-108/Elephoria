@@ -18,8 +18,22 @@ import WaitingRoom from './components/WaitingRoom'
 
 const TicTacToe = () => {
     const { state, startOver, startGame, leaveRoom, clearBoard } = useTicTacToeContext()
-    const { mode, isDraw, isGameOver, playerX, playerO, winner, isXNext, drawScore, isPlayingOnline, playerSymbol, gameStarted, roomId, roomName } =
-        state
+    const {
+        mode,
+        isDraw,
+        isGameOver,
+        playerX,
+        playerO,
+        winner,
+        isXNext,
+        drawScore,
+        isPlayingOnline,
+        isWaiting,
+        playerSymbol,
+        gameStarted,
+        roomId,
+        roomName,
+    } = state
 
     const renderGameStatus = () => {
         if (isGameOver) {
@@ -30,7 +44,7 @@ const TicTacToe = () => {
 
     return (
         <>
-            {isPlayingOnline && !gameStarted ? (
+            {isWaiting ? (
                 <WaitingRoom roomId={roomId} roomName={roomName} playerO={playerO} playerX={playerX} onStart={startGame} onExit={leaveRoom} />
             ) : (
                 <>
