@@ -1,16 +1,8 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 
 import { Link } from 'react-router-dom'
 
-import { useLoadingBar } from '../context/LoadingBarContext'
-
 const NotFound = () => {
-    const { completeLoading } = useLoadingBar()
-
-    useEffect(() => {
-        completeLoading()
-    }, [])
-
     return (
         <section className="bg-primary grid h-dvh place-items-center">
             <div className="grid place-items-center">

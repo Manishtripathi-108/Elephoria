@@ -1,5 +1,19 @@
 import React from 'react'
 
+/**
+ * LoadingState
+ * 
+ * A component that renders a loading animation with circles that jump up and down.
+ * 
+ * @param {Object} props Component props
+ * @prop {string} [baseHeight='40%'] The height of the base of the loading animation
+ * @prop {string} [circleSize='30px'] The size of each circle in the loading animation
+ * @prop {string} [jumpHeight='35%'] The height of the jump animation
+ * @prop {string} [width] The width of the component: tailwindcss classes
+ * @prop {string} [height] The height of the component: tailwindcss classes
+ * 
+ * @returns {ReactElement} The component
+ */
 const LoadingState = ({ baseHeight = '40%', circleSize = '30px', jumpHeight = '35%', width, height }) => {
     const styles = {
         '--loader-base-height': baseHeight,

@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 
 import ShadowsItem from '../components/ShadowsItem'
-import { useLoadingBar } from '../context/LoadingBarContext'
 
 const shadowsLight = ['shadow-neu-light-xs', 'shadow-neu-light-sm', 'shadow-neu-light-md', 'shadow-neu-light-lg', 'shadow-neu-light-xl']
 
@@ -24,11 +23,6 @@ const shadowsDarkInset = [
 ]
 
 const ShadowsGrid = () => {
-    const { completeLoading } = useLoadingBar()
-
-    useEffect(() => {
-        completeLoading()
-    }, [])
     return (
         <div className="flex-center w-full flex-col">
             <div className="w-full bg-light-primary p-4 lg:p-8">

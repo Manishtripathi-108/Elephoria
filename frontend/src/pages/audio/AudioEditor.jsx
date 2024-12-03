@@ -4,7 +4,6 @@ import axios from 'axios'
 
 import UploadInput from '../../components/common/form/UploadInput'
 import Toast from '../../components/common/notifications/Toast'
-import { useLoadingBar } from '../../context/LoadingBarContext'
 
 const AudioEditor = () => {
     const [file, setFile] = useState(null)
@@ -12,11 +11,6 @@ const AudioEditor = () => {
     const [coverImage, setCoverImage] = useState(null)
 
     const [toast, setToast] = useState(null)
-    const { completeLoading } = useLoadingBar()
-
-    useEffect(() => {
-        completeLoading()
-    }, [])
 
     const showToast = (message, type) => {
         setToast({ message, type })

@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 
 import { AnimatePresence, motion } from 'motion/react'
 
-import { useLoadingBar } from '../../../context/LoadingBarContext'
 import { useTicTacToeContext } from '../../../context/TicTacToe/TicTacToeContext'
 import Square from './components/Square'
 import { squareAnim } from './constants'
@@ -11,10 +10,7 @@ const UltimateTicTacToe = () => {
     const { state, handleMove, setMode } = useTicTacToeContext()
     const { classicBoard, ultimateBoard, activeIndex, winIndexes } = state
 
-    const { completeLoading } = useLoadingBar()
-
     useEffect(() => {
-        completeLoading()
         setMode('ultimate')
     }, [])
 

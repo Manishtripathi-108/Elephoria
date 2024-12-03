@@ -4,7 +4,6 @@ import { Icon } from '@iconify/react'
 
 import NoContentCard from '../../components/common/NoContentCard'
 import { useAnimeHubContext } from '../../context/AnimeHubContext'
-import { useLoadingBar } from '../../context/LoadingBarContext'
 import { iconMap } from '../../utils/globalConstants'
 import ImportMedia from './ImportMedia'
 import CardView from './components/CardView'
@@ -21,11 +20,6 @@ const AnimeHub = () => {
     const [isFilteringActive, setIsFilteringActive] = useState(false)
 
     const { mediaContent, activeTab, isLoading, error } = useAnimeHubContext()
-    const { completeLoading } = useLoadingBar()
-
-    useEffect(() => {
-        completeLoading()
-    }, [])
 
     // Reset filtered content when the active tab changes
     useEffect(() => {

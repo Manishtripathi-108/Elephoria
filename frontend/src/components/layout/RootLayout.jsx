@@ -1,24 +1,11 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 
-import { Outlet, useLocation } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 
-import { useLoadingBar } from '../../context/LoadingBarContext'
 import ToastStack from '../common/notifications/ToastStack'
 import Header from './Header'
 
 const RootLayout = () => {
-    const location = useLocation()
-    const { startContinuous } = useLoadingBar()
-    const [prevPath, setPrevPath] = React.useState('')
-
-    // useEffect(() => {
-    //     // if the location path is different from the previous one, start the loading bar
-    //     if (location.pathname !== prevPath) {
-    //         startContinuous(10, 500)
-    //         setPrevPath(location.pathname)
-    //     }
-    // }, [location])
-
     return (
         <>
             <Header />
