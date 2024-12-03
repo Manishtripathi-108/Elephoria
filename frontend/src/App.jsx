@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from 'react'
 
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 
+import LoadingState from './components/Loading'
 import PrivateRoute from './components/PrivateRoute'
 import RootLayout from './components/layout/RootLayout'
 import { AnimeHubProvider } from './context/AnimeHubContext'
@@ -20,7 +21,7 @@ const ClassicTicTacToe = lazy(() => import('./pages/games/tic-tac-toe/ClassicTic
 const UltimateTicTacToe = lazy(() => import('./pages/games/tic-tac-toe/UltimateTicTacToe'))
 
 // Fallback component for Suspense
-const Loading = () => <div>Loading...</div>
+// const Loading = () => <div>Loading...</div>
 
 const router = createBrowserRouter([
     {
@@ -30,15 +31,15 @@ const router = createBrowserRouter([
             {
                 path: '/',
                 element: (
-                    <Suspense fallback={<Loading />}>
-                        <Shadows />
+                    <Suspense fallback={<LoadingState />}>
+                        <LoadingState />
                     </Suspense>
                 ),
             },
             {
                 path: '/shadows',
                 element: (
-                    <Suspense fallback={<Loading />}>
+                    <Suspense fallback={<LoadingState />}>
                         <Shadows />
                     </Suspense>
                 ),
@@ -46,7 +47,7 @@ const router = createBrowserRouter([
             {
                 path: '/audio',
                 element: (
-                    <Suspense fallback={<Loading />}>
+                    <Suspense fallback={<LoadingState />}>
                         <MusicEditor />
                     </Suspense>
                 ),
@@ -58,7 +59,7 @@ const router = createBrowserRouter([
                         index: true,
                         element: (
                             <AnimeHubProvider>
-                                <Suspense fallback={<Loading />}>
+                                <Suspense fallback={<LoadingState />}>
                                     <AnimeHub />
                                 </Suspense>
                             </AnimeHubProvider>
@@ -68,7 +69,7 @@ const router = createBrowserRouter([
                         path: 'auth',
                         element: (
                             <AnimeHubProvider>
-                                <Suspense fallback={<Loading />}>
+                                <Suspense fallback={<LoadingState />}>
                                     <AnimeHubAuth />
                                 </Suspense>
                             </AnimeHubProvider>
@@ -80,7 +81,7 @@ const router = createBrowserRouter([
                 path: '/games/tic-tac-toe',
                 element: (
                     <TicTacToeProvider>
-                        <Suspense fallback={<Loading />}>
+                        <Suspense fallback={<LoadingState />}>
                             <TicTacToe />
                         </Suspense>
                     </TicTacToeProvider>
@@ -89,7 +90,7 @@ const router = createBrowserRouter([
                     {
                         path: '/games/tic-tac-toe',
                         element: (
-                            <Suspense fallback={<Loading />}>
+                            <Suspense fallback={<LoadingState circleSize="20px" width="w-60 sm:w-96" height="h-60 sm:h-96" />}>
                                 <ClassicTicTacToe />
                             </Suspense>
                         ),
@@ -97,7 +98,7 @@ const router = createBrowserRouter([
                     {
                         path: 'classic',
                         element: (
-                            <Suspense fallback={<Loading />}>
+                            <Suspense fallback={<LoadingState circleSize="20px" width="w-60 sm:w-96" height="h-60 sm:h-96" />}>
                                 <ClassicTicTacToe />
                             </Suspense>
                         ),
@@ -105,7 +106,7 @@ const router = createBrowserRouter([
                     {
                         path: 'ultimate',
                         element: (
-                            <Suspense fallback={<Loading />}>
+                            <Suspense fallback={<LoadingState circleSize="20px" width="w-60 sm:w-96" height="h-60 sm:h-96" />}>
                                 <UltimateTicTacToe />
                             </Suspense>
                         ),
@@ -115,7 +116,7 @@ const router = createBrowserRouter([
             {
                 path: '*',
                 element: (
-                    <Suspense fallback={<Loading />}>
+                    <Suspense fallback={<LoadingState />}>
                         <NotFound />
                     </Suspense>
                 ),

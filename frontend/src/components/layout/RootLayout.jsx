@@ -11,13 +11,13 @@ const RootLayout = () => {
     const { startContinuous } = useLoadingBar()
     const [prevPath, setPrevPath] = React.useState('')
 
-    useEffect(() => {
-        // if the location path is different from the previous one, start the loading bar
-        if (location.pathname !== prevPath) {
-            startContinuous(10, 500)
-            setPrevPath(location.pathname)
-        }
-    }, [location])
+    // useEffect(() => {
+    //     // if the location path is different from the previous one, start the loading bar
+    //     if (location.pathname !== prevPath) {
+    //         startContinuous(10, 500)
+    //         setPrevPath(location.pathname)
+    //     }
+    // }, [location])
 
     return (
         <>
