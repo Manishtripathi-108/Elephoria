@@ -11,6 +11,7 @@ import { TicTacToeProvider } from './context/TicTacToe/TicTacToeContext'
 import './utils/iconUtils'
 
 // Lazy-loaded components
+const Home = lazy(() => import('./pages/Home'))
 const NotFound = lazy(() => import('./pages/404-page'))
 const Shadows = lazy(() => import('./pages/ShadowsGrid'))
 const AnimeHub = lazy(() => import('./pages/animeHub/AnimeHub'))
@@ -32,7 +33,7 @@ const router = createBrowserRouter([
                 path: '/',
                 element: (
                     <Suspense fallback={<LoadingState />}>
-                        <LoadingState />
+                        <Home />
                     </Suspense>
                 ),
             },

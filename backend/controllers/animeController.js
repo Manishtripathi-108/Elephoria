@@ -32,7 +32,7 @@ exports.getToken = async (req, res) => {
 				maxAge: data.expires_in * 10000,
 			});
 			setCookie(res, "anilistRefreshToken", data.refresh_token);
-			setCookie(res, "aniListUserId", data.user_id);
+			setCookie(res, "anilistUserId", data.user_id);
 
 			return successResponse(res, true);
 		} else {
@@ -226,7 +226,7 @@ exports.logoutUser = (req, res) => {
 		secure: true,
 		sameSite: "strict",
 	});
-	res.clearCookie("aniListUserId", {
+	res.clearCookie("anilistUserId", {
 		httpOnly: true,
 		secure: true,
 		sameSite: "strict",

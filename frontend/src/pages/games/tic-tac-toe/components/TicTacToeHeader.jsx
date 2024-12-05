@@ -1,11 +1,21 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { Link } from 'react-router-dom'
 
 import ElevateButton from '../../../../components/common/buttons/ElevateButton'
-import { useTicTacToeContext } from '../../../../context/TicTacToe/TicTacToeContext'
+import useNetworkStatus from '../../../../hooks/useNetworkStatus'
 
 const TicTacToeHeader = ({ title, playingOnline }) => {
+    const isInternetConnected = useNetworkStatus()
+
+    useEffect(() => {
+        if (isInternetConnected) {
+            window.addToast('You are online.', 'success')
+        } else {
+            window.addToast('You are offline, if you want to play online mode, please connect to the internet.', 'error', 10000)
+        }
+    }, [isInternetConnected])
+
     return (
         <div
             className={`grid border-b border-light-secondary py-3 dark:border-dark-secondary md:grid-cols-2 ${playingOnline ? 'grid-cols-2' : 'grid-cols-4'}`}>
@@ -20,6 +30,10 @@ const TicTacToeHeader = ({ title, playingOnline }) => {
                 {!playingOnline && (
                     <ElevateButton
                         onClick={() => {
+                            if (!isInternetConnected) {
+                                window.addToast('Please connect to the internet to play online.', 'error')
+                                return
+                            }
                             const playModal = document.getElementById('play_online')
                             if (playModal) playModal.showModal()
                         }}>
