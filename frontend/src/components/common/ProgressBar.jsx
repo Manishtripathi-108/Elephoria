@@ -6,9 +6,9 @@ const ProgressBar = ({ total, current, percentage = '', name = '' }) => {
     }
 
     return (
-        <div className="bg-primary grid w-full max-w-sm place-items-center gap-3 rounded-2xl p-5 shadow-neu-light-md dark:shadow-neu-dark-md">
+        <div className="bg-primary grid w-full max-w-sm place-items-center gap-3 rounded-2xl p-5 shadow-neumorphic-md">
             {/* Progress Bar */}
-            <div className="flex h-5 w-full items-center justify-start rounded-3xl shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs">
+            <div className="flex h-5 w-full items-center justify-start rounded-3xl shadow-neumorphic-inset-xs">
                 <div
                     className="bg-accent h-full w-20 animate-pulse rounded-3xl"
                     style={{ width: `${percentage || 0}%` }}

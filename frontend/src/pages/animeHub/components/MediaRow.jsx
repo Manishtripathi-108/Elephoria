@@ -5,7 +5,7 @@ const MediaRow = ({ mediaItem, isFavourite = false }) => {
     const media = isFavourite ? mediaItem : mediaItem?.media
 
     return (
-        <tr className="border-x border-b border-light-secondary p-2 transition-all duration-300 ease-in-out last:rounded-b-lg last:rounded-t-none hover:border-transparent hover:shadow-neu-light-xs dark:border-dark-secondary dark:hover:border-transparent hover:dark:shadow-neu-dark-xs">
+        <tr className="border-x border-b border-light-secondary p-2 transition-all duration-300 ease-in-out last:rounded-b-lg last:rounded-t-none hover:border-transparent hover:shadow-neumorphic-xs dark:border-dark-secondary dark:hover:border-transparent">
             {/* Cover Image */}
             <td className="p-3">
                 <div className="size-20">

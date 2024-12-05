@@ -35,7 +35,7 @@ const UploadInput = ({ id, file, setFile }) => {
     }, [])
 
     return (
-        <div className="bg-primary mb-6 flex size-80 flex-col items-center justify-between gap-2 rounded-lg p-2.5 shadow-neu-light-sm dark:shadow-neu-dark-sm">
+        <div className="bg-primary mb-6 flex size-80 flex-col items-center justify-between gap-2 rounded-lg p-2.5 shadow-neumorphic-sm">
             <label
                 htmlFor={id}
                 className="text-highlight flex w-full flex-1 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-light-highlight dark:border-dark-highlight">

@@ -18,7 +18,7 @@ const ListView = ({ data = [], isFavourite = false }) => {
 
     // Render a regular media table (for Anime/Manga)
     const MediaTable = ({ list }) => (
-        <div key={list.name} className="mb-5 w-full overflow-hidden rounded-xl shadow-neu-light-sm dark:shadow-neu-dark-sm">
+        <div key={list.name} className="mb-5 w-full overflow-hidden rounded-xl shadow-neumorphic-sm">
             <div className="bg-secondary rounded-t-xl border border-light-secondary dark:border-dark-secondary">
                 <h2 className="text-primary p-3 font-aladin text-lg tracking-widest">{list.name}</h2>
             </div>
@@ -41,7 +41,7 @@ const ListView = ({ data = [], isFavourite = false }) => {
 
     // Render a Favourite media table (for Anime/Manga)
     const FavouriteTable = ({ type, media }) => (
-        <div className="mb-5 w-full overflow-hidden rounded-xl shadow-neu-light-sm dark:shadow-neu-dark-sm">
+        <div className="mb-5 w-full overflow-hidden rounded-xl shadow-neumorphic-sm">
             <div className="bg-secondary rounded-t-xl border border-light-secondary dark:border-dark-secondary">
                 <h2 className="text-primary p-3 font-aladin text-lg tracking-widest">Favourite {type}</h2>
             </div>

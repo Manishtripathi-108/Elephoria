@@ -8,7 +8,7 @@ const LoadingSkeleton = ({ isListView }) => {
     return (
         <div className="container mx-auto flex flex-col items-start justify-center gap-2 md:flex-row md:gap-5 md:p-5">
             <SkeletonFilter />
-            <div className="bg-primary mx-auto grid w-full place-items-center rounded-lg border border-light-secondary p-3 shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-sm">
+            <div className="bg-primary mx-auto grid w-full place-items-center rounded-lg border border-light-secondary p-3 shadow-neumorphic-inset-sm dark:border-dark-secondary">
                 {isListView ? (
                     <>
                         <SkeletonList />

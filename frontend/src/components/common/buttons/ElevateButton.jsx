@@ -10,7 +10,7 @@ const ElevateButton = React.forwardRef(({ children, onClick, title = '', classNa
             onClick={onClick}
             disabled={disabled}
             className={cn(
-                `group inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full border bg-[linear-gradient(145deg,var(--gradient-start),var(--gradient-end))] p-1.5 shadow-neu-light-xs duration-500 hover:scale-105 dark:shadow-neu-dark-xs ${className}`,
+                `group inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full border bg-[linear-gradient(145deg,var(--gradient-start),var(--gradient-end))] p-1.5 shadow-neumorphic-xs duration-500 hover:scale-105 ${className}`,
                 {
                     'text-secondary border-light-secondary [--gradient-end:#e6a4a7] [--gradient-start:#ffc3c6] [--sh-end:#ffcfd3] [--sh-start:#db9d9f] dark:border-dark-secondary dark:[--gradient-end:#364253] dark:[--gradient-start:#1f2937] dark:[--sh-end:#324258] dark:[--sh-start:#0c1016]':
                         variant === 'primary',

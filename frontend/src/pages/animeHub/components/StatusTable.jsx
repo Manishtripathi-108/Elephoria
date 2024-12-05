@@ -18,7 +18,7 @@ const StatusTable = ({ data, title, failed = false }) => {
     const displayData = filteredData.length > 0 ? filteredData : data
 
     return (
-        <div className="bg-primary w-full max-w-2xl rounded-2xl border border-light-secondary shadow-neu-light-sm dark:border-dark-secondary dark:shadow-neu-dark-sm">
+        <div className="bg-primary w-full max-w-2xl rounded-2xl border border-light-secondary shadow-neumorphic-sm dark:border-dark-secondary">
             <header className="flex w-full items-center justify-between border-b border-light-secondary px-4 py-3 dark:border-dark-secondary">
                 <h2 className="text-primary text-nowrap font-aladin text-xl font-semibold tracking-widest">
                     {title} ({data.length})
@@ -46,7 +46,7 @@ const StatusTable = ({ data, title, failed = false }) => {
                                 {displayData.map((item, index) => (
                                     <tr
                                         key={index}
-                                        className="border-b border-light-secondary transition-all duration-300 ease-in-out first:rounded-t-lg last:rounded-b-lg hover:border-transparent hover:shadow-neu-light-md dark:border-dark-secondary dark:hover:border-transparent dark:hover:shadow-neu-dark-sm">
+                                        className="border-b border-light-secondary transition-all duration-300 ease-in-out first:rounded-t-lg last:rounded-b-lg hover:border-transparent hover:shadow-neumorphic-md dark:border-dark-secondary dark:hover:border-transparent">
                                         <td className="px-5 py-3">{item.name}</td>
                                         <td className={`text-nowrap px-5 py-3 ${failed ? 'text-red-500' : 'text-green-500'}`}>{item.statusText}</td>
                                     </tr>

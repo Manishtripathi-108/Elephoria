@@ -68,20 +68,20 @@ const WaitingRoom = ({ onExit, onStart, playerO = '', playerX = '', roomId, room
 
     // Reusable Player Block Component
     const PlayerBlock = ({ player, label }) => (
-        <div className="w-full max-w-sm shrink-0 rounded-xl border border-light-secondary p-3 text-center shadow-neu-inset-light-md dark:border-dark-secondary dark:shadow-neu-inset-dark-md">
+        <div className="w-full max-w-sm shrink-0 rounded-xl border border-light-secondary p-3 text-center shadow-neumorphic-inset-md dark:border-dark-secondary">
             <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 exit={{ scale: 0 }}
                 transition={{ type: 'spring', stiffness: 100 }}
-                className="rounded-lg border border-inherit p-6 shadow-neu-light-md dark:shadow-neu-dark-md">
+                className="rounded-lg border border-inherit p-6 shadow-neumorphic-md">
                 <div
-                    className={`flex-center mx-auto size-20 rounded-full border border-inherit p-4 text-6xl shadow-neu-inset-light-md dark:shadow-neu-inset-dark-md md:size-44 md:text-8xl ${
+                    className={`flex-center mx-auto size-20 rounded-full border border-inherit p-4 text-6xl shadow-neumorphic-inset-md md:size-44 md:text-8xl ${
                         player ? 'text-highlight' : 'text-secondary animate-blob'
                     }`}>
                     {label}
                 </div>
-                <div className="mt-4 rounded-md border border-inherit p-2 shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs">
+                <div className="mt-4 rounded-md border border-inherit p-2 shadow-neumorphic-inset-xs">
                     {player || wordMap(`Waiting for ${label}...`)}
                 </div>
             </motion.div>

@@ -53,7 +53,7 @@ const AuthComponent = () => {
 
     return (
         <div className="grid h-dvh w-dvw place-items-center">
-            <div className="bg-primary relative h-[600px] w-[70%] overflow-hidden rounded-xl p-6 shadow-neu-light-lg dark:shadow-neu-dark-lg">
+            <div className="bg-primary relative h-[600px] w-[70%] overflow-hidden rounded-xl p-6 shadow-neumorphic-lg">
                 {/* Register Form with Formik */}
                 <div
                     className="bg-primary absolute left-[40%] top-0 z-0 flex h-full w-3/5 items-center justify-center p-6 transition-all duration-[1.25s]"
@@ -183,11 +183,11 @@ const AuthComponent = () => {
 
                 {/* Switch Container */}
                 <div
-                    className="bg-primary absolute left-0 top-0 z-[200] flex h-full w-2/5 items-center justify-center overflow-hidden p-[50px] shadow-neu-light-md transition-all duration-[1.25s] dark:shadow-neu-dark-md"
+                    className="bg-primary absolute left-0 top-0 z-[200] flex h-full w-2/5 items-center justify-center overflow-hidden p-[50px] shadow-neumorphic-md transition-all duration-[1.25s]"
                     ref={switchContainerRef}>
                     {/* Background Circles for Animation */}
-                    <div className="switch-circles bg-primary absolute bottom-[-60%] left-[-60%] size-[500px] rounded-full shadow-neu-inset-light-sm transition-all duration-[1.25s] dark:shadow-neu-inset-dark-sm"></div>
-                    <div className="switch-circles bg-primary absolute bottom-[-60%] left-[-60%] top-[-30%] size-[350px] rounded-full shadow-neu-inset-light-sm transition-all duration-[1.25s] dark:shadow-neu-inset-dark-sm"></div>
+                    <div className="switch-circles bg-primary absolute bottom-[-60%] left-[-60%] size-[500px] rounded-full shadow-neumorphic-inset-sm transition-all duration-[1.25s]"></div>
+                    <div className="switch-circles bg-primary absolute bottom-[-60%] left-[-60%] top-[-30%] size-[350px] rounded-full shadow-neumorphic-inset-sm transition-all duration-[1.25s]"></div>
 
                     {/* Login Switch */}
                     <div

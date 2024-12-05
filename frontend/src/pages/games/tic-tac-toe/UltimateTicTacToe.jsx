@@ -19,7 +19,7 @@ const UltimateTicTacToe = () => {
             {ultimateBoard.map((macroBoard, macroIndex) => (
                 <div
                     key={macroIndex}
-                    className={`relative grid grid-cols-3 gap-2 rounded-md p-2 shadow-neu-inset-light-xs dark:shadow-neu-inset-dark-xs md:gap-3 md:p-3 ${
+                    className={`relative grid grid-cols-3 gap-2 rounded-md p-2 shadow-neumorphic-inset-xs md:gap-3 md:p-3 ${
                         macroIndex === activeIndex ? 'bg-highlight' : ''
                     }`}>
                     {macroBoard.map((cell, cellIndex) => (
@@ -45,7 +45,7 @@ const UltimateTicTacToe = () => {
                                     winner: { scale: 1 },
                                     exit: { scale: 0 },
                                 }}
-                                className="flex-center bg-primary absolute inset-0 z-10 rounded-md p-5 shadow-neu-inset-light-sm dark:shadow-neu-inset-dark-sm">
+                                className="flex-center bg-primary absolute inset-0 z-10 rounded-md p-5 shadow-neumorphic-inset-sm">
                                 <motion.span
                                     variants={squareAnim}
                                     className={`${winIndexes?.includes(macroIndex) ? 'text-accent' : 'text-secondary'} select-none font-julee text-7xl md:text-9xl`}>

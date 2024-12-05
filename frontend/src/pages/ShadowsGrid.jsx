@@ -2,24 +2,14 @@ import React from 'react'
 
 import ShadowsItem from '../components/ShadowsItem'
 
-const shadowsLight = ['shadow-neu-light-xs', 'shadow-neu-light-sm', 'shadow-neu-light-md', 'shadow-neu-light-lg', 'shadow-neu-light-xl']
+const shadowsLight = ['shadow-neumorphic-xs', 'shadow-neumorphic-sm', 'shadow-neumorphic-md', 'shadow-neumorphic-lg', 'shadow-neumorphic-xl']
 
 const shadowsLightInset = [
-    'shadow-neu-inset-light-xs',
-    'shadow-neu-inset-light-sm',
-    'shadow-neu-inset-light-md',
-    'shadow-neu-inset-light-lg',
-    'shadow-neu-inset-light-xl',
-]
-
-const shadowsDark = ['shadow-neu-dark-xs', 'shadow-neu-dark-sm', 'shadow-neu-dark-md', 'shadow-neu-dark-lg', 'shadow-neu-dark-xl']
-
-const shadowsDarkInset = [
-    'shadow-neu-inset-dark-xs',
-    'shadow-neu-inset-dark-sm',
-    'shadow-neu-inset-dark-md',
-    'shadow-neu-inset-dark-lg',
-    'shadow-neu-inset-dark-xl',
+    'shadow-neumorphic-inset-xs',
+    'shadow-neumorphic-inset-sm',
+    'shadow-neumorphic-inset-md',
+    'shadow-neumorphic-inset-lg',
+    'shadow-neumorphic-inset-xl',
 ]
 
 const ShadowsGrid = () => {
@@ -32,14 +22,6 @@ const ShadowsGrid = () => {
             <div className="w-full bg-light-primary p-4 lg:p-8">
                 <h1 className="text-primary mb-8 text-center text-3xl font-bold">Neumorphic Inset Shadows</h1>
                 <ShadowsItem shadows={shadowsLightInset} />
-            </div>
-            <div className="w-full bg-dark-primary p-4 lg:p-8">
-                <h1 className="text-primary mb-8 text-center text-3xl font-bold">Dark Mode Neumorphic Shadows</h1>
-                <ShadowsItem shadows={shadowsDark} isDark={true} />
-            </div>
-            <div className="w-full bg-dark-primary p-4 lg:p-8">
-                <h1 className="text-primary mb-8 text-center text-3xl font-bold">Dark Mode Neumorphic Inset Shadows</h1>
-                <ShadowsItem shadows={shadowsDarkInset} isDark={true} />
             </div>
         </div>
     )

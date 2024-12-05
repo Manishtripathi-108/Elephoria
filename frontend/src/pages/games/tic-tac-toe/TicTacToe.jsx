@@ -66,7 +66,7 @@ const TicTacToe = () => {
                         </div>
 
                         {/* Game Board Placeholder */}
-                        <div className="relative z-0 w-fit rounded-xl border border-light-secondary p-2 shadow-neu-light-md dark:border-dark-secondary dark:shadow-neu-dark-md">
+                        <div className="relative z-0 w-fit rounded-xl border border-light-secondary p-2 shadow-neumorphic-md dark:border-dark-secondary">
                             <Outlet />
 
                             <AnimatePresence>{isGameOver && <GameOverModal clearBoard={clearBoard} status={renderGameStatus()} />}</AnimatePresence>

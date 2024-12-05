@@ -12,7 +12,7 @@ const ClassicTicTacToe = () => {
     }, [])
 
     return (
-        <div className="rounded-lg border border-light-secondary p-3 shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-sm">
+        <div className="rounded-lg border border-light-secondary p-3 shadow-neumorphic-inset-sm dark:border-dark-secondary">
             <div tabIndex={0} className="grid grid-cols-3 gap-3 outline-none">
                 {classicBoard.map((cell, index) => (
                     <Square

@@ -5,10 +5,10 @@ import axios from 'axios'
 import { fetchAniListIds, fetchUserMediaListIDs, saveMediaEntry } from '../../api/animeHubApi'
 import ProgressBar from '../../components/common/ProgressBar'
 import UploadInput from '../../components/common/form/UploadInput'
-import { chunkArray, filterExistingMalIds, handleError, handleRateLimits, isValidFormat, validateAndMapMedia } from './utils/importAnimeUtils'
 import CorrectInvalidStatuses from './components/CorrectInvalidStatuses'
 import StatusTable from './components/StatusTable'
 import { validStatusOptions } from './utils/constants'
+import { chunkArray, filterExistingMalIds, handleError, handleRateLimits, isValidFormat, validateAndMapMedia } from './utils/importAnimeUtils'
 
 const ImportMedia = () => {
     const [file, setFile] = useState(null)
@@ -278,7 +278,7 @@ const ImportMedia = () => {
     }
 
     return (
-        <div className="bg-primary container mx-auto grid place-items-center rounded-lg border border-light-secondary p-3 shadow-neu-inset-light-sm dark:border-dark-secondary dark:shadow-neu-inset-dark-sm md:p-5">
+        <div className="bg-primary container mx-auto grid place-items-center rounded-lg border border-light-secondary p-3 shadow-neumorphic-inset-sm dark:border-dark-secondary md:p-5">
             {importState.importStatus === 'IDLE' && (
                 <div className="mt-10 grid w-fit place-items-center gap-5 md:grid-cols-2">
                     {/* Upload Input */}

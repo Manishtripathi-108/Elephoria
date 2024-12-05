@@ -58,7 +58,7 @@ const Header = () => {
         <>
             <header
                 id="page-header"
-                className="bg-primary sticky top-0 z-50 mb-0.5 flex h-[var(--header-height)] w-full items-center justify-between p-2 shadow-neu-light-xs transition-all duration-300 ease-in-out dark:shadow-neu-dark-xs">
+                className="bg-primary sticky top-0 z-50 mb-0.5 flex h-[var(--header-height)] w-full items-center justify-between p-2 shadow-neumorphic-xs transition-all duration-300 ease-in-out">
                 <NeuToggleButton
                     id="sidenav-toggle"
                     aria-controls="sidenav"

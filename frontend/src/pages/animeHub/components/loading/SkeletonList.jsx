@@ -2,7 +2,7 @@ import React from 'react'
 
 const SkeletonList = () => {
     return (
-        <div className="w-full overflow-hidden rounded-xl shadow-neu-light-sm dark:shadow-neu-dark-sm">
+        <div className="w-full overflow-hidden rounded-xl shadow-neumorphic-sm">
             <div className="bg-secondary block rounded-t-xl border border-light-secondary dark:border-dark-secondary">
                 <div className="bg-primary m-3 h-8 w-1/3 animate-pulse rounded-lg"></div>
             </div>
@@ -26,7 +26,7 @@ const SkeletonList = () => {
                     {Array.from({ length: 5 }).map((_, index) => (
                         <tr
                             key={index}
-                            className="border-x border-b border-light-secondary p-2 transition-all duration-300 ease-in-out last:rounded-b-lg hover:border-transparent hover:shadow-neu-light-xs dark:border-dark-secondary dark:hover:border-transparent hover:dark:shadow-neu-dark-xs">
+                            className="border-x border-b border-light-secondary p-2 transition-all duration-300 ease-in-out last:rounded-b-lg hover:border-transparent hover:shadow-neumorphic-xs dark:border-dark-secondary dark:hover:border-transparent">
                             <td className="p-3">
                                 <div className="bg-secondary size-20 animate-pulse rounded-lg"></div>
                             </td>

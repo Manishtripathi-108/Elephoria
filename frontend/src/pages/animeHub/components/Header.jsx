@@ -61,7 +61,7 @@ const Header = () => {
 
     if (loading || error) {
         return (
-            <header className="shadow-neu-inset-light-lg dark:shadow-neu-inset-dark-lg">
+            <header className="shadow-neumorphic-inset-lg">
                 <div className="flex h-full w-full items-end justify-center bg-white/20 dark:bg-black/30">
                     <div className="flex w-5/6 max-w-screen-md items-end justify-start gap-5 pt-4 opacity-100 md:pt-20">
                         {/* Skeleton for avatar */}
@@ -81,7 +81,7 @@ const Header = () => {
     }
 
     return (
-        <header className="h-[45dvh] shadow-neu-inset-light-lg dark:shadow-neu-inset-dark-lg" style={bannerStyle}>
+        <header className="h-[45dvh] shadow-neumorphic-inset-lg" style={bannerStyle}>
             <div className="flex h-full w-full items-end justify-center bg-white/20 dark:bg-black/30">
                 <div className="flex w-5/6 max-w-screen-md flex-wrap items-end justify-start gap-5 opacity-100 md:pt-20">
                     <img

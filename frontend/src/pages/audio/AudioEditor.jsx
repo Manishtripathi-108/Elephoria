@@ -86,10 +86,7 @@ const AudioEditor = () => {
     return (
         <div className="flex-center flex-col gap-6">
             {/* Upload audio form */}
-            <form
-                id="upload-audio"
-                onSubmit={handleFileUpload}
-                className="flex-center w-full max-w-2xl flex-col rounded-lg p-6 shadow-neu-light-md dark:shadow-neu-dark-md">
+            <form id="upload-audio" onSubmit={handleFileUpload} className="flex-center w-full max-w-2xl flex-col rounded-lg p-6 shadow-neumorphic-md">
                 <h2 className="text-primary mb-2 font-aladin text-2xl tracking-wider">Upload Audio</h2>
                 <p className="text-primary mb-6 text-center">Upload an audio file to edit metadata, convert format, and more!</p>
 
@@ -103,13 +100,13 @@ const AudioEditor = () => {
             {/* Edit metadata form */}
             <form
                 id="edit-metadata"
-                className="flex-center w-full max-w-2xl flex-col gap-6 rounded-lg p-6 shadow-neu-light-md dark:shadow-neu-dark-md"
+                className="flex-center w-full max-w-2xl flex-col gap-6 rounded-lg p-6 shadow-neumorphic-md"
                 onSubmit={handleEditMetadata}>
                 <h2 className="text-primary font-aladin text-2xl tracking-wider">Edit Metadata</h2>
 
                 {/* Display cover image if available */}
                 {coverImage && (
-                    <div className="size-72 overflow-hidden rounded-lg p-3 shadow-neu-inset-light-sm dark:shadow-neu-inset-dark-sm">
+                    <div className="size-72 overflow-hidden rounded-lg p-3 shadow-neumorphic-inset-sm">
                         <div className="w-full overflow-hidden rounded-md">
                             <img src={coverImage} alt="Cover Image" className="h-full w-full object-cover" />
                         </div>

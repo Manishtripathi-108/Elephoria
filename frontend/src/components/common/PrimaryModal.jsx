@@ -43,8 +43,8 @@ const DialogModal = ({ modalId, maxWidthAndClasses = 'w-full max-w-2xl', showClo
         <dialog
             id={modalId}
             onClick={(e) => e.target === e.currentTarget && closeModal(modalId)}
-            className={`modal-animation scrollbar-thin rounded-xl border border-light-secondary p-5 shadow-neu-inset-light-md dark:border-dark-secondary dark:shadow-neu-inset-dark-md ${maxWidthAndClasses}`}>
-            <div className="overflow-hidden rounded-lg border border-light-secondary shadow-neu-light-md dark:border-dark-secondary dark:shadow-neu-dark-md">
+            className={`modal-animation scrollbar-thin rounded-xl border border-light-secondary p-5 shadow-neumorphic-inset-md dark:border-dark-secondary ${maxWidthAndClasses}`}>
+            <div className="overflow-hidden rounded-lg border border-light-secondary shadow-neumorphic-md dark:border-dark-secondary">
                 {showCloseButton && (
                     <button
                         className="text-secondary hover:text-primary absolute right-2 top-2 z-20 select-none rounded-full bg-light-secondary p-1 text-lg dark:bg-dark-secondary"
@@ -76,8 +76,8 @@ const ConfirmationModal = ({ modalId, icon, onConfirm, onCancel, confirmText = '
         <dialog
             id={modalId}
             onClick={(e) => e.target === e.currentTarget && closeModal(modalId)}
-            className={`modal-animation w-fit max-w-2xl rounded-xl border border-light-secondary p-5 shadow-neu-inset-light-md dark:border-dark-secondary dark:shadow-neu-inset-dark-md`}>
-            <div className="overflow-hidden rounded-lg border border-light-secondary shadow-neu-light-md dark:border-dark-secondary dark:shadow-neu-dark-md">
+            className={`modal-animation w-fit max-w-2xl rounded-xl border border-light-secondary p-5 shadow-neumorphic-inset-md dark:border-dark-secondary`}>
+            <div className="overflow-hidden rounded-lg border border-light-secondary shadow-neumorphic-md dark:border-dark-secondary">
                 <div className="relative max-h-full w-full max-w-md p-8 text-center md:p-10">
                     <Icon icon={icon} className="error mx-auto mb-4 size-12" />
                     <h3 className="text-primary mb-5 text-lg font-normal">{children}</h3>

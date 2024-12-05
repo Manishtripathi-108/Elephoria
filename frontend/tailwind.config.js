@@ -164,40 +164,20 @@ export default {
                 'dark-highlight': '#1E90FF',
             },
             boxShadow: {
-                // Light Mode Shadows
-                'neu-light-xs': '3px 3px 5px #db9d9f, -3px -3px 5px #ffcfd3',
-                'neu-light-sm': '5px 5px 10px #db9d9f, -5px -5px 10px #ffcfd3',
-                'neu-light-md': '6px 6px 12px #db9d9f, -6px -6px 12px #ffcfd3',
-                'neu-light-lg': '10px 10px 20px #db9d9f, -10px -10px 20px #ffcfd3',
-                'neu-light-xl': '20px 20px 40px #db9d9f, -20px -20px 40px #ffcfd3',
+                'neumorphic-xs': '3px 3px 5px var(--lower-shadow), -3px -3px 5px var(--upper-shadow)',
+                'neumorphic-sm': '5px 5px 10px var(--lower-shadow), -5px -5px 10px var(--upper-shadow)',
+                'neumorphic-md': '6px 6px 12px var(--lower-shadow), -6px -6px 12px var(--upper-shadow)',
+                'neumorphic-lg': '10px 10px 20px var(--lower-shadow), -10px -10px 20px var(--upper-shadow)',
+                'neumorphic-xl': '20px 20px 40px var(--lower-shadow), -20px -20px 40px var(--upper-shadow)',
 
-                // Light Mode Inset Shadows
-                'neu-inset-light-xs': 'inset 3px 3px 7px #bd8789, inset -3px -3px 7px #ffd1d8',
-                'neu-inset-light-sm': 'inset 5px 5px 10px #bd8789, inset -5px -5px 10px #ffd1d8',
-                'neu-inset-light-md': 'inset 6px 6px 12px #bd8789, inset -6px -6px 12px #ffd1d8',
-                'neu-inset-light-lg': 'inset 10px 10px 20px #bd8789, inset -10px -10px 20px #ffd1d8',
-                'neu-inset-light-xl': 'inset 20px 20px 40px #bd8789, inset -20px -20px 40px #ffd1d8',
-
-                // Light Mode Secondary Shadows
-                'neu-light-secondary-xs': '3px 3px 5px #29428e, -3px -3px 5px #5990ff',
-                'neu-inset-light-secondary-xs': 'inset 3px 3px 5px #29428e, inset -3px -3px 5px #5990ff',
-
-                // Dark Mode Shadows
-                'neu-dark-xs': '3px 3px 5px #0c1016, -3px -3px 5px #324258',
-                'neu-dark-sm': '5px 5px 10px #0c1016, -5px -5px 10px #324258',
-                'neu-dark-md': '6px 6px 12px #0c1016, -6px -6px 12px #324258',
-                'neu-dark-lg': '10px 10px 20px #0c1016, -10px -10px 20px #324258',
-                'neu-dark-xl': '20px 20px 40px #0c1016, -20px -20px 40px #324258;',
+                'neumorphic-inset-xs': 'inset 3px 3px 7px var(--lower-shadow), inset -3px -3px 7px var(--upper-shadow)',
+                'neumorphic-inset-sm': 'inset 5px 5px 10px var(--lower-shadow), inset -5px -5px 10px var(--upper-shadow)',
+                'neumorphic-inset-md': 'inset 6px 6px 12px var(--lower-shadow), inset -6px -6px 12px var(--upper-shadow)',
+                'neumorphic-inset-lg': 'inset 10px 10px 20px var(--lower-shadow), inset -10px -10px 20px var(--upper-shadow)',
+                'neumorphic-inset-xl': 'inset 20px 20px 40px var(--lower-shadow), inset -20px -20px 40px var(--upper-shadow)',
 
                 'neu-dark-secondary-xs': '3px 3px 5px #135ba1, -3px -3px 5px #29c5ff',
                 'neu-inset-dark-secondary-xs': 'inset 3px 3px 5px #135ba1, inset -3px -3px 5px #29c5ff',
-
-                // Dark Mode Inset Shadows
-                'neu-inset-dark-xs': 'inset 3px 3px 5px #0c1016, inset -3px -3px 5px #324258',
-                'neu-inset-dark-sm': 'inset 5px 5px 10px #0c1016, inset -5px -5px 10px #324258',
-                'neu-inset-dark-md': 'inset 6px 6px 12px #0c1016, inset -6px -6px 12px #324258',
-                'neu-inset-dark-lg': 'inset 10px 10px 20px #0c1016, inset -10px -10px 20px #324258',
-                'neu-inset-dark-xl': 'inset 20px 20px 40px #0c1016, inset -20px -20px 40px #324258',
             },
             fontFamily: {
                 'indie-flower': ['"Indie Flower"', 'cursive', 'serif'],
