@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 
 import { Link } from 'react-router-dom'
 
@@ -7,14 +7,6 @@ import useNetworkStatus from '../../../../hooks/useNetworkStatus'
 
 const TicTacToeHeader = ({ title, playingOnline }) => {
     const isInternetConnected = useNetworkStatus()
-
-    useEffect(() => {
-        if (isInternetConnected) {
-            window.addToast('You are online.', 'success')
-        } else {
-            window.addToast('You are offline, if you want to play online mode, please connect to the internet.', 'error', 10000)
-        }
-    }, [isInternetConnected])
 
     return (
         <div

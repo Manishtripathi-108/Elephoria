@@ -3,7 +3,7 @@ const {
 	handleClearBoard,
 	handleJoinRoom,
 	handleMove,
-	handleModeChange,
+	handleBoardChange,
 	handleStartGame,
 	handleLeaveRoom,
 } = require("../controllers/gameController");
@@ -22,7 +22,7 @@ const gameRoutes = (io) => {
 			socket.emit("roomLeft");
 		});
 		socket.on("playerMove", handleMove(socket, io));
-		socket.on("setMode", handleModeChange(socket, io));
+		socket.on("setBoard", handleBoardChange(socket, io));
 		socket.on("startGame", handleStartGame(socket, io));
 
 		socket.on("disconnect", () => {

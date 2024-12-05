@@ -2,7 +2,7 @@ const {
 	generateRoomId,
 	joinRoom,
 	startGame,
-	changeMode,
+	changeBoard,
 	leaveRoom,
 	updateGameState,
 	clearBoard,
@@ -87,10 +87,10 @@ const handleMove = (socket, io) => (movePayload) => {
 	}
 };
 
-const handleModeChange =
+const handleBoardChange =
 	(socket, io) =>
 	({ roomId, mode }) => {
-		const result = changeMode(roomId, mode);
+		const result = changeBoard(roomId, mode);
 
 		if (result.success) {
 			io.to(roomId).emit("updateGame", result.roomState);
@@ -146,7 +146,7 @@ module.exports = {
 	handleJoinRoom,
 	handleStartGame,
 	handleMove,
-	handleModeChange,
+	handleBoardChange,
 	handleClearBoard,
 	handleLeaveRoom,
 };

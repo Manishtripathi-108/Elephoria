@@ -4,16 +4,16 @@ import { useTicTacToeContext } from '../../../context/TicTacToe/TicTacToeContext
 import Square from './components/Square'
 
 const ClassicTicTacToe = () => {
-    const { state, setMode, handleMove } = useTicTacToeContext()
+    const { state, setBoard, handleMove } = useTicTacToeContext()
     const { classicBoard, winIndexes } = state
 
     useEffect(() => {
-        setMode('classic')
+        setBoard('classic')
     }, [])
 
     return (
-        <div className="shadow-neumorphic-md animate-zoom-in relative z-0 w-fit rounded-xl border border-light-secondary p-2 dark:border-dark-secondary">
-            <div className="shadow-neumorphic-inset-sm rounded-lg border border-light-secondary p-3 dark:border-dark-secondary">
+        <div className="relative z-0 w-fit animate-zoom-in rounded-xl border border-light-secondary p-2 shadow-neumorphic-md dark:border-dark-secondary">
+            <div className="rounded-lg border border-light-secondary p-3 shadow-neumorphic-inset-sm dark:border-dark-secondary">
                 <div tabIndex={0} className="grid grid-cols-3 gap-3 outline-none">
                     {classicBoard.map((cell, index) => (
                         <Square

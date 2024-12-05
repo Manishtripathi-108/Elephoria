@@ -82,10 +82,14 @@ export const TicTacToeProvider = ({ children }) => {
     // --- Actions ---
 
     // Set Game Mode
-    const setMode = useCallback(
+    const setBoard = useCallback(
         (mode) => {
             if (state.mode !== mode) {
-                state.isPlayingOnline ? emitEvent('setMode', { roomId: state.roomId, mode }) : dispatch({ type: ActionTypes.SET_MODE, payload: mode })
+                if (state.isPlayingOnline && state.roomId) {
+                    emitEvent('setBoard', { roomId: state.roomId, mode })
+                } else {
+                    dispatch({ type: ActionTypes.SET_BOARD, payload: mode })
+                }
             }
         },
         [state.isPlayingOnline, state.roomId, state.mode, emitEvent]
@@ -134,6 +138,7 @@ export const TicTacToeProvider = ({ children }) => {
     // Join Room
     const joinRoom = useCallback(
         (roomId, playerName, roomName = 'default', isCreateRoom = false) => {
+            navigate(`/games/tic-tac-toe/classic`)
             if (!state.isPlayingOnline) connectPlayer()
             emitEvent('joinRoom', { roomId, playerName, roomName, isCreateRoom })
         },
@@ -203,8 +208,8 @@ export const TicTacToeProvider = ({ children }) => {
                 handleMove,
                 joinRoom,
                 leaveRoom,
+                setBoard,
                 setLoading,
-                setMode,
                 setPlayerNames,
                 startGame,
                 startOver,

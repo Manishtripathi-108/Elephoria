@@ -13,11 +13,14 @@ const generateRoomId = () => {
 
 const joinRoom = (roomId, playerName, roomName, isCreateRoom, socketId) => {
 	let room = rooms[roomId];
+	// backendLogger.info(
+	// 	`Joining Room: ${roomId}, ${playerName}, ${roomName}, ${isCreateRoom}`
+	// );
 
 	if (!room) {
 		if (!isCreateRoom) {
-			// backendLogger.warn(`Room ${roomId} does not exist.`);
-			return { success: false, message: "Room does not exist" };
+			backendLogger.warn(`Room ${roomId} does not exist.`);
+			// return { success: false, message: "Room does not exist" };
 		}
 
 		// Create a deep copy of initialRoom
@@ -55,6 +58,7 @@ const joinRoom = (roomId, playerName, roomName, isCreateRoom, socketId) => {
 };
 
 const startGame = (roomId) => {
+	// backendLogger.info(`Starting game in Room ${roomId}.`);
 	const room = rooms[roomId];
 	if (!room || !room.playerX.id || !room.playerO.id) {
 		const message = room ? "Players not found" : "Room does not exist";
@@ -71,7 +75,7 @@ const updateGameState = (movePayload) => {
 	const room = rooms[roomId];
 
 	if (!room) {
-		// backendLogger.warn(`Room ${roomId} does not exist.`);
+		// backendLogger.warn(`Room ${roomId} does not exist from updateGameState.`);
 		return { success: false, message: "Room does not exist" };
 	}
 
@@ -175,10 +179,10 @@ const updateGameState = (movePayload) => {
 	}
 };
 
-const changeMode = (roomId, mode) => {
+const changeBoard = (roomId, mode) => {
 	const room = rooms[roomId];
 	if (!room) {
-		// backendLogger.warn(`Room ${roomId} does not exist.`);
+		// backendLogger.warn(`Room ${roomId} does not exist from changeBoard.`);
 		return { success: false, message: "Room does not exist" };
 	}
 
@@ -202,7 +206,7 @@ const clearBoard = (roomId) => {
 
 	const room = rooms[roomId];
 	if (!room) {
-		// backendLogger.warn(`Room ${roomId} does not exist.`);
+		// backendLogger.warn(`Room ${roomId} does not exist from clearBoard.`);
 		return { success: false, message: "Room does not exist" };
 	}
 
@@ -225,7 +229,7 @@ const clearBoard = (roomId) => {
 const leaveRoom = (roomId, socketId) => {
 	const room = rooms[roomId];
 	if (!room) {
-		backendLogger.warn(`Room ${roomId} does not exist.`);
+		// backendLogger.warn(`Room ${roomId} does not exist. from leaveRoom`);
 		return { success: false, message: "Room does not exist" };
 	}
 
@@ -237,11 +241,11 @@ const leaveRoom = (roomId, socketId) => {
 
 	if (!room.playerX.id && !room.playerO.id) {
 		delete rooms[roomId];
-		backendLogger.info(`Room ${roomId} deleted as all players left.`);
+		// backendLogger.info(`Room ${roomId} deleted as all players left.`);
 		return { success: true };
 	}
 
-	backendLogger.info(`Player left Room ${roomId}.`);
+	// backendLogger.info(`Player left Room ${roomId}.`);
 
 	return { success: true, roomState: clearBoard(roomId).roomState };
 };
@@ -251,7 +255,7 @@ module.exports = {
 	joinRoom,
 	startGame,
 	updateGameState,
-	changeMode,
+	changeBoard,
 	leaveRoom,
 	clearBoard,
 };
