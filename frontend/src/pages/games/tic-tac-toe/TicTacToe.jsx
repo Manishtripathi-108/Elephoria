@@ -5,6 +5,7 @@ import { Outlet } from 'react-router-dom'
 import { Icon } from '@iconify/react'
 import { AnimatePresence } from 'motion/react'
 
+import Loading from '../../../components/Loading'
 import { ConfirmationModal, DialogModal, openModal } from '../../../components/common/PrimaryModal'
 import ElevateButton from '../../../components/common/buttons/ElevateButton'
 import { useTicTacToeContext } from '../../../context/TicTacToe/TicTacToeContext'
@@ -31,6 +32,7 @@ const TicTacToe = () => {
         isWaiting,
         playerSymbol,
         gameStarted,
+        isLoading,
         roomId,
         roomName,
     } = state
@@ -42,65 +44,63 @@ const TicTacToe = () => {
         return <>{isXNext ? `${playerX.name}'s turn` : `${playerO.name}'s turn`}</>
     }
 
+    if (isWaiting) {
+        return <WaitingRoom roomId={roomId} roomName={roomName} playerO={playerO} playerX={playerX} onStart={startGame} onExit={leaveRoom} />
+    }
+
+    if (isLoading) {
+        return <Loading />
+    }
+
     return (
         <>
-            {isWaiting ? (
-                <WaitingRoom roomId={roomId} roomName={roomName} playerO={playerO} playerX={playerX} onStart={startGame} onExit={leaveRoom} />
-            ) : (
-                <>
-                    <TicTacToeHeader title={isPlayingOnline ? `Welcome, to ${roomName} ${roomId} (${mode})` : mode} playingOnline={isPlayingOnline} />
+            <TicTacToeHeader title={isPlayingOnline ? `Welcome, to ${roomName} ${roomId} (${mode})` : mode} playingOnline={isPlayingOnline} />
 
-                    <div className="container mx-auto grid place-items-center gap-5 px-2 py-5">
-                        <div className="text-primary flex w-full max-w-4xl items-center justify-evenly">
-                            <span className="text-secondary font-julee text-4xl">{isXNext ? 'X' : 'O'}</span>
-                            <h2 className="text-accent line-clamp-1 text-center text-2xl font-bold capitalize tracking-wider">
-                                {renderGameStatus()}
-                            </h2>
-                            <button
-                                onClick={() => openModal('game_action')}
-                                type="button"
-                                title="Clear Board"
-                                className="button button-icon-only-square">
-                                <Icon icon={iconMap.broom} className="size-6" />
-                            </button>
-                        </div>
+            <div className="container mx-auto grid place-items-center gap-5 px-2 py-5">
+                <div className="text-primary flex w-full max-w-4xl items-center justify-evenly">
+                    <span className="text-secondary font-julee text-4xl">{isXNext ? 'X' : 'O'}</span>
+                    <h2 className="text-accent line-clamp-1 text-center text-2xl font-bold capitalize tracking-wider">{renderGameStatus()}</h2>
+                    {isPlayingOnline ? (
+                        <span className="text-highlight font-julee text-4xl">{playerSymbol}</span>
+                    ) : (
+                        <button onClick={() => openModal('game_action')} type="button" title="Clear Board" className="button button-icon-only-square">
+                            <Icon icon={iconMap.broom} className="size-6" />
+                        </button>
+                    )}
+                </div>
 
-                        {/* Game Board Placeholder */}
-                        <div>
-                            <Outlet />
+                {/* Game Board Placeholder */}
+                <Outlet />
 
-                            <AnimatePresence>{isGameOver && <GameOverModal clearBoard={clearBoard} status={renderGameStatus()} />}</AnimatePresence>
-                        </div>
+                <AnimatePresence>{isGameOver && <GameOverModal clearBoard={clearBoard} status={renderGameStatus()} />}</AnimatePresence>
 
-                        <ScoreBoard playerX={playerX} playerO={playerO} drawScore={drawScore} />
+                <ScoreBoard playerX={playerX} playerO={playerO} drawScore={drawScore} />
 
-                        {/* Action Buttons */}
-                        <div className="mt-5 grid grid-cols-2 gap-4">
-                            {!isPlayingOnline ? (
-                                <>
-                                    <ElevateButton onClick={startOver}>
-                                        <Icon icon={iconMap.gamePad} className="size-6" />
-                                        <span className="text-sm font-semibold">Start Over</span>
-                                    </ElevateButton>
-                                    <ElevateButton onClick={() => openModal('playerNameModal')}>
-                                        <Icon icon={iconMap.player} className="size-5" />
-                                        <span className="text-sm font-semibold">
-                                            Change <span className="hidden md:inline">Player</span> Name
-                                        </span>
-                                    </ElevateButton>
-                                </>
-                            ) : (
-                                <ElevateButton onClick={leaveRoom} variant="danger" title="Exit Room" className="col-span-2">
-                                    <Icon icon={iconMap.logOut} className="size-5" />
-                                    <span className="text-sm font-semibold">
-                                        Leave <span className="hidden md:inline">Room</span>
-                                    </span>
-                                </ElevateButton>
-                            )}
-                        </div>
-                    </div>
-                </>
-            )}
+                {/* Action Buttons */}
+                <div className="mt-5 grid grid-cols-2 gap-4">
+                    {!isPlayingOnline ? (
+                        <>
+                            <ElevateButton onClick={startOver}>
+                                <Icon icon={iconMap.gamePad} className="size-6" />
+                                <span className="text-sm font-semibold">Start Over</span>
+                            </ElevateButton>
+                            <ElevateButton onClick={() => openModal('playerNameModal')}>
+                                <Icon icon={iconMap.player} className="size-5" />
+                                <span className="text-sm font-semibold">
+                                    Change <span className="hidden md:inline">Player</span> Name
+                                </span>
+                            </ElevateButton>
+                        </>
+                    ) : (
+                        <ElevateButton onClick={leaveRoom} variant="danger" title="Exit Room" className="col-span-2">
+                            <Icon icon={iconMap.logOut} className="size-5" />
+                            <span className="text-sm font-semibold">
+                                Leave <span className="hidden md:inline">Room</span>
+                            </span>
+                        </ElevateButton>
+                    )}
+                </div>
+            </div>
 
             {/* Player Name Modal */}
             {!isPlayingOnline && (

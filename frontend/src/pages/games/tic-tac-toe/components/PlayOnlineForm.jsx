@@ -9,12 +9,13 @@ import { iconMap } from '../../../../utils/globalConstants'
 
 const PlayOnlineForm = () => {
     const [isJoinForm, setIsJoinForm] = useState(true)
-    const { joinRoom, createRoom } = useTicTacToeContext()
+    const { joinRoom, createRoom, setLoading } = useTicTacToeContext()
 
     const handleFormToggle = (isJoining) => setIsJoinForm(isJoining)
 
     const handleSubmit = (values, { setSubmitting }) => {
         setSubmitting(true)
+        setLoading(true)
         if (isJoinForm) {
             joinRoom(values.roomId, values.playerName)
         } else {

@@ -35,7 +35,7 @@ export const TicTacToeProvider = ({ children }) => {
 
         socketRef.current.on('connect', () => {
             console.log('Connected:', socketRef.current.id)
-            dispatch({ type: ActionTypes.IS_PLAYING_ONLINE, payload: true })
+            dispatch({ type: ActionTypes.SET_PLAYING_ONLINE, payload: true })
         })
 
         socketRef.current.on('gameStarted', (roomState) => {
@@ -48,6 +48,7 @@ export const TicTacToeProvider = ({ children }) => {
         })
 
         socketRef.current.on('gameError', (message) => {
+            setLoading(false)
             window.addToast(message, 'error')
         })
 
@@ -160,6 +161,11 @@ export const TicTacToeProvider = ({ children }) => {
         emitEvent('leaveRoom', state.roomId)
     }, [state.roomId, emitEvent])
 
+    // set Loading
+    const setLoading = useCallback((loading) => {
+        dispatch({ type: ActionTypes.SET_LOADING, payload: loading })
+    })
+
     // Clear Board
     const clearBoard = useCallback(() => {
         state.isPlayingOnline ? emitEvent('clearBoard', state.roomId) : dispatch({ type: ActionTypes.CLEAR_BOARD })
@@ -190,17 +196,18 @@ export const TicTacToeProvider = ({ children }) => {
     return (
         <TicTacToeContext.Provider
             value={{
+                clearBoard,
+                connectPlayer,
+                createRoom,
+                disconnectPlayer,
+                handleMove,
+                joinRoom,
+                leaveRoom,
+                setLoading,
                 setMode,
                 setPlayerNames,
-                handleMove,
                 startGame,
-                joinRoom,
-                createRoom,
-                leaveRoom,
-                clearBoard,
                 startOver,
-                connectPlayer,
-                disconnectPlayer,
                 state,
             }}>
             {children}

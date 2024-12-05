@@ -9,6 +9,7 @@ export const initialState = {
     ultimateBoard: Array(9).fill(Array(9).fill(null)),
 
     // Online play
+    isLoading: false,
     isPlayingOnline: false,
     isWaiting: false,
     playerSymbol: null,
@@ -135,13 +136,19 @@ export const TicTacToeReducer = (state, action) => {
             }
         }
 
-        case ActionTypes.IS_PLAYING_ONLINE:
+        case ActionTypes.SET_PLAYING_ONLINE:
             return resetState(initialState, { isPlayingOnline: action.payload })
 
         case ActionTypes.UPDATE_STATE:
             return {
                 ...state,
                 ...action.payload,
+            }
+
+        case ActionTypes.SET_LOADING:
+            return {
+                ...state,
+                isLoading: action.payload,
             }
 
         case ActionTypes.START_OVER:

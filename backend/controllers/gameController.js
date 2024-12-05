@@ -36,6 +36,7 @@ const handleJoinRoom =
 			socket.emit("updateGame", {
 				playerSymbol: result.symbol,
 				isPlayingOnline: true,
+				isLoading: false,
 				isWaiting: true,
 				...result.roomState,
 			});
