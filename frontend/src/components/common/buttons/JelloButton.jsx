@@ -3,15 +3,19 @@ import React from 'react'
 import { twMerge } from 'tailwind-merge'
 
 /**
- * JelloButton is a customizable button component with animated hover and focus effects.
+ * A jello-style button with a fancy animation.
  *
- * @param {Function} onClick - The function to call when the button is clicked.
- * @param {string} title - The title attribute for the button, used for accessibility and tooltips.
- * @param {string} variant - The visual style variant of the button. Options include 'primary', 'secondary', 'danger', 'warning', 'success', and 'info'.
- * @param {React.ReactNode} children - The content to display inside the button.
- * @param {string} className - Additional CSS classes to apply to the button.
+ * @param {JSX.Element|string} children - The content of the button.
+ * @param {string} className - An additional class name for the button.
+ * @param {function} onClick - The callback when the button is clicked.
+ * @param {string} title - The title of the button.
+ * @param {string} type - The type of the button.
+ * @param {string} variant - The variant of the button. Can be one of `primary`, `secondary`, `danger`, `warning`, `success`, or `info`. Defaults to `primary`.
+ *
+ * @example
+ * <JelloButton onClick={() => console.log('Button clicked!)}>Click me</JelloButton>
  */
-const JelloButton = ({ onClick, title = '', variant = 'primary', children = '', className }) => {
+const JelloButton = ({ children = '', className, onClick, title = '', type, variant = 'primary' }) => {
     const variants = {
         primary: ['bg-primary', 'bg-primary-gradient', 'text-primary', 'border-light-secondary dark:border-dark-secondary'],
         secondary: ['bg-secondary', 'bg-secondary-gradient', 'text-primary', 'border-light-primary dark:border-dark-primary'],
@@ -25,6 +29,7 @@ const JelloButton = ({ onClick, title = '', variant = 'primary', children = '', 
 
     return (
         <button
+            type={type}
             onClick={onClick}
             title={title}
             className={twMerge(`group/btn relative cursor-pointer rounded-lg border-none bg-transparent p-0 tracking-wider ${className}`)}>

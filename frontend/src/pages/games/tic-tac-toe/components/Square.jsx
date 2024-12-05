@@ -1,6 +1,5 @@
 import React, { memo } from 'react'
 
-import clsx from 'clsx'
 import { AnimatePresence, motion } from 'motion/react'
 
 import cn from '../../../../utils/cn'

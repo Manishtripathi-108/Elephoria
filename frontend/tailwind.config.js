@@ -4,62 +4,26 @@ export default {
     theme: {
         extend: {
             animation: {
-                'close-n-zero': 'close-n-zero 0.2s forwards',
-                'pulse-slow': 'pulse-slow 1s ease-in-out infinite alternate',
-                'puff-in': 'puff-in 0.3s forwards',
-                'puff-out': 'puff-out 0.3s forwards',
-                'scale-up': 'scale-up 0.3s cubic-bezier(0.6, -0.28, 0.74, 0.05) forwards',
-                'slide-left-return': 'slide-left-return 0.3s forwards',
-                'slide-left': 'slide-left 0.3s forwards',
-                'wipe-in-down': 'wipe-in-down 0.5s cubic-bezier(0.6, -0.28, 0.74, 0.05) forwards',
-                'wipe-in-up': 'wipe-in-up 0.5s cubic-bezier(0.6, -0.28, 0.74, 0.05) forwards',
-                'wipe-out-down': 'wipe-out-down 0.5s cubic-bezier(0.6, -0.28, 0.74, 0.05) forwards',
-                'wipe-out-up': 'wipe-out-up 0.5s cubic-bezier(0.6, -0.28, 0.74, 0.05) forwards',
-                unfoldIn: 'unfoldIn 0.5s forwards',
-                unfoldOut: 'unfoldOut 0.5s 0.5s forwards',
-                zoomIn: 'zoomIn 0.5s 0.5s forwards',
-                zoomOut: 'zoomOut 0.5s forwards',
-                'shimmer-ray': 'shimmer-ray 2.5s cubic-bezier(0, 0, 0.2, 1) infinite',
-                'push-release-from': 'push-release-from 0.3s forwards',
-                'l-zoom-out': 'l-zoom-in 0.3s forwards',
                 blob: 'blob 10s infinite cubic-bezier(0.68, -0.55, 0.27, 1.55)',
-                'loader-shadow': 'loader-shadow 0.5s var(--animation-delay, 0s) alternate infinite ease-in',
                 'loader-circle': 'loader-circle 0.5s var(--animation-delay, 0s) alternate infinite ease-in',
+                'loader-shadow': 'loader-shadow 0.5s var(--animation-delay, 0s) alternate infinite ease-in',
+                'pulse-slow': 'pulse-slow 1s ease-in-out infinite alternate',
+                'shimmer-ray': 'shimmer-ray 2.5s cubic-bezier(0, 0, 0.2, 1) infinite',
+                'slide-left': 'slide-left 0.3s cubic-bezier(0.18,0.89,0.32,1.27) forwards',
+                'slide-left-return': 'slide-left-return 0.3s cubic-bezier(0.18,0.89,0.32,1.27) forwards',
+                'wipe-in-down': 'wipe-in-down 0.5s cubic-bezier(0.18,0.89,0.32,1.27) forwards',
+                'wipe-out-down': 'wipe-out-down 0.5s cubic-bezier(0.18,0.89,0.32,1.27) forwards',
+                'zoom-in': 'zoom-in 0.5s 0.5s cubic-bezier(0.18,0.89,0.32,1.27) forwards',
+                'zoom-out': 'zoom-out 0.5s cubic-bezier(0.18,0.89,0.32,1.27) forwards',
             },
             keyframes: {
                 'shimmer-ray': {
                     '0%': { left: '-30%', opacity: '0', width: '0' },
                     '100%': { left: '100%', opacity: '1', width: '35%' },
                 },
-                'close-n-zero': {
-                    from: { 'stroke-dashoffset': '50' },
-                    to: { 'stroke-dashoffset': '0' },
-                },
                 'pulse-slow': {
                     '0%': { opacity: '1', transform: 'scale(1.2)' },
                     to: { opacity: '.5', transform: 'scale(0.8)' },
-                },
-                'puff-in': {
-                    '0%': { opacity: 0, transformOrigin: '50% 50%', transform: 'scale(2, 2)', filter: 'blur(2px)', visibility: 'hidden' },
-                    '100%': { opacity: 1, transformOrigin: '50% 50%', transform: 'scale(1, 1)', filter: 'blur(0px)', visibility: 'visible' },
-                },
-                'puff-out': {
-                    '0%': {
-                        opacity: '1',
-                        transform: 'scale(1)',
-                        transformOrigin: '50% 50%',
-                        filter: 'blur(0px)',
-                    },
-                    '100%': {
-                        opacity: '0',
-                        transform: 'scale(2)',
-                        transformOrigin: '50% 50%',
-                        filter: 'blur(2px)',
-                    },
-                },
-                'scale-up': {
-                    '0%': { transform: 'scale(0)', opacity: '0', visibility: 'hidden' },
-                    '100%': { transform: 'scale(1)', opacity: '1', visibility: 'visible' },
                 },
                 'slide-left-return': {
                     '0%': { transformOrigin: '0 0', transform: 'translate(-100%)' },
@@ -77,32 +41,14 @@ export default {
                     '0%': { clipPath: 'inset(0 0 0 0)', display: 'block' },
                     '100%': { clipPath: 'inset(0 0 100% 0)', display: 'none' },
                 },
-                unfoldIn: {
-                    '0%': { transform: 'scaleY(0.005) scaleX(0)' },
-                    '50%': { transform: 'scaleY(0.005) scaleX(1)' },
-                    '100%': { transform: 'scaleY(1) scaleX(1)' },
-                },
-                unfoldOut: {
-                    '0%': { transform: 'scaleY(1) scaleX(1)' },
-                    '50%': { transform: 'scaleY(0.005) scaleX(1)' },
-                    '100%': { transform: 'scaleY(0.005) scaleX(0)' },
-                },
-                zoomIn: {
+                'zoom-in': {
                     '0%': { transform: 'scale(0)' },
                     '100%': { transform: 'scale(1)' },
                 },
-                zoomOut: {
+                'zoom-out': {
                     '0%': { transform: 'scale(1)' },
                     '100%': { transform: 'scale(0)' },
                 },
-                'push-release-from': {
-                    from: { transform: 'scale(3, 3)', opacity: '0' },
-                    '30%': { transform: 'scale(.5, .5)' },
-                },
-                'l-zoom-in': {
-                    from: { transform: 'scale(10)', opacity: '0' },
-                },
-
                 blob: {
                     '0%': {
                         borderRadius: '40% 60% 55% 45% / 50% 45% 55% 50%',
@@ -120,13 +66,11 @@ export default {
                         borderRadius: '40% 60% 55% 45% / 50% 45% 55% 50%',
                     },
                 },
-
                 'loader-shadow': {
                     '0%': { transform: 'scaleX(.2)', opacity: '.4' },
                     '80%': { transform: 'scaleX(1)', opacity: '.7' },
                     '100%': { transform: 'scaleX(1.5)' },
                 },
-
                 'loader-circle': {
                     '0%': { bottom: 'calc(var(--loader-base-height) + var(--loader-jump-height))' },
                     '80%': { height: 'var(--loader-circle-size)', borderRadius: '50%', transform: 'scaleX(1)' },
@@ -175,9 +119,6 @@ export default {
                 'neumorphic-inset-md': 'inset 6px 6px 12px var(--lower-shadow), inset -6px -6px 12px var(--upper-shadow)',
                 'neumorphic-inset-lg': 'inset 10px 10px 20px var(--lower-shadow), inset -10px -10px 20px var(--upper-shadow)',
                 'neumorphic-inset-xl': 'inset 20px 20px 40px var(--lower-shadow), inset -20px -20px 40px var(--upper-shadow)',
-
-                'neu-dark-secondary-xs': '3px 3px 5px #135ba1, -3px -3px 5px #29c5ff',
-                'neu-inset-dark-secondary-xs': 'inset 3px 3px 5px #135ba1, inset -3px -3px 5px #29c5ff',
             },
             fontFamily: {
                 'indie-flower': ['"Indie Flower"', 'cursive', 'serif'],

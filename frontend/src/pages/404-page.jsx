@@ -2,6 +2,8 @@ import React from 'react'
 
 import { Link } from 'react-router-dom'
 
+import JelloButton from '../components/common/buttons/JelloButton'
+
 const NotFound = () => {
     return (
         <section className="bg-primary grid h-dvh place-items-center">
@@ -78,15 +80,11 @@ const NotFound = () => {
                     <span className="text-primary text-xl">Sorry, We couldn't find what you are looking for!</span>
                 </div>
 
-                <div className="inline-flex items-center rounded-md shadow-sm">
-                    <button
-                        type="submit"
-                        className="bg-accent mt-6 cursor-pointer rounded-lg border-b-4 border-[#bf2121] px-6 py-2 text-white transition-all hover:-translate-y-0.5 hover:border-b-8 hover:brightness-110 active:translate-y-1 active:border-b-2 active:brightness-90 dark:border-[#cc573e]">
-                        <Link to={'/'} className="font-karla text-center text-xl tracking-wide">
-                            Go back
-                        </Link>
-                    </button>
-                </div>
+                <JelloButton className="mt-8" variant="info">
+                    <Link to={'/'} className="font-karla text-center text-xl tracking-wide">
+                        Go back
+                    </Link>
+                </JelloButton>
             </div>
         </section>
     )
