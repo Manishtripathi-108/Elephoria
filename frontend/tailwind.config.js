@@ -13,7 +13,7 @@ export default {
                 'slide-left-return': 'slide-left-return 0.3s cubic-bezier(0.18,0.89,0.32,1.27) forwards',
                 'wipe-in-down': 'wipe-in-down 0.5s cubic-bezier(0.18,0.89,0.32,1.27) forwards',
                 'wipe-out-down': 'wipe-out-down 0.5s cubic-bezier(0.18,0.89,0.32,1.27) forwards',
-                'zoom-in': 'zoom-in 0.5s 0.5s cubic-bezier(0.18,0.89,0.32,1.27) forwards',
+                'zoom-in': 'zoom-in 0.5s cubic-bezier(0.18,0.89,0.32,1.27) forwards',
                 'zoom-out': 'zoom-out 0.5s cubic-bezier(0.18,0.89,0.32,1.27) forwards',
             },
             keyframes: {
