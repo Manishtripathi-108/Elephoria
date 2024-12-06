@@ -19,8 +19,8 @@ const joinRoom = (roomId, playerName, roomName, isCreateRoom, socketId) => {
 
 	if (!room) {
 		if (!isCreateRoom) {
-			backendLogger.warn(`Room ${roomId} does not exist.`);
-			// return { success: false, message: "Room does not exist" };
+			// backendLogger.warn(`Room ${roomId} does not exist.`);
+			return { success: false, message: "Room does not exist" };
 		}
 
 		// Create a deep copy of initialRoom
