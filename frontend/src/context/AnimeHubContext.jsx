@@ -56,6 +56,7 @@ export const AnimeHubProvider = ({ children }) => {
     // Check user authentication on load
     useEffect(() => {
         const checkAuthentication = async () => {
+            setIsLoading(true)
             const isAuth = await isAuthenticated()
             setIsUserAuthenticated(isAuth)
 
@@ -66,6 +67,8 @@ export const AnimeHubProvider = ({ children }) => {
                 console.log('User is not authenticated')
                 navigate('/anime-hub/auth')
             }
+
+            setIsLoading(false)
         }
 
         checkAuthentication()

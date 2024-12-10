@@ -1,4 +1,5 @@
 const fs = require("fs");
+const path = require("path");
 const { uploadAudio, editMetadata } = require("../services/audioService");
 const { backendLogger } = require("../utils/logger");
 
@@ -20,26 +21,45 @@ exports.uploadAudioHandler = async (req, res) => {
 };
 
 exports.editMetadataHandler = async (req, res) => {
-	const file = `uploads/audio/${req.body.name}`;
-	const outputFile = `uploads/audio/edited_${Date.now()}_${req.body.name}`;
+	try {
+		const uploadsDir = path.join(__dirname, "../uploads/audio");
+		const file = path.join(uploadsDir, req.body.name);
+		const outputFile = path.join(
+			uploadsDir,
+			`edited_${Date.now()}_${req.body.name}`
+		);
 
-	if (!fs.existsSync(file)) {
-		return res
-			.status(404)
-			.json({ message: "Audio file not found! Please Reupload" });
-	}
+		// Check if the original file exists
+		if (!fs.existsSync(file)) {
+			backendLogger.error("Audio file not found!");
+			return res
+				.status(404)
+				.json({ message: "Audio file not found! Please reupload." });
+		}
 
-	await editMetadata(req.body.metadata, file, outputFile)
-		.then((result) => {
-			if (!result.success) {
-				backendLogger.error(result.message);
-				return res.status(500).json(result);
+		// Edit metadata
+		const result = await editMetadata(req.body.metadata, file, outputFile);
+
+		if (!result.success) {
+			backendLogger.error(result.message);
+			return res.status(500).json({ message: result.message });
+		}
+
+		// Send the edited file for download
+		res.download(outputFile, (err) => {
+			if (err) {
+				backendLogger.error("File download failed:", err);
+				return res
+					.status(500)
+					.json({ message: "File download failed!" });
 			}
 
-			return res.download(outputFile);
-		})
-		.finally(() => {
-			fs.unlinkSync(file);
-			// fs.unlinkSync(outputFile);
+			// Cleanup files
+			if (fs.existsSync(file)) fs.unlinkSync(file);
+			if (fs.existsSync(outputFile)) fs.unlinkSync(outputFile);
 		});
+	} catch (error) {
+		backendLogger.error("Error editing metadata:", error);
+		res.status(500).json({ message: "Internal server error!" });
+	}
 };

@@ -59,16 +59,12 @@ const UploadInput = ({ className, file, id, setFile }) => {
             <div className="flex w-full items-center justify-center gap-2">
                 <label
                     htmlFor={id}
-                    className="bg-secondary text-highlight flex h-10 w-full cursor-pointer items-center justify-end rounded-lg border-none p-2">
-                    {!file && <Icon icon={iconMap.filePlus} className="size-6 cursor-pointer" />}
-                    <p className="line-clamp-1 flex-1 text-center tracking-wider">{fileName}</p>
+                    className={`bg-secondary text-highlight flex h-10 cursor-pointer items-center justify-end rounded-lg border-none p-2 ${file ? 'w-10/12' : 'w-full'}`}>
+                    {!file && <Icon icon={iconMap.filePlus} className="size-6" />}
+                    <p className="line-clamp-1 w-full text-center tracking-wider">{fileName}</p>
                 </label>
                 {file && (
-                    <button
-                        type="button"
-                        title="Remove File"
-                        onClick={handleFileRemove}
-                        className="button button-icon-only-square flex-1 shadow-none">
+                    <button type="button" title="Remove File" onClick={handleFileRemove} className="button button-icon-only-square shadow-none">
                         <Icon icon={iconMap.trash} className="size-5" />
                     </button>
                 )}

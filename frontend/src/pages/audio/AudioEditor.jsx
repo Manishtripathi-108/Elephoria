@@ -5,6 +5,7 @@ import axios from 'axios'
 import UploadProgressBar from '../../components/common/UploadProgressBar'
 import JelloButton from '../../components/common/buttons/JelloButton'
 import UploadInput from '../../components/common/form/UploadInput'
+import MetadataEditor from './components/MetadataEditor'
 
 const AudioEditor = () => {
     const [audio, setAudio] = useState({
@@ -65,37 +66,13 @@ const AudioEditor = () => {
             })
     }
 
-    const handleEditMetadata = async (e) => {
-        e.preventDefault()
-
-        if (!meta || !name) return
-
-        try {
-            const response = await axios.post('/api/audio/edit-metadata', { name, metadata: meta }, { responseType: 'blob' })
-
-            const url = window.URL.createObjectURL(new Blob([response.data]))
-            const link = document.createElement('a')
-            link.href = url
-            link.setAttribute('download', name)
-            document.body.appendChild(link)
-            link.click()
-            link.remove()
-
-            console.log('Edit Metadata Response:', response)
-            window.addToast('Metadata edited successfully!', 'success')
-        } catch (error) {
-            console.log('Failed to edit metadata.', error)
-            window.addToast(error.response?.data?.message || 'Failed to edit metadata.', 'error')
-        }
-    }
-
     const handleCancelUpload = () => {
         setUpload({ status: 'idle', progress: 0, error: null })
         setAudio({ file: null, meta: null, cover: null })
     }
 
     return (
-        <div className="flex-center min-h-calc-full-height flex-col gap-6 py-8">
+        <div className="flex-center min-h-calc-full-height flex-col gap-6 px-2 py-8">
             {/* Upload Progress Bar */}
             {status === 'uploading' && (
                 <UploadProgressBar
@@ -129,84 +106,7 @@ const AudioEditor = () => {
             )}
 
             {/* Edit Metadata Form */}
-            {meta && (
-                <form
-                    id="edit-metadata"
-                    onSubmit={handleEditMetadata}
-                    className="flex-center w-full max-w-2xl flex-col gap-6 rounded-3xl border border-light-secondary p-6 shadow-neumorphic-lg dark:border-dark-secondary">
-                    <h2 className="text-primary font-aladin text-2xl tracking-wider">Edit Metadata</h2>
-
-                    {/* Display Cover Image */}
-                    {cover && (
-                        <div className="size-72 overflow-hidden rounded-xl border border-light-secondary p-2 shadow-neumorphic-inset-xs dark:border-dark-secondary">
-                            <img src={cover} alt="Cover Image" className="h-full w-full rounded-lg object-cover" />
-                        </div>
-                    )}
-
-                    {/* Metadata Fields */}
-                    <div className="grid w-full grid-cols-3 place-items-center gap-5">
-                        {Object.entries(meta)
-                            .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
-                            .map(([key, value]) => {
-                                if (key === 'lyrics') return null
-                                return (
-                                    <div key={key} className="form-group">
-                                        <label className="form-label" htmlFor={key}>
-                                            {key.toLowerCase().split('_').join(' ')}
-                                        </label>
-                                        <input
-                                            className="input-text"
-                                            id={key}
-                                            type="text"
-                                            placeholder={`Enter ${key.toLowerCase().split('_').join(' ')}`}
-                                            value={value}
-                                            onChange={(e) =>
-                                                setAudio((prev) => ({
-                                                    ...prev,
-                                                    meta: { ...prev.meta, [key]: e.target.value },
-                                                }))
-                                            }
-                                        />
-                                    </div>
-                                )
-                            })}
-                    </div>
-
-                    {/* Lyrics Field if available */}
-                    {meta.lyrics && (
-                        <div className="form-group">
-                            <label className="form-label" htmlFor="lyrics">
-                                Lyrics
-                            </label>
-                            <textarea
-                                className="input-textarea scrollbar-thin"
-                                id="lyrics"
-                                placeholder="Enter Lyrics"
-                                value={meta.lyrics}
-                                onChange={(e) =>
-                                    setAudio((prev) => ({
-                                        ...prev,
-                                        meta: { ...prev.meta, lyrics: e.target.value },
-                                    }))
-                                }
-                            />
-                        </div>
-                    )}
-
-                    <div className="ml-auto mt-5">
-                        <JelloButton type="submit">Save Changes</JelloButton>
-                        <JelloButton
-                            variant="danger"
-                            className="ml-4"
-                            onClick={(e) => {
-                                e.preventDefault()
-                                handleCancelUpload()
-                            }}>
-                            Cancel
-                        </JelloButton>
-                    </div>
-                </form>
-            )}
+            {status === 'success' && <MetadataEditor fileName={name} coverImage={cover} metadata={meta} onCancel={handleCancelUpload} />}
         </div>
     )
 }
