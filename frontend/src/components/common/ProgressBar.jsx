@@ -8,15 +8,18 @@ const ProgressBar = ({ total, current, percentage = '', name = '' }) => {
     return (
         <div className="bg-primary grid w-full max-w-sm place-items-center gap-3 rounded-2xl p-5 shadow-neumorphic-md">
             {/* Progress Bar */}
-            <div className="flex h-5 w-full items-center justify-start rounded-3xl shadow-neumorphic-inset-xs">
-                <div
-                    className="bg-accent h-full w-20 animate-pulse rounded-3xl"
-                    style={{ width: `${percentage || 0}%` }}
+            <div className="bg-primary relative block w-full rounded-full border border-light-secondary p-1 text-base leading-4 shadow-neumorphic-inset-xs dark:border-dark-secondary">
+                <span
+                    style={{
+                        width: `${Math.min(percentage, 100)}%`,
+                        transition: 'width 0.3s ease-in-out',
+                    }}
                     aria-valuenow={percentage}
                     aria-valuemin="0"
                     aria-valuemax="100"
                     role="progressbar"
-                    aria-label={`${percentage}% progress`}></div>
+                    aria-label={`${percentage}% progress`}
+                    className="relative inline-block h-5 overflow-hidden rounded-full border border-inherit bg-gradient-to-t from-light-accent/70 to-light-accent bg-cover align-middle after:absolute after:inset-0 after:animate-progress-after after:bg-[linear-gradient(_45deg,#ffffff_25%,rgba(0,0,0,0)_25%,rgba(0,0,0,0)_50%,#ffffff_50%,#ffffff_75%,rgba(0,0,0,0)_75%,rgba(0,0,0,0)_)] after:bg-[length:30px_30px] after:opacity-30 dark:from-dark-accent/70 dark:to-dark-accent"></span>
             </div>
 
             <span className="text-primary text-center font-aladin text-sm tracking-widest">

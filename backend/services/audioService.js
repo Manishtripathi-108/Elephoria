@@ -1,6 +1,7 @@
 const ffmpeg = require("fluent-ffmpeg");
 const fs = require("fs");
 const path = require("path");
+const { backendLogger } = require("../utils/logger");
 
 // Function to handle metadata editing
 exports.editMetadata = (req, res) => {
@@ -44,19 +45,25 @@ exports.editMetadata = (req, res) => {
 		});
 };
 
-// Function to handle audio upload and extract metadata
-exports.uploadAudio = (req, res) => {
-	if (!req.file) {
-		return res.status(400).json({ message: "No file uploaded!" });
-	}
+exports.uploadAudio = async (file) => {
+	let metadata;
+	let coverImageName = `http://localhost:3000/uploads/images/no-cover.jpg`;
 
-	// Use ffprobe to extract metadata from the uploaded audio file
-	ffmpeg.ffprobe(req.file.path, (err, metadata) => {
-		if (err) {
-			return res
-				.status(500)
-				.json({ message: "Error extracting metadata", error: err });
-		}
+	try {
+		// Use ffprobe to extract metadata from the uploaded audio file
+		metadata = await new Promise((resolve, reject) => {
+			ffmpeg.ffprobe(file.path, (err, extractedMetadata) => {
+				if (err) {
+					reject({
+						success: false,
+						message: "Error extracting metadata",
+						error: err,
+					});
+				} else {
+					resolve(extractedMetadata);
+				}
+			});
+		});
 
 		// Check if there is a stream containing a cover image
 		const coverStream = metadata.streams.find(
@@ -66,37 +73,46 @@ exports.uploadAudio = (req, res) => {
 
 		if (coverStream) {
 			// Extract the cover image if available
-			const coverImageName = `cover_${Date.now()}.jpg`;
-			const coverImagePath = path.join("uploads", coverImageName);
+			const coverImagePath = path.join(
+				"uploads/images",
+				`cover_${Date.now()}.jpg`
+			);
 
-			// Extract the cover image using FFmpeg
-			ffmpeg(req.file.path)
-				.outputOptions("-map", `0:${coverStream.index}`) // Select the cover image stream
-				.save(path.join(__dirname, "../", coverImagePath)) // Save in uploads folder
-				.on("end", () => {
-					// Return metadata and HTTP URL to the cover image
-					res.json({
-						message:
-							"File uploaded and metadata extracted successfully!",
-						file: req.file,
-						metadata: metadata,
-						coverImage: `http://localhost:3000/uploads/${coverImageName}`, // Return the HTTP URL
+			await new Promise((resolve, reject) => {
+				ffmpeg(file.path)
+					.outputOptions("-map", `0:${coverStream.index}`) // Select the cover image stream
+					.save(path.join(__dirname, "../", coverImagePath)) // Save in uploads folder
+					.on("end", () => {
+						coverImageName = `http://localhost:3000/uploads/images/${path.basename(
+							coverImagePath
+						)}`;
+						resolve();
+					})
+					.on("error", (err) => {
+						backendLogger.error(
+							"Error extracting cover image:",
+							err
+						);
+						reject(err);
 					});
-				})
-				.on("error", (err) => {
-					console.error("Error extracting cover image:", err);
-					res.status(500).json({
-						error: "Error extracting cover image",
-					});
-				});
-		} else {
-			// If no cover image is found, just return metadata
-			res.json({
-				message: "File uploaded and metadata extracted successfully!",
-				file: req.file,
-				metadata: metadata,
-				coverImage: null, // No cover image
 			});
 		}
-	});
+
+		backendLogger.info("Metadata extracted successfully:", metadata);
+
+		return {
+			success: true,
+			message: "File uploaded and metadata extracted successfully!",
+			metadata: metadata,
+			coverImage: coverImageName,
+		};
+	} catch (error) {
+		backendLogger.error("Error in uploadAudio:", error);
+
+		return {
+			success: false,
+			message: "Error processing file",
+			error: error.message,
+		};
+	}
 };

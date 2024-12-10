@@ -7,7 +7,7 @@ export const iconMap = {
     desktop: 'noto:desktop-computer',
     down: 'mdi:chevron-down',
     email: 'line-md:email-alt-filled',
-    error: 'solar:danger-triangle-bold',
+    error: 'meteocons:code-red-fill',
     filePlus: 'line-md:file-plus-filled',
     gamePad: 'emojione-monotone:video-game',
     gamePadTurbo: 'arcticons:gameturbo',
@@ -31,12 +31,13 @@ export const iconMap = {
     settingsOutlined: 'solar:settings-outline',
     share: 'solar:share-bold-duotone',
     showPassword: 'line-md:watch-off-loop',
-    success: 'ep:success-filled',
+    success: 'line-md:confirm-circle-filled',
     sun: 'meteocons:clear-day-fill',
     trash: 'entypo:trash',
     upload: 'line-md:cloud-alt-upload-filled-loop',
     user: 'carbon:user-avatar-filled',
-    warning: 'solar:shield-warning-bold',
+    warning: 'meteocons:code-yellow-fill',
+    // warning: 'solar:shield-warning-bold',
 }
 
 export const sidenavMenuItems = [

@@ -70,9 +70,11 @@ const TicTacToe = () => {
                 </div>
 
                 {/* Game Board Placeholder */}
-                <Outlet />
+                <div className="relative">
+                    <Outlet />
 
-                <AnimatePresence>{isGameOver && <GameOverModal clearBoard={clearBoard} status={renderGameStatus()} />}</AnimatePresence>
+                    <AnimatePresence>{isGameOver && <GameOverModal clearBoard={clearBoard} status={renderGameStatus()} />}</AnimatePresence>
+                </div>
 
                 <ScoreBoard playerX={playerX} playerO={playerO} drawScore={drawScore} />
 

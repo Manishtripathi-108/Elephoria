@@ -1,5 +1,6 @@
 import React from 'react'
 
+import cn from '../../utils/cn'
 import JelloButton from './buttons/JelloButton'
 
 /**
@@ -8,13 +9,14 @@ import JelloButton from './buttons/JelloButton'
  * Displays the progress of a file upload.
  *
  * @param {number} bytesUploaded - Number of bytes uploaded so far.
+ * @param {string} className - Additional classes to apply to the component.
  * @param {string} fileName - Name of the file being uploaded.
  * @param {number} totalBytes - Total number of bytes to be uploaded.
  * @param {Function} onRetry - Callback function for retrying the upload.
  * @param {Function} onCancel - Callback function for canceling the upload.
  * @param {boolean} [hasError=false] - Flag indicating if there was an error during upload.
  */
-const UploadProgressBar = ({ bytesUploaded, fileName, totalBytes, onRetry, onCancel, hasError = false }) => {
+const UploadProgressBar = ({ bytesUploaded, className, fileName, totalBytes, onRetry, onCancel, hasError = false }) => {
     const formatFileSize = (uploaded, total) => {
         if (total < 1024) return `${uploaded}/${total} B`
         if (total < 1024 * 1024) return `${(uploaded / 1024).toFixed(2)}/${(total / 1024).toFixed(2)} KB`
@@ -24,22 +26,26 @@ const UploadProgressBar = ({ bytesUploaded, fileName, totalBytes, onRetry, onCan
     const uploadPercentage = ((bytesUploaded / totalBytes) * 100).toFixed()
 
     return (
-        <div className="bg-primary mx-auto w-full max-w-md rounded-xl border border-light-secondary p-6 shadow-neumorphic-lg dark:border-dark-secondary">
+        <div
+            className={cn(
+                'bg-primary mx-auto w-full max-w-md rounded-xl border border-light-secondary p-6 shadow-neumorphic-lg dark:border-dark-secondary',
+                className
+            )}>
             <h2 className="text-primary mb-4 font-aladin text-xl font-bold tracking-widest">Uploading File</h2>
 
             {/* File Info */}
-            <div className="bg-secondary my-4 rounded-lg p-3">
+            <div className="bg-secondary my-4 flex items-center justify-between gap-3 rounded-lg p-3">
                 <p className="text-primary line-clamp-1 font-medium" title={fileName}>
                     {fileName}
                 </p>
-                <p className="text-secondary text-xs">{formatFileSize(bytesUploaded, totalBytes)}</p>
+                <p className="text-secondary text-nowrap text-xs">{formatFileSize(bytesUploaded, totalBytes)}</p>
             </div>
 
             {/* Progress Bar */}
             <div className="flex-center relative gap-x-2">
                 {/* Percentage Indicator */}
                 <div className="flex-center rounded-full border border-light-secondary p-1 shadow-neumorphic-inset-xs dark:border-dark-secondary">
-                    <span className="text-accent bg-primary size-7 rounded-full border border-inherit p-1 text-center text-sm font-bold shadow-neumorphic-xs transition-all duration-300 ease-in-out">
+                    <span className="text-accent flex-center bg-primary size-7 rounded-full border border-inherit p-1 text-xs font-bold shadow-neumorphic-xs transition-all duration-300 ease-in-out">
                         {Math.min(uploadPercentage, 100)}%
                     </span>
                 </div>

@@ -1,29 +1,23 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import axios from 'axios'
 
+import UploadProgressBar from '../../components/common/UploadProgressBar'
 import UploadInput from '../../components/common/form/UploadInput'
-import Toast from '../../components/common/notifications/Toast'
 
 const AudioEditor = () => {
-    const [file, setFile] = useState(null)
-    const [metaData, setMetadata] = useState(null)
-    const [coverImage, setCoverImage] = useState(null)
+    const [file, setFile] = useState(null) // File to upload
+    const [metaData, setMetaData] = useState(null) // Metadata of the uploaded file
+    const [coverImage, setCoverImage] = useState(null) // Cover image from the file metadata
 
-    const [toast, setToast] = useState(null)
-
-    const showToast = (message, type) => {
-        setToast({ message, type })
-    }
-
-    const handleDismiss = () => {
-        setToast(null)
-    }
+    const [uploadProgress, setUploadProgress] = useState(0) // Upload progress percentage
+    const [isUploading, setIsUploading] = useState(false) // Uploading state
+    const [hasUploadError, setHasUploadError] = useState(false) // Error state for upload
 
     const handleFileUpload = async (e) => {
         e.preventDefault()
         if (!file) {
-            showToast('Please select a file first!', 'warning')
+            window.addToast('Please select a file first!', 'warning')
             return
         }
 
@@ -31,26 +25,36 @@ const AudioEditor = () => {
         formData.append('audio', file)
 
         try {
-            const response = await axios.post('/api/upload', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
+            setIsUploading(true)
+            setHasUploadError(false)
+
+            const response = await axios.post('/api/audio/upload', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+                onUploadProgress: (progressEvent) => {
+                    setUploadProgress(progressEvent)
                 },
             })
 
-            // Set metadata and cover image URL
-            setMetadata(response.data?.metadata?.format?.tags)
-            setCoverImage(response.data?.coverImage) // Set the full URL of the cover image
+            console.log(response.data)
 
-            showToast('File uploaded and metadata extracted successfully!', 'success')
+            setMetaData(response.data?.metadata?.format?.tags || {})
+            setCoverImage(response.data?.coverImage || null)
+            window.addToast('File uploaded and metadata extracted successfully!', 'success')
         } catch (error) {
             console.error('Error uploading file:', error)
-            showToast('File upload failed', 'error')
+            setHasUploadError(true)
+            window.addToast('File upload failed.', 'error')
+        } finally {
+            setIsUploading(false)
         }
     }
 
+    /**
+     * Handle metadata editing and download the updated file.
+     */
     const handleEditMetadata = async (e) => {
         e.preventDefault()
-        if (!file) return
+        if (!file || !metaData) return
 
         const formData = new FormData()
 
@@ -63,57 +67,71 @@ const AudioEditor = () => {
         })
 
         try {
-            const response = await axios.post('/api/edit-metadata', formData, {
+            const response = await axios.post('/api/audio/edit-metadata', formData, {
                 responseType: 'blob', // Expect a file as the response
             })
 
-            const originalFilename = response.headers['content-disposition'].split('filename=')[1].replace(/"/g, '')
+            const originalFilename = response.headers['content-disposition']?.split('filename=')[1]?.replace(/"/g, '') || 'edited_audio.mp3'
 
             const url = window.URL.createObjectURL(new Blob([response.data]))
             const link = document.createElement('a')
             link.href = url
-            link.setAttribute('download', originalFilename) // Use original filename for download
+            link.setAttribute('download', originalFilename)
             document.body.appendChild(link)
             link.click()
 
-            setToast({ message: 'Metadata edited successfully!', type: 'success' })
+            window.addToast('Metadata edited successfully!', 'success')
         } catch (error) {
             console.error('Error editing metadata:', error)
-            setToast({ message: 'Error editing metadata', type: 'error' })
+            window.addToast('Failed to edit metadata.', 'error')
         }
     }
 
     return (
-        <div className="flex-center flex-col gap-6">
-            {/* Upload audio form */}
-            <form id="upload-audio" onSubmit={handleFileUpload} className="flex-center w-full max-w-2xl flex-col rounded-lg p-6 shadow-neumorphic-md">
-                <h2 className="text-primary mb-2 font-aladin text-2xl tracking-wider">Upload Audio</h2>
-                <p className="text-primary mb-6 text-center">Upload an audio file to edit metadata, convert format, and more!</p>
+        <div className="flex-center min-h-calc-full-height flex-col gap-6 py-8">
+            {/* Upload Progress Bar */}
+            {isUploading ? (
+                <UploadProgressBar
+                    bytesUploaded={uploadProgress.loaded}
+                    className="my-6"
+                    totalBytes={uploadProgress.total}
+                    fileName={file?.name || 'Unknown File'}
+                    onRetry={handleFileUpload}
+                    onCancel={() => setIsUploading(false)}
+                    hasError={hasUploadError}
+                />
+            ) : (
+                <form
+                    id="upload-audio"
+                    onSubmit={handleFileUpload}
+                    className="flex-center w-full max-w-2xl flex-col rounded-3xl p-6 shadow-neumorphic-md">
+                    <h2 className="text-primary mb-2 font-aladin text-2xl tracking-wider">Upload Audio</h2>
+                    <p className="text-primary mb-6 text-center">Upload an audio file to edit metadata, convert format, and more!</p>
 
-                <UploadInput id="upload_audio" file={file} setFile={setFile} />
+                    <UploadInput id="upload_audio" file={file} setFile={setFile} />
 
-                <button type="submit" title="Upload Audio" className="button flex-shrink-0" onClick={handleFileUpload}>
-                    Upload Audio
-                </button>
-            </form>
+                    <button type="submit" title="Upload Audio" className="button flex-shrink-0" onClick={handleFileUpload}>
+                        Upload Audio
+                    </button>
+                </form>
+            )}
 
-            {/* Edit metadata form */}
-            <form
-                id="edit-metadata"
-                className="flex-center w-full max-w-2xl flex-col gap-6 rounded-lg p-6 shadow-neumorphic-md"
-                onSubmit={handleEditMetadata}>
-                <h2 className="text-primary font-aladin text-2xl tracking-wider">Edit Metadata</h2>
+            {/* Edit Metadata Form */}
+            {metaData && (
+                <form
+                    id="edit-metadata"
+                    onSubmit={handleEditMetadata}
+                    className="flex-center w-full max-w-2xl flex-col gap-6 rounded-3xl p-6 shadow-neumorphic-md">
+                    <h2 className="text-primary font-aladin text-2xl tracking-wider">Edit Metadata</h2>
 
-                {/* Display cover image if available */}
-                {coverImage && (
-                    <div className="size-72 overflow-hidden rounded-lg p-3 shadow-neumorphic-inset-sm">
-                        <div className="w-full overflow-hidden rounded-md">
-                            <img src={coverImage} alt="Cover Image" className="h-full w-full object-cover" />
+                    {/* Display Cover Image */}
+                    {coverImage && (
+                        <div className="size-72 overflow-hidden rounded-xl p-2 shadow-neumorphic-inset-sm">
+                            <img src={coverImage} alt="Cover Image" className="h-full w-full rounded-lg object-cover" />
                         </div>
-                    </div>
-                )}
+                    )}
 
-                {metaData && (
+                    {/* Metadata Fields */}
                     <div className="flex w-full flex-wrap gap-x-5">
                         {Object.entries(metaData)
                             .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
@@ -129,25 +147,18 @@ const AudioEditor = () => {
                                         className="input-text"
                                         id={key}
                                         type="text"
-                                        placeholder={key
-                                            .split('_')
-                                            .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-                                            .join(' ')}
                                         value={value}
-                                        onChange={(e) => setMetadata({ ...metaData, [key]: e.target.value })}
+                                        onChange={(e) => setMetaData({ ...metaData, [key]: e.target.value })}
                                     />
                                 </div>
                             ))}
                     </div>
-                )}
 
-                <button type="submit" className="button">
-                    Edit Metadata
-                </button>
-            </form>
-
-            {/* Display toast notification */}
-            {toast && <Toast message={toast.message} type={toast.type} onDismiss={handleDismiss} duration={5000} />}
+                    <button type="submit" className="button">
+                        Save Changes
+                    </button>
+                </form>
+            )}
         </div>
     )
 }

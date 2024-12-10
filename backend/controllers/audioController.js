@@ -1,14 +1,15 @@
 // controllers/audioController.js
 const { uploadAudio, editMetadata } = require("../services/audioService");
-const { successResponse, errorResponse } = require("../utils/responseHandler");
+const { backendLogger } = require("../utils/logger");
 
 exports.uploadAudioHandler = async (req, res) => {
-	try {
-		const data = await uploadAudio(req);
-		return successResponse(res, data);
-	} catch (error) {
-		return errorResponse(res, "Audio upload failed", error);
+	if (!req.file) {
+		return res.status(400).json({ message: "No file uploaded!" });
 	}
+
+	const response = await uploadAudio(req.file);
+	backendLogger.info("Audio upload response:", response);
+	return res.status(response.success ? 200 : 500).json(response);
 };
 
 exports.editMetadataHandler = async (req, res) => {

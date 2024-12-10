@@ -125,10 +125,14 @@ export default {
                 'neumorphic-inset-lg': 'inset 10px 10px 20px var(--lower-shadow), inset -10px -10px 20px var(--upper-shadow)',
                 'neumorphic-inset-xl': 'inset 20px 20px 40px var(--lower-shadow), inset -20px -20px 40px var(--upper-shadow)',
             },
+
             fontFamily: {
                 'indie-flower': ['"Indie Flower"', 'cursive', 'serif'],
                 aladin: ['"Aladin"', 'system-ui'],
                 julee: ['"Julee"', 'cursive'],
+            },
+            spacing: {
+                'calc-full-height': 'calc(100vh - var(--header-height) - 2px)',
             },
         },
     },
