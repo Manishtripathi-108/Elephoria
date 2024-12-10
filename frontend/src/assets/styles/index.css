@@ -53,14 +53,14 @@ body {
 
     .form-label,
     .form-helper-text {
-        @apply text-secondary font-indie-flower text-sm leading-3 tracking-wider;
+        @apply text-secondary text-sm capitalize leading-3;
     }
 
     /*-- ------------------------- input-text ------------------------- */
     .dropdown-select,
     .input-textarea,
     .input-text {
-        @apply bg-primary text-primary active:placeholder:text-primary focus:placeholder:text-primary placeholder:text-secondary w-full appearance-none rounded-lg border border-light-secondary px-3 py-2 font-indie-flower shadow-neumorphic-xs outline-none transition duration-300 placeholder:tracking-wide focus:shadow-neumorphic-inset-xs dark:border-dark-secondary;
+        @apply bg-primary text-primary placeholder:text-secondary w-full appearance-none rounded-lg border border-light-secondary px-3 py-2 shadow-neumorphic-xs outline-none transition duration-300 placeholder:capitalize focus:shadow-neumorphic-inset-xs dark:border-dark-secondary;
     }
 
     /* ------------------------- input-wrapper & Icon ------------------------- */
@@ -92,7 +92,7 @@ body {
     .input-wrapper:focus .input-text,
     .input-wrapper:hover .input-icon,
     .input-wrapper:focus-within .input-icon {
-        @apply placeholder:text-primary text-primary;
+        @apply text-primary;
     }
 
     .input-wrapper:focus-within .input-icon.error {
@@ -108,11 +108,6 @@ body {
     .input-inset-outset:hover,
     .input-inset-outset:active {
         @apply placeholder:text-primary shadow-neumorphic-md;
-    }
-
-    /* ---------------------------- input-textarea --------------------------- */
-    .input-textarea {
-        @apply transition-all duration-300;
     }
 
     /* ----------------------------- dropdown-select ---------------------------- */
@@ -345,7 +340,7 @@ body {
     /* -------------------------------------------------------------------------- */
 
     .button {
-        @apply text-secondary bg-primary rounded-lg border border-light-secondary px-4 py-2 text-center font-indie-flower tracking-wider shadow-neumorphic-xs transition-all duration-300 dark:border-dark-secondary;
+        @apply text-secondary bg-primary rounded-lg border border-light-secondary px-4 py-2 text-center text-sm shadow-neumorphic-xs transition-all duration-300 dark:border-dark-secondary;
     }
 
     .button.active,

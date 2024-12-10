@@ -1,53 +1,10 @@
 const ffmpeg = require("fluent-ffmpeg");
-const fs = require("fs");
 const path = require("path");
 const { backendLogger } = require("../utils/logger");
 
-// Function to handle metadata editing
-exports.editMetadata = (req, res) => {
-	const filePath = req.file.path;
-	const outputFile = `uploads/edited_${Date.now()}_${req.file.originalname}`;
-
-	// Initialize the ffmpeg command with the input file path
-	const command = ffmpeg(filePath);
-
-	// Loop through req.body and add metadata options dynamically
-	Object.entries(req.body).forEach(([key, value]) => {
-		if (value) {
-			// Ensure value is not empty or null before appending to metadata
-			command.outputOptions("-metadata", `${key}=${value}`);
-		} else if (value === null || value === "") {
-			command.outputOptions(`-metadata`, `${key}=`);
-		}
-	});
-
-	// Execute the ffmpeg command
-	command
-		// .audioBitrate("320")
-		// .audioFrequency(48000)
-		.outputOptions("-c copy") // Copy the stream without re-encoding
-		.save(outputFile)
-		.on("end", () => {
-			// Send the edited file as a download
-			res.download(outputFile, (err) => {
-				if (err) {
-					console.error("Error sending the edited file:", err);
-				}
-
-				// Delete the uploaded and processed files after the download
-				fs.unlinkSync(filePath);
-				fs.unlinkSync(outputFile);
-			});
-		})
-		.on("error", (err) => {
-			console.error("Error editing metadata:", err);
-			res.status(500).json({ error: "Error processing the file" });
-		});
-};
-
 exports.uploadAudio = async (file) => {
 	let metadata;
-	let coverImageName = `http://localhost:3000/uploads/images/no-cover.jpg`;
+	let coverImageName = `http://localhost:3000/uploads/images/no-cover.png`;
 
 	try {
 		// Use ffprobe to extract metadata from the uploaded audio file
@@ -89,30 +46,56 @@ exports.uploadAudio = async (file) => {
 						resolve();
 					})
 					.on("error", (err) => {
-						backendLogger.error(
-							"Error extracting cover image:",
-							err
-						);
 						reject(err);
 					});
 			});
 		}
 
-		backendLogger.info("Metadata extracted successfully:", metadata);
-
 		return {
 			success: true,
-			message: "File uploaded and metadata extracted successfully!",
+			fileName: file.filename,
 			metadata: metadata,
 			coverImage: coverImageName,
 		};
 	} catch (error) {
-		backendLogger.error("Error in uploadAudio:", error);
-
 		return {
 			success: false,
-			message: "Error processing file",
-			error: error.message,
+			message: "Error processing the file",
+			error: error,
 		};
 	}
+};
+
+exports.editMetadata = (metadata, inputFilePath, outputFilePath) => {
+	return new Promise((resolve, reject) => {
+		// Initialize the ffmpeg command with the input file path
+		const command = ffmpeg(inputFilePath);
+
+		// Loop through metadata and add options dynamically
+		Object.entries(metadata).forEach(([key, value]) => {
+			// Ensure value is not empty or null before appending to metadata
+			if (value) {
+				command.outputOptions("-metadata", `${key}=${value}`);
+			} else if (value === null || value === "") {
+				command.outputOptions(`-metadata`, `${key}=`);
+			}
+		});
+
+		// Execute the ffmpeg command
+		command
+			.outputOptions("-c copy") // Copy the stream without re-encoding
+			.save(outputFilePath)
+			.on("end", () => {
+				resolve({
+					success: true,
+				});
+			})
+			.on("error", (err) => {
+				reject({
+					success: false,
+					message: "Error processing the file",
+					error: err,
+				});
+			});
+	});
 };

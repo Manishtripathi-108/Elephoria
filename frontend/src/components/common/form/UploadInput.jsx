@@ -2,9 +2,23 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import { Icon } from '@iconify/react'
 
+import cn from '../../../utils/cn'
 import { iconMap } from '../../../utils/globalConstants'
 
-const UploadInput = ({ id, file, setFile }) => {
+/**
+ * UploadInput
+ *
+ * A component for uploading files with a customizable appearance.
+ *
+ * @param {string} className - Additional classes to apply to the component.
+ * @param {File} file - The currently selected file.
+ * @param {string} id - The unique identifier for the file input element.
+ * @param {Function} setFile - Function to update the selected file state.
+ *
+ * @returns {JSX.Element} The rendered file upload input component with functionality
+ * to select, display, and remove a file, including visual feedback for file upload status.
+ */
+const UploadInput = ({ className, file, id, setFile }) => {
     const fileInputRef = useRef(null)
     const [fileName, setFileName] = useState('Upload File')
 
@@ -29,7 +43,11 @@ const UploadInput = ({ id, file, setFile }) => {
     }, [file])
 
     return (
-        <div className="bg-primary mb-6 flex size-80 flex-col items-center justify-between gap-2 rounded-lg p-2.5 shadow-neumorphic-sm">
+        <div
+            className={cn(
+                'bg-primary mb-6 flex size-80 flex-col items-center justify-between gap-2 rounded-lg border border-light-secondary p-2.5 shadow-neumorphic-sm dark:border-dark-secondary',
+                className
+            )}>
             <label
                 htmlFor={id}
                 className="text-highlight flex w-full flex-1 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-light-highlight dark:border-dark-highlight">
@@ -43,7 +61,7 @@ const UploadInput = ({ id, file, setFile }) => {
                     htmlFor={id}
                     className="bg-secondary text-highlight flex h-10 w-full cursor-pointer items-center justify-end rounded-lg border-none p-2">
                     {!file && <Icon icon={iconMap.filePlus} className="size-6 cursor-pointer" />}
-                    <p className="flex-1 text-center tracking-wider line-clamp-1">{fileName}</p>
+                    <p className="line-clamp-1 flex-1 text-center tracking-wider">{fileName}</p>
                 </label>
                 {file && (
                     <button

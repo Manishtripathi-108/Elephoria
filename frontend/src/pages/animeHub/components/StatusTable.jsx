@@ -34,7 +34,7 @@ const StatusTable = ({ data, title, failed = false }) => {
             </header>
             <div className="p-3">
                 <div className="relative">
-                    <div className="scrollbar-thin h-80 overflow-y-scroll">
+                    <div className="scrollbar-thin h-80 overflow-y-auto">
                         <table className="w-full table-auto">
                             <thead className="text-secondary text-left tracking-wide">
                                 <tr>

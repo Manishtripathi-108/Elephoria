@@ -3,19 +3,30 @@ import React, { useState } from 'react'
 import axios from 'axios'
 
 import UploadProgressBar from '../../components/common/UploadProgressBar'
+import JelloButton from '../../components/common/buttons/JelloButton'
 import UploadInput from '../../components/common/form/UploadInput'
 
 const AudioEditor = () => {
-    const [file, setFile] = useState(null) // File to upload
-    const [metaData, setMetaData] = useState(null) // Metadata of the uploaded file
-    const [coverImage, setCoverImage] = useState(null) // Cover image from the file metadata
+    const [audio, setAudio] = useState({
+        file: null,
+        meta: null,
+        cover: null,
+    })
 
-    const [uploadProgress, setUploadProgress] = useState(0) // Upload progress percentage
-    const [isUploading, setIsUploading] = useState(false) // Uploading state
-    const [hasUploadError, setHasUploadError] = useState(false) // Error state for upload
+    const [upload, setUpload] = useState({
+        status: 'idle', // idle | uploading | success | error
+        progress: 0,
+        error: null, // Upload error, if any
+    })
+
+    const [name, setName] = useState('')
+
+    const { file, meta, cover } = audio
+    const { status, progress, error } = upload
 
     const handleFileUpload = async (e) => {
         e.preventDefault()
+
         if (!file) {
             window.addToast('Please select a file first!', 'warning')
             return
@@ -24,139 +35,176 @@ const AudioEditor = () => {
         const formData = new FormData()
         formData.append('audio', file)
 
-        try {
-            setIsUploading(true)
-            setHasUploadError(false)
+        setUpload({ status: 'uploading', progress: 0, error: null })
 
-            const response = await axios.post('/api/audio/upload', formData, {
+        await axios
+            .post('/api/audio/upload', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
-                onUploadProgress: (progressEvent) => {
-                    setUploadProgress(progressEvent)
+                onUploadProgress: (event) => {
+                    setUpload((prev) => ({ ...prev, progress: event.loaded }))
                 },
             })
+            .then((response) => {
+                console.log('Upload Response:', response.data)
+                setName(response.data.fileName)
 
-            console.log(response.data)
+                setAudio({
+                    file,
+                    meta: response.data?.metadata?.format?.tags || null,
+                    cover: response.data?.coverImage || null,
+                })
 
-            setMetaData(response.data?.metadata?.format?.tags || {})
-            setCoverImage(response.data?.coverImage || null)
-            window.addToast('File uploaded and metadata extracted successfully!', 'success')
-        } catch (error) {
-            console.error('Error uploading file:', error)
-            setHasUploadError(true)
-            window.addToast('File upload failed.', 'error')
-        } finally {
-            setIsUploading(false)
-        }
+                setUpload({ status: 'success', progress: 100, error: null })
+                window.addToast('File uploaded successfully!', 'success')
+            })
+            .catch((error) => {
+                setUpload({ status: 'idle', progress: 0, error: error.response?.data?.message || 'Upload failed.' })
+                console.log(error)
+
+                window.addToast(error.response?.data?.message || 'File upload failed.', 'error')
+            })
     }
 
-    /**
-     * Handle metadata editing and download the updated file.
-     */
     const handleEditMetadata = async (e) => {
         e.preventDefault()
-        if (!file || !metaData) return
 
-        const formData = new FormData()
-
-        // Append the file
-        formData.append('audio', file)
-
-        // Loop through the metaData object and append each key-value pair
-        Object.entries(metaData).forEach(([key, value]) => {
-            formData.append(key, value)
-        })
+        if (!meta || !name) return
 
         try {
-            const response = await axios.post('/api/audio/edit-metadata', formData, {
-                responseType: 'blob', // Expect a file as the response
-            })
-
-            const originalFilename = response.headers['content-disposition']?.split('filename=')[1]?.replace(/"/g, '') || 'edited_audio.mp3'
+            const response = await axios.post('/api/audio/edit-metadata', { name, metadata: meta }, { responseType: 'blob' })
 
             const url = window.URL.createObjectURL(new Blob([response.data]))
             const link = document.createElement('a')
             link.href = url
-            link.setAttribute('download', originalFilename)
+            link.setAttribute('download', name)
             document.body.appendChild(link)
             link.click()
+            link.remove()
 
+            console.log('Edit Metadata Response:', response)
             window.addToast('Metadata edited successfully!', 'success')
         } catch (error) {
-            console.error('Error editing metadata:', error)
-            window.addToast('Failed to edit metadata.', 'error')
+            console.log('Failed to edit metadata.', error)
+            window.addToast(error.response?.data?.message || 'Failed to edit metadata.', 'error')
         }
+    }
+
+    const handleCancelUpload = () => {
+        setUpload({ status: 'idle', progress: 0, error: null })
+        setAudio({ file: null, meta: null, cover: null })
     }
 
     return (
         <div className="flex-center min-h-calc-full-height flex-col gap-6 py-8">
             {/* Upload Progress Bar */}
-            {isUploading ? (
+            {status === 'uploading' && (
                 <UploadProgressBar
-                    bytesUploaded={uploadProgress.loaded}
-                    className="my-6"
-                    totalBytes={uploadProgress.total}
+                    bytesUploaded={progress || 0}
+                    totalBytes={file ? file.size : 0}
                     fileName={file?.name || 'Unknown File'}
                     onRetry={handleFileUpload}
-                    onCancel={() => setIsUploading(false)}
-                    hasError={hasUploadError}
+                    onCancel={handleCancelUpload}
+                    hasError={status === 'error'}
                 />
-            ) : (
+            )}
+
+            {/* Upload Form */}
+            {status === 'idle' && (
                 <form
                     id="upload-audio"
                     onSubmit={handleFileUpload}
-                    className="flex-center w-full max-w-2xl flex-col rounded-3xl p-6 shadow-neumorphic-md">
+                    className="flex-center w-full max-w-2xl flex-col rounded-3xl border border-light-secondary p-6 shadow-neumorphic-lg dark:border-dark-secondary">
                     <h2 className="text-primary mb-2 font-aladin text-2xl tracking-wider">Upload Audio</h2>
                     <p className="text-primary mb-6 text-center">Upload an audio file to edit metadata, convert format, and more!</p>
 
-                    <UploadInput id="upload_audio" file={file} setFile={setFile} />
+                    <UploadInput
+                        className="shadow-neumorphic-xs"
+                        id="upload_audio"
+                        file={file}
+                        setFile={(newFile) => setAudio((prev) => ({ ...prev, file: newFile }))}
+                    />
 
-                    <button type="submit" title="Upload Audio" className="button flex-shrink-0" onClick={handleFileUpload}>
-                        Upload Audio
-                    </button>
+                    <JelloButton type="submit">Upload Audio</JelloButton>
                 </form>
             )}
 
             {/* Edit Metadata Form */}
-            {metaData && (
+            {meta && (
                 <form
                     id="edit-metadata"
                     onSubmit={handleEditMetadata}
-                    className="flex-center w-full max-w-2xl flex-col gap-6 rounded-3xl p-6 shadow-neumorphic-md">
+                    className="flex-center w-full max-w-2xl flex-col gap-6 rounded-3xl border border-light-secondary p-6 shadow-neumorphic-lg dark:border-dark-secondary">
                     <h2 className="text-primary font-aladin text-2xl tracking-wider">Edit Metadata</h2>
 
                     {/* Display Cover Image */}
-                    {coverImage && (
-                        <div className="size-72 overflow-hidden rounded-xl p-2 shadow-neumorphic-inset-sm">
-                            <img src={coverImage} alt="Cover Image" className="h-full w-full rounded-lg object-cover" />
+                    {cover && (
+                        <div className="size-72 overflow-hidden rounded-xl border border-light-secondary p-2 shadow-neumorphic-inset-xs dark:border-dark-secondary">
+                            <img src={cover} alt="Cover Image" className="h-full w-full rounded-lg object-cover" />
                         </div>
                     )}
 
                     {/* Metadata Fields */}
-                    <div className="flex w-full flex-wrap gap-x-5">
-                        {Object.entries(metaData)
+                    <div className="grid w-full grid-cols-3 place-items-center gap-5">
+                        {Object.entries(meta)
                             .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
-                            .map(([key, value]) => (
-                                <div key={key} className="form-group mb-4 w-fit">
-                                    <label className="form-label" htmlFor={key}>
-                                        {key
-                                            .split('_')
-                                            .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-                                            .join(' ')}
-                                    </label>
-                                    <input
-                                        className="input-text"
-                                        id={key}
-                                        type="text"
-                                        value={value}
-                                        onChange={(e) => setMetaData({ ...metaData, [key]: e.target.value })}
-                                    />
-                                </div>
-                            ))}
+                            .map(([key, value]) => {
+                                if (key === 'lyrics') return null
+                                return (
+                                    <div key={key} className="form-group">
+                                        <label className="form-label" htmlFor={key}>
+                                            {key.toLowerCase().split('_').join(' ')}
+                                        </label>
+                                        <input
+                                            className="input-text"
+                                            id={key}
+                                            type="text"
+                                            placeholder={`Enter ${key.toLowerCase().split('_').join(' ')}`}
+                                            value={value}
+                                            onChange={(e) =>
+                                                setAudio((prev) => ({
+                                                    ...prev,
+                                                    meta: { ...prev.meta, [key]: e.target.value },
+                                                }))
+                                            }
+                                        />
+                                    </div>
+                                )
+                            })}
                     </div>
 
-                    <button type="submit" className="button">
-                        Save Changes
-                    </button>
+                    {/* Lyrics Field if available */}
+                    {meta.lyrics && (
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="lyrics">
+                                Lyrics
+                            </label>
+                            <textarea
+                                className="input-textarea scrollbar-thin"
+                                id="lyrics"
+                                placeholder="Enter Lyrics"
+                                value={meta.lyrics}
+                                onChange={(e) =>
+                                    setAudio((prev) => ({
+                                        ...prev,
+                                        meta: { ...prev.meta, lyrics: e.target.value },
+                                    }))
+                                }
+                            />
+                        </div>
+                    )}
+
+                    <div className="ml-auto mt-5">
+                        <JelloButton type="submit">Save Changes</JelloButton>
+                        <JelloButton
+                            variant="danger"
+                            className="ml-4"
+                            onClick={(e) => {
+                                e.preventDefault()
+                                handleCancelUpload()
+                            }}>
+                            Cancel
+                        </JelloButton>
+                    </div>
                 </form>
             )}
         </div>
