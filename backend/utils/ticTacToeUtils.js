@@ -75,4 +75,4 @@ const initialRoom = {
 	playerO: { id: null, name: null, score: 0 },
 };
 
-module.exports = { WINNING_PATTERNS, evaluateBoardStatus, initialRoom };
+export { WINNING_PATTERNS, evaluateBoardStatus, initialRoom };

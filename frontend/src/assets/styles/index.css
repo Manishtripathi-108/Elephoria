@@ -430,11 +430,11 @@ body {
     }
 
     .side-nav-animation::backdrop {
-        @apply -translate-x-full opacity-65;
+        @apply opacity-0;
     }
 
     .side-nav-animation[open]::backdrop {
-        @apply translate-x-0;
+        @apply opacity-65;
     }
 
     /* Modal animations */
@@ -470,7 +470,7 @@ body {
         }
 
         .side-nav-animation[open]::backdrop {
-            @apply -translate-x-full opacity-0;
+            @apply opacity-0;
         }
     }
 }

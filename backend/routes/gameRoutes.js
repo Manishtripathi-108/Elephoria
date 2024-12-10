@@ -1,4 +1,4 @@
-const {
+import {
 	getRoomId,
 	handleClearBoard,
 	handleJoinRoom,
@@ -6,9 +6,8 @@ const {
 	handleBoardChange,
 	handleStartGame,
 	handleLeaveRoom,
-} = require("../controllers/gameController");
-const { backendLogger } = require("../utils/logger");
-
+} from "../controllers/gameController.js";
+import { backendLogger } from "../utils/logger.js";
 const gameRoutes = (io) => {
 	io.on("connection", (socket) => {
 		backendLogger.info(`User connected: ${socket.id}`);
@@ -36,4 +35,4 @@ const gameRoutes = (io) => {
 	});
 };
 
-module.exports = gameRoutes;
+export default gameRoutes;

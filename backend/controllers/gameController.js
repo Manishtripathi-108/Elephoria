@@ -1,4 +1,4 @@
-const {
+import {
 	generateRoomId,
 	joinRoom,
 	startGame,
@@ -6,9 +6,8 @@ const {
 	leaveRoom,
 	updateGameState,
 	clearBoard,
-} = require("../services/gameService.js");
-const { backendLogger } = require("../utils/logger.js");
-
+} from "../services/gameService.js";
+import { backendLogger } from "../utils/logger.js";
 const getRoomId = (socket) => (callback) => {
 	const roomId = generateRoomId();
 	callback(
@@ -141,7 +140,7 @@ const handleLeaveRoom = (roomId, socketId, io) => {
 	}
 };
 
-module.exports = {
+export {
 	getRoomId,
 	handleJoinRoom,
 	handleStartGame,

@@ -1,6 +1,6 @@
-const express = require("express");
-const { backendLogger, frontendLogger } = require("../utils/logger");
-const router = express.Router();
+import { Router } from "express";
+import { backendLogger, frontendLogger } from "../utils/logger.js";
+const router = Router();
 
 // Log frontend messages to frontend.log
 router.post("/frontend", (req, res) => {
@@ -42,4 +42,4 @@ router.post("/backend", (req, res) => {
 	res.status(200).json({ success: true });
 });
 
-module.exports = router;
+export default router;

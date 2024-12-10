@@ -1,8 +1,8 @@
-const ffmpeg = require("fluent-ffmpeg");
-const path = require("path");
-const { backendLogger } = require("../utils/logger");
+import ffmpeg from "fluent-ffmpeg";
+import { join, basename, resolve } from "path";
+import { backendLogger } from "../utils/logger.js";
 
-exports.uploadAudio = async (file) => {
+export const uploadAudio = async (file) => {
 	let metadata;
 	let coverImageName = `http://localhost:3000/uploads/images/no-cover.png`;
 
@@ -30,17 +30,17 @@ exports.uploadAudio = async (file) => {
 
 		if (coverStream) {
 			// Extract the cover image if available
-			const coverImagePath = path.join(
-				"uploads/images",
+			const coverImagePath = join(
+				resolve("./uploads/images"),
 				`cover_${Date.now()}.jpg`
 			);
 
 			await new Promise((resolve, reject) => {
 				ffmpeg(file.path)
 					.outputOptions("-map", `0:${coverStream.index}`) // Select the cover image stream
-					.save(path.join(__dirname, "../", coverImagePath)) // Save in uploads folder
+					.save(join(coverImagePath)) // Save in uploads folder
 					.on("end", () => {
-						coverImageName = `http://localhost:3000/uploads/images/${path.basename(
+						coverImageName = `http://localhost:3000/uploads/images/${basename(
 							coverImagePath
 						)}`;
 						resolve();
@@ -66,7 +66,7 @@ exports.uploadAudio = async (file) => {
 	}
 };
 
-exports.editMetadata = (metadata, inputFilePath, outputFilePath) => {
+export const editMetadata = (metadata, inputFilePath, outputFilePath) => {
 	return new Promise((resolve, reject) => {
 		// Initialize the ffmpeg command with the input file path
 		const command = ffmpeg(inputFilePath);

@@ -1,5 +1,5 @@
-const express = require("express");
-const {
+import { Router } from "express";
+import {
 	getToken,
 	getUserData,
 	getUserMedia,
@@ -10,10 +10,10 @@ const {
 	saveMedia,
 	toggleFavouriteMedia,
 	deleteMedia,
-} = require("../controllers/animeController");
-const verifyAuth = require("../middlewares/authMiddleware");
+} from "../controllers/animeController.js";
+import verifyAuth from "../middlewares/authMiddleware.js";
 
-const router = express.Router();
+const router = Router();
 
 router.post("/login", getToken);
 router.post("/check-auth", verifyAuth, (req, res) =>
@@ -30,4 +30,4 @@ router.post("/toggle-favourite", verifyAuth, toggleFavouriteMedia);
 router.post("/delete", verifyAuth, deleteMedia);
 router.post("/logout", logoutUser);
 
-module.exports = router;
+export default router;

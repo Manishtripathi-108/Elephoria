@@ -1,8 +1,8 @@
-const express = require("express");
-const animeRoutes = require("./animeRoutes");
-const audioRoutes = require("./audioRoutes");
-const logs = require("./logs");
-const router = express.Router();
+import { Router } from "express";
+import animeRoutes from "./animeRoutes.js";
+import audioRoutes from "./audioRoutes.js";
+import logs from "./logs.js";
+const router = Router();
 
 router.get("/", (req, res) => {
 	res.status(200).json({
@@ -14,4 +14,4 @@ router.use("/anime-hub", animeRoutes);
 router.use("/audio", audioRoutes);
 router.use("/logs", logs);
 
-module.exports = router;
+export default router;

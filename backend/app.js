@@ -1,17 +1,21 @@
-const express = require("express");
-const cors = require("cors");
-const cookieParser = require("cookie-parser");
-const routes = require("./routes");
-const path = require("path");
-const http = require("http");
-const { Server } = require("socket.io");
-const gameRoutes = require("./routes/gameRoutes");
-const { backendLogger } = require("./utils/logger");
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import routes from "./routes/index.js";
+import { join, resolve } from "path";
+import { createServer } from "http";
+import { Server } from "socket.io";
+import gameRoutes from "./routes/gameRoutes.js";
+import { backendLogger } from "./utils/logger.js";
 
 const app = express();
 
+// Load environment variables
+dotenv.config();
+
 // HTTP server with Express app
-const server = http.createServer(app);
+const server = createServer(app);
 
 // Socket.io with CORS options
 const io = new Server(server, {
@@ -39,6 +43,8 @@ app.use("/api", routes);
 gameRoutes(io);
 
 /* ------------------ Serve Static Files for Uploaded Images ---------------- */
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// Resolve uploads directory using relative path from current file
+const uploadsPath = resolve("./uploads");
+app.use("/uploads", express.static(uploadsPath));
 
-module.exports = { app, server, io };
+export { app, server, io };

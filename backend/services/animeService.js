@@ -1,5 +1,5 @@
-const anilistApi = require("../config/anilistConfig");
-const { backendLogger } = require("../utils/logger");
+import anilistApi from "../config/anilistConfig.js";
+import { backendLogger } from "../utils/logger.js";
 
 // const fetchAnimeList = async (req) => {
 // 	const response = await anilistApi.post("/", {
@@ -378,7 +378,7 @@ const deleteMediaEntry = async (token, entryId) => {
 	return response.data.data.DeleteMediaListEntry.deleted;
 };
 
-module.exports = {
+export {
 	exchangePinForToken,
 	renewAniListToken,
 	fetchUserId,

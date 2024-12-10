@@ -1,5 +1,5 @@
-const { backendLogger } = require("../utils/logger");
-const { evaluateBoardStatus, initialRoom } = require("../utils/ticTacToeUtils");
+import { backendLogger } from "../utils/logger.js";
+import { evaluateBoardStatus, initialRoom } from "../utils/ticTacToeUtils.js";
 
 const rooms = {};
 
@@ -250,7 +250,7 @@ const leaveRoom = (roomId, socketId) => {
 	return { success: true, roomState: clearBoard(roomId).roomState };
 };
 
-module.exports = {
+export {
 	generateRoomId,
 	joinRoom,
 	startGame,

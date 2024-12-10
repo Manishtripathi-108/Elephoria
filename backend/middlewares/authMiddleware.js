@@ -1,5 +1,4 @@
-const { fetchUserId, renewAniListToken } = require("../services/animeService");
-
+import { fetchUserId, renewAniListToken } from "../services/animeService.js";
 const setCookie = (res, name, value, options = {}) => {
 	res.cookie(name, value, {
 		httpOnly: true,
@@ -66,4 +65,4 @@ const verifyAuth = async (req, res, next) => {
 	else handleUnauthorized(res);
 };
 
-module.exports = verifyAuth;
+export default verifyAuth;

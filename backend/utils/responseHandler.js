@@ -1,14 +1,14 @@
-const { backendLogger } = require("./logger");
+import { backendLogger } from "./logger.js";
 
-exports.successResponse = (res, data) =>
+export const successResponse = (res, data) =>
 	res.status(200).json({ success: true, data });
 
-exports.errorResponse = (res, message, error) => {
+export const errorResponse = (res, message, error) => {
 	backendLogger.error(message, error);
 	res.status(500).json({ success: false, message, error });
 };
 
-exports.anilistErrorResponse = (res, message, error) => {
+export const anilistErrorResponse = (res, message, error) => {
 	backendLogger.error(message, error);
 
 	const retryAfterSeconds = error.response?.headers["retry-after"];

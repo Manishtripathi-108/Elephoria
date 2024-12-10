@@ -56,23 +56,26 @@ export const AnimeHubProvider = ({ children }) => {
     // Check user authentication on load
     useEffect(() => {
         const checkAuthentication = async () => {
-            setIsLoading(true)
-            const isAuth = await isAuthenticated()
-            setIsUserAuthenticated(isAuth)
+            window.addToast('Checking authentication status...', 'info')
+            if (location.pathname === '/anime-hub' || location.pathname === '/anime-hub/auth') {
+                setIsLoading(true)
+                const isAuth = await isAuthenticated()
+                setIsUserAuthenticated(isAuth)
 
-            if (isAuth) {
-                console.log('User is authenticated')
-                navigate('/anime-hub')
-            } else {
-                console.log('User is not authenticated')
-                navigate('/anime-hub/auth')
+                if (isAuth) {
+                    console.log('User is authenticated')
+                    navigate('/anime-hub')
+                } else {
+                    console.log('User is not authenticated')
+                    navigate('/anime-hub/auth')
+                }
+
+                setIsLoading(false)
             }
-
-            setIsLoading(false)
         }
 
         checkAuthentication()
-    }, [navigate])
+    }, [location, navigate])
 
     // Fetch media content when the active tab changes and the user is authenticated
     useEffect(() => {

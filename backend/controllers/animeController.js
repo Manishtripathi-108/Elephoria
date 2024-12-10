@@ -1,4 +1,4 @@
-const {
+import {
 	exchangePinForToken,
 	fetchUserData,
 	fetchUserMedia,
@@ -7,12 +7,11 @@ const {
 	saveMediaEntry,
 	toggleFavourite,
 	deleteMediaEntry,
-} = require("../services/animeService");
-
-const {
+} from "../services/animeService.js";
+import {
 	successResponse,
 	anilistErrorResponse,
-} = require("../utils/responseHandler");
+} from "../utils/responseHandler.js";
 
 const setCookie = (res, name, value, options = {}) => {
 	res.cookie(name, value, {
@@ -23,7 +22,7 @@ const setCookie = (res, name, value, options = {}) => {
 	});
 };
 
-exports.getToken = async (req, res) => {
+export const getToken = async (req, res) => {
 	try {
 		const data = await exchangePinForToken(req.body.pin);
 
@@ -51,7 +50,7 @@ exports.getToken = async (req, res) => {
 	}
 };
 
-exports.getUserData = async (req, res) => {
+export const getUserData = async (req, res) => {
 	try {
 		const data = await fetchUserData(req.body.anilistToken);
 		return successResponse(res, data);
@@ -64,7 +63,7 @@ exports.getUserData = async (req, res) => {
 	}
 };
 
-exports.getUserMedia = async (req, res) => {
+export const getUserMedia = async (req, res) => {
 	try {
 		const data = await fetchUserMedia(
 			req.body.anilistToken,
@@ -81,7 +80,7 @@ exports.getUserMedia = async (req, res) => {
 	}
 };
 
-exports.getUserMediaIds = async (req, res) => {
+export const getUserMediaIds = async (req, res) => {
 	try {
 		const data = await fetchUserMedia(
 			req.body.anilistToken,
@@ -99,7 +98,7 @@ exports.getUserMediaIds = async (req, res) => {
 	}
 };
 
-exports.getUserFavourites = async (req, res) => {
+export const getUserFavourites = async (req, res) => {
 	try {
 		const data = await fetchUserFavourites(
 			req.body.anilistToken,
@@ -127,7 +126,7 @@ exports.getUserFavourites = async (req, res) => {
 	}
 };
 
-exports.getAniListIds = async (req, res) => {
+export const getAniListIds = async (req, res) => {
 	try {
 		const data = await fetchAniListIds(
 			req.body.malIds,
@@ -155,7 +154,7 @@ exports.getAniListIds = async (req, res) => {
 	}
 };
 
-exports.saveMedia = async (req, res) => {
+export const saveMedia = async (req, res) => {
 	const status = req.body.status.toUpperCase();
 	let progress = status === "COMPLETED" ? 10000 : req.body.progress;
 
@@ -176,7 +175,7 @@ exports.saveMedia = async (req, res) => {
 	}
 };
 
-exports.toggleFavouriteMedia = async (req, res) => {
+export async function toggleFavouriteMedia(req, res) {
 	try {
 		const data = await toggleFavourite(
 			req.body.anilistToken,
@@ -191,9 +190,9 @@ exports.toggleFavouriteMedia = async (req, res) => {
 			error
 		);
 	}
-};
+}
 
-exports.deleteMedia = async (req, res) => {
+export async function deleteMedia(req, res) {
 	try {
 		const data = await deleteMediaEntry(
 			req.body.anilistToken,
@@ -207,9 +206,9 @@ exports.deleteMedia = async (req, res) => {
 			error
 		);
 	}
-};
+}
 
-exports.logoutUser = (req, res) => {
+export const logoutUser = (req, res) => {
 	const { anilistToken, anilistRefreshToken, aniListUserId } = req.cookies;
 
 	if (!anilistToken && !anilistRefreshToken && !aniListUserId) {

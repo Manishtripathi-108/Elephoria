@@ -1,18 +1,22 @@
-const { createLogger, format, transports } = require("winston");
-const path = require("path");
+import { createLogger, format, transports } from "winston";
+import { join, resolve } from "path";
 
 // Safe JSON stringify to handle circular references
 function safeStringify(obj) {
 	const seen = new WeakSet();
-	return JSON.stringify(obj, (key, value) => {
-		if (typeof value === "object" && value !== null) {
-			if (seen.has(value)) {
-				return "[Circular]";
+	return JSON.stringify(
+		obj,
+		(key, value) => {
+			if (typeof value === "object" && value !== null) {
+				if (seen.has(value)) {
+					return "[Circular]";
+				}
+				seen.add(value);
 			}
-			seen.add(value);
-		}
-		return value;
-	});
+			return value;
+		},
+		2
+	); // Add spacing for better readability
 }
 
 // Custom log format
@@ -20,39 +24,31 @@ const logFormat = format.combine(
 	format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
 	format.printf(({ timestamp, level, message, ...metadata }) => {
 		let logMessage = `${timestamp} [${level.toUpperCase()}]: ${message}`;
-		if (metadata) {
+		if (Object.keys(metadata).length > 0) {
 			logMessage += ` | Metadata: ${safeStringify(metadata)}`;
 		}
 		return logMessage;
 	})
 );
 
+// Helper function to create a logger
+function createCustomLogger(logFileName) {
+	return createLogger({
+		level: "info",
+		format: logFormat,
+		transports: [
+			new transports.Console({
+				format: format.combine(format.colorize(), format.simple()),
+			}),
+			new transports.File({
+				filename: join(resolve("logs"), logFileName),
+			}),
+		],
+	});
+}
+
 // Logger for backend logs
-const backendLogger = createLogger({
-	level: "info",
-	format: logFormat,
-	transports: [
-		new transports.Console({
-			format: format.combine(format.colorize(), format.simple()),
-		}),
-		new transports.File({
-			filename: path.join(__dirname, "../logs/backend.log"),
-		}),
-	],
-});
+export const backendLogger = createCustomLogger("backend.log");
 
 // Logger for frontend logs
-const frontendLogger = createLogger({
-	level: "info",
-	format: logFormat,
-	transports: [
-		new transports.Console({
-			format: format.combine(format.colorize(), format.simple()),
-		}),
-		new transports.File({
-			filename: path.join(__dirname, "../logs/frontend.log"),
-		}),
-	],
-});
-
-module.exports = { backendLogger, frontendLogger };
+export const frontendLogger = createCustomLogger("frontend.log");

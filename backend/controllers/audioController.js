@@ -1,9 +1,8 @@
-const fs = require("fs");
-const path = require("path");
-const { uploadAudio, editMetadata } = require("../services/audioService");
-const { backendLogger } = require("../utils/logger");
-
-exports.uploadAudioHandler = async (req, res) => {
+import { existsSync, unlinkSync } from "fs";
+import { join, resolve } from "path";
+import { uploadAudio, editMetadata } from "../services/audioService.js";
+import { backendLogger } from "../utils/logger.js";
+export const uploadAudioHandler = async (req, res) => {
 	if (!req.file) {
 		return res.status(400).json({ message: "No file uploaded!" });
 	}
@@ -20,17 +19,18 @@ exports.uploadAudioHandler = async (req, res) => {
 	});
 };
 
-exports.editMetadataHandler = async (req, res) => {
+export const editMetadataHandler = async (req, res) => {
 	try {
-		const uploadsDir = path.join(__dirname, "../uploads/audio");
-		const file = path.join(uploadsDir, req.body.name);
-		const outputFile = path.join(
-			uploadsDir,
+		const file = join(resolve("./uploads/audio"), req.body.name);
+		console.log("file", file);
+
+		const outputFile = join(
+			resolve("./uploads/audio"),
 			`edited_${Date.now()}_${req.body.name}`
 		);
 
 		// Check if the original file exists
-		if (!fs.existsSync(file)) {
+		if (!existsSync(file)) {
 			backendLogger.error("Audio file not found!");
 			return res
 				.status(404)
@@ -55,8 +55,8 @@ exports.editMetadataHandler = async (req, res) => {
 			}
 
 			// Cleanup files
-			if (fs.existsSync(file)) fs.unlinkSync(file);
-			if (fs.existsSync(outputFile)) fs.unlinkSync(outputFile);
+			if (existsSync(file)) unlinkSync(file);
+			if (existsSync(outputFile)) unlinkSync(outputFile);
 		});
 	} catch (error) {
 		backendLogger.error("Error editing metadata:", error);

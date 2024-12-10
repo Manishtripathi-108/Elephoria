@@ -28,27 +28,9 @@ const Header = () => {
 
         getUserData()
 
-        const pageHeader = document.getElementById('page-header')
-        pageHeader.style.opacity = `0.8`
-
-        if (pageHeader) {
-            const handleScroll = () => {
-                // Apply the 45dvh transparency effect when the scroll position is between 0 and 45vh
-                if (window.scrollY <= window.innerHeight * 0.45) {
-                    pageHeader.style.opacity = `0.8`
-                } else {
-                    pageHeader.style.opacity = '1'
-                }
-            }
-
-            window.addEventListener('scroll', handleScroll)
-
-            // Clean up scroll listener on component unmount
-            return () => {
-                window.removeEventListener('scroll', handleScroll)
-                if (retryTimeoutRef.current) {
-                    clearTimeout(retryTimeoutRef.current)
-                }
+        return () => {
+            if (retryTimeoutRef.current) {
+                clearTimeout(retryTimeoutRef.current)
             }
         }
     }, [])
