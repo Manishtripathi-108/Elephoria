@@ -7,11 +7,11 @@ import {
 	saveMediaEntry,
 	toggleFavourite,
 	deleteMediaEntry,
-} from "../services/animeService.js";
+} from "../services/anime.service.js";
 import {
 	successResponse,
 	anilistErrorResponse,
-} from "../utils/responseHandler.js";
+} from "../utils/response.utils.js";
 
 const setCookie = (res, name, value, options = {}) => {
 	res.cookie(name, value, {

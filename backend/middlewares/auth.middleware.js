@@ -1,4 +1,4 @@
-import { fetchUserId, renewAniListToken } from "../services/animeService.js";
+import { fetchUserId, renewAniListToken } from "../services/anime.service.js";
 const setCookie = (res, name, value, options = {}) => {
 	res.cookie(name, value, {
 		httpOnly: true,

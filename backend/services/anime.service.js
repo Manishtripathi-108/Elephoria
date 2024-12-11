@@ -1,4 +1,4 @@
-import anilistApi from "../config/anilistConfig.js";
+import anilistApi from "../config/anilist.config.js";
 import { backendLogger } from "../utils/logger.js";
 
 // const fetchAnimeList = async (req) => {

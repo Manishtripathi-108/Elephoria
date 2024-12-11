@@ -1,7 +1,7 @@
 import { Router } from "express";
-import animeRoutes from "./animeRoutes.js";
-import audioRoutes from "./audioRoutes.js";
-import logs from "./logs.js";
+import animeRoutes from "./anime.routes.js";
+import audioRoutes from "./audio.routes.js";
+import logs from "./logs.routes.js";
 const router = Router();
 
 router.get("/", (req, res) => {

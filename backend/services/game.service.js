@@ -1,5 +1,5 @@
 import { backendLogger } from "../utils/logger.js";
-import { evaluateBoardStatus, initialRoom } from "../utils/ticTacToeUtils.js";
+import { evaluateBoardStatus, initialRoom } from "../utils/ticTacToe.utils.js";
 
 const rooms = {};
 

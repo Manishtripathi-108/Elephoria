@@ -1,6 +1,6 @@
 import { existsSync, unlinkSync } from "fs";
 import { join, resolve } from "path";
-import { uploadAudio, editMetadata } from "../services/audioService.js";
+import { uploadAudio, editMetadata } from "../services/audio.service.js";
 import { backendLogger } from "../utils/logger.js";
 export const uploadAudioHandler = async (req, res) => {
 	if (!req.file) {

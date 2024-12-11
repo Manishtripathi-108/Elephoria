@@ -6,7 +6,7 @@ import {
 	handleBoardChange,
 	handleStartGame,
 	handleLeaveRoom,
-} from "../controllers/gameController.js";
+} from "../controllers/game.controller.js";
 import { backendLogger } from "../utils/logger.js";
 const gameRoutes = (io) => {
 	io.on("connection", (socket) => {

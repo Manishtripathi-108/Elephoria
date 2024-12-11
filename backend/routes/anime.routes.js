@@ -10,8 +10,8 @@ import {
 	saveMedia,
 	toggleFavouriteMedia,
 	deleteMedia,
-} from "../controllers/animeController.js";
-import verifyAuth from "../middlewares/authMiddleware.js";
+} from "../controllers/anime.controller.js";
+import verifyAuth from "../middlewares/auth.middleware.js";
 
 const router = Router();
 

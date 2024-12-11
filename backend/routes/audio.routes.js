@@ -4,7 +4,7 @@ import multer, { diskStorage } from "multer";
 import {
 	uploadAudioHandler,
 	editMetadataHandler,
-} from "../controllers/audioController.js";
+} from "../controllers/audio.controller.js";
 
 /* ------------------ Multer configuration for file uploads ----------------- */
 const storage = diskStorage({
