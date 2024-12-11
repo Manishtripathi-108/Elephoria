@@ -7,7 +7,7 @@ import {
 	handleStartGame,
 	handleLeaveRoom,
 } from "../controllers/game.controller.js";
-import { backendLogger } from "../utils/logger.js";
+import { backendLogger } from "../utils/logger.utils.js";
 const gameRoutes = (io) => {
 	io.on("connection", (socket) => {
 		backendLogger.info(`User connected: ${socket.id}`);

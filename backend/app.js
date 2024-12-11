@@ -7,7 +7,7 @@ import { join, resolve } from "path";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import gameRoutes from "./routes/game.routes.js";
-import { backendLogger } from "./utils/logger.js";
+import { backendLogger } from "./utils/logger.utils.js";
 
 const app = express();
 

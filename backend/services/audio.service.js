@@ -1,6 +1,7 @@
 import ffmpeg from "fluent-ffmpeg";
 import { join, basename, resolve } from "path";
-import { backendLogger } from "../utils/logger.js";
+import { exec } from "child_process";
+import { backendLogger } from "../utils/logger.utils.js";
 
 export const uploadAudio = async (file) => {
 	let metadata;
@@ -21,6 +22,28 @@ export const uploadAudio = async (file) => {
 				}
 			});
 		});
+
+		const lyrics = await new Promise((resolve, reject) => {
+			const ffprobeCmd = `ffprobe -i "${file.path}" -show_entries format_tags=lyrics -of json`;
+			exec(ffprobeCmd, (error, stdout, stderr) => {
+				if (error) {
+					return reject(`Error executing ffprobe: ${error.message}`);
+				}
+				try {
+					const parsedMetadata = JSON.parse(stdout);
+					const lyrics =
+						parsedMetadata.format?.tags?.lyrics ||
+						"No lyrics found";
+
+					resolve(lyrics);
+				} catch (parseError) {
+					reject(`Error parsing JSON: ${parseError.message}`);
+				}
+			});
+		});
+
+		// Append lyrics to the metadata object
+		metadata.format.tags.lyrics = lyrics.format.tags.lyrics;
 
 		// Check if there is a stream containing a cover image
 		const coverStream = metadata.streams.find(

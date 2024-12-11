@@ -46,6 +46,12 @@ const AudioEditor = () => {
                 },
             })
             .then((response) => {
+                if (!response.data.metadata) {
+                    setUpload({ status: 'idle', progress: 100, error: 'No metadata found' })
+                    window.addToast('No metadata found', 'error')
+                    return
+                }
+
                 console.log('Upload Response:', response.data)
                 setName(response.data.fileName)
 
@@ -73,6 +79,27 @@ const AudioEditor = () => {
 
     return (
         <div className="flex-center min-h-calc-full-height flex-col gap-6 px-2 py-8">
+            {/* Upload Form */}
+            {status === 'idle' && (
+                <form
+                    id="upload-audio"
+                    onSubmit={handleFileUpload}
+                    className="flex-center w-full max-w-2xl flex-col rounded-3xl border border-light-secondary p-6 shadow-neumorphic-lg dark:border-dark-secondary">
+                    <h2 className="text-primary mb-2 font-aladin text-2xl tracking-wider">Upload Audio</h2>
+                    <p className="text-primary mb-6 text-center">Upload an audio file to edit metadata, cover image and more!</p>
+
+                    <UploadInput
+                        acceptType="audio/*"
+                        className="shadow-neumorphic-xs"
+                        id="upload_audio"
+                        file={file}
+                        setFile={(newFile) => setAudio((prev) => ({ ...prev, file: newFile }))}
+                    />
+
+                    <JelloButton type="submit">Upload Audio</JelloButton>
+                </form>
+            )}
+
             {/* Upload Progress Bar */}
             {status === 'uploading' && (
                 <UploadProgressBar
@@ -83,26 +110,6 @@ const AudioEditor = () => {
                     onCancel={handleCancelUpload}
                     hasError={status === 'error'}
                 />
-            )}
-
-            {/* Upload Form */}
-            {status === 'idle' && (
-                <form
-                    id="upload-audio"
-                    onSubmit={handleFileUpload}
-                    className="flex-center w-full max-w-2xl flex-col rounded-3xl border border-light-secondary p-6 shadow-neumorphic-lg dark:border-dark-secondary">
-                    <h2 className="text-primary mb-2 font-aladin text-2xl tracking-wider">Upload Audio</h2>
-                    <p className="text-primary mb-6 text-center">Upload an audio file to edit metadata, convert format, and more!</p>
-
-                    <UploadInput
-                        className="shadow-neumorphic-xs"
-                        id="upload_audio"
-                        file={file}
-                        setFile={(newFile) => setAudio((prev) => ({ ...prev, file: newFile }))}
-                    />
-
-                    <JelloButton type="submit">Upload Audio</JelloButton>
-                </form>
             )}
 
             {/* Edit Metadata Form */}

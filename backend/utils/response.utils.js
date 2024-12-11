@@ -1,4 +1,4 @@
-import { backendLogger } from "./logger.js";
+import { backendLogger } from "./logger.utils.js";
 
 export const successResponse = (res, data) =>
 	res.status(200).json({ success: true, data });

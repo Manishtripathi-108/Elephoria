@@ -1,5 +1,5 @@
 import anilistApi from "../config/anilist.config.js";
-import { backendLogger } from "../utils/logger.js";
+import { backendLogger } from "../utils/logger.utils.js";
 
 // const fetchAnimeList = async (req) => {
 // 	const response = await anilistApi.post("/", {

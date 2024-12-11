@@ -7,7 +7,7 @@ import {
 	updateGameState,
 	clearBoard,
 } from "../services/game.service.js";
-import { backendLogger } from "../utils/logger.js";
+import { backendLogger } from "../utils/logger.utils.js";
 const getRoomId = (socket) => (callback) => {
 	const roomId = generateRoomId();
 	callback(

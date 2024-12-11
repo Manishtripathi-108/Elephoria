@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { backendLogger, frontendLogger } from "../utils/logger.js";
+import { backendLogger, frontendLogger } from "../utils/logger.utils.js";
 const router = Router();
 
 // Log frontend messages to frontend.log

@@ -10,6 +10,7 @@ import { iconMap } from '../../../utils/globalConstants'
  *
  * A component for uploading files with a customizable appearance.
  *
+ * @param {string} acceptType - The file type(s) accepted by the input element.
  * @param {string} className - Additional classes to apply to the component.
  * @param {File} file - The currently selected file.
  * @param {string} id - The unique identifier for the file input element.
@@ -18,7 +19,7 @@ import { iconMap } from '../../../utils/globalConstants'
  * @returns {JSX.Element} The rendered file upload input component with functionality
  * to select, display, and remove a file, including visual feedback for file upload status.
  */
-const UploadInput = ({ className, file, id, setFile }) => {
+const UploadInput = ({ acceptType, className, file, id, setFile }) => {
     const fileInputRef = useRef(null)
     const [fileName, setFileName] = useState('Upload File')
 
@@ -69,7 +70,7 @@ const UploadInput = ({ className, file, id, setFile }) => {
                     </button>
                 )}
             </div>
-            <input id={id} type="file" ref={fileInputRef} className="hidden" onChange={(e) => setFile(e.target.files[0])} />
+            <input id={id} type="file" ref={fileInputRef} className="hidden" onChange={(e) => setFile(e.target.files[0])} accept={acceptType} />
         </div>
     )
 }

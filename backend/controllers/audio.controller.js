@@ -1,7 +1,7 @@
 import { existsSync, unlinkSync } from "fs";
 import { join, resolve } from "path";
 import { uploadAudio, editMetadata } from "../services/audio.service.js";
-import { backendLogger } from "../utils/logger.js";
+import { backendLogger } from "../utils/logger.utils.js";
 export const uploadAudioHandler = async (req, res) => {
 	if (!req.file) {
 		return res.status(400).json({ message: "No file uploaded!" });
@@ -13,8 +13,9 @@ export const uploadAudioHandler = async (req, res) => {
 
 	await uploadAudio(req.file).then((result) => {
 		if (!result.success) {
-			backendLogger.error(result.message);
+			backendLogger.error("Error uploading audio file:", result.message);
 		}
+		backendLogger.info("Audio upload result:", result);
 		return res.status(result.success ? 200 : 500).json(result);
 	});
 };
@@ -22,7 +23,6 @@ export const uploadAudioHandler = async (req, res) => {
 export const editMetadataHandler = async (req, res) => {
 	try {
 		const file = join(resolve("./uploads/audio"), req.body.name);
-		console.log("file", file);
 
 		const outputFile = join(
 			resolve("./uploads/audio"),

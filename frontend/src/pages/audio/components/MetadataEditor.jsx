@@ -57,6 +57,8 @@ const MetadataEditor = ({ fileName, coverImage, metadata, onCancel }) => {
         setSubmitting(false)
     }
 
+    if (!metadata) return 'Loading...'
+
     return (
         <div className="w-full max-w-screen-lg rounded-3xl border border-light-secondary p-6 shadow-neumorphic-lg dark:border-dark-secondary">
             <h2 className="text-primary mb-6 text-center font-aladin text-2xl tracking-wider">Edit Tags</h2>

@@ -1,4 +1,4 @@
-import { backendLogger } from "../utils/logger.js";
+import { backendLogger } from "../utils/logger.utils.js";
 import { evaluateBoardStatus, initialRoom } from "../utils/ticTacToe.utils.js";
 
 const rooms = {};
