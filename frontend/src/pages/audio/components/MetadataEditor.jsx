@@ -1,19 +1,20 @@
 import React from 'react'
 
 import axios from 'axios'
-import { Field, Form, Formik } from 'formik'
+import { ErrorMessage, Field, Form, Formik } from 'formik'
+import * as Yup from 'yup'
 
 import JelloButton from '../../../components/common/buttons/JelloButton'
 
 const tagOrder = {
-    title: 'order-1 col-span-2 sm:col-span-2',
-    artist: 'order-2 col-span-1',
-    album: 'order-3 col-span-1',
-    album_artist: 'order-4 col-span-1',
-    genre: 'order-5 col-span-1 sm:col-span-2 lg:col-span-2',
-    date: 'order-6 col-span-1',
-    track: 'order-7 col-span-1',
-    lyrics: 'order-8 col-span-1 sm:col-span-2 lg:col-span-3',
+    title: { className: 'order-1 col-span-2 sm:col-span-2', placeholder: 'i.e. My Song' },
+    artist: { className: 'order-2 col-span-1', placeholder: 'i.e. John Doe' },
+    album: { className: 'order-3 col-span-1', placeholder: 'i.e. My Album' },
+    album_artist: { className: 'order-4 col-span-1', placeholder: 'i.e. John Doe, Jane Doe' },
+    genre: { className: 'order-5 col-span-1 sm:col-span-2 lg:col-span-2', placeholder: 'i.e. Pop, Rock, Country' },
+    date: { className: 'order-6 col-span-1', placeholder: 'i.e. 2021', validate: Yup.string().matches(/^\d{4}$/, 'Year must be a 4-digit number') },
+    track: { className: 'order-7 col-span-1', placeholder: 'i.e. 1' },
+    lyrics: { className: 'order-8 col-span-1 sm:col-span-2 lg:col-span-3', placeholder: 'i.e. Lyrics' },
 }
 
 const MetadataEditor = ({ fileName, coverImage, metadata, onCancel }) => {
@@ -39,25 +40,26 @@ const MetadataEditor = ({ fileName, coverImage, metadata, onCancel }) => {
 
             window.addToast('Metadata edited successfully!', 'success')
         } catch (error) {
-            // If an error occurs during the request itself
-            console.error('Failed to edit tags 1:', error)
-
-            // Attempt to read the error response
-            if (error.response?.data) {
-                const reader = new FileReader()
-                reader.onload = () => {
-                    const errorData = JSON.parse(reader.result)
-                    window.addToast(errorData.message || 'Failed to edit tags.', 'error')
-                }
-                reader.readAsText(error.response.data)
-            } else {
-                window.addToast('Failed to edit tags.', 'error')
-            }
+            console.error('Failed to edit metadata:', error)
+            window.addToast(error.response?.data?.message || 'Failed to edit metadata.', 'error')
         }
         setSubmitting(false)
     }
 
-    if (!metadata) return 'Loading...'
+    const addNewTag = (values, setFieldValue) => {
+        const newTagKey = `description`
+        setFieldValue(newTagKey, '')
+    }
+
+    const validationSchema = Yup.object(
+        Object.keys(tagOrder).reduce((schema, key) => {
+            const tagValidation = tagOrder[key].validate
+            if (tagValidation) {
+                schema[key] = tagValidation
+            }
+            return schema
+        }, {})
+    )
 
     return (
         <div className="w-full max-w-screen-lg rounded-3xl border border-light-secondary p-6 shadow-neumorphic-lg dark:border-dark-secondary">
@@ -70,26 +72,25 @@ const MetadataEditor = ({ fileName, coverImage, metadata, onCancel }) => {
                 </div>
 
                 {/* Metadata Form */}
-                <Formik initialValues={metadata} onSubmit={handleEditMetadata}>
-                    {({ values, isSubmitting }) => (
+                <Formik initialValues={metadata} validationSchema={validationSchema} onSubmit={handleEditMetadata}>
+                    {({ values, isSubmitting, setFieldValue }) => (
                         <Form className="w-full space-y-6">
                             {/* Metadata Fields */}
                             <div className="grid w-full grid-cols-1 place-items-center gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                                {Object.entries(tagOrder).map(([key, value]) => (
-                                    <div key={key} className={`form-group ${value}`}>
+                                {Object.entries(tagOrder).map(([key, { className, placeholder }]) => (
+                                    <div key={key} className={`form-group ${className}`}>
                                         <Field
                                             id={key}
                                             rows="10"
                                             name={key}
                                             as={key === 'lyrics' ? 'textarea' : 'input'}
                                             className={key === 'lyrics' ? 'input-textarea scrollbar-thin' : 'input-text'}
-                                            max={key === 'date' ? new Date().getFullYear() : undefined}
-                                            type={key === 'date' ? 'number' : 'text'}
-                                            placeholder={`Enter ${key.replace('_', ' ')}`}
+                                            placeholder={placeholder}
                                         />
                                         <label className="form-label" htmlFor={key}>
                                             {key === 'date' ? 'Year' : key.replace('_', ' ')}
                                         </label>
+                                        <ErrorMessage name={key} component="div" className="form-helper-text error" />
                                     </div>
                                 ))}
 
@@ -102,9 +103,21 @@ const MetadataEditor = ({ fileName, coverImage, metadata, onCancel }) => {
                                             <label className="form-label" htmlFor={key}>
                                                 {key.replace('_', ' ')}
                                             </label>
+                                            <ErrorMessage name={key} component="div" className="form-helper-text error" />
                                         </div>
                                     ))}
                             </div>
+
+                            {/* Add Tag Button */}
+                            <JelloButton
+                                variant="info"
+                                onClick={(e) => {
+                                    e.preventDefault()
+                                    addNewTag(values, setFieldValue)
+                                }}
+                                disabled={isSubmitting}>
+                                Add New Tag
+                            </JelloButton>
 
                             {/* Action Buttons */}
                             <div className="ml-auto mt-8 flex w-full justify-end gap-4">

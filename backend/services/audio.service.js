@@ -43,7 +43,7 @@ export const uploadAudio = async (file) => {
 		});
 
 		// Append lyrics to the metadata object
-		metadata.format.tags.lyrics = lyrics.format.tags.lyrics;
+		metadata.format.tags.lyrics = lyrics;
 
 		// Check if there is a stream containing a cover image
 		const coverStream = metadata.streams.find(
@@ -93,7 +93,7 @@ export const editMetadata = (metadata, inputFilePath, outputFilePath) => {
 	return new Promise((resolve, reject) => {
 		// Initialize the ffmpeg command with the input file path
 		const command = ffmpeg(inputFilePath);
-
+		backendLogger.info('Metadata: ',metadata);
 		// Loop through metadata and add options dynamically
 		Object.entries(metadata).forEach(([key, value]) => {
 			// Ensure value is not empty or null before appending to metadata

@@ -15,7 +15,7 @@ export const uploadAudioHandler = async (req, res) => {
 		if (!result.success) {
 			backendLogger.error("Error uploading audio file:", result.message);
 		}
-		backendLogger.info("Audio upload result:", result);
+
 		return res.status(result.success ? 200 : 500).json(result);
 	});
 };
