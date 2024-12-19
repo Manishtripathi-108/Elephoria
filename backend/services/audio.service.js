@@ -91,27 +91,23 @@ export const uploadAudio = async (file) => {
 
 export const editMetadata = (metadata, inputFilePath, outputFilePath) => {
 	return new Promise((resolve, reject) => {
-		// Initialize the ffmpeg command with the input file path
 		const command = ffmpeg(inputFilePath);
-		backendLogger.info('Metadata: ',metadata);
-		// Loop through metadata and add options dynamically
+		backendLogger.info("Metadata: ", metadata);
+
 		Object.entries(metadata).forEach(([key, value]) => {
-			// Ensure value is not empty or null before appending to metadata
 			if (value) {
 				command.outputOptions("-metadata", `${key}=${value}`);
-			} else if (value === null || value === "") {
-				command.outputOptions(`-metadata`, `${key}=`);
+			} else {
+				// Ensure empty tags are cleared
+				command.outputOptions("-metadata", `${key}=`);
 			}
 		});
 
-		// Execute the ffmpeg command
 		command
 			.outputOptions("-c copy") // Copy the stream without re-encoding
 			.save(outputFilePath)
 			.on("end", () => {
-				resolve({
-					success: true,
-				});
+				resolve({ success: true });
 			})
 			.on("error", (err) => {
 				reject({
