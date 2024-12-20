@@ -9,36 +9,33 @@ import { Server } from "socket.io";
 import gameRoutes from "./routes/game.routes.js";
 import { backendLogger } from "./utils/logger.utils.js";
 
-const app = express();
-
 // Load environment variables
 dotenv.config();
+
+// Create Express app
+const app = express();
 
 // HTTP server with Express app
 const server = createServer(app);
 
+/* --------------------------- CORS configuration --------------------------- */
+const corsOptions = {
+	origin:
+		process.env.NODE_ENV === "production"
+			? process.env.CLIENT_URL
+			: "http://localhost",
+	credentials: true,
+};
 // Socket.io with CORS options
-const io = new Server(server, {
-	cors: {
-		origin: "*",
-		credentials: true,
-	},
-});
+const io = new Server(server, { cors: corsOptions });
 
-// Middleware configuration
-app.use(
-	cors({
-		origin:
-			process.env.NODE_ENV === "production"
-				? process.env.CLIENT_URL
-				: "http://localhost",
-		credentials: true,
-	})
-);
+app.use(cors(corsOptions));
+
+/* ------------------------ Middleware configuration ------------------------ */
 app.use(express.json());
 app.use(cookieParser());
 
-// API routes
+/* ------------------------------- API routes ------------------------------- */
 app.use("/api", routes);
 gameRoutes(io);
 

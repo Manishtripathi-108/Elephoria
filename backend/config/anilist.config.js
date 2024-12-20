@@ -12,4 +12,6 @@ const anilistApi = axios.create({
 	},
 });
 
+console.log("Anilist API configured!");
+
 export default anilistApi;
