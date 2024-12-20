@@ -8,24 +8,24 @@ export const uploadAudio = async (file) => {
 	let coverImageName = `http://localhost:3000/uploads/images/no-cover.png`;
 
 	try {
-		// Use ffprobe to extract metadata from the uploaded audio file
+		// Extract metadata from the uploaded audio file
 		metadata = await new Promise((resolve, reject) => {
 			ffmpeg.ffprobe(file.path, (err, extractedMetadata) => {
 				if (err) {
-					reject({
+					return reject({
 						success: false,
 						message: "Error extracting metadata",
 						error: err,
 					});
-				} else {
-					resolve(extractedMetadata);
 				}
+				resolve(extractedMetadata);
 			});
 		});
 
+		// Extract lyrics
 		const lyrics = await new Promise((resolve, reject) => {
 			const ffprobeCmd = `ffprobe -i "${file.path}" -show_entries format_tags=lyrics -of json`;
-			exec(ffprobeCmd, (error, stdout, stderr) => {
+			exec(ffprobeCmd, (error, stdout) => {
 				if (error) {
 					return reject(`Error executing ffprobe: ${error.message}`);
 				}
@@ -34,7 +34,6 @@ export const uploadAudio = async (file) => {
 					const lyrics =
 						parsedMetadata.format?.tags?.lyrics ||
 						"No lyrics found";
-
 					resolve(lyrics);
 				} catch (parseError) {
 					reject(`Error parsing JSON: ${parseError.message}`);
@@ -45,7 +44,7 @@ export const uploadAudio = async (file) => {
 		// Append lyrics to the metadata object
 		metadata.format.tags.lyrics = lyrics;
 
-		// Check if there is a stream containing a cover image
+		// Check for a cover image stream
 		const coverStream = metadata.streams.find(
 			(stream) =>
 				stream.codec_name === "mjpeg" || stream.codec_type === "video"
@@ -61,7 +60,7 @@ export const uploadAudio = async (file) => {
 			await new Promise((resolve, reject) => {
 				ffmpeg(file.path)
 					.outputOptions("-map", `0:${coverStream.index}`) // Select the cover image stream
-					.save(join(coverImagePath)) // Save in uploads folder
+					.save(coverImagePath) // Save in uploads folder
 					.on("end", () => {
 						coverImageName = `http://localhost:3000/uploads/images/${basename(
 							coverImagePath
@@ -69,7 +68,8 @@ export const uploadAudio = async (file) => {
 						resolve();
 					})
 					.on("error", (err) => {
-						reject(err);
+						console.warn("Error extracting cover image:", err);
+						resolve(); // Continue without rejecting
 					});
 			});
 		}
@@ -77,14 +77,14 @@ export const uploadAudio = async (file) => {
 		return {
 			success: true,
 			fileName: file.filename,
-			metadata: metadata,
+			metadata,
 			coverImage: coverImageName,
 		};
 	} catch (error) {
 		return {
 			success: false,
 			message: "Error processing the file",
-			error: error,
+			error,
 		};
 	}
 };
@@ -95,26 +95,19 @@ export const editMetadata = (metadata, inputFilePath, outputFilePath) => {
 		backendLogger.info("Metadata: ", metadata);
 
 		Object.entries(metadata).forEach(([key, value]) => {
-			if (value) {
-				command.outputOptions("-metadata", `${key}=${value}`);
-			} else {
-				// Ensure empty tags are cleared
-				command.outputOptions("-metadata", `${key}=`);
-			}
+			command.outputOptions("-metadata", `${key}=${value || ""}`);
 		});
 
 		command
 			.outputOptions("-c copy") // Copy the stream without re-encoding
 			.save(outputFilePath)
-			.on("end", () => {
-				resolve({ success: true });
-			})
-			.on("error", (err) => {
+			.on("end", () => resolve({ success: true }))
+			.on("error", (err) =>
 				reject({
 					success: false,
 					message: "Error processing the file",
 					error: err,
-				});
-			});
+				})
+			);
 	});
 };
