@@ -7,12 +7,7 @@ import JelloButton from '../../components/common/buttons/JelloButton'
 import UploadInput from '../../components/common/form/UploadInput'
 import MetadataEditor from './components/MetadataEditor'
 
-const initialAudio = {
-    name: '',
-    file: null,
-    meta: null,
-    cover: null,
-}
+const initialAudio = { name: '', file: null, meta: null, cover: null }
 
 const initialUpload = {
     status: 'idle', // idle | uploading | success | error | processing
@@ -41,7 +36,7 @@ const AudioEditor = () => {
         formData.append('audio', file)
 
         const source = axios.CancelToken.source()
-        setUpload({ ...initialUpload, status: 'uploading', cancelToken: source })
+        setUpload({ status: 'uploading', progress: 0, cancelToken: source })
 
         try {
             const response = await axios.post('/api/audio/upload', formData, {
@@ -55,13 +50,6 @@ const AudioEditor = () => {
                 },
             })
 
-            if (!response.data.metadata) {
-                setUpload(initialUpload)
-                setError('No metadata found')
-                window.addToast('No metadata found', 'error')
-                return
-            }
-
             console.log('Upload Response:', response.data)
             setAudio({
                 name: response.data.fileName,
@@ -69,7 +57,6 @@ const AudioEditor = () => {
                 meta: response.data?.metadata?.format?.tags || null,
                 cover: response.data?.coverImage || null,
             })
-
             setUpload({ status: 'success', progress: 100 })
             window.addToast('File uploaded successfully!', 'success')
         } catch (error) {
@@ -77,18 +64,21 @@ const AudioEditor = () => {
                 setUpload(initialUpload)
                 setAudio(initialAudio)
                 console.error('Upload canceled:', error)
-                window.addToast('File upload canceled.', 'error')
+                window.addToast('Upload canceled.', 'error')
             } else {
                 console.error('Upload failed:', error)
                 setUpload(initialUpload)
                 setError(error.response?.data?.message || 'Upload failed.')
-                window.addToast(error.response?.data?.message || 'File upload failed.', 'error')
+                window.addToast(error.response?.data?.message || 'Upload failed.', 'error')
             }
         }
     }
 
-    // Cancel the upload if it's in progress
-    const handleCancelUpload = () => cancelToken?.cancel('Upload canceled by the user.')
+    const handleCancelUpload = () => {
+        if (cancelToken) {
+            cancelToken.cancel('Upload canceled by the user.')
+        }
+    }
 
     return (
         <div className="flex-center min-h-calc-full-height flex-col gap-6 px-2 py-8">

@@ -25,10 +25,7 @@ const storage = diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.post('/upload', upload.single('audio'), (req, res) => {
-    const abortToken = req.body.abortToken;
-    uploadAudioHandler(req, res, abortToken);
-});
+router.post('/upload', upload.single('audio'), uploadAudioHandler);
 router.post('/edit-metadata', editMetadataHandler);
 
 export default router;

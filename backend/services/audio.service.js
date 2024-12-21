@@ -2,23 +2,22 @@ import ffmpeg from 'fluent-ffmpeg';
 import { exec } from 'child_process';
 import { backendLogger } from '../utils/logger.utils.js';
 import { uploadImageToCloudinary } from './cloudinary.service.js';
-import { createDirectoryIfNotExists, getTempPath } from '../utils/path.utils.js';
+import { cleanupFile, createDirectoryIfNotExists, getTempPath } from '../utils/path.utils.js';
 
 export const processAudioUpload = async (file, abortToken) => {
-    const noImage = `https://res.cloudinary.com/dra73suxl/image/upload/v1734726129/uploads/rnarvvwmsgqt5rs8okds.png`;
+    const noImage = 'https://res.cloudinary.com/dra73suxl/image/upload/v1734726129/uploads/rnarvvwmsgqt5rs8okds.png';
     let metadata,
         coverImage = noImage;
 
     const tempDir = getTempPath('images');
     const coverImagePath = `${tempDir}/cover_${Date.now()}.jpg`;
     console.log('Cover Image Path:', coverImagePath);
-    
 
     try {
         await createDirectoryIfNotExists(tempDir);
 
         console.log('start processing audio upload');
-        
+
         // Extract metadata from the uploaded audio file
         metadata = await new Promise((resolve, reject) => {
             ffmpeg.ffprobe(file.path, (error, extractedMetadata) => {
@@ -34,7 +33,7 @@ export const processAudioUpload = async (file, abortToken) => {
         });
 
         console.log('extracted');
-        
+
         // Extract lyrics
         const lyrics = await new Promise((resolve) => {
             const ffprobeCmd = `ffprobe -i "${file.path}" -show_entries format_tags=lyrics -of json`;
@@ -53,10 +52,10 @@ export const processAudioUpload = async (file, abortToken) => {
         });
 
         // Append lyrics to the metadata object
-        metadata.format?.tags ? (metadata.format.tags.lyrics = lyrics) : (metadata.format = { tags: { lyrics } });
+        metadata.format = { ...(metadata.format || {}), tags: { ...metadata.format?.tags, lyrics } };
 
-        console.log('lyrics:', lyrics);
-        
+        console.log('lyrics');
+
         const coverStream = metadata.streams?.find(
             (stream) => stream.codec_name === 'mjpeg' || stream.codec_type === 'video'
         );
@@ -78,7 +77,6 @@ export const processAudioUpload = async (file, abortToken) => {
         }
 
         console.log('completed');
-        
 
         return {
             success: true,
@@ -87,6 +85,8 @@ export const processAudioUpload = async (file, abortToken) => {
             coverImage,
         };
     } catch (error) {
+        if (file.path) cleanupFile(file.path);
+        if (coverImagePath) cleanupFile(coverImagePath);
         return {
             success: false,
             message: error.message || 'Error processing the file',

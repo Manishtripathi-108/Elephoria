@@ -1,4 +1,4 @@
-import { existsSync } from 'fs';
+import { existsSync, unlinkSync } from 'fs';
 import { mkdir } from 'fs/promises';
 import path from 'path';
 import { backendLogger } from './logger.utils.js';
@@ -127,5 +127,20 @@ export const createDirectoryIfNotExists = async (dirPath) => {
             backendLogger.error('Error creating directory:', error);
             throw new Error(`Failed to create directory at ${dirPath}`);
         }
+    }
+};
+
+/**
+ * Utility to clean up a file.
+ * @param {string} filePath - Path to the file to delete.
+ */
+export const cleanupFile = (filePath) => {
+    try {
+        if (existsSync(filePath)) {
+            unlinkSync(filePath);
+            backendLogger.info(`Deleted file: ${filePath}`);
+        }
+    } catch (error) {
+        backendLogger.error(`Failed to delete file ${filePath}:`, error);
     }
 };
