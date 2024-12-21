@@ -7,75 +7,88 @@ import JelloButton from '../../components/common/buttons/JelloButton'
 import UploadInput from '../../components/common/form/UploadInput'
 import MetadataEditor from './components/MetadataEditor'
 
+const initialAudio = {
+    name: '',
+    file: null,
+    meta: null,
+    cover: null,
+}
+
+const initialUpload = {
+    status: 'idle', // idle | uploading | success | error | processing
+    progress: 0,
+    cancelToken: null,
+}
+
 const AudioEditor = () => {
-    const [audio, setAudio] = useState({
-        file: null,
-        meta: null,
-        cover: null,
-    })
+    const [audio, setAudio] = useState(initialAudio)
+    const [upload, setUpload] = useState(initialUpload)
+    const [error, setError] = useState(null)
 
-    const [upload, setUpload] = useState({
-        status: 'idle', // idle | uploading | success | error
-        progress: 0,
-        error: null, // Upload error, if any
-    })
+    const { name, file, meta, cover } = audio
+    const { status, progress, cancelToken } = upload
 
-    const [name, setName] = useState('')
-
-    const { file, meta, cover } = audio
-    const { status, progress, error } = upload
-
-    const handleFileUpload = async (e) => {
+    const handleFileUploadAndExtractMetadata = async (e) => {
         e.preventDefault()
+        setError(null)
 
         if (!file) {
-            window.addToast('Please select a file first!', 'warning')
+            setError('Please select a file first!')
             return
         }
 
         const formData = new FormData()
         formData.append('audio', file)
 
-        setUpload({ status: 'uploading', progress: 0, error: null })
+        const source = axios.CancelToken.source()
+        setUpload({ ...initialUpload, status: 'uploading', cancelToken: source })
 
-        await axios
-            .post('/api/audio/upload', formData, {
+        try {
+            const response = await axios.post('/api/audio/upload', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
+                cancelToken: source.token,
                 onUploadProgress: (event) => {
                     setUpload((prev) => ({ ...prev, progress: event.loaded }))
+                    if (event.loaded === event.total) {
+                        setUpload((prev) => ({ ...prev, status: 'processing' }))
+                    }
                 },
             })
-            .then((response) => {
-                if (!response.data.metadata) {
-                    setUpload({ status: 'idle', progress: 100, error: 'No metadata found' })
-                    window.addToast('No metadata found', 'error')
-                    return
-                }
 
-                console.log('Upload Response:', response.data)
-                setName(response.data.fileName)
+            if (!response.data.metadata) {
+                setUpload(initialUpload)
+                setError('No metadata found')
+                window.addToast('No metadata found', 'error')
+                return
+            }
 
-                setAudio({
-                    file,
-                    meta: response.data?.metadata?.format?.tags || null,
-                    cover: response.data?.coverImage || null,
-                })
-
-                setUpload({ status: 'success', progress: 100, error: null })
-                window.addToast('File uploaded successfully!', 'success')
+            console.log('Upload Response:', response.data)
+            setAudio({
+                name: response.data.fileName,
+                file,
+                meta: response.data?.metadata?.format?.tags || null,
+                cover: response.data?.coverImage || null,
             })
-            .catch((error) => {
-                setUpload({ status: 'idle', progress: 0, error: error.response?.data?.message || 'Upload failed.' })
-                console.log(error)
 
+            setUpload({ status: 'success', progress: 100 })
+            window.addToast('File uploaded successfully!', 'success')
+        } catch (error) {
+            if (axios.isCancel(error)) {
+                setUpload(initialUpload)
+                setAudio(initialAudio)
+                console.error('Upload canceled:', error)
+                window.addToast('File upload canceled.', 'error')
+            } else {
+                console.error('Upload failed:', error)
+                setUpload(initialUpload)
+                setError(error.response?.data?.message || 'Upload failed.')
                 window.addToast(error.response?.data?.message || 'File upload failed.', 'error')
-            })
+            }
+        }
     }
 
-    const handleCancelUpload = () => {
-        setUpload({ status: 'idle', progress: 0, error: null })
-        setAudio({ file: null, meta: null, cover: null })
-    }
+    // Cancel the upload if it's in progress
+    const handleCancelUpload = () => cancelToken?.cancel('Upload canceled by the user.')
 
     return (
         <div className="flex-center min-h-calc-full-height flex-col gap-6 px-2 py-8">
@@ -83,20 +96,21 @@ const AudioEditor = () => {
             {status === 'idle' && (
                 <form
                     id="upload-audio"
-                    onSubmit={handleFileUpload}
+                    onSubmit={handleFileUploadAndExtractMetadata}
                     className="flex-center w-full max-w-2xl flex-col rounded-3xl border border-light-secondary p-6 shadow-neumorphic-lg dark:border-dark-secondary">
                     <h2 className="text-primary mb-2 font-aladin text-2xl tracking-wider">Upload Audio</h2>
                     <p className="text-primary mb-6 text-center">Upload an audio file to edit metadata, cover image and more!</p>
 
                     <UploadInput
                         acceptType="audio/*"
-                        className="shadow-neumorphic-xs"
+                        className="mb-6 shadow-neumorphic-xs"
                         id="upload_audio"
                         file={file}
                         setFile={(newFile) => setAudio((prev) => ({ ...prev, file: newFile }))}
                     />
 
                     <JelloButton type="submit">Upload Audio</JelloButton>
+                    {error && <p className="error mt-4">{error}</p>}
                 </form>
             )}
 
@@ -106,10 +120,17 @@ const AudioEditor = () => {
                     bytesUploaded={progress || 0}
                     totalBytes={file ? file.size : 0}
                     fileName={file?.name || 'Unknown File'}
-                    onRetry={handleFileUpload}
+                    onRetry={handleFileUploadAndExtractMetadata}
                     onCancel={handleCancelUpload}
                     hasError={status === 'error'}
                 />
+            )}
+
+            {status === 'processing' && (
+                <div>
+                    <p className="text-primary">Processing...</p>
+                    <JelloButton onClick={handleCancelUpload}> Cancel</JelloButton>
+                </div>
             )}
 
             {/* Edit Metadata Form */}
