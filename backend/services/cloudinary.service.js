@@ -58,6 +58,28 @@ export const uploadFileToCloudinary = async (localFilePath, options) => {
     }
 };
 
+export const downloadAudioFromCloudinary = async (cloudinaryPublicId, abortSignal) => {
+    try {
+        const downloadResponse = await cloudinary.api.resource(cloudinaryPublicId, {
+            resource_type: 'video',
+            format: 'm4a',
+            signal: abortSignal,
+        });
+
+        return {
+            success: true,
+            url: downloadResponse.secure_url,
+            format: downloadResponse.format,
+        };
+    } catch (error) {
+        return {
+            success: false,
+            message: 'Error downloading audio from Cloudinary',
+            error,
+        };
+    }
+};
+
 /**
  * Uploads an image to Cloudinary.
  * @param {string} imageFilePath - The local path of the image file to upload.

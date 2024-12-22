@@ -17,15 +17,15 @@ const tagOrder = {
     lyrics: { className: 'order-8 col-span-1 sm:col-span-2 lg:col-span-3', placeholder: 'i.e. Lyrics' },
 }
 
-const MetadataEditor = ({ fileName, coverImage, metadata, onCancel }) => {
+const MetadataEditor = ({ fileId, fileUrl, coverImage, metadata, onCancel }) => {
     const handleEditMetadata = async (values, { setSubmitting }) => {
-        if (!fileName || !values) return
+        if (!fileId || !values) return
 
         setSubmitting(true)
         try {
             console.log('Editing metadata:', values)
 
-            const response = await axios.post('/api/audio/edit-metadata', { name: fileName, metadata: values }, { responseType: 'blob' })
+            const response = await axios.post('/api/audio/edit-metadata', { fileId, metadata: values }, { responseType: 'blob' })
 
             const originalFilename = response.headers['content-disposition']?.split('filename=')[1]?.replace(/"/g, '') || 'edited_audio.mp3'
 

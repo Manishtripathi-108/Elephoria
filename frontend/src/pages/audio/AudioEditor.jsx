@@ -2,14 +2,15 @@ import React, { useRef, useState } from 'react'
 
 import axios from 'axios'
 
+import LoadingState from '../../components/Loading'
 import UploadProgressBar from '../../components/common/UploadProgressBar'
 import JelloButton from '../../components/common/buttons/JelloButton'
 import UploadInput from '../../components/common/form/UploadInput'
 import MetadataEditor from './components/MetadataEditor'
 
-const initialAudioState = { id: null, file: null, metadata: null, coverImage: null }
+const initialAudioState = { fileId: 'uploads/audio/wr1nwraarbyyshkhab8i', fileUrl: null, file: null, metadata: null, coverImage: null }
 const initialUploadState = {
-    status: 'idle', // idle | uploading | uploaded | processing | extracted | error
+    status: 'uploaded', // idle | uploading | uploaded | processing | extracted | error
     progress: 0,
     error: null,
 }
@@ -19,7 +20,7 @@ const AudioEditor = () => {
     const [upload, setUpload] = useState(initialUploadState)
     const abortControllerRef = useRef(null)
 
-    const { id, file, metadata, coverImage } = audio
+    const { fileId, fileUrl, file, metadata, coverImage } = audio
     const { status, progress, error } = upload
 
     // Handles audio file upload
@@ -50,7 +51,7 @@ const AudioEditor = () => {
             })
 
             console.log('Upload Response:', response.data)
-            setAudio((prev) => ({ ...prev, id: response.data.publicId }))
+            setAudio((prev) => ({ ...prev, fileId: response.data.publicId, fileUrl: response.data.url }))
             setUpload({ ...initialUploadState, status: 'uploaded' })
             window.addToast('Audio file uploaded successfully!', 'success')
         } catch (err) {
@@ -67,7 +68,7 @@ const AudioEditor = () => {
 
     // Handles metadata extraction
     const handleExtractMetadata = async () => {
-        if (!id) {
+        if (!(fileId || fileUrl)) {
             setUpload({ ...initialUploadState, error: 'No audio file uploaded to extract metadata from.' })
             return
         }
@@ -79,7 +80,7 @@ const AudioEditor = () => {
         setUpload({ ...initialUploadState, status: 'processing' })
 
         try {
-            const response = await axios.post('/api/audio/process-metadata', { id, abortSignal: signal })
+            const response = await axios.post('/api/audio/extract-metadata', { fileId }, { signal })
 
             console.log('Metadata Extraction Response:', response.data)
             setAudio((prev) => ({
@@ -106,7 +107,7 @@ const AudioEditor = () => {
         if (abortControllerRef.current) {
             abortControllerRef.current.abort()
             abortControllerRef.current = null
-            setUpload({ ...initialUploadState, status: 'idle' })
+            setUpload({ ...initialUploadState, status: 'uploaded' })
         }
     }
 
@@ -163,9 +164,18 @@ const AudioEditor = () => {
                 </div>
             )}
 
+            {/* Metadata Extraction */}
+            {status === 'processing' && (
+                <>
+                    <LoadingState width="w-60 sm:w-96" height="h-60 sm:h-96" />
+                    {/* //cancel button */}
+                    <JelloButton onClick={handleCancel}>Cancel</JelloButton>
+                </>
+            )}
+
             {/* Metadata Editing */}
             {status === 'extracted' && (
-                <MetadataEditor fileName={file.name} coverImage={coverImage} metadata={metadata} onCancel={resetAudioEditor} />
+                <MetadataEditor fileUrl={fileUrl} fileId={fileId} coverImage={coverImage} metadata={metadata} onCancel={resetAudioEditor} />
             )}
         </div>
     )

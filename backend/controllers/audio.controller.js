@@ -3,7 +3,7 @@ import { join, resolve } from 'path';
 import { processAudioMetadata, editMetadata } from '../services/audio.service.js';
 import { backendLogger } from '../utils/logger.utils.js';
 import { cleanupFile } from '../utils/pathAndFile.utils.js';
-import { uploadAudioToCloudinary } from '../services/cloudinary.service.js';
+import { downloadAudioFromCloudinary, uploadAudioToCloudinary } from '../services/cloudinary.service.js';
 import { successResponse, errorResponse } from '../utils/response.utils.js';
 
 export const handleAudioUpload = async (req, res) => {
@@ -18,7 +18,7 @@ export const handleAudioUpload = async (req, res) => {
         if (!uploadResult.success) {
             return errorResponse(res, 'Error uploading audio file. Please try again later.', uploadResult.error);
         }
-        return successResponse(res, { publicId: uploadResult.publicId });
+        return successResponse(res, { publicId: uploadResult.publicId, url: uploadResult.url });
     } catch (error) {
         cleanupFile(req.file?.path);
         return errorResponse(res, 'Internal server error. Please try again later.', error);
@@ -27,31 +27,51 @@ export const handleAudioUpload = async (req, res) => {
 
 export const handleExtractMetadata = async (req, res) => {
     try {
-        const { id } = req.body;
-        const { abortSignal } = req.body;
+        const { fileId } = req.body;
+        let fileUrl = req.body.fileUrl;
 
-        const metadataResult = await processAudioMetadata(id, abortSignal);
-
-        if (!metadataResult.success) {
-            return errorResponse(res, 'Error processing audio metadata. Please try again later.', metadataResult);
+        if (!(fileId || fileUrl)) {
+            return errorResponse(res, 'Missing file in request.', null, 400);
         }
 
-        return successResponse(res, { metadata: metadataResult.metadata });
+        const controller = new AbortController();
+        // ToDO: Implement cancellation logic
+
+        // req.on('close', () => {
+        //     console.log('close');
+        // });
+
+        // req.on('aborted', () => {
+        //     console.log('aborted');
+        // });
+
+        if (!fileUrl) {
+            const fileResult = await downloadAudioFromCloudinary(fileId, controller.signal);
+            if (!fileResult.success) {
+                return errorResponse(res, 'Something went wrong.', fileResult);
+            }
+            fileUrl = fileResult.url;
+        }
+
+        const metadataResult = await processAudioMetadata(fileUrl, controller.signal);
+
+        if (!metadataResult.success) {
+            return errorResponse(res, 'Error Extracting metadata.', metadataResult);
+        }
+
+        return successResponse(res, { ...metadataResult });
     } catch (error) {
-        return errorResponse(res, 'Internal server error. Please try again later.', error);
+        return errorResponse(res, 'Internal server error.', error);
     }
 };
 
 export const handleEditMetadata = async (req, res) => {
     try {
-        const { name: fileName, metadata } = req.body;
+        const { fileId, metadata } = req.body;
 
-        if (!fileName) {
+        if (!fileId) {
             return errorResponse(res, 'File name is required for metadata editing.', null, 400);
         }
-
-        const originalFilePath = join(resolve('./uploads/audio'), fileName);
-        const editedFilePath = join(resolve('./uploads/audio'), `edited_${Date.now()}_${fileName}`);
 
         if (!existsSync(originalFilePath)) {
             return errorResponse(res, 'Audio file not found. Please re-upload the file.', null, 404);
