@@ -1,65 +1,80 @@
 import { existsSync, unlinkSync } from 'fs';
 import { join, resolve } from 'path';
-import { processAudioUpload, editMetadata } from '../services/audio.service.js';
+import { processAudioMetadata, editMetadata } from '../services/audio.service.js';
 import { backendLogger } from '../utils/logger.utils.js';
+import { cleanupFile } from '../utils/pathAndFile.utils.js';
+import { uploadAudioToCloudinary } from '../services/cloudinary.service.js';
+import { successResponse, errorResponse } from '../utils/response.utils.js';
 
-export const uploadAudioHandler = async (req, res) => {
+export const handleAudioUpload = async (req, res) => {
     try {
         if (!req.file) {
-            return res.status(400).json({ message: 'No file uploaded!' });
+            return errorResponse(res, 'No file uploaded. Please upload an audio file.', null, 400);
         }
 
-        if (!req.file.mimetype.startsWith('audio/')) {
-            return res.status(400).json({ message: 'Invalid audio file!' });
-        }
+        const uploadResult = await uploadAudioToCloudinary(req.file.path);
+        cleanupFile(req.file.path);
 
-        const result = await processAudioUpload(req.file);
-        if (!result.success) {
-            backendLogger.error(result);
-            return res.status(500).json(result);
+        if (!uploadResult.success) {
+            return errorResponse(res, 'Error uploading audio file. Please try again later.', uploadResult.error);
         }
-        return res.status(200).json(result);
+        return successResponse(res, { publicId: uploadResult.publicId });
     } catch (error) {
-        backendLogger.error('Error uploading audio file:', error);
-        return res.status(500).json({ message: 'Internal server error!' });
+        cleanupFile(req.file?.path);
+        return errorResponse(res, 'Internal server error. Please try again later.', error);
     }
 };
 
-export const editMetadataHandler = async (req, res) => {
+export const handleExtractMetadata = async (req, res) => {
     try {
-        const file = join(resolve('./uploads/audio'), req.body.name);
-        const outputFile = join(resolve('./uploads/audio'), `edited_${Date.now()}_${req.body.name}`);
+        const { id } = req.body;
+        const { abortSignal } = req.body;
 
-        // Check if the original file exists
-        if (!existsSync(file)) {
-            backendLogger.error('Audio file not found!');
-            return res.status(404).json({ message: 'Audio file not found! Please reupload.' });
+        const metadataResult = await processAudioMetadata(id, abortSignal);
+
+        if (!metadataResult.success) {
+            return errorResponse(res, 'Error processing audio metadata. Please try again later.', metadataResult);
         }
 
-        // Edit metadata
-        const result = await editMetadata(req.body.metadata, file, outputFile);
-        if (!result.success) {
-            backendLogger.error(result.message);
-            return res.status(500).json({ message: result.message });
+        return successResponse(res, { metadata: metadataResult.metadata });
+    } catch (error) {
+        return errorResponse(res, 'Internal server error. Please try again later.', error);
+    }
+};
+
+export const handleEditMetadata = async (req, res) => {
+    try {
+        const { name: fileName, metadata } = req.body;
+
+        if (!fileName) {
+            return errorResponse(res, 'File name is required for metadata editing.', null, 400);
         }
 
-        // Send the edited file for download
-        res.download(outputFile, (err) => {
+        const originalFilePath = join(resolve('./uploads/audio'), fileName);
+        const editedFilePath = join(resolve('./uploads/audio'), `edited_${Date.now()}_${fileName}`);
+
+        if (!existsSync(originalFilePath)) {
+            return errorResponse(res, 'Audio file not found. Please re-upload the file.', null, 404);
+        }
+
+        const editResult = await editMetadata(metadata, originalFilePath, editedFilePath);
+
+        if (!editResult.success) {
+            return errorResponse(res, editResult.message);
+        }
+
+        res.download(editedFilePath, (err) => {
             if (err) {
-                backendLogger.error('File download failed:', err);
-                return res.status(500).json({ message: 'File download failed!' });
+                return errorResponse(res, 'File download failed. Please try again later.', err);
             }
 
-            // Cleanup files
+            // Cleanup original and edited files after download
             try {
-                if (existsSync(file)) unlinkSync(file);
-                if (existsSync(outputFile)) unlinkSync(outputFile);
-            } catch (cleanupError) {
-                backendLogger.error('Error during file cleanup:', cleanupError);
-            }
+                if (existsSync(originalFilePath)) unlinkSync(originalFilePath);
+                if (existsSync(editedFilePath)) unlinkSync(editedFilePath);
+            } catch (cleanupError) {}
         });
     } catch (error) {
-        backendLogger.error('Error editing metadata:', error);
-        return res.status(500).json({ message: 'Internal server error!' });
+        return errorResponse(res, 'Internal server error. Please try again later.', error);
     }
 };

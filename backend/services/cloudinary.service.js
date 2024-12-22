@@ -1,16 +1,14 @@
-import { unlinkSync } from 'fs';
 import cloudinary from '../config/cloudinary.config.js';
+import { cleanupFile } from '../utils/pathAndFile.utils.js';
 
 /**
  * Deletes a file from Cloudinary.
- * @param {string} publicId - The public id of the image to delete.
- * @returns {Promise<{success: boolean, message: string, error?: Error}>} - A promise that resolves to an object with a "success" property.
- * If the request succeeds, the "success" property is true.
- * If the request fails, the "success" property is false and an error message is provided.
+ * @param {string} cloudinaryPublicId - The Cloudinary public ID of the file to delete.
+ * @returns {Promise<{success: boolean, message: string, error?: Error}>}
  */
-export const deleteFileFromCloudinary = async (publicId) => {
+export const deleteCloudinaryFile = async (cloudinaryPublicId) => {
     try {
-        await cloudinary.uploader.destroy(publicId);
+        await cloudinary.uploader.destroy(cloudinaryPublicId);
         return { success: true, message: 'File deleted successfully' };
     } catch (error) {
         return {
@@ -21,19 +19,35 @@ export const deleteFileFromCloudinary = async (publicId) => {
     }
 };
 
-const uploadToCloudinary = async (fileLocation, targetFolder, resourceType = 'image', abortToken) => {
+/**
+ * Uploads a file to Cloudinary.
+ * @param {string} localFilePath - The local path of the file to upload.
+ * @param {object} options - Configuration options for the upload.
+ * @param {string} options.targetFolder - The Cloudinary folder for the upload.
+ * @param {string} [options.resourceType='image'] - The type of the resource (e.g., 'image', 'video').
+ * @param {AbortSignal} [options.abortSignal=null] - Optional abort signal to cancel the upload request.
+ * @param {boolean} [options.shouldDeleteLocalFile=true] - Whether to delete the local file after upload.
+ * @returns {Promise<{success: boolean, message: string, error?: Error, url?: string, publicId?: string}>}
+ */
+export const uploadFileToCloudinary = async (localFilePath, options) => {
+    const { targetFolder, resourceType = 'image', abortSignal = null, shouldDeleteLocalFile = true } = options;
+
     try {
-        const result = await cloudinary.uploader.upload(fileLocation, {
+        const uploadResponse = await cloudinary.uploader.upload(localFilePath, {
             resource_type: resourceType,
             folder: targetFolder,
-            cancelToken: abortToken,
+            signal: abortSignal,
         });
-        unlinkSync(fileLocation);
+
+        if (shouldDeleteLocalFile) {
+            cleanupFile(localFilePath);
+        }
+
         return {
             success: true,
+            url: uploadResponse.secure_url,
+            publicId: uploadResponse.public_id,
             message: 'File uploaded successfully',
-            url: result.secure_url,
-            public_id: result.public_id,
         };
     } catch (error) {
         return {
@@ -46,24 +60,32 @@ const uploadToCloudinary = async (fileLocation, targetFolder, resourceType = 'im
 
 /**
  * Uploads an image to Cloudinary.
- * @param {string} filePath - The path of the local image file to upload.
- * @param {object} abortToken - The token to cancel the upload request.
- * @returns {Promise<{success: boolean, message: string, error?: Error, url?: string, public_id?: string}>} - A promise that resolves to an object with a "success" property.
- * If the request succeeds, the "success" property is true and a "url" and "public_id" property are provided.
- * If the request fails, the "success" property is false and an error message is provided.
+ * @param {string} imageFilePath - The local path of the image file to upload.
+ * @param {AbortSignal} [abortSignal=null] - Optional abort signal to cancel the upload request.
+ * @param {boolean} [shouldDeleteLocalFile=true] - Whether to delete the local file after upload.
+ * @returns {Promise<{success: boolean, message: string, error?: Error, url?: string, publicId?: string}>}
  */
-export const uploadImageToCloudinary = async (filePath, abortToken) => {
-    return await uploadToCloudinary(filePath, 'uploads/images', 'image', abortToken);
+export const uploadImageToCloudinary = async (imageFilePath, abortSignal = null, shouldDeleteLocalFile = true) => {
+    return await uploadFileToCloudinary(imageFilePath, {
+        targetFolder: 'uploads/images',
+        resourceType: 'image',
+        abortSignal,
+        shouldDeleteLocalFile,
+    });
 };
 
 /**
  * Uploads an audio file to Cloudinary.
- * @param {string} filePath - The path of the local audio file to upload.
- * @param {object} abortToken - The token to cancel the upload request.
- * @returns {Promise<{success: boolean, message: string, error?: Error, url?: string, public_id?: string}>} - A promise that resolves to an object with a "success" property.
- * If the request succeeds, the "success" property is true and a "url" and "public_id" property are provided.
- * If the request fails, the "success" property is false and an error message is provided.
+ * @param {string} audioFilePath - The local path of the audio file to upload.
+ * @param {AbortSignal} [abortSignal=null] - Optional abort signal to cancel the upload request.
+ * @param {boolean} [shouldDeleteLocalFile=true] - Whether to delete the local file after upload.
+ * @returns {Promise<{success: boolean, message: string, error?: Error, url?: string, publicId?: string}>}
  */
-export const uploadAudioToCloudinary = async (filePath, abortToken) => {
-    return await uploadToCloudinary(filePath, 'uploads/audio', 'audio', abortToken);
+export const uploadAudioToCloudinary = async (audioFilePath, abortSignal = null, shouldDeleteLocalFile = true) => {
+    return await uploadFileToCloudinary(audioFilePath, {
+        targetFolder: 'uploads/audio',
+        resourceType: 'video', // Cloudinary uses 'video' for audio files
+        abortSignal,
+        shouldDeleteLocalFile,
+    });
 };

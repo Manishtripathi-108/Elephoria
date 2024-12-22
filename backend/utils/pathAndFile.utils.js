@@ -133,6 +133,8 @@ export const createDirectoryIfNotExists = async (dirPath) => {
 /**
  * Utility to clean up a file.
  * @param {string} filePath - Path to the file to delete.
+ * @example
+ * cleanupFile('/path/to/file.txt');
  */
 export const cleanupFile = (filePath) => {
     try {

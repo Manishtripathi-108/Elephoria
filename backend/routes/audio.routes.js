@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import multer, { diskStorage } from 'multer';
-import { uploadAudioHandler, editMetadataHandler } from '../controllers/audio.controller.js';
+import { handleAudioUpload, handleExtractMetadata, handleEditMetadata } from '../controllers/audio.controller.js';
 import { extname } from 'path';
-import { createDirectoryIfNotExists, getTempPath } from '../utils/path.utils.js';
+import { createDirectoryIfNotExists, getTempPath } from '../utils/pathAndFile.utils.js';
 
 const router = Router();
 
@@ -23,9 +23,33 @@ const storage = diskStorage({
     },
 });
 
-const upload = multer({ storage: storage });
+const audioFileFilter = (req, file, cb) => {
+    if (file.mimetype.startsWith('audio/')) {
+        return cb(null, true);
+    } else {
+        return cb(new Error('Invalid file type. Please upload an audio file.'));
+    }
+};
 
-router.post('/upload', upload.single('audio'), uploadAudioHandler);
-router.post('/edit-metadata', editMetadataHandler);
+const upload = multer({ storage: storage, fileFilter: audioFileFilter });
+
+/* ------------------------ Error Handling Middleware ----------------------- */
+const uploadMiddleware = (req, res, next) => {
+    upload.single('audio')(req, res, (err) => {
+        if (err instanceof multer.MulterError || err instanceof Error) {
+            return res.status(400).json({
+                success: false,
+                message: err.message || 'File upload error.',
+            });
+        }
+        next();
+    });
+};
+
+/* ------------------------------ Routes Setup ------------------------------ */
+router.post('/upload', uploadMiddleware, handleAudioUpload);
+
+router.post('/extract-metadata', handleExtractMetadata);
+router.post('/edit-metadata', handleEditMetadata);
 
 export default router;
