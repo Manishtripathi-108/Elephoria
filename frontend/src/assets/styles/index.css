@@ -53,7 +53,7 @@ body {
 
     .form-label,
     .form-helper-text {
-        @apply text-secondary text-sm capitalize leading-3;
+        @apply text-secondary text-xs capitalize leading-3;
     }
 
     .form-label {

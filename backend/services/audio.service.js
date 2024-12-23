@@ -1,46 +1,34 @@
 import ffmpeg from 'fluent-ffmpeg';
 import { exec } from 'child_process';
 import { backendLogger } from '../utils/logger.utils.js';
-import { uploadImageToCloudinary } from './cloudinary.service.js';
+import { uploadAudioToCloudinary, uploadImageToCloudinary } from './cloudinary.service.js';
 import { createDirectoryIfNotExists, getTempPath } from '../utils/pathAndFile.utils.js';
 
 /**
- * Processes an audio file to extract metadata, lyrics, and cover image.
+ * Extracts metadata, lyrics, and cover image from an audio file.
  *
- * @param {Object} file - An Express.js file object containing the audio file to process.
- * @param {Object} abortSignal - An AbortController token to cancel the process if needed.
- * @returns {Promise<{success: boolean, fileName?: string, metadata?: object, coverImage?: string, error?: Error}>} - A promise resolving to an object indicating success, extracted metadata, lyrics, and cover image URL.
- * If successful, includes the original file name, metadata, and cover image URL. If failed, includes error information.
- *
- * @example
- * const result = await processAudioMetadata(req.file, abortControllerRef.current.signal);
- * if (result.success) {
- *   console.log('Metadata:', result.metadata);
- *   console.log('Cover Image:', result.coverImage);
- * } else {
- *   console.error('Error processing metadata:', result.error);
- * }
+ * @param {string} fileUrl - URL of the audio file to process.
+ * @param {AbortSignal} abortSignal - Optional signal to cancel processing.
+ * @returns {Promise<{success: boolean, metadata?: object, coverImage?: string, message?: string, error?: object}>}
  */
-export const processAudioMetadata = async (fileUrl, abortSignal) => {
-    const noImage = 'https://res.cloudinary.com/dra73suxl/image/upload/v1734726129/uploads/rnarvvwmsgqt5rs8okds.png';
+export const extractMetadata = async (fileUrl, abortSignal) => {
+    const fallbackImageUrl =
+        'https://res.cloudinary.com/dra73suxl/image/upload/v1734726129/uploads/rnarvvwmsgqt5rs8okds.png';
     let metadata,
-        coverImage = noImage;
+        coverImage = fallbackImageUrl;
 
     const tempDir = getTempPath('images');
-    const coverImagePath = `${tempDir}/cover_${Date.now()}.jpg`;
+    const coverImagePath = getTempPath('images', `cover_${Date.now()}.jpg`);
 
     try {
+        // Ensure temporary directory exists
         await createDirectoryIfNotExists(tempDir);
 
-        // Extract metadata from the audio file URL
+        // Extract metadata
         metadata = await new Promise((resolve, reject) => {
             ffmpeg.ffprobe(fileUrl, (error, extractedMetadata) => {
                 if (error) {
-                    return reject({
-                        success: false,
-                        message: 'Error extracting metadata',
-                        error: error?.toString(),
-                    });
+                    return reject({ success: false, message: 'Error extracting metadata', error });
                 }
                 resolve(extractedMetadata);
             });
@@ -48,94 +36,85 @@ export const processAudioMetadata = async (fileUrl, abortSignal) => {
 
         // Extract lyrics
         const lyrics = await new Promise((resolve) => {
-            const ffprobeCmd = `ffprobe -i "${fileUrl}" -show_entries format_tags=lyrics -of json`;
-            exec(ffprobeCmd, (error, stdout) => {
+            const ffprobeCommand = `ffprobe -i "${fileUrl}" -show_entries format_tags=lyrics -of json`;
+            exec(ffprobeCommand, (error, stdout) => {
                 if (error) {
-                    backendLogger.warn('Error extracting lyrics:', error);
-                    resolve('No lyrics found');
+                    backendLogger.warn('Error extracting lyrics', { error });
+                    return resolve('No lyrics found');
                 }
                 try {
-                    const lyrics = JSON.parse(stdout).format?.tags?.lyrics || 'No lyrics found';
-                    resolve(lyrics);
+                    const extractedLyrics = JSON.parse(stdout)?.format?.tags?.lyrics || 'No lyrics found';
+                    resolve(extractedLyrics);
                 } catch (parseError) {
+                    backendLogger.warn('Error parsing lyrics data', { parseError });
                     resolve('No lyrics found');
                 }
             });
         });
 
-        // Append lyrics to the metadata object
         metadata.format = { ...(metadata.format || {}), tags: { ...metadata.format?.tags, lyrics } };
 
+        // Extract cover image
         const coverStream = metadata.streams?.find(
             (stream) => stream.codec_name === 'mjpeg' || stream.codec_type === 'video'
         );
-
         if (coverStream) {
             coverImage = await new Promise((resolve) => {
                 ffmpeg(fileUrl)
                     .outputOptions('-map', `0:${coverStream.index}`)
                     .save(coverImagePath)
                     .on('end', async () => {
-                        const result = await uploadImageToCloudinary(coverImagePath, abortSignal);
-                        resolve(result.success ? result.url : noImage);
+                        const uploadResult = await uploadImageToCloudinary(coverImagePath, abortSignal);
+                        resolve(uploadResult.success ? uploadResult.url : fallbackImageUrl);
                     })
                     .on('error', (error) => {
-                        backendLogger.warn('Error extracting cover image:', error);
-                        resolve(noImage);
+                        backendLogger.warn('Error extracting cover image', { error });
+                        resolve(fallbackImageUrl);
                     });
             });
         }
 
-        return {
-            success: true,
-            metadata,
-            coverImage,
-        };
+        return { success: true, metadata, coverImage };
     } catch (error) {
-        return {
-            success: false,
-            message: error.message || 'Error processing the file',
-            error: error.error || error,
-        };
+        return { success: false, message: 'Failed to process the file. Please try again.', error };
     }
 };
 
 /**
- * Edits the metadata of an audio file using FFmpeg.
+ * Edits metadata of an audio file.
  *
- * @param {Object} metadata Object containing the metadata key-value pairs.
- * @param {string} inputFilePath Path to the input audio file.
- * @param {string} outputFilePath Path to the output audio file with the edited metadata.
- *
- * @returns {Promise} A promise that resolves with { success: true } if successful, or rejects with { success: false, message, error } if an error occurs.
- * @example
- * const result = await editMetadata(metadata, inputFilePath, outputFilePath);
- * if (result.success) {
- *  console.log('Metadata edited successfully!');
- * }
- * else {
- * console.error('Error editing metadata:', result.error);
- * }
+ * @param {string} fileUrl - URL of the audio file to edit.
+ * @param {object} metadata - Metadata key-value pairs to be updated.
+ * @param {string} fileExtension - File extension for the edited file.
+ * @returns {Promise<{success: boolean, url?: string, message?: string, error?: object}>}
  */
-export const editMetadata = (metadata, inputFilePath, outputFilePath) => {
-    return new Promise((resolve, reject) => {
-        const command = ffmpeg(inputFilePath);
-        backendLogger.info('Metadata: ', metadata);
+export const editMetadata = async (fileUrl, metadata, fileExtension) => {
+    const outputFilePath = getTempPath('audio', `edited_${Date.now()}${fileExtension}`);
 
-        Object.entries(metadata).forEach(([key, value]) => {
-            command.outputOptions('-metadata', `${key}=${value || ''}`);
-        });
+    try {
+        return await new Promise((resolve, reject) => {
+            const command = ffmpeg(fileUrl);
 
-        command
-            .outputOptions('-c copy') // Copy the stream without re-encoding
-            .save(outputFilePath)
-            .on('end', () => resolve({ success: true }))
-            .on('error', (err) =>
-                reject({
-                    success: false,
-                    message: 'Error processing the file',
-                    error: err,
+            // Add metadata fields to the ffmpeg command
+            Object.entries(metadata).forEach(([key, value]) => {
+                command.outputOptions('-metadata', `${key}=${value || ''}`);
+            });
+
+            command
+                .outputOptions('-c copy') // Copy stream without re-encoding
+                .save(outputFilePath)
+                .on('end', async () => {
+                    const uploadResult = await uploadAudioToCloudinary(outputFilePath);
+                    if (!uploadResult.success) {
+                        return reject(uploadResult);
+                    }
+                    resolve({ success: true, url: uploadResult.url });
                 })
-            );
-    });
+                .on('error', (error) => {
+                    reject({ success: false, message: 'Failed to edit the file metadata.', error });
+                });
+        });
+    } catch (error) {
+        return { success: false, message: 'An error occurred while editing metadata. Please try again.', error };
+    }
 };

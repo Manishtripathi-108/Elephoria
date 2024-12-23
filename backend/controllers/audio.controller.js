@@ -1,6 +1,6 @@
 import { existsSync, unlinkSync } from 'fs';
-import { join, resolve } from 'path';
-import { processAudioMetadata, editMetadata } from '../services/audio.service.js';
+import { extname, join, resolve } from 'path';
+import { extractMetadata, editMetadata } from '../services/audio.service.js';
 import { backendLogger } from '../utils/logger.utils.js';
 import { cleanupFile } from '../utils/pathAndFile.utils.js';
 import { downloadAudioFromCloudinary, uploadAudioToCloudinary } from '../services/cloudinary.service.js';
@@ -9,29 +9,29 @@ import { successResponse, errorResponse } from '../utils/response.utils.js';
 export const handleAudioUpload = async (req, res) => {
     try {
         if (!req.file) {
-            return errorResponse(res, 'No file uploaded. Please upload an audio file.', null, 400);
+            return errorResponse(res, 'No file uploaded. Please upload a valid audio file.', null, 400);
         }
 
         const uploadResult = await uploadAudioToCloudinary(req.file.path);
         cleanupFile(req.file.path);
 
         if (!uploadResult.success) {
-            return errorResponse(res, 'Error uploading audio file. Please try again later.', uploadResult.error);
+            return errorResponse(res, 'Failed to upload the audio file. Please try again.', uploadResult.error);
         }
+
         return successResponse(res, { publicId: uploadResult.publicId, url: uploadResult.url });
     } catch (error) {
         cleanupFile(req.file?.path);
-        return errorResponse(res, 'Internal server error. Please try again later.', error);
+        return errorResponse(res, 'Unexpected error occurred while uploading. Please try again.', error);
     }
 };
 
 export const handleExtractMetadata = async (req, res) => {
     try {
-        const { fileId } = req.body;
-        let fileUrl = req.body.fileUrl;
+        const { fileId, fileUrl } = req.body;
 
-        if (!(fileId || fileUrl)) {
-            return errorResponse(res, 'Missing file in request.', null, 400);
+        if (!fileId && !fileUrl) {
+            return errorResponse(res, 'File details are missing. Please provide a valid file to process.', null, 400);
         }
 
         const controller = new AbortController();
@@ -45,56 +45,57 @@ export const handleExtractMetadata = async (req, res) => {
         //     console.log('aborted');
         // });
 
+        let fileDownloadUrl = fileUrl;
         if (!fileUrl) {
-            const fileResult = await downloadAudioFromCloudinary(fileId, controller.signal);
-            if (!fileResult.success) {
-                return errorResponse(res, 'Something went wrong.', fileResult);
+            const downloadResult = await downloadAudioFromCloudinary(fileId, controller.signal);
+            if (!downloadResult.success) {
+                return errorResponse(res, 'Failed to retrieve the file. Please try again.', downloadResult.error);
             }
-            fileUrl = fileResult.url;
+            fileDownloadUrl = downloadResult.url;
         }
 
-        const metadataResult = await processAudioMetadata(fileUrl, controller.signal);
-
+        const metadataResult = await extractMetadata(fileDownloadUrl, controller.signal);
         if (!metadataResult.success) {
-            return errorResponse(res, 'Error Extracting metadata.', metadataResult);
+            return errorResponse(res, 'Failed to extract metadata. Please try again.', metadataResult.error);
         }
 
-        return successResponse(res, { ...metadataResult });
+        return successResponse(res, { metadata: metadataResult.metadata, coverImage: metadataResult.coverImage });
     } catch (error) {
-        return errorResponse(res, 'Internal server error.', error);
+        return errorResponse(res, 'Unexpected error occurred while extracting metadata. Please try again.', error);
     }
 };
 
 export const handleEditMetadata = async (req, res) => {
     try {
-        const { fileId, metadata } = req.body;
+        const { fileId, fileUrl, metadata } = req.body;
 
-        if (!fileId) {
-            return errorResponse(res, 'File name is required for metadata editing.', null, 400);
+        if (!fileId && !fileUrl) {
+            return errorResponse(
+                res,
+                'File details are missing. Please provide a valid file to edit metadata.',
+                null,
+                400
+            );
         }
 
-        if (!existsSync(originalFilePath)) {
-            return errorResponse(res, 'Audio file not found. Please re-upload the file.', null, 404);
+        let fileDownloadUrl = fileUrl;
+        if (!fileUrl) {
+            const downloadResult = await downloadAudioFromCloudinary(fileId);
+            if (!downloadResult.success) {
+                return errorResponse(res, 'Failed to retrieve the file. Please try again.', downloadResult.error);
+            }
+            fileDownloadUrl = downloadResult.url;
         }
 
-        const editResult = await editMetadata(metadata, originalFilePath, editedFilePath);
+        const fileExtension = extname(fileDownloadUrl);
+        const editResult = await editMetadata(fileDownloadUrl, metadata, fileExtension);
 
         if (!editResult.success) {
-            return errorResponse(res, editResult.message);
+            return errorResponse(res, 'Failed to edit metadata. Please try again.', editResult.error);
         }
 
-        res.download(editedFilePath, (err) => {
-            if (err) {
-                return errorResponse(res, 'File download failed. Please try again later.', err);
-            }
-
-            // Cleanup original and edited files after download
-            try {
-                if (existsSync(originalFilePath)) unlinkSync(originalFilePath);
-                if (existsSync(editedFilePath)) unlinkSync(editedFilePath);
-            } catch (cleanupError) {}
-        });
+        return successResponse(res, { editedFileUrl: editResult.url });
     } catch (error) {
-        return errorResponse(res, 'Internal server error. Please try again later.', error);
+        return errorResponse(res, 'Unexpected error occurred while editing metadata. Please try again.', error);
     }
 };
