@@ -1,8 +1,8 @@
+import { handleAudioUpload, handleExtractMetadata, handleEditMetadata } from '../controllers/audio.controller.js';
+import { createDirectoryIfNotExists, getTempPath } from '../utils/pathAndFile.utils.js';
 import { Router } from 'express';
 import multer, { diskStorage } from 'multer';
-import { handleAudioUpload, handleExtractMetadata, handleEditMetadata } from '../controllers/audio.controller.js';
 import { extname } from 'path';
-import { createDirectoryIfNotExists, getTempPath } from '../utils/pathAndFile.utils.js';
 
 const router = Router();
 

@@ -58,8 +58,6 @@ const ImportMedia = () => {
     useEffect(() => {
         initializeCancelToken()
         return () => {
-            console.log('Cleanup: Canceling import process...')
-
             cancelImport()
         }
     }, [])
@@ -76,7 +74,6 @@ const ImportMedia = () => {
     // Start importing the file
     const startImport = () => {
         if (file) {
-            console.log('Starting import...')
             resetImport()
             initializeCancelToken()
 
@@ -85,7 +82,6 @@ const ImportMedia = () => {
                 const content = e.target.result
                 try {
                     const jsonData = JSON.parse(content)
-                    console.log(jsonData)
                     if (isValidFormat(jsonData)) {
                         setJsonContent(jsonData)
                         await importMediaList(jsonData)
@@ -142,8 +138,6 @@ const ImportMedia = () => {
 
                 await handleRateLimits(remainingRateLimit, retryAfterSeconds)
 
-                console.log(remainingRateLimit, retryAfterSeconds)
-
                 if (aniListId) {
                     setImportState((prev) => ({
                         ...prev,
@@ -187,7 +181,6 @@ const ImportMedia = () => {
 
     // Import media list
     const importMediaList = async (mediaList, retryFailed = false) => {
-        console.log('Importing media list:')
 
         setImportState({
             importStatus: 'IN_PROGRESS',
@@ -220,7 +213,6 @@ const ImportMedia = () => {
 
         // Step 2: Fetch user's media list and filter out existing entries
         setImportState((prev) => ({ ...prev, currentItem: `Fetching AniList IDs for ${Object.keys(malIdMap).length} media...` }))
-        console.log('Fetching user media list IDs...')
         let malIds = Object.keys(malIdMap)
         const response = await fetchUserMediaListIDs(mediaType, cancelTokenSourceRef.current.token)
 
@@ -241,13 +233,11 @@ const ImportMedia = () => {
 
         // Step 3: Fetch AniList IDs for MAL IDs
         setImportState((prev) => ({ ...prev, currentItem: `Fetching AniList IDs for ${malIds.length} media...` }))
-        console.log('Fetching AniList IDs...')
 
         const aniListIdMap = await fetchAniListIdsInBatches(malIds, mediaType)
 
         if (Object.keys(aniListIdMap).length === 0) {
             window.addToast('Failed to fetch AniList IDs.', 'error')
-            console.log('Failed to fetch AniList IDs.')
             const failedList = importResults.failed || []
             malIds.forEach((malId) => {
                 failedList.push({

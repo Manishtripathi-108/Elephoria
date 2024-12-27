@@ -1,14 +1,14 @@
+import { extractAudioMetadata, editAudioMetadata } from '../services/audio.service.js';
 import {
     downloadAudioFromCloudinary,
     uploadAudioToCloudinary,
     uploadImageToCloudinary,
 } from '../services/cloudinary.service.js';
-import { extractAudioMetadata, editAudioMetadata } from '../services/audio.service.js';
-import { extname } from 'path';
+import { backendLogger } from '../utils/logger.utils.js';
 import { cleanupFile, getTempPath } from '../utils/pathAndFile.utils.js';
 import { successResponse, errorResponse } from '../utils/response.utils.js';
 import { resizeAndCropImage } from '../utils/sharp.utils.js';
-import { backendLogger } from '../utils/logger.utils.js';
+import { extname } from 'path';
 
 export const handleAudioUpload = async (req, res) => {
     try {
@@ -20,8 +20,6 @@ export const handleAudioUpload = async (req, res) => {
         }
 
         const uploadResult = await uploadAudioToCloudinary(file);
-
-        console.log('Upload Result:', uploadResult);
 
         if (!uploadResult.success) {
             return errorResponse(res, 'Failed to upload the audio file. Please try again.', uploadResult.error);

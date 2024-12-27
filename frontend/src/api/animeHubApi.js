@@ -1,4 +1,5 @@
 import axios from 'axios'
+
 import API_ROUTES from '../constants/apiEndpoints'
 
 /**
@@ -10,11 +11,9 @@ import API_ROUTES from '../constants/apiEndpoints'
 const handleError = (message, error) => {
     // Check if the error was due to cancellation
     if (axios.isCancel(error)) {
-        console.error('Request canceled:', error.message)
         return { success: false, message: 'Request canceled' }
     }
 
-    console.error(message, error)
     return {
         success: false,
         message: error.response?.data?.message || `Oops! ${message}`,
@@ -25,11 +24,12 @@ const handleError = (message, error) => {
 
 /**
  * Checks if the user is authenticated by making a request to the server.
+ * @param {AbortSignal} abortSignal The signal to abort the request.
  * @returns {Boolean} True if the user is authenticated, false otherwise.
  */
-export const isAuthenticated = async () => {
+export const isAuthenticated = async (abortSignal) => {
     try {
-        const result = await axios.post(API_ROUTES.ANIME_HUB.CHECK_AUTH, { withCredentials: true })
+        const result = await axios.post(API_ROUTES.ANIME_HUB.CHECK_AUTH, { withCredentials: true, signal: abortSignal })
         return result.data.success
     } catch (error) {
         return false
@@ -38,11 +38,12 @@ export const isAuthenticated = async () => {
 
 /**
  * Logs the user out of their account.
+ * @param {AbortSignal} abortSignal The signal to abort the request.
  * @returns {Object} An object containing a boolean "success" property indicating if the logout was successful.
  */
-export const logoutUser = async () => {
+export const logoutUser = async (abortSignal) => {
     try {
-        const response = await axios.post(API_ROUTES.ANIME_HUB.LOGOUT, { withCredentials: true })
+        const response = await axios.post(API_ROUTES.ANIME_HUB.LOGOUT, { withCredentials: true, signal: abortSignal })
         return { success: response.data.success }
     } catch (error) {
         return handleError('Failed to log out. Please try again later.', error)
@@ -52,13 +53,14 @@ export const logoutUser = async () => {
 /**
  * Exchanges an AniList authorization pin for an access token, then logs in the user.
  * @param {String} pin The authorization pin to exchange.
+ * @param {AbortSignal} abortSignal The signal to abort the request.
  * @returns {Promise<Object>} A promise that resolves to an object with a "success" property.
  * If the exchange is successful, the "success" property is true and the user is logged in.
  * If the exchange fails, the "success" property is false and an error message is provided.
  */
-export const exchangePin = async (pin) => {
+export const exchangePin = async (pin, abortSignal) => {
     try {
-        const response = await axios.post(API_ROUTES.ANIME_HUB.LOGIN, { pin })
+        const response = await axios.post(API_ROUTES.ANIME_HUB.LOGIN, { pin }, { signal: abortSignal })
         return { success: response.data.data }
     } catch (error) {
         return handleError('Something went wrong while exchanging the pin. Please try again later.', error)
@@ -67,13 +69,14 @@ export const exchangePin = async (pin) => {
 
 /**
  * Fetches the user's data from the server.
+ * @param {AbortSignal} abortSignal The signal to abort the request.
  * @returns {Promise<Object>} A promise that resolves to an object with a "success" property and a "userData" property.
  * The "userData" property is an object containing the user's data, or undefined if the fetch fails.
  * If the fetch fails, the "success" property is false and an error message is provided.
  */
-export const fetchUserData = async () => {
+export const fetchUserData = async (abortSignal) => {
     try {
-        const response = await axios.post(API_ROUTES.ANIME_HUB.USER_DATA, { withCredentials: true })
+        const response = await axios.post(API_ROUTES.ANIME_HUB.USER_DATA, { withCredentials: true, signal: abortSignal })
         return {
             success: response.data.success,
             userData: response.data.data,
@@ -87,18 +90,19 @@ export const fetchUserData = async () => {
  * Fetches the user's media list from the server.
  * @param {String} mediaType The type of media to fetch (e.g. "ANIME" or "MANGA").
  * @param {Boolean} [favourite=false] Whether to fetch only favourite media.
+ * @param {AbortSignal} abortSignal The signal to abort the request.
  * @returns {Promise<Object>} A promise that resolves to an object with a "success" property and a "mediaList" property.
  * The "mediaList" property is an array of media entries or favourites, depending on the "favourite" parameter.
  * If the fetch is successful, the "success" property is true and the "mediaList" contains the data.
  * If the fetch fails, the "success" property is false and an error message is provided.
  */
-export const fetchUserMediaList = async (mediaType, favourite = false) => {
+export const fetchUserMediaList = async (mediaType, favourite = false, abortSignal) => {
     try {
         let endpoint = API_ROUTES.ANIME_HUB.USER_MEDIA
         if (favourite) {
             endpoint = API_ROUTES.ANIME_HUB.FAVOURITE
         }
-        const response = await axios.post(endpoint, { mediaType }, { withCredentials: true })
+        const response = await axios.post(endpoint, { mediaType }, { withCredentials: true, signal: abortSignal })
 
         return {
             success: response.data.success,
@@ -113,7 +117,7 @@ export const fetchUserMediaList = async (mediaType, favourite = false) => {
  * Fetches AniList IDs for a list of MAL IDs and a media type.
  * @param {String[]} malIds An array of MAL IDs to fetch AniList IDs for.
  * @param {String} mediaType The type of media to fetch AniList IDs for (e.g. "ANIME" or "MANGA").
- * @param {Object} [cancelToken] A cancel token to abort the request.
+ * @param {AbortSignal} abortSignal The signal to abort the request.
  * @returns {Promise<Object>} A promise that resolves to an object with a "success" property, an "aniListIds" property,
  * a "remainingRateLimit" property and a "retryAfterSeconds" property.
  * The "aniListIds" property is an object mapping MAL IDs to their corresponding AniList IDs.
@@ -121,9 +125,9 @@ export const fetchUserMediaList = async (mediaType, favourite = false) => {
  * The "retryAfterSeconds" property is the number of seconds to wait before retrying the request.
  * If the fetch fails, the "success" property is false and an error message is provided.
  */
-export const fetchAniListIds = async (malIds, mediaType, cancelToken) => {
+export const fetchAniListIds = async (malIds, mediaType, abortSignal) => {
     try {
-        const response = await axios.post(API_ROUTES.ANIME_HUB.ANILIST_IDS, { malIds, mediaType }, { cancelToken })
+        const response = await axios.post(API_ROUTES.ANIME_HUB.ANILIST_IDS, { malIds, mediaType }, { signal: abortSignal })
 
         // Return AniList ID mapping and rate limit information
         return {
@@ -140,14 +144,14 @@ export const fetchAniListIds = async (malIds, mediaType, cancelToken) => {
 /**
  * Fetches a list of AniList IDs that the user has in their media list.
  * @param {String} mediaType The type of media to fetch IDs for (e.g. "ANIME" or "MANGA").
- * @param {Object} [cancelToken] A cancel token to abort the request.
+ * @param {AbortSignal} abortSignal The signal to abort the request.
  * @returns {Promise<Object>} A promise that resolves to an object with a "success" property and a "mediaListIDs" property.
  * The "mediaListIDs" property is an array of AniList IDs that the user has in their media list.
  * If the fetch fails, the "success" property is false and an error message is provided.
  */
-export const fetchUserMediaListIDs = async (mediaType, cancelToken) => {
+export const fetchUserMediaListIDs = async (mediaType, abortSignal) => {
     try {
-        const response = await axios.post(API_ROUTES.ANIME_HUB.USER_MEDIA_IDS, { mediaType }, { cancelToken }, { withCredentials: true })
+        const response = await axios.post(API_ROUTES.ANIME_HUB.USER_MEDIA_IDS, { mediaType }, { withCredentials: true, signal: abortSignal })
         return {
             success: response.data.success,
             mediaListIDs: response.data.data,
@@ -162,13 +166,13 @@ export const fetchUserMediaListIDs = async (mediaType, cancelToken) => {
  * @param {Number} mediaId The ID of the media to save.
  * @param {String} status The status of the media (e.g. "WATCHING", "COMPLETED", etc.).
  * @param {Number} [progress=0] The progress value to save (e.g. 0-10000).
- * @param {Object} [cancelToken] A cancel token to abort the request.
+ * @param {AbortSignal} abortSignal The signal to abort the request.
  * @returns {Promise<Object>} A promise that resolves to an object with a "success" property and rate limit information.
  * If the request fails, the "success" property is false and an error message is provided.
  */
-export const saveMediaEntry = async (mediaId, status, progress = 0, cancelToken) => {
+export const saveMediaEntry = async (mediaId, status, progress = 0, abortSignal) => {
     try {
-        const response = await axios.post(API_ROUTES.ANIME_HUB.SAVE, { mediaId, status, progress }, { cancelToken }, { withCredentials: true })
+        const response = await axios.post(API_ROUTES.ANIME_HUB.SAVE, { mediaId, status, progress }, { withCredentials: true, signal: abortSignal })
 
         // Return success status and rate limit information
         return {
@@ -185,14 +189,18 @@ export const saveMediaEntry = async (mediaId, status, progress = 0, cancelToken)
  * Toggles the favourite status of a media item.
  * @param {Number} mediaId The ID of the media to toggle.
  * @param {String} mediaType The type of media to toggle (e.g. "ANIME" or "MANGA").
- * @param {Object} [cancelToken] A cancel token to abort the request.
+ * @param {AbortSignal} abortSignal The signal to abort the request.
  * @returns {Promise<Object>} A promise that resolves to an object with a "success" property and a "favouriteStatus" property.
  * The "favouriteStatus" property is a boolean indicating whether the media item is now favourited (true) or not (false).
  * If the request fails, the "success" property is false and an error message is provided.
  */
-export const toggleFavourite = async (mediaId, mediaType) => {
+export const toggleFavourite = async (mediaId, mediaType, abortSignal) => {
     try {
-        const response = await axios.post(API_ROUTES.ANIME_HUB.TOGGLE_FAVOURITE, { mediaId, mediaType }, { withCredentials: true })
+        const response = await axios.post(
+            API_ROUTES.ANIME_HUB.TOGGLE_FAVOURITE,
+            { mediaId, mediaType },
+            { withCredentials: true, signal: abortSignal }
+        )
 
         return {
             success: response.data.success,
@@ -206,13 +214,14 @@ export const toggleFavourite = async (mediaId, mediaType) => {
 /**
  * Deletes a media entry from the user's AniList media list.
  * @param {Number} entryId The ID of the media entry to delete.
+ * @param {AbortSignal} abortSignal The signal to abort the request.
  * @returns {Promise<Object>} A promise that resolves to an object with a "success" property.
  * If the request succeeds, the "success" property is true.
  * If the request fails, the "success" property is false and an error message is provided.
  */
-export const deleteMediaEntry = async (entryId) => {
+export const deleteMediaEntry = async (entryId, abortSignal) => {
     try {
-        const response = await axios.post(API_ROUTES.ANIME_HUB.DELETE, { entryId }, { withCredentials: true })
+        const response = await axios.post(API_ROUTES.ANIME_HUB.DELETE, { entryId }, { withCredentials: true, signal: abortSignal })
 
         return {
             success: response.data.data,

@@ -64,7 +64,6 @@ export const TicTacToeReducer = (state, action) => {
         case ActionTypes.SET_BOARD: {
             const { payload: mode } = action
             if (!['classic', 'ultimate'].includes(mode)) {
-                console.error('Invalid game mode:', mode)
                 return state
             }
             return resetState(state, { mode })

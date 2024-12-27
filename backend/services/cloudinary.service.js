@@ -1,4 +1,5 @@
 import cloudinary from '../config/cloudinary.config.js';
+import { backendLogger } from '../utils/logger.utils.js';
 import { cleanupFile } from '../utils/pathAndFile.utils.js';
 
 /**
@@ -28,8 +29,6 @@ export const uploadFileToCloudinary = async (file, options) => {
             uploadResponse = await new Promise((resolve, reject) => {
                 const uploadStream = cloudinary.uploader.upload_stream(uploadOptions, (error, result) => {
                     if (error) {
-                        console.log('Upload Error:', error);
-
                         return reject(error);
                     }
                     resolve(result);
@@ -49,6 +48,7 @@ export const uploadFileToCloudinary = async (file, options) => {
             message: 'File uploaded successfully',
         };
     } catch (error) {
+        backendLogger.error('Error uploading file to Cloudinary:', error);
         return {
             success: false,
             message: 'Error uploading file to Cloudinary',
@@ -71,6 +71,7 @@ export const deleteCloudinaryFile = async (cloudinaryPublicId) => {
         await cloudinary.uploader.destroy(cloudinaryPublicId);
         return { success: true, message: 'File deleted successfully' };
     } catch (error) {
+        backendLogger.error('Error deleting file from Cloudinary:', error);
         return {
             success: false,
             message: 'Error deleting file from Cloudinary',
@@ -98,6 +99,7 @@ export const downloadAudioFromCloudinary = async (cloudinaryPublicId, abortSigna
             format: downloadResponse.format,
         };
     } catch (error) {
+        backendLogger.error('Error downloading audio from Cloudinary:', error);
         return {
             success: false,
             message: 'Error downloading audio from Cloudinary',

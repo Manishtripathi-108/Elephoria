@@ -34,7 +34,6 @@ export const TicTacToeProvider = ({ children }) => {
         socketRef.current = io(import.meta.env.VITE_SERVER_URL)
 
         socketRef.current.on('connect', () => {
-            console.log('Connected:', socketRef.current.id)
             dispatch({ type: ActionTypes.SET_PLAYING_ONLINE, payload: true })
         })
 
@@ -43,7 +42,6 @@ export const TicTacToeProvider = ({ children }) => {
         })
 
         socketRef.current.on('updateGame', (roomState) => {
-            console.log('updateGame', roomState)
             dispatch({ type: ActionTypes.UPDATE_STATE, payload: { ...roomState } })
         })
 
@@ -53,13 +51,11 @@ export const TicTacToeProvider = ({ children }) => {
         })
 
         socketRef.current.on('disconnect', () => {
-            console.log('Disconnected from server')
             socketRef.current = null
             dispatch({ type: ActionTypes.START_OVER })
         })
 
         socketRef.current.on('roomLeft', () => {
-            console.log('Player left the room')
             window.addToast('You left the room', 'info')
             dispatch({ type: ActionTypes.START_OVER })
         })

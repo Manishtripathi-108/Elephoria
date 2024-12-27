@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect, useState } from 'react'
+import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
 
 import { useNavigate } from 'react-router-dom'
 
@@ -9,6 +9,7 @@ const AnimeHubContext = createContext()
 export const useAnimeHubContext = () => useContext(AnimeHubContext)
 
 export const AnimeHubProvider = ({ children }) => {
+    const abortControllerRef = useRef(null)
     const [mediaContent, setMediaContent] = useState([])
     const [activeTab, setActiveTab] = useState('ANIME')
     const [isLoading, setIsLoading] = useState(false)
@@ -24,12 +25,17 @@ export const AnimeHubProvider = ({ children }) => {
                 return
             }
 
+            if (abortControllerRef.current) {
+                abortControllerRef.current.abort()
+            }
+            abortControllerRef.current = new AbortController()
+
             setIsLoading(reload)
             setError(null)
 
             try {
                 // Fetch media content for the active tab
-                const result = await fetchUserMediaList(activeTab, activeTab === 'FAVOURITES')
+                const result = await fetchUserMediaList(activeTab, activeTab === 'FAVOURITES', abortControllerRef.current.signal)
 
                 if (result.success) {
                     // Sort mediaList alphabetically by 'name', except for FAVOURITES
@@ -43,9 +49,13 @@ export const AnimeHubProvider = ({ children }) => {
                     window.addToast(result.message, 'error')
                 }
             } catch (error) {
-                setError(error)
-                window.addToast(`Error fetching ${activeTab.toLowerCase()} data.`, 'error', 10000)
-                console.error(`Error fetching ${activeTab.toLowerCase()} data:`, error)
+                if (error.name === 'AbortError') {
+                    console.log('Fetch aborted')
+                } else {
+                    setError(error)
+                    window.addToast(`Error fetching ${activeTab.toLowerCase()} data.`, 'error', 10000)
+                    console.error(`Error fetching ${activeTab.toLowerCase()} data:`, error)
+                }
             } finally {
                 setIsLoading(false)
             }
@@ -59,7 +69,7 @@ export const AnimeHubProvider = ({ children }) => {
             window.addToast('Checking authentication status...', 'info')
             if (location.pathname === '/anime-hub' || location.pathname === '/anime-hub/auth') {
                 setIsLoading(true)
-                const isAuth = await isAuthenticated()
+                const isAuth = await isAuthenticated(abortControllerRef.current?.signal)
                 setIsUserAuthenticated(isAuth)
 
                 if (isAuth) {
@@ -83,6 +93,14 @@ export const AnimeHubProvider = ({ children }) => {
             fetchMediaContent(true)
         }
     }, [activeTab, fetchMediaContent, isUserAuthenticated])
+
+    useEffect(() => {
+        return () => {
+            if (abortControllerRef.current) {
+                abortControllerRef.current.abort()
+            }
+        }
+    }, [])
 
     const refetchMedia = () => fetchMediaContent()
 

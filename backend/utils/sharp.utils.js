@@ -1,5 +1,5 @@
-import sharp from 'sharp';
 import { backendLogger } from './logger.utils.js';
+import sharp from 'sharp';
 
 /**
  * Resizes an image to a specified width and height, cropping it if necessary.

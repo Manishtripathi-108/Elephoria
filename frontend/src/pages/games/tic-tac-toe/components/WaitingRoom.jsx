@@ -58,7 +58,6 @@ const WaitingRoom = ({ onExit, onStart, playerO = '', playerX = '', roomId, room
                     text: `Use this room Id to join: ${roomId}`,
                 })
                 .catch((err) => {
-                    console.error('Error sharing:', err)
                     window.addToast('Error sharing room code. Please try again.', 'error')
                 })
         } else {

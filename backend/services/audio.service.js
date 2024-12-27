@@ -1,9 +1,9 @@
-import ffmpeg from 'fluent-ffmpeg';
-import { exec } from 'child_process';
-import { PassThrough } from 'stream';
 import { backendLogger } from '../utils/logger.utils.js';
-import { uploadAudioToCloudinary, uploadImageToCloudinary } from './cloudinary.service.js';
 import { createDirectoryIfNotExists, getTempPath } from '../utils/pathAndFile.utils.js';
+import { uploadAudioToCloudinary, uploadImageToCloudinary } from './cloudinary.service.js';
+import { exec } from 'child_process';
+import ffmpeg from 'fluent-ffmpeg';
+import { PassThrough } from 'stream';
 
 // Constants
 const FALLBACK_IMAGE_URL =

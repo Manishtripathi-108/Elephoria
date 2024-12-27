@@ -1,5 +1,5 @@
-import anilistApi from "../config/anilist.config.js";
-import { backendLogger } from "../utils/logger.utils.js";
+import anilistApi from '../config/anilist.config.js';
+import { backendLogger } from '../utils/logger.utils.js';
 
 // const fetchAnimeList = async (req) => {
 // 	const response = await anilistApi.post("/", {
@@ -11,46 +11,40 @@ import { backendLogger } from "../utils/logger.utils.js";
 // };
 
 const exchangePinForToken = async (pin) => {
-	const response = await anilistApi.post(
-		"https://anilist.co/api/v2/oauth/token",
-		{
-			grant_type: "authorization_code",
-			client_id: process.env.ANILIST_CLIENT_ID,
-			client_secret: process.env.ANILIST_CLIENT_SECRET,
-			redirect_uri: process.env.ANILIST_REDIRECT_URI,
-			code: pin,
-		}
-	);
+    const response = await anilistApi.post('https://anilist.co/api/v2/oauth/token', {
+        grant_type: 'authorization_code',
+        client_id: process.env.ANILIST_CLIENT_ID,
+        client_secret: process.env.ANILIST_CLIENT_SECRET,
+        redirect_uri: process.env.ANILIST_REDIRECT_URI,
+        code: pin,
+    });
 
-	const userId = await fetchUserId(response.data.access_token);
-	response.data.user_id = userId;
+    const userId = await fetchUserId(response.data.access_token);
+    response.data.user_id = userId;
 
-	return response.data;
+    return response.data;
 };
 
 const renewAniListToken = async (refreshToken) => {
-	const response = await anilistApi.post(
-		"https://anilist.co/api/v2/oauth/token",
-		{
-			grant_type: "refresh_token",
-			refresh_token: refreshToken,
-			client_id: process.env.ANILIST_CLIENT_ID,
-			client_secret: process.env.ANILIST_CLIENT_SECRET,
-		}
-	);
+    const response = await anilistApi.post('https://anilist.co/api/v2/oauth/token', {
+        grant_type: 'refresh_token',
+        refresh_token: refreshToken,
+        client_id: process.env.ANILIST_CLIENT_ID,
+        client_secret: process.env.ANILIST_CLIENT_SECRET,
+    });
 
-	backendLogger.info("Renewed AniList token", {
-		userId: response.data.user_id,
-	});
+    backendLogger.info('Renewed AniList token', {
+        userId: response.data.user_id,
+    });
 
-	const userId = await fetchUserId(response.data.access_token);
-	response.data.user_id = userId;
+    const userId = await fetchUserId(response.data.access_token);
+    response.data.user_id = userId;
 
-	return response.data;
+    return response.data;
 };
 
 const fetchUserId = async (token) => {
-	const query = `
+    const query = `
         query {
             Viewer {
                 id
@@ -58,21 +52,21 @@ const fetchUserId = async (token) => {
         }
     `;
 
-	const response = await anilistApi.post(
-		"/",
-		{ query },
-		{
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		}
-	);
+    const response = await anilistApi.post(
+        '/',
+        { query },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
 
-	return response.data.data.Viewer.id;
+    return response.data.data.Viewer.id;
 };
 
 const fetchUserData = async (token) => {
-	const query = `
+    const query = `
         query {
             Viewer {
                 id
@@ -83,21 +77,21 @@ const fetchUserData = async (token) => {
         }
     `;
 
-	const response = await anilistApi.post(
-		"/",
-		{ query },
-		{
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		}
-	);
+    const response = await anilistApi.post(
+        '/',
+        { query },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
 
-	return response.data.data.Viewer;
+    return response.data.data.Viewer;
 };
 
 const fetchUserMedia = async (token, userId, mediaType, onlyIds = false) => {
-	const allMedia = `
+    const allMedia = `
         query ($userId: Int, $type: MediaType) {
             MediaListCollection(userId: $userId, type: $type) {
                 lists {
@@ -142,7 +136,7 @@ const fetchUserMedia = async (token, userId, mediaType, onlyIds = false) => {
         }
     `;
 
-	const onlyIdsQuery = `
+    const onlyIdsQuery = `
         query ($userId: Int, $type: MediaType) {
             MediaListCollection(userId: $userId, type: $type) {
                 lists {
@@ -158,29 +152,29 @@ const fetchUserMedia = async (token, userId, mediaType, onlyIds = false) => {
         }
     `;
 
-	const query = onlyIds ? onlyIdsQuery : allMedia;
+    const query = onlyIds ? onlyIdsQuery : allMedia;
 
-	const response = await anilistApi.post(
-		"/",
-		{
-			query,
-			variables: {
-				userId,
-				type: mediaType,
-			},
-		},
-		{
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		}
-	);
+    const response = await anilistApi.post(
+        '/',
+        {
+            query,
+            variables: {
+                userId,
+                type: mediaType,
+            },
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
 
-	return response.data.data.MediaListCollection;
+    return response.data.data.MediaListCollection;
 };
 
 const fetchUserFavourites = async (token, userId) => {
-	const query = `
+    const query = `
         query ($userId: Int) {
             User(id: $userId) {
                 favourites {
@@ -240,21 +234,21 @@ const fetchUserFavourites = async (token, userId) => {
         }
     `;
 
-	const response = await anilistApi.post(
-		"/",
-		{ query, variables: { userId } },
-		{
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		}
-	);
+    const response = await anilistApi.post(
+        '/',
+        { query, variables: { userId } },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
 
-	return response.data?.data?.User?.favourites;
+    return response.data?.data?.User?.favourites;
 };
 
 const fetchAniListIds = async (malIds, mediaType) => {
-	const query = `
+    const query = `
         query ($idMals: [Int], $type: MediaType) {
             Page {
                 media(idMal_in: $idMals, type: $type) {
@@ -265,19 +259,19 @@ const fetchAniListIds = async (malIds, mediaType) => {
         }
     `;
 
-	const response = await anilistApi.post("/", {
-		query,
-		variables: {
-			idMals: malIds,
-			type: mediaType,
-		},
-	});
+    const response = await anilistApi.post('/', {
+        query,
+        variables: {
+            idMals: malIds,
+            type: mediaType,
+        },
+    });
 
-	return response;
+    return response;
 };
 
 const saveMediaEntry = async (token, mediaId, status, progress) => {
-	const mutation = `
+    const mutation = `
         mutation($mediaId: Int, $status: MediaListStatus, $progress: Int) {
             SaveMediaListEntry(mediaId: $mediaId, status: $status, progress: $progress) {
                 id
@@ -287,25 +281,25 @@ const saveMediaEntry = async (token, mediaId, status, progress) => {
         }
     `;
 
-	const response = await anilistApi.post(
-		"/",
-		{
-			query: mutation,
-			variables: { mediaId, status, progress },
-		},
-		{
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		}
-	);
+    const response = await anilistApi.post(
+        '/',
+        {
+            query: mutation,
+            variables: { mediaId, status, progress },
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
 
-	return response;
+    return response;
 };
 
 const toggleFavourite = async (token, mediaId, mediaType) => {
-	// Mutation strings for Anime and Manga
-	const mutationAnime = `
+    // Mutation strings for Anime and Manga
+    const mutationAnime = `
 		mutation ToggleFavourite($mediaId: Int) {
 			ToggleFavourite(animeId: $mediaId) {
 				anime {
@@ -317,7 +311,7 @@ const toggleFavourite = async (token, mediaId, mediaType) => {
 		}
 	`;
 
-	const mutationManga = `
+    const mutationManga = `
 		mutation ToggleFavourite($mediaId: Int) {
 			ToggleFavourite(mangaId: $mediaId) {
 				manga {
@@ -329,32 +323,32 @@ const toggleFavourite = async (token, mediaId, mediaType) => {
 		}
 	`;
 
-	// Choose the correct mutation based on mediaType
-	const mutation = mediaType === "anime" ? mutationAnime : mutationManga;
+    // Choose the correct mutation based on mediaType
+    const mutation = mediaType === 'anime' ? mutationAnime : mutationManga;
 
-	const response = await anilistApi.post(
-		"/",
-		{
-			query: mutation,
-			variables: { mediaId },
-		},
-		{
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		}
-	);
+    const response = await anilistApi.post(
+        '/',
+        {
+            query: mutation,
+            variables: { mediaId },
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
 
-	// Extract favourite status from response
-	const favouriteNodes = response.data.data.ToggleFavourite[mediaType].nodes;
-	const isFavouriteNow = favouriteNodes.some((node) => node.id === mediaId);
+    // Extract favourite status from response
+    const favouriteNodes = response.data.data.ToggleFavourite[mediaType].nodes;
+    const isFavouriteNow = favouriteNodes.some((node) => node.id === mediaId);
 
-	// Return the updated favourite status
-	return isFavouriteNow;
+    // Return the updated favourite status
+    return isFavouriteNow;
 };
 
 const deleteMediaEntry = async (token, entryId) => {
-	const mutation = `
+    const mutation = `
 		mutation DeleteMediaListEntry($entryId: Int) {
 			DeleteMediaListEntry(id: $entryId) {
 				deleted
@@ -362,31 +356,31 @@ const deleteMediaEntry = async (token, entryId) => {
 		}
 	`;
 
-	const response = await anilistApi.post(
-		"/",
-		{
-			query: mutation,
-			variables: { entryId },
-		},
-		{
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		}
-	);
+    const response = await anilistApi.post(
+        '/',
+        {
+            query: mutation,
+            variables: { entryId },
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
 
-	return response.data.data.DeleteMediaListEntry.deleted;
+    return response.data.data.DeleteMediaListEntry.deleted;
 };
 
 export {
-	exchangePinForToken,
-	renewAniListToken,
-	fetchUserId,
-	fetchUserData,
-	fetchUserMedia,
-	fetchUserFavourites,
-	fetchAniListIds,
-	saveMediaEntry,
-	toggleFavourite,
-	deleteMediaEntry,
+    exchangePinForToken,
+    renewAniListToken,
+    fetchUserId,
+    fetchUserData,
+    fetchUserMedia,
+    fetchUserFavourites,
+    fetchAniListIds,
+    saveMediaEntry,
+    toggleFavourite,
+    deleteMediaEntry,
 };

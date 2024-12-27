@@ -39,8 +39,6 @@ const FileDownload = ({
                 link.remove()
                 window.URL.revokeObjectURL(url)
             } catch (error) {
-                console.log('Download Error:', error)
-
                 window.addToast('Failed to download the file. Please try again.', 'error')
             }
         } else {
