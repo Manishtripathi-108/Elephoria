@@ -19,7 +19,7 @@ const AnimeHub = () => {
     const [isFilterApplied, setIsFilterApplied] = useState(false)
     const [isFilteringActive, setIsFilteringActive] = useState(false)
 
-    const { mediaContent, activeTab, isLoading, error } = useAnimeHubContext()
+    const { mediaContent, activeTab, isLoading, error } = useAnimeHubContext()    
 
     // Reset filtered content when the active tab changes
     useEffect(() => {

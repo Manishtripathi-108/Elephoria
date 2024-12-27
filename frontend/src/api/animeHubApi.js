@@ -62,7 +62,7 @@ export const logoutUser = async (abortSignal) => {
 export const exchangePin = async (pin, abortSignal) => {
     try {
         const response = await axios.post(API_ROUTES.ANIME_HUB.LOGIN, { pin }, { signal: abortSignal })
-        return { success: response.data.data }
+        return { success: response.data }
     } catch (error) {
         return handleError('Something went wrong while exchanging the pin. Please try again later.', error)
     }
@@ -134,9 +134,9 @@ export const fetchAniListIds = async (malIds, mediaType, abortSignal) => {
         // Return AniList ID mapping and rate limit information
         return {
             success: response.data.success,
-            aniListIds: response.data.data.aniListIds,
-            remainingRateLimit: response.data.data.remainingRateLimit || 100,
-            retryAfterSeconds: response.data.data.retryAfterSeconds || 0,
+            aniListIds: response.data?.aniListIds,
+            remainingRateLimit: response.data?.remainingRateLimit || 100,
+            retryAfterSeconds: response.data?.retryAfterSeconds || 0,
         }
     } catch (error) {
         return handleError('Error fetching AniList IDs. Please try again later.', error)
@@ -156,7 +156,7 @@ export const fetchUserMediaListIDs = async (mediaType, abortSignal) => {
         const response = await axios.post(API_ROUTES.ANIME_HUB.USER_MEDIA_IDS, { mediaType }, { withCredentials: true, signal: abortSignal })
         return {
             success: response.data.success,
-            mediaListIDs: response.data.data,
+            mediaListIDs: response.data,
         }
     } catch (error) {
         return handleError('Failed to load user media IDs. Please try again later.', error)
@@ -177,10 +177,12 @@ export const saveMediaEntry = async (mediaId, status, progress = 0, abortSignal)
         const response = await axios.post(API_ROUTES.ANIME_HUB.SAVE, { mediaId, status, progress }, { withCredentials: true, signal: abortSignal })
 
         // Return success status and rate limit information
+        console.log(response.data)
+
         return {
             success: response.data.success,
-            remainingRateLimit: response.data.data.remainingRateLimit || 100,
-            retryAfterSeconds: response.data.data.retryAfterSeconds || 0,
+            remainingRateLimit: response.data?.remainingRateLimit || 100,
+            retryAfterSeconds: response.data?.retryAfterSeconds || 0,
         }
     } catch (error) {
         return handleError('Oops! We couldn’t save your media entry. Please try again later.', error)
@@ -206,7 +208,7 @@ export const toggleFavourite = async (mediaId, mediaType, abortSignal) => {
 
         return {
             success: response.data.success,
-            favouriteStatus: response.data.data,
+            favouriteStatus: response.data,
         }
     } catch (error) {
         return handleError('Failed to toggle favourite status. Please try again later.', error)
@@ -226,7 +228,7 @@ export const deleteMediaEntry = async (entryId, abortSignal) => {
         const response = await axios.post(API_ROUTES.ANIME_HUB.DELETE, { entryId }, { withCredentials: true, signal: abortSignal })
 
         return {
-            success: response.data.data,
+            success: response.data,
         }
     } catch (error) {
         return handleError('Failed to delete media entry. Please try again later.', error)
