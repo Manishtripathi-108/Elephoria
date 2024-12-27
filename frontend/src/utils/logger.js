@@ -1,5 +1,7 @@
 import axios from 'axios'
 
+import API_ROUTES from '../constants/apiEndpoints'
+
 const LOG_LEVELS = {
     INFO: 'info',
     WARN: 'warn',
@@ -30,7 +32,7 @@ export const logger = {
 // Function to send logs to the backend
 async function logToServer(level, message, metadata) {
     try {
-        await axios.post('/api/logs/frontend', {
+        await axios.post(API_ROUTES.LOGS.FRONTEND, {
             level,
             message,
             metadata,

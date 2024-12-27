@@ -12,7 +12,7 @@ export const successResponse = (res, data) => res.status(200).json({ success: tr
  */
 export const errorResponse = (res, message, error, status = 500) => {
     backendLogger.error(message, error);
-    res.status(status).json({ success: false, message, error });
+    res.status(status).json({ success: false, message: message, error });
 };
 
 /**

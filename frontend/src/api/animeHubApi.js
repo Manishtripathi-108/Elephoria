@@ -1,4 +1,5 @@
 import axios from 'axios'
+import API_ROUTES from '../constants/apiEndpoints'
 
 /**
  * Handles API errors and returns a standardized error object.
@@ -28,7 +29,7 @@ const handleError = (message, error) => {
  */
 export const isAuthenticated = async () => {
     try {
-        const result = await axios.post('/api/anime-hub/check-auth', { withCredentials: true })
+        const result = await axios.post(API_ROUTES.ANIME_HUB.CHECK_AUTH, { withCredentials: true })
         return result.data.success
     } catch (error) {
         return false
@@ -41,7 +42,7 @@ export const isAuthenticated = async () => {
  */
 export const logoutUser = async () => {
     try {
-        const response = await axios.post('/api/anime-hub/logout', { withCredentials: true })
+        const response = await axios.post(API_ROUTES.ANIME_HUB.LOGOUT, { withCredentials: true })
         return { success: response.data.success }
     } catch (error) {
         return handleError('Failed to log out. Please try again later.', error)
@@ -57,7 +58,7 @@ export const logoutUser = async () => {
  */
 export const exchangePin = async (pin) => {
     try {
-        const response = await axios.post('/api/anime-hub/login', { pin })
+        const response = await axios.post(API_ROUTES.ANIME_HUB.LOGIN, { pin })
         return { success: response.data.data }
     } catch (error) {
         return handleError('Something went wrong while exchanging the pin. Please try again later.', error)
@@ -72,7 +73,7 @@ export const exchangePin = async (pin) => {
  */
 export const fetchUserData = async () => {
     try {
-        const response = await axios.post('/api/anime-hub/user-data', { withCredentials: true })
+        const response = await axios.post(API_ROUTES.ANIME_HUB.USER_DATA, { withCredentials: true })
         return {
             success: response.data.success,
             userData: response.data.data,
@@ -93,9 +94,9 @@ export const fetchUserData = async () => {
  */
 export const fetchUserMediaList = async (mediaType, favourite = false) => {
     try {
-        let endpoint = '/api/anime-hub/user-media'
+        let endpoint = API_ROUTES.ANIME_HUB.USER_MEDIA
         if (favourite) {
-            endpoint = '/api/anime-hub/favourite'
+            endpoint = API_ROUTES.ANIME_HUB.FAVOURITE
         }
         const response = await axios.post(endpoint, { mediaType }, { withCredentials: true })
 
@@ -122,7 +123,7 @@ export const fetchUserMediaList = async (mediaType, favourite = false) => {
  */
 export const fetchAniListIds = async (malIds, mediaType, cancelToken) => {
     try {
-        const response = await axios.post('/api/anime-hub/anilist-ids', { malIds, mediaType }, { cancelToken })
+        const response = await axios.post(API_ROUTES.ANIME_HUB.ANILIST_IDS, { malIds, mediaType }, { cancelToken })
 
         // Return AniList ID mapping and rate limit information
         return {
@@ -146,7 +147,7 @@ export const fetchAniListIds = async (malIds, mediaType, cancelToken) => {
  */
 export const fetchUserMediaListIDs = async (mediaType, cancelToken) => {
     try {
-        const response = await axios.post('/api/anime-hub/user-media/ids', { mediaType }, { cancelToken }, { withCredentials: true })
+        const response = await axios.post(API_ROUTES.ANIME_HUB.USER_MEDIA_IDS, { mediaType }, { cancelToken }, { withCredentials: true })
         return {
             success: response.data.success,
             mediaListIDs: response.data.data,
@@ -167,7 +168,7 @@ export const fetchUserMediaListIDs = async (mediaType, cancelToken) => {
  */
 export const saveMediaEntry = async (mediaId, status, progress = 0, cancelToken) => {
     try {
-        const response = await axios.post('/api/anime-hub/save', { mediaId, status, progress }, { cancelToken }, { withCredentials: true })
+        const response = await axios.post(API_ROUTES.ANIME_HUB.SAVE, { mediaId, status, progress }, { cancelToken }, { withCredentials: true })
 
         // Return success status and rate limit information
         return {
@@ -191,7 +192,7 @@ export const saveMediaEntry = async (mediaId, status, progress = 0, cancelToken)
  */
 export const toggleFavourite = async (mediaId, mediaType) => {
     try {
-        const response = await axios.post('/api/anime-hub/toggle-favourite', { mediaId, mediaType }, { withCredentials: true })
+        const response = await axios.post(API_ROUTES.ANIME_HUB.TOGGLE_FAVOURITE, { mediaId, mediaType }, { withCredentials: true })
 
         return {
             success: response.data.success,
@@ -211,7 +212,7 @@ export const toggleFavourite = async (mediaId, mediaType) => {
  */
 export const deleteMediaEntry = async (entryId) => {
     try {
-        const response = await axios.post('/api/anime-hub/delete', { entryId }, { withCredentials: true })
+        const response = await axios.post(API_ROUTES.ANIME_HUB.DELETE, { entryId }, { withCredentials: true })
 
         return {
             success: response.data.data,

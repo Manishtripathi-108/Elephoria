@@ -31,11 +31,34 @@ const audioFileFilter = (req, file, cb) => {
     }
 };
 
-const upload = multer({ storage: storage, fileFilter: audioFileFilter });
+const imageFileFilter = (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) {
+        return cb(null, true);
+    } else {
+        return cb(new Error('Invalid file type. Please upload an image file.'));
+    }
+};
+
+// * Change the code here (if not using Buffer)
+const uploadAudio = multer({ storage: multer.memoryStorage(), fileFilter: audioFileFilter });
+
+const uploadImage = multer({ storage: multer.memoryStorage(), fileFilter: imageFileFilter });
 
 /* ------------------------ Error Handling Middleware ----------------------- */
-const uploadMiddleware = (req, res, next) => {
-    upload.single('audio')(req, res, (err) => {
+const uploadAudioMiddleware = (req, res, next) => {
+    uploadAudio.single('audio')(req, res, (err) => {
+        if (err instanceof multer.MulterError || err instanceof Error) {
+            return res.status(400).json({
+                success: false,
+                message: err.message || 'File upload error.',
+            });
+        }
+        next();
+    });
+};
+
+const uploadImageMiddleware = (req, res, next) => {
+    uploadImage.single('cover')(req, res, (err) => {
         if (err instanceof multer.MulterError || err instanceof Error) {
             return res.status(400).json({
                 success: false,
@@ -47,9 +70,8 @@ const uploadMiddleware = (req, res, next) => {
 };
 
 /* ------------------------------ Routes Setup ------------------------------ */
-router.post('/upload', uploadMiddleware, handleAudioUpload);
-
+router.post('/upload', uploadAudioMiddleware, handleAudioUpload);
 router.post('/extract-metadata', handleExtractMetadata);
-router.post('/edit-metadata', handleEditMetadata);
+router.post('/edit-metadata', uploadImageMiddleware, handleEditMetadata);
 
 export default router;

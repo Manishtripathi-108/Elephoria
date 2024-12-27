@@ -1,3 +1,5 @@
+import ROUTES from '../constants/routes';
+
 export const iconMap = {
     anime: 'custom:anime',
     broom: 'game-icons:broom',
@@ -46,8 +48,8 @@ export const sidenavMenuItems = [
         title: 'Anime Hub',
         icon: iconMap.anime,
         children: [
-            { name: 'Anime Hub', link: '/anime-hub' },
-            { name: 'Authorize', link: '/anime-hub/auth' },
+            { name: 'Anime Hub', link: ROUTES.ANIME_HUB },
+            { name: 'Authorize', link: ROUTES.ANIME_HUB_AUTH },
         ],
     },
     {
@@ -57,8 +59,8 @@ export const sidenavMenuItems = [
             {
                 name: 'Tic Tac Toe',
                 children: [
-                    { name: 'Classic', link: '/games/tic-tac-toe/classic' },
-                    { name: 'Ultimate', link: '/games/tic-tac-toe/ultimate' },
+                    { name: 'Classic', link: ROUTES.CLASSIC_TIC_TAC_TOE },
+                    { name: 'Ultimate', link: ROUTES.ULTIMATE_TIC_TAC_TOE },
                 ],
             },
             { name: 'Snake', link: '/games/snake' },
@@ -68,7 +70,7 @@ export const sidenavMenuItems = [
     {
         title: 'Audio',
         icon: iconMap.music,
-        children: [{ name: 'Music Editor', link: '/audio' }],
+        children: [{ name: 'Music Editor', link: ROUTES.AUDIO_TAGS_EXTRACTOR }],
     },
     {
         title: 'Profile',
@@ -76,4 +78,4 @@ export const sidenavMenuItems = [
         icon: iconMap.person,
         link: '/profile',
     },
-]
+];
