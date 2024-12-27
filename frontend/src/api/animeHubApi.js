@@ -13,6 +13,7 @@ const handleError = (message, error) => {
     if (axios.isCancel(error)) {
         return { success: false, message: 'Request canceled' }
     }
+    console.log(error)
 
     return {
         success: false,
@@ -78,8 +79,7 @@ export const fetchUserData = async (abortSignal) => {
     try {
         const response = await axios.post(API_ROUTES.ANIME_HUB.USER_DATA, { withCredentials: true, signal: abortSignal })
         return {
-            success: response.data.success,
-            userData: response.data.data,
+            ...response.data,
         }
     } catch (error) {
         return handleError('Failed to load user data. Please refresh the page or try again.', error)
@@ -98,15 +98,17 @@ export const fetchUserData = async (abortSignal) => {
  */
 export const fetchUserMediaList = async (mediaType, favourite = false, abortSignal) => {
     try {
+        if (!['ANIME', 'MANGA', 'FAVOURITES'].includes(mediaType)) {
+            return { success: false, message: 'Invalid media type' }
+        }
         let endpoint = API_ROUTES.ANIME_HUB.USER_MEDIA
         if (favourite) {
             endpoint = API_ROUTES.ANIME_HUB.FAVOURITE
         }
         const response = await axios.post(endpoint, { mediaType }, { withCredentials: true, signal: abortSignal })
-
         return {
             success: response.data.success,
-            mediaList: response.data.data?.lists || response.data.data.favourites || [],
+            mediaList: response.data?.lists || response.data?.favourites || [],
         }
     } catch (error) {
         return handleError('Failed to load user media list. Please try again later.', error)

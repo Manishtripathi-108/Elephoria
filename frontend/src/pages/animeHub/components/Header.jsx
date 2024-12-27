@@ -1,8 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { memo, useEffect, useRef, useState } from 'react'
 
 import { fetchUserData } from '../../../api/animeHubApi'
+import { useAnimeHubContext } from '../../../context/AnimeHubContext'
 
 const Header = () => {
+    // const { loading } = useAnimeHubContext()
     const [userData, setUserData] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
@@ -13,15 +15,13 @@ const Header = () => {
             const response = await fetchUserData()
 
             if (response.success) {
-                setUserData(response.userData)
+                setUserData(response)
                 setLoading(false)
             } else if (response.retryAfterSeconds > 0) {
-                window.addToast(`You've hit the rate limit. Retrying in ${response.retryAfterSeconds} seconds.`, 'error')
-
                 retryTimeoutRef.current = setTimeout(getUserData, response.retryAfterSeconds * 1000)
             } else {
-                window.addToast(response.message || 'Oops! Something went wrong while fetching the user data.', 'error')
-                setError('Oops! Something went wrong while fetching the user data.')
+                window.addToast(response.message || 'Oops! Something went wrong. Please try refreshing the page or come back later.', 'error')
+                setError('Oops! Something went wrong. Please try refreshing the page or come back later.')
                 setLoading(false)
             }
         }
@@ -78,4 +78,4 @@ const Header = () => {
     )
 }
 
-export default Header
+export default memo(Header)

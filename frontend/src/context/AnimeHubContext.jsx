@@ -3,6 +3,7 @@ import React, { createContext, useCallback, useContext, useEffect, useRef, useSt
 import { useNavigate } from 'react-router-dom'
 
 import { fetchUserMediaList, isAuthenticated } from '../api/animeHubApi'
+import ROUTES from '../constants/routes'
 
 const AnimeHubContext = createContext()
 
@@ -10,99 +11,85 @@ export const useAnimeHubContext = () => useContext(AnimeHubContext)
 
 export const AnimeHubProvider = ({ children }) => {
     const abortControllerRef = useRef(null)
-    const [mediaContent, setMediaContent] = useState([])
-    const [activeTab, setActiveTab] = useState('ANIME')
-    const [isLoading, setIsLoading] = useState(false)
-    const [error, setError] = useState(null)
-    const [isUserAuthenticated, setIsUserAuthenticated] = useState(false)
-
     const navigate = useNavigate()
 
-    const fetchMediaContent = useCallback(
-        async (reload = false) => {
-            if (!isUserAuthenticated) {
-                console.warn('User is not authenticated. Skipping media fetch.')
-                return
-            }
+    const [mediaContent, setMediaContent] = useState([])
+    const [activeTab, setActiveTab] = useState('ANIME')
+    const [isLoading, setIsLoading] = useState(true)
+    const [isAuthenticatedUser, setIsAuthenticatedUser] = useState(false)
+    const [error, setError] = useState(null)
 
-            if (abortControllerRef.current) {
-                abortControllerRef.current.abort()
-            }
-            abortControllerRef.current = new AbortController()
+    const abortPreviousRequest = () => {
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort()
+        }
+        abortControllerRef.current = new AbortController()
+    }
 
-            setIsLoading(reload)
+    const checkAuthentication = useCallback(async () => {
+        try {
+            abortPreviousRequest()
+            setIsLoading(true)
+
+            const isAuth = await isAuthenticated(abortControllerRef.current.signal)
+            setIsAuthenticatedUser(isAuth)
+            console.log(isAuth)
+
+            if (isAuth) {
+                navigate(ROUTES.ANIME_HUB)
+            } else {
+                navigate(ROUTES.ANIME_HUB_AUTH)
+            }
+        } catch (error) {
+            if (error.name !== 'AbortError') {
+                console.error('Error checking authentication:', error)
+            }
+        } finally {
+            setIsLoading(false)
+        }
+    }, [navigate])
+
+    const fetchMediaContent = useCallback(async () => {
+        if (!isAuthenticatedUser) return
+
+        try {
+            abortPreviousRequest()
+            setIsLoading(true)
             setError(null)
 
-            try {
-                // Fetch media content for the active tab
-                const result = await fetchUserMediaList(activeTab, activeTab === 'FAVOURITES', abortControllerRef.current.signal)
+            const result = await fetchUserMediaList(activeTab, activeTab === 'FAVOURITES', abortControllerRef.current.signal)
 
-                if (result.success) {
-                    // Sort mediaList alphabetically by 'name', except for FAVOURITES
-                    const sortedMediaList =
-                        activeTab !== 'FAVOURITES' ? result.mediaList.sort((a, b) => a.name.localeCompare(b.name)) : result.mediaList
+            if (result.success) {
+                const sortedMedia = activeTab !== 'FAVOURITES' ? result.mediaList.sort((a, b) => a.name.localeCompare(b.name)) : result.mediaList
 
-                    setMediaContent(sortedMediaList)
-                } else if (result.retryAfterSeconds > 0) {
-                    window.addToast(`Rate limit exceeded. Try again after ${result.retryAfterSeconds} seconds.`, 'error')
-                } else {
-                    window.addToast(result.message, 'error')
-                }
-            } catch (error) {
-                if (error.name === 'AbortError') {
-                    console.log('Fetch aborted')
-                } else {
-                    setError(error)
-                    window.addToast(`Error fetching ${activeTab.toLowerCase()} data.`, 'error', 10000)
-                    console.error(`Error fetching ${activeTab.toLowerCase()} data:`, error)
-                }
-            } finally {
-                setIsLoading(false)
+                setMediaContent(sortedMedia)
+            } else {
+                setError(result.message)
+                console.warn(result.message)
             }
-        },
-        [activeTab, isUserAuthenticated]
-    )
-
-    // Check user authentication on load
-    useEffect(() => {
-        const checkAuthentication = async () => {
-            window.addToast('Checking authentication status...', 'info')
-            if (location.pathname === '/anime-hub' || location.pathname === '/anime-hub/auth') {
-                setIsLoading(true)
-                const isAuth = await isAuthenticated(abortControllerRef.current?.signal)
-                setIsUserAuthenticated(isAuth)
-
-                if (isAuth) {
-                    console.log('User is authenticated')
-                    navigate('/anime-hub')
-                } else {
-                    console.log('User is not authenticated')
-                    navigate('/anime-hub/auth')
-                }
-
-                setIsLoading(false)
+        } catch (error) {
+            if (error.name !== 'AbortError') {
+                setError('Failed to fetch media content.')
+                console.error('Error fetching media content:', error)
             }
+        } finally {
+            setIsLoading(false)
         }
+    }, [activeTab, isAuthenticatedUser])
 
+    useEffect(() => {
         checkAuthentication()
-    }, [location, navigate])
-
-    // Fetch media content when the active tab changes and the user is authenticated
-    useEffect(() => {
-        if (isUserAuthenticated && ['ANIME', 'MANGA', 'FAVOURITES'].includes(activeTab)) {
-            fetchMediaContent(true)
-        }
-    }, [activeTab, fetchMediaContent, isUserAuthenticated])
+    }, [checkAuthentication])
 
     useEffect(() => {
-        return () => {
-            if (abortControllerRef.current) {
-                abortControllerRef.current.abort()
-            }
+        if (isAuthenticatedUser && ['ANIME', 'MANGA', 'FAVOURITES'].includes(activeTab)) {
+            fetchMediaContent()
         }
+    }, [activeTab, isAuthenticatedUser, fetchMediaContent])
+
+    useEffect(() => {
+        return () => abortPreviousRequest()
     }, [])
-
-    const refetchMedia = () => fetchMediaContent()
 
     return (
         <AnimeHubContext.Provider
@@ -111,8 +98,8 @@ export const AnimeHubProvider = ({ children }) => {
                 activeTab,
                 setActiveTab,
                 isLoading,
-                refetchMedia,
                 error,
+                refetchMedia: fetchMediaContent,
             }}>
             {children}
         </AnimeHubContext.Provider>
