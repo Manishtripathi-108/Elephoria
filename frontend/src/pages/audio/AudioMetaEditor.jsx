@@ -9,9 +9,9 @@ import * as Yup from 'yup'
 
 import FileDownload from '../../components/common/FileDownload'
 import JelloButton from '../../components/common/buttons/JelloButton'
-import API_ROUTES from '../../constants/apiEndpoints'
-import ROUTES from '../../constants/routes'
-import { iconMap } from '../../utils/globalConstants'
+import API_ROUTES from '../../constants/apiRoutes'
+import APP_ROUTES from '../../constants/appRoutes'
+import iconMap from '../../constants/iconMap'
 import { metaTags } from './utils.js/constants'
 
 const AudioMetadataEditor = () => {
@@ -31,7 +31,7 @@ const AudioMetadataEditor = () => {
     useEffect(() => {
         // If not from the extractor, redirect to the AudioTagsExtractor page
         if (!fromExtractor) {
-            navigate(ROUTES.AUDIO_TAGS_EXTRACTOR)
+            navigate(APP_ROUTES.AUDIO.TAGS_EXTRACTOR)
         }
 
         // Clear the sessionStorage flag after redirect or navigation

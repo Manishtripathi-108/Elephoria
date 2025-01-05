@@ -10,7 +10,7 @@ import { backendLogger } from '../utils/logger.utils.js';
 // 	return res.json(response.data);
 // };
 
-const exchangePinForToken = async (pin) => {
+const exchangeCodeForToken = async (pin) => {
     const response = await anilistApi.post('https://anilist.co/api/v2/oauth/token', {
         grant_type: 'authorization_code',
         client_id: process.env.ANILIST_CLIENT_ID,
@@ -18,9 +18,6 @@ const exchangePinForToken = async (pin) => {
         redirect_uri: process.env.ANILIST_REDIRECT_URI,
         code: pin,
     });
-
-    const userId = await fetchUserId(response.data.access_token);
-    response.data.user_id = userId;
 
     return response.data;
 };
@@ -37,8 +34,11 @@ const renewAniListToken = async (refreshToken) => {
         userId: response.data.user_id,
     });
 
-    const userId = await fetchUserId(response.data.access_token);
-    response.data.user_id = userId;
+    if (!response.data.access_token) {
+        return null;
+    }
+
+    response.data.expires_in = parseInt(response.data.expires_in) / 1000;
 
     return response.data;
 };
@@ -373,7 +373,7 @@ const deleteMediaEntry = async (token, entryId) => {
 };
 
 export {
-    exchangePinForToken,
+    exchangeCodeForToken,
     renewAniListToken,
     fetchUserId,
     fetchUserData,

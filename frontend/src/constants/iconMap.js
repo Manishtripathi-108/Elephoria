@@ -1,7 +1,7 @@
-import ROUTES from '../constants/routes';
-
-export const iconMap = {
+const iconMap = {
     anime: 'custom:anime',
+    arrowOpenLeft: 'line-md:arrow-open-left',
+    arrowOpenRight: 'line-md:arrow-open-right',
     broom: 'game-icons:broom',
     card: 'material-symbols:cards-outline-rounded',
     close: 'iconamoon:close',
@@ -11,12 +11,15 @@ export const iconMap = {
     email: 'line-md:email-alt-filled',
     error: 'meteocons:code-red-fill',
     filePlus: 'line-md:file-plus-filled',
+    filter: 'line-md:filter-filled',
     gamePad: 'emojione-monotone:video-game',
     gamePadTurbo: 'arcticons:gameturbo',
     google: 'logos:google-icon',
     heart: 'icomoon-free:heart',
     info: 'ic:round-info',
     infoOutlined: 'carbon:information',
+    left: 'formkit:left',
+    leftArrow: 'line-md:arrow-left',
     list: 'tabler:list',
     loading: 'line-md:loading-loop',
     logOut: 'majesticons:logout',
@@ -27,6 +30,8 @@ export const iconMap = {
     password: 'line-md:watch-loop',
     person: 'line-md:person-filled',
     player: 'game-icons:centurion-helmet',
+    right: 'formkit:right',
+    rightArrow: 'line-md:arrow-right',
     refresh: 'grommet-icons:power-reset',
     search: 'line-md:search',
     settings: 'solar:settings-bold',
@@ -43,39 +48,4 @@ export const iconMap = {
     // warning: 'solar:shield-warning-bold',
 }
 
-export const sidenavMenuItems = [
-    {
-        title: 'Anime Hub',
-        icon: iconMap.anime,
-        children: [
-            { name: 'Anime Hub', link: ROUTES.ANIME_HUB },
-            { name: 'Authorize', link: ROUTES.ANIME_HUB_AUTH },
-        ],
-    },
-    {
-        title: 'Games',
-        icon: iconMap.gamePad,
-        children: [
-            {
-                name: 'Tic Tac Toe',
-                children: [
-                    { name: 'Classic', link: ROUTES.CLASSIC_TIC_TAC_TOE },
-                    { name: 'Ultimate', link: ROUTES.ULTIMATE_TIC_TAC_TOE },
-                ],
-            },
-            { name: 'Snake', link: '/games/snake' },
-            { name: 'Ludo', link: '/games/ludo' },
-        ],
-    },
-    {
-        title: 'Audio',
-        icon: iconMap.music,
-        children: [{ name: 'Music Editor', link: ROUTES.AUDIO_TAGS_EXTRACTOR }],
-    },
-    {
-        title: 'Profile',
-        badge: 14,
-        icon: iconMap.person,
-        link: '/profile',
-    },
-];
+export default iconMap

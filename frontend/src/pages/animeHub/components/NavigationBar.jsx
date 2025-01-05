@@ -7,7 +7,7 @@ import { Icon } from '@iconify/react'
 import { logoutUser } from '../../../api/animeHubApi'
 import { ConfirmationModal, openModal } from '../../../components/common/PrimaryModal'
 import { useAnimeHubContext } from '../../../context/AnimeHubContext'
-import { iconMap } from '../../../utils/globalConstants'
+import iconMap from '../../../constants/iconMap'
 
 const NavigationBar = () => {
     const { activeTab, setActiveTab } = useAnimeHubContext()

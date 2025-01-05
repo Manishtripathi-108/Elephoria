@@ -5,7 +5,7 @@ import { ErrorMessage, Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
 import { useTicTacToeContext } from '../../../../context/TicTacToe/TicTacToeContext'
-import { iconMap } from '../../../../utils/globalConstants'
+import iconMap from '../../../../constants/iconMap'
 
 const PlayOnlineForm = () => {
     const [isJoinForm, setIsJoinForm] = useState(true)

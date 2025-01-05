@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Icon } from '@iconify/react'
 
-import { iconMap } from '../../../utils/globalConstants'
+import iconMap from '../../../constants/iconMap'
 
 const Progress = ({ percentage, timeLeft }) => {
     return (

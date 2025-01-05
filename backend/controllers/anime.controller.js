@@ -1,5 +1,5 @@
 import {
-    exchangePinForToken,
+    exchangeCodeForToken,
     fetchUserData,
     fetchUserMedia,
     fetchUserFavourites,
@@ -7,85 +7,101 @@ import {
     saveMediaEntry,
     toggleFavourite,
     deleteMediaEntry,
+    renewAniListToken,
 } from '../services/anime.service.js';
 import { successResponse, anilistErrorResponse } from '../utils/response.utils.js';
 
-const setCookie = (res, name, value, options = {}) => {
-    res.cookie(name, value, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        ...options,
-    });
+const handleTokenResponse = (res, data) => {
+    if (data.access_token) {
+        res.cookie('anilistRefreshToken', data.refresh_token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        });
+
+        return successResponse(res, {
+            anilistAccessToken: data.access_token,
+            expiresIn: data.expires_in,
+        });
+    } else {
+        return anilistErrorResponse(res, 'Failed to Login. Please try again', data);
+    }
 };
 
-export const getToken = async (req, res) => {
+export const handleCodeExchange = async (req, res) => {
     try {
-        const data = await exchangePinForToken(req.body.pin);
-
-        if (data.access_token) {
-            setCookie(res, 'anilistToken', data.access_token, {
-                maxAge: data.expires_in * 10000,
-            });
-            setCookie(res, 'anilistRefreshToken', data.refresh_token);
-            setCookie(res, 'anilistUserId', data.user_id);
-
-            return successResponse(res, true);
-        } else {
-            return anilistErrorResponse(res, 'Failed to Login. Please try again', data);
-        }
+        const data = await exchangeCodeForToken(req.body.pin);
+        return handleTokenResponse(res, data);
     } catch (error) {
         return anilistErrorResponse(res, 'Failed to Login. Please try again', error);
     }
 };
 
+export const refreshToken = async (req, res) => {
+    try {
+        console.log('Refreshing anilist access token...');
+
+        const { anilistRefreshToken } = req.cookies;
+
+        if (!anilistRefreshToken) {
+            return res.status(401).json({ message: 'Unauthorized: No refresh token provided' });
+        }
+
+        const data = await renewAniListToken(anilistRefreshToken);
+
+        if (!data) {
+            return res.status(401).json({ message: 'Unauthorized: Invalid refresh token' });
+        }
+
+        return handleTokenResponse(res, data);
+    } catch (error) {
+        if (error.response?.status === 401) {
+            return res.status(401).json({ message: 'Unauthorized: Invalid refresh token' });
+        }
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
 export const getUserData = async (req, res) => {
     try {
-        const data = await fetchUserData(req.body.anilistToken);
+        const data = await fetchUserData(req.body.anilistAccessToken);
         return successResponse(res, data);
     } catch (error) {
-        return anilistErrorResponse(
-            res,
-            'Oops! Something went wrong while fetching your data. Please try refreshing the page or come back later.',
-            error
-        );
+        return anilistErrorResponse(res, 'Error fetching user data. Please try again later.', error);
     }
 };
 
 export const getUserMedia = async (req, res) => {
     try {
         const data = await fetchUserMedia(
-            req.body.anilistToken,
+            req.body.anilistAccessToken,
             req.body.anilistUserId,
             String(req.body.mediaType || 'ANIME').toUpperCase()
         );
         return successResponse(res, data);
     } catch (error) {
-        return anilistErrorResponse(
-            res,
-            'Oops! Something went wrong while fetching your media. Please try refreshing the page or come back later.',
-            error
-        );
+        return anilistErrorResponse(res, 'Error fetching user media. Please try again later.', error);
     }
 };
 
 export const getUserMediaIds = async (req, res) => {
     try {
         const data = await fetchUserMedia(
-            req.body.anilistToken,
+            req.body.anilistAccessToken,
             req.body.anilistUserId,
             String(req.body.mediaType || 'ANIME').toUpperCase(),
             true
         );
         return successResponse(res, data);
     } catch (error) {
-        return anilistErrorResponse(res, 'Unable to fetch media IDs. Please try again.', error);
+        return anilistErrorResponse(res, 'Error fetching media IDs. Please try again later.', error);
     }
 };
 
 export const getUserFavourites = async (req, res) => {
     try {
-        const data = await fetchUserFavourites(req.body.anilistToken, req.body.anilistUserId);
+        const data = await fetchUserFavourites(req.body.anilistAccessToken, req.body.anilistUserId);
 
         if (!data) {
             return res.status(404).json({ message: 'Favourites data not found' });
@@ -98,7 +114,7 @@ export const getUserFavourites = async (req, res) => {
             },
         });
     } catch (error) {
-        return anilistErrorResponse(res, 'Unable to retrieve favourites. Please try again.', error);
+        return anilistErrorResponse(res, 'Error retrieving favourites. Please try again later.', error);
     }
 };
 
@@ -125,47 +141,47 @@ export const saveMedia = async (req, res) => {
     let progress = status === 'COMPLETED' ? 10000 : req.body.progress;
 
     try {
-        const data = await saveMediaEntry(req.body.anilistToken, req.body.mediaId, status, progress);
+        const data = await saveMediaEntry(req.body.anilistAccessToken, req.body.mediaId, status, progress);
         return successResponse(res, {
             SaveMediaListEntry: data.data.data.SaveMediaListEntry,
             retryAfterSeconds: data.headers['retry-after'],
             remainingRateLimit: data.headers['x-ratelimit-remaining'],
         });
     } catch (error) {
-        return anilistErrorResponse(res, 'Failed to fetch AniList IDs', error);
+        return anilistErrorResponse(res, 'Error saving media entry. Please try again later.', error);
     }
 };
 
-export async function toggleFavouriteMedia(req, res) {
+export const toggleFavouriteMedia = async (req, res) => {
     try {
         const data = await toggleFavourite(
-            req.body.anilistToken,
+            req.body.anilistAccessToken,
             req.body.mediaId,
             String(req.body.mediaType || 'ANIME').toLowerCase()
         );
         return successResponse(res, data);
     } catch (error) {
-        return anilistErrorResponse(res, 'Failed to toggle favourite status. Please try again later.', error);
+        return anilistErrorResponse(res, 'Error toggling favourite status. Please try again later.', error);
     }
-}
+};
 
-export async function deleteMedia(req, res) {
+export const deleteMedia = async (req, res) => {
     try {
-        const data = await deleteMediaEntry(req.body.anilistToken, req.body.entryId);
+        const data = await deleteMediaEntry(req.body.anilistAccessToken, req.body.entryId);
         return successResponse(res, data);
     } catch (error) {
-        return anilistErrorResponse(res, 'Failed to delete media entry. Please try again later.', error);
+        return anilistErrorResponse(res, 'Error deleting media entry. Please try again later.', error);
     }
-}
+};
 
 export const logoutUser = (req, res) => {
-    const { anilistToken, anilistRefreshToken, aniListUserId } = req.cookies;
+    const { anilistAccessToken, anilistRefreshToken, aniListUserId } = req.cookies;
 
-    if (!anilistToken && !anilistRefreshToken && !aniListUserId) {
+    if (!anilistAccessToken && !anilistRefreshToken && !aniListUserId) {
         return res.status(200).json({ message: 'Already logged out.' });
     }
 
-    res.clearCookie('anilistToken', {
+    res.clearCookie('anilistAccessToken', {
         httpOnly: true,
         secure: true,
         sameSite: 'strict',
@@ -181,5 +197,5 @@ export const logoutUser = (req, res) => {
         sameSite: 'strict',
     });
 
-    res.status(200).json({ message: 'Logged out successfully.' });
+    return res.status(200).json({ message: 'Logged out successfully.' });
 };

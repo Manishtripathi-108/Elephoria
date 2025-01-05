@@ -3,7 +3,7 @@ import React, { memo } from 'react'
 import { Icon } from '@iconify/react'
 
 import { openModal } from '../../../components/common/PrimaryModal'
-import { iconMap } from '../../../utils/globalConstants'
+import iconMap from '../../../constants/iconMap'
 import { convertMonthNumberToName } from '../utils/constants'
 import AnimeModal from './AnimeModal'
 

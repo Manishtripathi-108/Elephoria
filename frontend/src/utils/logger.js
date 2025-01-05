@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import API_ROUTES from '../constants/apiEndpoints'
+import API_ROUTES from '../constants/apiRoutes'
 
 const LOG_LEVELS = {
     INFO: 'info',

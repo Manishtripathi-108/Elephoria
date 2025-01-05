@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { iconMap } from '../../utils/globalConstants'
+import iconMap from '../../constants/iconMap'
 import JelloButton from './buttons/JelloButton'
 
 /**

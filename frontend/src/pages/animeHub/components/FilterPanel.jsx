@@ -3,7 +3,7 @@ import React, { useCallback, useDeferredValue, useEffect, useState } from 'react
 import { Icon } from '@iconify/react'
 
 import NeuToggleButton from '../../../components/common/buttons/NeuToggleButton'
-import { iconMap } from '../../../utils/globalConstants'
+import iconMap from '../../../constants/iconMap'
 import { filterOptions, sortOptions } from '../utils/constants'
 
 const currentYear = new Date().getFullYear()

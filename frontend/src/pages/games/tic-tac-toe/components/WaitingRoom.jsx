@@ -4,7 +4,7 @@ import { Icon } from '@iconify/react'
 import { motion } from 'motion/react'
 
 import ElevateButton from '../../../../components/common/buttons/ElevateButton'
-import { iconMap } from '../../../../utils/globalConstants'
+import iconMap from '../../../../constants/iconMap'
 
 const WaitingRoom = ({ onExit, onStart, playerO = '', playerX = '', roomId, roomName }) => {
     // Utility to animate letters in a word

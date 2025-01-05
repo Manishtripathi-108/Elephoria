@@ -390,6 +390,10 @@ body {
         @apply px-2 py-1 text-xs;
     }
 
+    .button-base {
+        @apply px-4 py-2 text-sm;
+    }
+
     .button-lg {
         @apply px-4 py-3 text-base;
     }
@@ -544,7 +548,26 @@ body {
         @apply text-light-secondary dark:text-dark-secondary;
     }
 
-    /* ----------------------------- Thin Scrollbar ----------------------------- */
+    /* ------------------------------ Border Colors ----------------------------- */
+    .border-primary {
+        @apply border-light-primary dark:border-dark-primary;
+    }
+
+    .border-secondary {
+        @apply border-light-secondary dark:border-dark-secondary;
+    }
+
+    .border-accent {
+        @apply border-light-accent dark:border-dark-accent;
+    }
+
+    .border-highlight {
+        @apply border-light-highlight dark:border-dark-highlight;
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /*                               Thin Scrollbar                               */
+    /* -------------------------------------------------------------------------- */
     .scrollbar-thin {
         &::-webkit-scrollbar {
             width: 6px; /* Set the width of the scrollbar */

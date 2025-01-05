@@ -6,7 +6,7 @@ import axios from 'axios'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
-import { exchangePin } from '../../api/animeHubApi'
+import { exchangeCode } from '../../api/animeHubApi'
 
 const validationSchema = Yup.object().shape({
     pin: Yup.string()
@@ -18,7 +18,7 @@ const AnimeHubAuth = () => {
     const navigate = useNavigate()
 
     const handleSubmit = async (values, { setSubmitting }) => {
-        const result = await exchangePin(values.pin)
+        const result = await exchangeCode(values.pin)
         if (result.success) {
             window.addToast('Authorization successful!', 'success')
             navigate('/anime-hub')

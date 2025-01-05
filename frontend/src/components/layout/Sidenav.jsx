@@ -5,7 +5,50 @@ import { Link } from 'react-router-dom'
 import { Icon } from '@iconify/react'
 
 import avatarImage from '../../assets/images/square/logo.png'
-import { iconMap, sidenavMenuItems } from '../../utils/globalConstants'
+import APP_ROUTES from '../../constants/appRoutes'
+import iconMap from '../../constants/iconMap'
+
+export const sidenavMenuItems = [
+    {
+        title: 'Anime Hub',
+        icon: iconMap.anime,
+        children: [
+            { name: 'Anime Hub', link: APP_ROUTES.ANIME_HUB.ROOT },
+            { name: 'Authorize', link: APP_ROUTES.ANIME_HUB.LOGIN },
+        ],
+    },
+    {
+        title: 'Anime',
+        icon: iconMap.anime,
+        link: APP_ROUTES.ANIME.ANIMELIST,
+    },
+    {
+        title: 'Games',
+        icon: iconMap.gamePad,
+        children: [
+            {
+                name: 'Tic Tac Toe',
+                children: [
+                    { name: 'Classic', link: APP_ROUTES.GAMES.TIC_TAC_TOE.CLASSIC },
+                    { name: 'Ultimate', link: APP_ROUTES.GAMES.TIC_TAC_TOE.ULTIMATE },
+                ],
+            },
+            { name: 'Snake', link: '/anime' },
+            { name: 'Ludo', link: '/games/ludo' },
+        ],
+    },
+    {
+        title: 'Audio',
+        icon: iconMap.music,
+        children: [{ name: 'Music Editor', link: APP_ROUTES.AUDIO.TAGS_EXTRACTOR }],
+    },
+    {
+        title: 'Profile',
+        badge: 14,
+        icon: iconMap.person,
+        link: '/profile',
+    },
+]
 
 const Sidenav = ({ onDismiss }) => {
     return (

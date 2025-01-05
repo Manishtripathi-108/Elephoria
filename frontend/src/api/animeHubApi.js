@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import API_ROUTES from '../constants/apiEndpoints'
+import API_ROUTES from '../constants/apiRoutes'
 
 /**
  * Handles API errors and returns a standardized error object.
@@ -59,10 +59,14 @@ export const logoutUser = async (abortSignal) => {
  * If the exchange is successful, the "success" property is true and the user is logged in.
  * If the exchange fails, the "success" property is false and an error message is provided.
  */
-export const exchangePin = async (pin, abortSignal) => {
+export const exchangeCode = async (pin, abortSignal) => {
     try {
         const response = await axios.post(API_ROUTES.ANIME_HUB.LOGIN, { pin }, { signal: abortSignal })
-        return { success: response.data }
+        if (!response.data.success) {
+            return { success: false, message: response.data.message }
+        }
+
+        return response.data
     } catch (error) {
         return handleError('Something went wrong while exchanging the pin. Please try again later.', error)
     }

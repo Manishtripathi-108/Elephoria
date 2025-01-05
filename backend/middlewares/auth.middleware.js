@@ -1,35 +1,24 @@
-import { fetchUserId, renewAniListToken } from '../services/anime.service.js';
-
-const setCookie = (res, name, value, options = {}) => {
-    res.cookie(name, value, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        ...options,
-    });
-};
-
-const handleUnauthorized = (res, message = 'Unauthorized: Please log in again.') => {
-    return res.status(401).json({ message });
-};
+import { fetchUserId } from '../services/anime.service.js';
+import jwt from 'jsonwebtoken';
 
 const verifyAuth = async (req, res, next) => {
-    let { anilistToken: token, anilistRefreshToken: refreshToken, anilistUserId: userId } = req.cookies;
+    console.log('Verifying anime auth...');
 
-    // Check and renew token if missing
-    if (!token && refreshToken) {
-        const response = await renewAniListToken(refreshToken);
-        if (!response.access_token) return handleUnauthorized(res);
+    const token = req.headers['authorization']?.split(' ')[1];
 
-        token = response.access_token;
-        setCookie(res, 'anilistToken', response.access_token, {
-            maxAge: response.expires_in * 10000,
-        });
-        setCookie(res, 'anilistRefreshToken', response.refresh_token);
-        setCookie(res, 'anilistUserId', response.user_id);
-        userId = response.user_id;
-    } else if (!token) {
-        return handleUnauthorized(res);
+    if (!token) return res.status(401).json({ message: 'Unauthorized' });
+    let userId;
+
+    try {
+        const decoded = jwt.decode(token);
+        if (!decoded) return res.status(401).json({ message: 'Unauthorized' });
+        if (decoded.exp < Date.now() / 1000) return res.status(401).json({ message: 'Unauthorized' });
+        if (!decoded.aud || decoded.aud !== process.env.ANILIST_CLIENT_ID)
+            return res.status(401).json({ message: 'Unauthorized' });
+
+        userId = decoded.sub;
+    } catch (error) {
+        return res.status(401).json({ message: 'Unauthorized' });
     }
 
     // Fetch user ID if missing
@@ -37,21 +26,17 @@ const verifyAuth = async (req, res, next) => {
         try {
             userId = await fetchUserId(token);
             if (!userId) return handleUnauthorized(res, 'Unauthorized: Please log in again.');
-            setCookie(res, 'anilistUserId', userId);
         } catch (error) {
-            return res.status(500).json({
-                message: 'Failed to fetch user ID. Please reload the page or log in again.',
-                error,
-            });
+            return res.status(500).json({ message: 'Internal Server Error' });
         }
     }
 
-    // Attach user info to request for access in further middleware/route handlers
+    // Attach user info to request
     req.body.anilistUserId = userId;
-    req.body.anilistToken = token;
+    req.body.anilistAccessToken = token;
 
     if (token && userId) next();
-    else handleUnauthorized(res);
+    else return res.status(401).json({ message: 'Unauthorized' });
 };
 
 export default verifyAuth;

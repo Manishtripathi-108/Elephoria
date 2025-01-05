@@ -3,8 +3,10 @@ import React, { Suspense, lazy } from 'react'
 import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom'
 
 import LoadingState from './components/Loading'
+import ProtectedRoute from './components/PrivateRoute'
 import RootLayout from './components/layout/RootLayout'
 import { AnimeHubProvider } from './context/AnimeHubContext'
+import AuthTokenProvider from './context/AuthTokenProvider'
 import { LoadingBarProvider } from './context/LoadingBarContext'
 import { TicTacToeProvider } from './context/TicTacToe/TicTacToeContext'
 import './utils/iconUtils'
@@ -13,6 +15,9 @@ import './utils/iconUtils'
 const Home = lazy(() => import('./pages/Home'))
 const NotFound = lazy(() => import('./pages/404-page'))
 const Shadows = lazy(() => import('./pages/ShadowsGrid'))
+const AnimeLayout = lazy(() => import('./pages/anime/AnimeLayout'))
+const AnimeList = lazy(() => import('./pages/anime/AnimeList'))
+const AnimeLogin = lazy(() => import('./pages/anime/AnimeLogin'))
 const AnimeHub = lazy(() => import('./pages/animeHub/AnimeHub'))
 const AnimeHubAuth = lazy(() => import('./pages/animeHub/AnimeHubAuth'))
 const AudioMetaExtractor = lazy(() => import('./pages/audio/AudioMetaExtractor'))
@@ -28,10 +33,16 @@ const withSuspense = (Component, props = {}) => (
     </Suspense>
 )
 
+const withProtectedRoute = (Component, isAnilistRoute = false) => <ProtectedRoute isAnilistRoute={isAnilistRoute}>{Component}</ProtectedRoute>
+
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <RootLayout />,
+        element: (
+            <AuthTokenProvider>
+                <RootLayout />
+            </AuthTokenProvider>
+        ),
         children: [
             { index: true, element: withSuspense(Home) },
             { path: '/shadows', element: withSuspense(Shadows) },
@@ -46,13 +57,23 @@ const router = createBrowserRouter([
             {
                 path: '/anime-hub',
                 element: <AnimeHubProvider>{withSuspense(AnimeHub)}</AnimeHubProvider>,
+            },
+            {
+                path: '/anime-hub/auth',
+                element: <AnimeHubProvider>{withSuspense(AnimeHubAuth)}</AnimeHubProvider>,
+            },
+            /* -------------------------------------------------------------------------- */
+            /*                                    Anime                                   */
+            /* -------------------------------------------------------------------------- */
+            {
+                path: '/anime',
+                element: withProtectedRoute(withSuspense(AnimeLayout), true),
                 children: [
-                    {
-                        path: 'auth',
-                        element: <AnimeHubProvider>{withSuspense(AnimeHubAuth)}</AnimeHubProvider>,
-                    },
+                    { index: true, element: <Navigate to="animelist" replace /> },
+                    { path: 'animelist', element: withSuspense(AnimeList) },
                 ],
             },
+            { path: '/anime/login', element: withSuspense(AnimeLogin) },
             /* -------------------------------------------------------------------------- */
             /*                                    Games                                   */
             /* -------------------------------------------------------------------------- */

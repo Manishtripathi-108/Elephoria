@@ -3,7 +3,7 @@ import React from 'react'
 import { Icon } from '@iconify/react'
 
 import cn from '../../../utils/cn'
-import { iconMap } from '../../../utils/globalConstants'
+import iconMap from '../../../constants/iconMap'
 
 const variants = {
     primary: {

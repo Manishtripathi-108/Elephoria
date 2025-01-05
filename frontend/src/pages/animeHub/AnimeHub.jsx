@@ -4,7 +4,7 @@ import { Icon } from '@iconify/react'
 
 import NoContentCard from '../../components/common/NoContentCard'
 import { useAnimeHubContext } from '../../context/AnimeHubContext'
-import { iconMap } from '../../utils/globalConstants'
+import iconMap from '../../constants/iconMap'
 import ImportMedia from './ImportMedia'
 import CardView from './components/CardView'
 import FilterPanel from './components/FilterPanel'

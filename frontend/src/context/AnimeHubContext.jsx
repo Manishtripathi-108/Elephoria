@@ -3,7 +3,7 @@ import React, { createContext, useCallback, useContext, useEffect, useRef, useSt
 import { useNavigate } from 'react-router-dom'
 
 import { fetchUserMediaList, isAuthenticated } from '../api/animeHubApi'
-import ROUTES from '../constants/routes'
+import APP_ROUTES from '../constants/appRoutes'
 
 const AnimeHubContext = createContext()
 
@@ -35,11 +35,11 @@ export const AnimeHubProvider = ({ children }) => {
             setIsAuthenticatedUser(isAuth)
             console.log(isAuth)
 
-            if (isAuth) {
-                navigate(ROUTES.ANIME_HUB)
-            } else {
-                navigate(ROUTES.ANIME_HUB_AUTH)
-            }
+            // if (isAuth) {
+            //     navigate(APP_ROUTES.ANIME_HUB.ROOT)
+            // } else {
+            //     navigate(APP_ROUTES.ANIME_HUB.LOGIN)
+            // }
         } catch (error) {
             if (error.name !== 'AbortError') {
                 console.error('Error checking authentication:', error)

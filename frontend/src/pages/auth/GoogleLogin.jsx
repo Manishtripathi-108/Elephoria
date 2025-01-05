@@ -6,7 +6,7 @@ import { Icon } from '@iconify/react'
 import { signInWithPopup } from 'firebase/auth'
 
 import { auth, provider } from '../../firebase'
-import { iconMap } from '../../utils/globalConstants'
+import iconMap from '../../constants/iconMap'
 
 const GoogleLogin = () => {
     const navigate = useNavigate()

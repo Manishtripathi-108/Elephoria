@@ -4,7 +4,7 @@ import { Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
 import IconInput from '../../components/common/form/icon-input'
-import { iconMap } from '../../utils/globalConstants'
+import iconMap from '../../constants/iconMap'
 import GoogleLogin from './GoogleLogin'
 
 const validationSchema = Yup.object({

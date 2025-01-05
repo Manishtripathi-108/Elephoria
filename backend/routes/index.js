@@ -1,3 +1,4 @@
+import refreshAllTokens from '../services/refreshAllTokens.service.js';
 import animeRoutes from './anime.routes.js';
 import audioRoutes from './audio.routes.js';
 import logs from './logs.routes.js';
@@ -11,6 +12,7 @@ router.get('/', (req, res) => {
         message: 'Welcome to the Elephoria API!',
     });
 });
+router.post('/token', refreshAllTokens);
 router.use('/anime-hub', animeRoutes);
 router.use('/audio', audioRoutes);
 router.use('/logs', logs);

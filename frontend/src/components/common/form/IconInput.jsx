@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 import { Icon } from '@iconify/react'
 
-import { iconMap } from '../../../utils/globalConstants'
+import iconMap from '../../../constants/iconMap'
 
 const IconInput = ({
     type = 'text',

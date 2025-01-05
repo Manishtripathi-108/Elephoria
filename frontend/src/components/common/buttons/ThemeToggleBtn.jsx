@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 import { Icon } from '@iconify/react'
 
 import useThemeMode from '../../../hooks/useThemeMode'
-import { iconMap } from '../../../utils/globalConstants'
+import iconMap from '../../../constants/iconMap'
 
 const ThemeToggleBtn = () => {
     const { theme, handleThemeChange } = useThemeMode()

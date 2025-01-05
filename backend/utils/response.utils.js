@@ -3,14 +3,15 @@ import { backendLogger } from './logger.utils.js';
 export const successResponse = (res, data) => res.status(200).json({ success: true, ...data });
 
 /**
- * Sends an error response with a specified HTTP status code and logs the error.
+ * Sends an error response with a specified HTTP status code, logs the error, and
+ * includes the error message in the response.
  *
  * @param {Object} res - The Express.js response object.
- * @param {string} message - The error message to send in the response.
- * @param {Error} error - The error object to log.
- * @param {number} [status=500] - The HTTP status code for the response.
+ * @param {string} [message='Internal Server Error'] - The error message to log and send in the response.
+ * @param {Error} [error] - The error object to log.
+ * @param {number} [status=500] - The HTTP status code to send in the response.
  */
-export const errorResponse = (res, message, error, status = 500) => {
+export const errorResponse = (res, message = 'Internal Server Error', error, status = 500) => {
     backendLogger.error(message, error);
     res.status(status).json({ success: false, message: message, error });
 };

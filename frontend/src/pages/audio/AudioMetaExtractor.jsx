@@ -8,8 +8,8 @@ import LoadingState from '../../components/Loading'
 import UploadProgressBar from '../../components/common/UploadProgressBar'
 import JelloButton from '../../components/common/buttons/JelloButton'
 import UploadInput from '../../components/common/form/UploadInput'
-import API_ROUTES from '../../constants/apiEndpoints'
-import ROUTES from '../../constants/routes'
+import API_ROUTES from '../../constants/apiRoutes'
+import APP_ROUTES from '../../constants/appRoutes'
 
 const INITIAL_UPLOAD_STATE = {
     status: 'idle', // idle | uploading | processing
@@ -104,7 +104,7 @@ const AudioMetaExtractor = () => {
 
             if (response.data?.success) {
                 sessionStorage.setItem('fromExtractor', 'true')
-                navigate(ROUTES.AUDIO_TAGS_EDITOR, {
+                navigate(APP_ROUTES.AUDIO.TAGS_EXTRACTOR, {
                     state: {
                         metadata: response.data?.metadata?.format?.tags || null,
                         coverImage: response.data?.coverImage || null,
