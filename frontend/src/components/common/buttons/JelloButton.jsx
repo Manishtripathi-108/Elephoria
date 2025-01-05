@@ -2,8 +2,8 @@ import React from 'react'
 
 import { Icon } from '@iconify/react'
 
-import cn from '../../../utils/cn'
 import iconMap from '../../../constants/iconMap'
+import cn from '../../../utils/cn'
 
 const variants = {
     primary: {

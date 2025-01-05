@@ -19,7 +19,7 @@ const ProgressBar = ({ total, current, percentage = '', name = '' }) => {
                     aria-valuemax="100"
                     role="progressbar"
                     aria-label={`${percentage}% progress`}
-                    className="relative inline-block h-5 overflow-hidden rounded-full border border-inherit bg-gradient-to-t from-light-accent/70 to-light-accent bg-cover align-middle after:absolute after:inset-0 after:animate-progress-after after:bg-[linear-gradient(_45deg,#ffffff_25%,rgba(0,0,0,0)_25%,rgba(0,0,0,0)_50%,#ffffff_50%,#ffffff_75%,rgba(0,0,0,0)_75%,rgba(0,0,0,0)_)] after:bg-[length:30px_30px] after:opacity-30 dark:from-dark-accent/70 dark:to-dark-accent"></span>
+                    className="bg-linear-to-t relative inline-block h-5 overflow-hidden rounded-full border border-inherit from-light-accent/70 to-light-accent bg-cover align-middle after:absolute after:inset-0 after:animate-progress-after after:bg-[linear-gradient(_45deg,#ffffff_25%,rgba(0,0,0,0)_25%,rgba(0,0,0,0)_50%,#ffffff_50%,#ffffff_75%,rgba(0,0,0,0)_75%,rgba(0,0,0,0)_)] after:bg-[length:30px_30px] after:opacity-30 dark:from-dark-accent/70 dark:to-dark-accent"></span>
             </div>
 
             <span className="text-primary text-center font-aladin text-sm tracking-widest">

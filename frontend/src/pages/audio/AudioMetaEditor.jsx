@@ -116,7 +116,7 @@ const AudioMetadataEditor = () => {
                     fileName={metadata.title || 'edited_audio_file'}
                 />
             ) : (
-                <div className="w-full max-w-screen-lg rounded-3xl border border-light-secondary p-2 shadow-neumorphic-lg dark:border-dark-secondary sm:p-6">
+                <div className="max-w-(--breakpoint-lg) w-full rounded-3xl border border-light-secondary p-2 shadow-neumorphic-lg dark:border-dark-secondary sm:p-6">
                     <div className="flex-center flex-col gap-4 rounded-2xl border border-light-secondary p-6 dark:border-dark-secondary sm:rounded-xl">
                         <h1 className="text-primary text-center font-aladin text-2xl tracking-wider">Edit Tags</h1>
 

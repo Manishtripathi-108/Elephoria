@@ -11,13 +11,13 @@ const SkeletonList = () => {
                     <tr className="hidden sm:table-row">
                         <th className="sr-only"></th>
                         <th className="w-2/3 p-2">
-                            <div className="bg-secondary h-4 w-full animate-pulse rounded"></div>
+                            <div className="bg-secondary h-4 w-full animate-pulse rounded-sm"></div>
                         </th>
                         <th className="w-1/12 px-1 py-2">
-                            <div className="bg-secondary mx-auto h-4 w-full animate-pulse rounded"></div>
+                            <div className="bg-secondary mx-auto h-4 w-full animate-pulse rounded-sm"></div>
                         </th>
                         <th className="w-1/12 px-1 py-2">
-                            <div className="bg-secondary mx-auto h-4 w-full animate-pulse rounded"></div>
+                            <div className="bg-secondary mx-auto h-4 w-full animate-pulse rounded-sm"></div>
                         </th>
                     </tr>
                 </thead>
@@ -31,14 +31,14 @@ const SkeletonList = () => {
                                 <div className="bg-secondary size-20 animate-pulse rounded-lg"></div>
                             </td>
                             <td className="w-full px-2 align-middle tracking-wide md:w-2/3">
-                                <div className="bg-secondary h-4 w-full animate-pulse rounded"></div>
-                                <div className="bg-secondary mt-2 h-2 w-1/2 animate-pulse rounded sm:hidden"></div>
+                                <div className="bg-secondary h-4 w-full animate-pulse rounded-sm"></div>
+                                <div className="bg-secondary mt-2 h-2 w-1/2 animate-pulse rounded-sm sm:hidden"></div>
                             </td>
                             <td className="hidden px-1 align-middle sm:table-cell">
-                                <div className="bg-secondary mx-auto h-4 w-full animate-pulse rounded"></div>
+                                <div className="bg-secondary mx-auto h-4 w-full animate-pulse rounded-sm"></div>
                             </td>
                             <td className="hidden px-1 align-middle sm:table-cell">
-                                <div className="bg-secondary mx-auto h-4 w-full animate-pulse rounded"></div>
+                                <div className="bg-secondary mx-auto h-4 w-full animate-pulse rounded-sm"></div>
                             </td>
                         </tr>
                     ))}

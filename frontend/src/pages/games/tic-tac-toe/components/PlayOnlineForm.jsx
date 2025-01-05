@@ -4,8 +4,8 @@ import { Icon } from '@iconify/react'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
-import { useTicTacToeContext } from '../../../../context/TicTacToe/TicTacToeContext'
 import iconMap from '../../../../constants/iconMap'
+import { useTicTacToeContext } from '../../../../context/TicTacToe/TicTacToeContext'
 
 const PlayOnlineForm = () => {
     const [isJoinForm, setIsJoinForm] = useState(true)

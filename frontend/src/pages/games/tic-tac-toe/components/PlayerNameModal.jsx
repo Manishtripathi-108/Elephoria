@@ -4,8 +4,8 @@ import { Icon } from '@iconify/react'
 
 import { DialogModal } from '../../../../components/common/PrimaryModal'
 import ElevateButton from '../../../../components/common/buttons/ElevateButton'
-import { useTicTacToeContext } from '../../../../context/TicTacToe/TicTacToeContext'
 import iconMap from '../../../../constants/iconMap'
+import { useTicTacToeContext } from '../../../../context/TicTacToe/TicTacToeContext'
 
 const PlayerNameModal = () => {
     const [validationError, setValidationError] = useState('')

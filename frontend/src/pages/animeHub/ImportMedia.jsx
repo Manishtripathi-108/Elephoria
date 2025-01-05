@@ -181,7 +181,6 @@ const ImportMedia = () => {
 
     // Import media list
     const importMediaList = async (mediaList, retryFailed = false) => {
-
         setImportState({
             importStatus: 'IN_PROGRESS',
             totalItems: mediaList.length,

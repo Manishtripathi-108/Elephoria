@@ -46,7 +46,7 @@ const AuthComponent = () => {
 
         registerContainer.classList.toggle('left-0')
         registerContainer.classList.toggle('left-[40%]')
-        registerContainer.classList.toggle('z-[200]')
+        registerContainer.classList.toggle('z-200')
         loginContainer.classList.toggle('left-0')
         loginContainer.classList.toggle('left-[40%]')
     }
@@ -122,7 +122,7 @@ const AuthComponent = () => {
 
                 {/* Login Form with Formik */}
                 <div
-                    className="bg-primary absolute left-[40%] top-0 z-[100] flex h-full w-3/5 items-center justify-center p-6 transition-all duration-[1.25s]"
+                    className="bg-primary z-100 absolute left-[40%] top-0 flex h-full w-3/5 items-center justify-center p-6 transition-all duration-[1.25s]"
                     ref={loginContainerRef}>
                     <Formik
                         initialValues={{ email: '', password: '' }}
@@ -183,7 +183,7 @@ const AuthComponent = () => {
 
                 {/* Switch Container */}
                 <div
-                    className="bg-primary absolute left-0 top-0 z-[200] flex h-full w-2/5 items-center justify-center overflow-hidden p-[50px] shadow-neumorphic-md transition-all duration-[1.25s]"
+                    className="bg-primary z-200 absolute left-0 top-0 flex h-full w-2/5 items-center justify-center overflow-hidden p-[50px] shadow-neumorphic-md transition-all duration-[1.25s]"
                     ref={switchContainerRef}>
                     {/* Background Circles for Animation */}
                     <div className="switch-circles bg-primary absolute bottom-[-60%] left-[-60%] size-[500px] rounded-full shadow-neumorphic-inset-sm transition-all duration-[1.25s]"></div>

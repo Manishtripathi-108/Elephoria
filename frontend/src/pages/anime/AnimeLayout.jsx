@@ -95,7 +95,7 @@ const AnimeLayout = () => {
             {/* Header */}
             <header className="border-secondary w-full border-b shadow-neumorphic-inset-lg" style={bannerStyle}>
                 <div className="flex h-full w-full items-end justify-center bg-white/20 dark:bg-black/30">
-                    <div className="flex w-5/6 max-w-screen-md flex-wrap items-end justify-start gap-5 opacity-100 md:pt-20">
+                    <div className="max-w-(--breakpoint-md) flex w-5/6 flex-wrap items-end justify-start gap-5 opacity-100 md:pt-20">
                         <img
                             src="https://picsum.photos/150"
                             alt="Hello"

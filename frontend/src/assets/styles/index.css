@@ -1,407 +1,1072 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@import 'tailwindcss/screens' layer(utilities);
+@import 'tailwindcss/variants' layer(utilities);
+@import 'tailwindcss/tailwind' layer(utilities);
 
-/* Remove default CSS */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+@variant dark (&:is(.dark *));
+
+@theme {
+    --animate-blob: blob 10s infinite cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    --animate-loader-circle: loader-circle 0.5s var(--animation-delay, 0s) alternate infinite ease-in;
+    --animate-loader-shadow: loader-shadow 0.5s var(--animation-delay, 0s) alternate infinite ease-in;
+    --animate-pulse-slow: pulse-slow 1s ease-in-out infinite alternate;
+    --animate-progress-after: progress-after 1s infinite linear;
+    --animate-shimmer-ray: shimmer-ray 2.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+    --animate-slide-left: slide-left 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.27) forwards;
+    --animate-slide-left-return: slide-left-return 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.27) forwards;
+    --animate-wipe-in-down: wipe-in-down 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.27) forwards;
+    --animate-wipe-out-down: wipe-out-down 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.27) forwards;
+    --animate-zoom-in: zoom-in 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.27) forwards;
+    --animate-zoom-out: zoom-out 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.27) forwards;
+
+    --background-image-primary-gradient: linear-gradient(
+        to left,
+        rgba(31, 41, 55, 1) 0%,
+        rgba(51, 65, 85, 1) 10%,
+        rgba(51, 65, 85, 1) 90%,
+        rgba(31, 41, 55, 1) 100%
+    );
+    --background-image-secondary-gradient: linear-gradient(
+        to left,
+        rgba(51, 65, 85, 1) 0%,
+        rgba(67, 76, 94, 1) 10%,
+        rgba(67, 76, 94, 1) 90%,
+        rgba(51, 65, 85, 1) 100%
+    );
+    --background-image-yellow-gradient: linear-gradient(to left, #eab308 0%, #facc15 10%, #facc15 90%, #eab308 100%);
+    --background-image-green-gradient: linear-gradient(to left, #22c55e 0%, #4ade80 10%, #4ade80 90%, #22c55e 100%);
+    --background-image-blue-gradient: linear-gradient(to left, #3b82f6 0%, #60a5fa 10%, #60a5fa 90%, #3b82f6 100%);
+    --background-image-red-gradient: linear-gradient(
+        to left,
+        rgba(220, 38, 38, 1) 0%,
+        rgba(239, 68, 68, 1) 10%,
+        rgba(239, 68, 68, 1) 90%,
+        rgba(220, 38, 38, 1) 100%
+    );
+    --background-image-shimmer-ray-accent: radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(255, 99, 71, 1) 100%);
+    --background-image-shimmer-ray-highlight: radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(30, 144, 255, 1) 100%);
+
+    --color-light-primary: #ffb6b9;
+    --color-light-secondary: #ffe6e6;
+    --color-light-text-primary: #333333;
+    --color-light-text-secondary: #666666;
+    --color-light-accent: #dc2626;
+    --color-light-highlight: #4169e1;
+    --color-dark-primary: #1f2937;
+    --color-dark-secondary: #334155;
+    --color-dark-text-primary: #ffffff;
+    --color-dark-text-secondary: #9ca3af;
+    --color-dark-accent: #ff6347;
+    --color-dark-highlight: #1e90ff;
+
+    --shadow-neumorphic-xs: 3px 3px 5px var(--lower-shadow), -3px -3px 5px var(--upper-shadow);
+    --shadow-neumorphic-sm: 5px 5px 10px var(--lower-shadow), -5px -5px 10px var(--upper-shadow);
+    --shadow-neumorphic-md: 6px 6px 12px var(--lower-shadow), -6px -6px 12px var(--upper-shadow);
+    --shadow-neumorphic-lg: 10px 10px 20px var(--lower-shadow), -10px -10px 20px var(--upper-shadow);
+    --shadow-neumorphic-xl: 20px 20px 40px var(--lower-shadow), -20px -20px 40px var(--upper-shadow);
+    --shadow-neumorphic-inset-xs: inset 3px 3px 7px var(--lower-shadow), inset -3px -3px 7px var(--upper-shadow);
+    --shadow-neumorphic-inset-sm: inset 5px 5px 10px var(--lower-shadow), inset -5px -5px 10px var(--upper-shadow);
+    --shadow-neumorphic-inset-md: inset 6px 6px 12px var(--lower-shadow), inset -6px -6px 12px var(--upper-shadow);
+    --shadow-neumorphic-inset-lg: inset 10px 10px 20px var(--lower-shadow), inset -10px -10px 20px var(--upper-shadow);
+    --shadow-neumorphic-inset-xl: inset 20px 20px 40px var(--lower-shadow), inset -20px -20px 40px var(--upper-shadow);
+
+    --font-indie-flower: 'Indie Flower', cursive, serif;
+    --font-aladin: 'Aladin', system-ui;
+    --font-julee: 'Julee', cursive;
+
+    --spacing-calc-full-height: calc(100vh - var(--header-height) - 2px);
+
+    @keyframes shimmer-ray {
+        0% {
+            left: -30%;
+            opacity: 0;
+            width: 0;
+        }
+        100% {
+            left: 100%;
+            opacity: 1;
+            width: 35%;
+        }
+    }
+    @keyframes pulse-slow {
+        0% {
+            opacity: 1;
+            transform: scale(1.2);
+        }
+        to {
+            opacity: 0.5;
+            transform: scale(0.8);
+        }
+    }
+    @keyframes slide-left-return {
+        0% {
+            transform-origin: 0 0;
+            transform: translate(-100%);
+        }
+        100% {
+            transform-origin: 0 0;
+            transform: translate(0);
+        }
+    }
+    @keyframes slide-left {
+        0% {
+            transform-origin: 0 0;
+            transform: translate(0);
+        }
+        100% {
+            transform-origin: 0 0;
+            transform: translate(-100%);
+        }
+    }
+    @keyframes wipe-in-down {
+        0% {
+            clip-path: inset(0 0 100% 0);
+            display: none;
+        }
+        100% {
+            clip-path: inset(0 0 0 0);
+            display: block;
+        }
+    }
+    @keyframes wipe-out-down {
+        0% {
+            clip-path: inset(0 0 0 0);
+            display: block;
+        }
+        100% {
+            clip-path: inset(0 0 100% 0);
+            display: none;
+        }
+    }
+    @keyframes zoom-in {
+        0% {
+            transform: scale(0);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+    @keyframes zoom-out {
+        0% {
+            transform: scale(1);
+        }
+        100% {
+            transform: scale(0);
+        }
+    }
+    @keyframes blob {
+        0% {
+            border-radius: 40% 60% 55% 45% / 50% 45% 55% 50%;
+        }
+        25% {
+            border-radius: 60% 40% 45% 55% / 55% 60% 40% 45%;
+        }
+        50% {
+            border-radius: 50% 50% 60% 40% / 45% 55% 50% 60%;
+        }
+        75% {
+            border-radius: 45% 55% 50% 50% / 60% 40% 55% 45%;
+        }
+        100% {
+            border-radius: 40% 60% 55% 45% / 50% 45% 55% 50%;
+        }
+    }
+    @keyframes loader-shadow {
+        0% {
+            transform: scaleX(0.2);
+            opacity: 0.4;
+        }
+        80% {
+            transform: scaleX(1);
+            opacity: 0.7;
+        }
+        100% {
+            transform: scaleX(1.5);
+        }
+    }
+    @keyframes loader-circle {
+        0% {
+            bottom: calc(var(--loader-base-height) + var(--loader-jump-height));
+        }
+        80% {
+            height: var(--loader-circle-size);
+            border-radius: 50%;
+            transform: scaleX(1);
+        }
+        100% {
+            bottom: var(--loader-base-height);
+            height: 5px;
+            border-radius: 50px 50px 25px 25px;
+            transform: scaleX(1.7);
+        }
+    }
+    @keyframes progress-after {
+        0% {
+            background-position: 0 100%;
+        }
+        100% {
+            background-position: 30px 100%;
+        }
+    }
 }
 
-body {
-    --header-height: 64px;
-    font-family: 'Indie Flower', cursive;
-    letter-spacing: 0.05em;
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentColor);
+    }
 }
 
-/* Reset styles */
-.reset {
-    all: unset;
+@utility form-group {
+    /* -------------------------------------------------------------------------- */
+    /*                                  form                                  */
+    /* -------------------------------------------------------------------------- */
+    @apply flex w-full flex-col gap-2;
+
+    /* Initial styles for smooth entry transition */
 }
 
-/* Animating the popover in */
+@utility file-input-group {
+    @apply flex w-full flex-col gap-2;
 
-/* IS-OPEN STATE   */
-/* [popover]:popover-open {
+    /* Initial styles for smooth entry transition */
+}
+
+@utility form-label {
+    @apply text-secondary text-xs capitalize leading-3;
+    @apply order-1;
+
+    .input-text:focus ~ & {
+        @apply text-primary;
+    }
+
+    .input-textarea:focus ~ & {
+        @apply text-primary;
+    }
+
+    .dropdown-select:focus ~ & {
+        @apply text-primary;
+    }
+
+    .input-text:not(:placeholder-shown) ~ & {
+        @apply text-primary;
+    }
+
+    .input-textarea:not(:placeholder-shown) ~ & {
+        @apply text-primary;
+    }
+
+    .dropdown-select:not(:placeholder-shown) ~ & {
+        @apply text-primary;
+    }
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility form-helper-text {
+    @apply text-secondary text-xs capitalize leading-3;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility dropdown-select {
+    /*-- ------------------------- input-text ------------------------- */
+    @apply bg-primary text-primary placeholder:text-secondary outline-hidden order-2 w-full appearance-none rounded-lg border border-light-secondary px-3 py-2 text-sm shadow-neumorphic-xs transition duration-300 focus:shadow-neumorphic-inset-xs dark:border-dark-secondary;
+
+    &:focus ~ .form-label {
+        @apply text-primary;
+    }
+
+    &:not(:placeholder-shown) ~ .form-label {
+        @apply text-primary;
+    }
+
+    /* ----------------------------- dropdown-select ---------------------------- */
+    @apply cursor-pointer appearance-none bg-no-repeat pr-10 ring-black focus:ring-1 dark:ring-white;
+
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="%23767676" d="M8.037 11.166L14.5 22.36c.825 1.43 2.175 1.43 3 0l6.463-11.195c.826-1.43.15-2.598-1.5-2.598H9.537c-1.65 0-2.326 1.17-1.5 2.6z"/></svg>');
+    background-position: right 0.5rem center;
+    background-size: 1.5rem 1.5rem;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility input-textarea {
+    @apply bg-primary text-primary placeholder:text-secondary outline-hidden order-2 w-full appearance-none rounded-lg border border-light-secondary px-3 py-2 text-sm shadow-neumorphic-xs transition duration-300 focus:shadow-neumorphic-inset-xs dark:border-dark-secondary;
+
+    &:focus ~ .form-label {
+        @apply text-primary;
+    }
+
+    &:not(:placeholder-shown) ~ .form-label {
+        @apply text-primary;
+    }
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility input-text {
+    @apply bg-primary text-primary placeholder:text-secondary outline-hidden order-2 w-full appearance-none rounded-lg border border-light-secondary px-3 py-2 text-sm shadow-neumorphic-xs transition duration-300 focus:shadow-neumorphic-inset-xs dark:border-dark-secondary;
+
+    &:focus ~ .form-label {
+        @apply text-primary;
+    }
+
+    &:not(:placeholder-shown) ~ .form-label {
+        @apply text-primary;
+    }
+
+    .input-group-start & {
+        @apply m-1 ml-0 rounded-l-none rounded-r-md border-none py-1 shadow-none focus:shadow-neumorphic-inset-xs;
+    }
+
+    .input-group-end & {
+        @apply m-1 mr-0 rounded-l-md rounded-r-none border-none py-1 shadow-none focus:shadow-neumorphic-inset-xs;
+    }
+
+    .input-wrapper:hover & {
+        @apply text-primary;
+    }
+
+    .input-wrapper:focus & {
+        @apply text-primary;
+    }
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility input-wrapper {
+    /* ------------------------- input-wrapper & Icon ------------------------- */
+    @apply flex w-full items-center rounded-lg border border-light-secondary shadow-neumorphic-xs dark:border-dark-secondary;
+
+    &:hover .input-text {
+        @apply text-primary;
+    }
+
+    &:focus .input-text {
+        @apply text-primary;
+    }
+
+    &:hover .input-icon {
+        @apply text-primary;
+    }
+
+    &:focus-within .input-icon {
+        @apply text-primary;
+    }
+
+    &:focus-within .input-icon.error {
+        @apply border border-red-500 dark:border-red-500;
+    }
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility input-icon {
+    @apply text-secondary size-10 shrink-0 border-light-secondary px-2 dark:border-dark-secondary;
+
+    .input-group-start & {
+        @apply rounded-l-md rounded-r-none border-r;
+    }
+
+    .input-group-end & {
+        @apply rounded-l-none rounded-r-md border-l;
+    }
+
+    .input-wrapper:hover & {
+        @apply text-primary;
+    }
+
+    .input-wrapper:focus-within & {
+        @apply text-primary;
+    }
+
+    .input-wrapper:focus-within &.error {
+        @apply border border-red-500 dark:border-red-500;
+    }
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility input-group-start {
+    & .input-text {
+        @apply m-1 ml-0 rounded-l-none rounded-r-md border-none py-1 shadow-none focus:shadow-neumorphic-inset-xs;
+    }
+
+    & .input-icon {
+        @apply rounded-l-md rounded-r-none border-r;
+    }
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility input-group-end {
+    & .input-text {
+        @apply m-1 mr-0 rounded-l-md rounded-r-none border-none py-1 shadow-none focus:shadow-neumorphic-inset-xs;
+    }
+
+    & .input-icon {
+        @apply rounded-l-none rounded-r-md border-l;
+    }
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility error {
+    .input-wrapper:focus-within &.input-icon {
+        @apply border border-red-500 dark:border-red-500;
+    }
+
+    /* Initial styles for smooth entry transition */
+    /* ---------------------------------- Error --------------------------------- */
+    @apply border-red-500 text-red-500 transition-all duration-300 focus-within:border-red-500 hover:border-red-500 focus:border-red-500 dark:border-red-600 dark:text-red-500 dark:focus-within:border-red-600 dark:hover:border-red-600 dark:focus:border-red-600;
+}
+
+@utility input-inset-outset {
+    /* ------------------------- input-inset-outset ------------------------- */
+    @apply bg-primary outline-hidden appearance-none rounded-xl border-none shadow-neumorphic-inset-sm placeholder:tracking-wide;
+
+    &:focus {
+        @apply placeholder:text-primary shadow-neumorphic-md;
+    }
+
+    &:hover {
+        @apply placeholder:text-primary shadow-neumorphic-md;
+    }
+
+    &:active {
+        @apply placeholder:text-primary shadow-neumorphic-md;
+    }
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility file-upload {
+    /* ------------------------------- file-upload ---------------------------- */
+    @apply hidden;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility file-upload-group {
+    & label {
+        @apply bg-primary text-secondary hover:text-primary relative cursor-pointer overflow-hidden rounded-lg border border-light-secondary px-4 py-2 font-indie-flower shadow-neumorphic-xs transition duration-300 ease-in-out active:shadow-neumorphic-inset-sm dark:border-dark-secondary;
+    }
+
+    & label:after {
+        content: 'Browse';
+        @apply text-secondary bg-secondary absolute right-0 top-0 px-4 py-2 font-indie-flower;
+    }
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility file-preview {
+    @apply bg-primary mx-auto size-fit rounded-lg border border-light-secondary p-3 shadow-neumorphic-inset-sm dark:border-dark-secondary;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility checkbox-group {
+    /* ----------------------------- checkbox-input -------------------------- */
+    @apply bg-primary flex flex-col items-start gap-2 rounded-2xl px-16 py-12 shadow-neumorphic-inset-xs;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility checkbox-label {
+    @apply inline-flex cursor-pointer items-center;
+
+    &:hover .checkbox-text {
+        @apply text-primary translate-x-2;
+    }
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility checkbox-input {
+    @apply bg-primary flex-center disabled:text-secondary outline-hidden size-4 appearance-none rounded-sm border border-light-secondary shadow-neumorphic-inset-xs transition-all duration-300 ease-in-out placeholder:tracking-wide dark:border-dark-secondary;
+
+    &:checked {
+        @apply bg-primary text-primary flex-center;
+    }
+
+    &:checked:after {
+        content: '\2713';
+        @apply text-primary flex-center size-full font-bold transition-all;
+    }
+
+    &:checked:after {
+        transform: scale(0.8);
+    }
+
+    &:checked ~ .checkbox-text {
+        @apply text-primary translate-x-2;
+    }
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility checkbox-text {
+    @apply text-secondary ml-2 font-indie-flower text-sm transition-all duration-500;
+
+    .checkbox-label:hover & {
+        @apply text-primary translate-x-2;
+    }
+
+    .checkbox-input:checked ~ & {
+        @apply text-primary translate-x-2;
+    }
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility radio-group {
+    /* ------------------------------- radio-input --------------------------- */
+    @apply bg-primary flex flex-col items-start gap-2 rounded-2xl px-16 py-12 shadow-neumorphic-inset-xs;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility radio-label {
+    @apply relative inline-flex cursor-pointer items-center;
+
+    &:hover .radio-text {
+        @apply text-primary translate-x-2;
+    }
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility radio-input {
+    @apply sr-only;
+
+    &:checked ~ .radio-text {
+        @apply text-primary translate-x-2;
+    }
+
+    &:checked ~ .radio-indicator:before {
+        @apply shadow-neumorphic-inset-xs;
+    }
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility radio-indicator {
+    @apply relative size-5 overflow-hidden rounded-full shadow-neumorphic-xs before:absolute before:left-[10%] before:top-[10%] before:size-4/5 before:rounded-full before:shadow-neumorphic-md;
+
+    .radio-input:checked ~ &:before {
+        @apply shadow-neumorphic-inset-xs;
+    }
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility radio-text {
+    @apply text-secondary ml-2 font-indie-flower transition-all duration-500;
+
+    .radio-label:hover & {
+        @apply text-primary translate-x-2;
+    }
+
+    .radio-input:checked ~ & {
+        @apply text-primary translate-x-2;
+    }
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility switch-label {
+    /* ------------------------------- switch ------------------------------- */
+    @apply relative inline-flex cursor-pointer items-center;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility toggle-switch {
+    @apply sr-only;
+
+    &:hover ~ .switch-indicator:after {
+        @apply scale-95;
+    }
+
+    &:checked ~ .switch-indicator:after {
+        @apply translate-x-12 rotate-0 content-['✔️'];
+    }
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility switch-indicator {
+    @apply bg-primary outline-hidden h-12 w-24 rounded-full shadow-neumorphic-inset-sm ring-0;
+    @apply;
+
+    &:after {
+        @apply bg-primary ease-Out-back outline-hidden absolute left-1 top-1 flex size-10 -rotate-180 items-center justify-center rounded-full shadow-neumorphic-xs duration-300 content-['✖️'];
+    }
+
+    .toggle-switch:hover ~ &:after {
+        @apply scale-95;
+    }
+
+    .toggle-switch:checked ~ &:after {
+        @apply translate-x-12 rotate-0 content-['✔️'];
+    }
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility range-slider-group {
+    /* ------------------------------- slider ------------------------------- */
+    @apply w-full;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility range-slider {
+    @apply bg-primary outline-hidden relative h-2 w-full appearance-none rounded-full shadow-neumorphic-xs;
+
+    &::-webkit-slider-thumb {
+        @apply bg-accent h-6 w-6 cursor-pointer appearance-none rounded-full shadow-neumorphic-xs transition duration-300 ease-in-out;
+    }
+
+    &::-moz-range-thumb {
+        @apply bg-accent relative h-6 w-6 cursor-pointer appearance-none rounded-full shadow-neumorphic-xs transition duration-300 ease-in-out;
+    }
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility form-double-range-group {
+    @apply flex w-full flex-col gap-4;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility calendar-container {
+    /* -------------------------------------------------------------------------- */
+    /*                                calendar                                */
+    /* -------------------------------------------------------------------------- */
+    @apply relative w-72;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility calendar {
+    @apply bg-primary absolute left-0 top-12 z-50 mt-2 w-full overflow-hidden rounded-lg shadow-neumorphic-xs;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility calendar-header-button {
+    @apply flex items-center justify-between px-4 py-2 shadow-neumorphic-xs;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility calendar-header-button-btn {
+    @apply button p-1.5;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility calendar-header-title {
+    @apply button mx-3 w-full text-nowrap px-4 py-1.5 text-sm;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility calendar-body {
+    @apply m-1 grid gap-1 p-4 text-sm shadow-neumorphic-inset-xs;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility calendar-body-days {
+    @apply m-1 grid gap-1 p-4 text-sm shadow-neumorphic-inset-xs;
+    @apply grid-cols-7;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility calendar-body-months {
+    @apply m-1 grid gap-1 p-4 text-sm shadow-neumorphic-inset-xs;
+    @apply grid-cols-3;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility calendar-body-years {
+    @apply m-1 grid gap-1 p-4 text-sm shadow-neumorphic-inset-xs;
+    @apply grid-cols-4;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility calendar-item {
+    @apply text-primary hover:bg-secondary flex cursor-pointer items-center justify-center rounded-lg p-2 transition hover:text-white hover:shadow-neumorphic-xs;
+
+    &.active {
+        @apply bg-secondary text-white shadow-neumorphic-xs;
+    }
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility active {
+    &.calendar-item {
+        @apply bg-secondary text-white shadow-neumorphic-xs;
+    }
+
+    &.button {
+        @apply text-primary shadow-neumorphic-inset-xs;
+    }
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility badge {
+    /* -------------------------------------------------------------------------- */
+    /*                                  badge                                 */
+    /* -------------------------------------------------------------------------- */
+    @apply text-secondary rounded-full border border-light-secondary px-2 py-1 text-center font-indie-flower text-sm shadow-neumorphic-inset-sm dark:border-dark-secondary;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility badge-primary {
+    @apply text-primary;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility badge-secondary {
+    @apply text-secondary;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility badge-accent {
+    @apply text-accent;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility badge-highlight {
+    @apply text-highlight;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility badge-md {
+    @apply px-3 py-2;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility badge-lg {
+    @apply px-4 py-3 text-base;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility badge-xl {
+    @apply px-5 py-4 text-lg;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility button {
+    /* -------------------------------------------------------------------------- */
+    /*                                   button                                  */
+    /* -------------------------------------------------------------------------- */
+    @apply text-secondary bg-primary rounded-lg border border-light-secondary px-4 py-2 text-center text-sm shadow-neumorphic-xs transition-all duration-300 dark:border-dark-secondary;
+
+    &.active {
+        @apply text-primary shadow-neumorphic-inset-xs;
+    }
+
+    &:active {
+        @apply text-primary shadow-neumorphic-inset-xs;
+    }
+
+    &:hover:not(.active) {
+        @apply text-primary scale-105 transform;
+    }
+
+    &:focus:not(.active) {
+        @apply text-primary scale-105 transform;
+    }
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility button-pill {
+    /*-- -------------------------------- button-pill -------------------------------- */
+    @apply rounded-l-full rounded-r-full;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility button-with-icon {
+    /*-- -------------------------------- button-with-icon -------------------------------- */
+    @apply inline-flex items-center justify-center gap-2 text-sm;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility button-icon-only {
+    /*-- -------------------------------- button-icon-only ------------------------------*/
+    @apply rounded-full p-2 shadow-neumorphic-md;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility button-icon-only-square {
+    @apply rounded-lg p-2 shadow-neumorphic-md;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility button-sm {
+    /*-- -------------------------------- button Sizes -------------------------------- */
+    @apply px-2 py-1 text-xs;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility button-base {
+    @apply px-4 py-2 text-sm;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility button-lg {
+    @apply px-4 py-3 text-base;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility button-xl {
+    @apply px-5 py-4 text-lg;
+
+    /* Initial styles for smooth entry transition */
+}
+
+@utility side-nav-animation {
+    /* Side navigation animations */
+    @apply -translate-x-full -translate-y-full scale-0 opacity-0;
+
+    &[open] {
+        @apply translate-x-0 translate-y-0 scale-100 opacity-100;
+    }
+
+    &::backdrop {
+        @apply opacity-0;
+    }
+
+    &[open]::backdrop {
+        @apply opacity-65;
+    }
+
+    /* Initial styles for smooth entry transition */
+    @starting-style {
+        &[open] {
+            @apply -translate-x-full -translate-y-full scale-0 opacity-0;
+        }
+
+        &[open]::backdrop {
+            @apply opacity-0;
+        }
+    }
+}
+
+@utility modal-animation {
+    /* Modal animations */
+    @apply m-auto hidden scale-0 opacity-0 ease-in-out;
+
+    &::backdrop {
+        @apply scale-x-100 scale-y-0 opacity-65 ease-in-out;
+    }
+
+    /* Visible state for modal */
+    &[open] {
+        @apply block scale-100 opacity-100 delay-300;
+    }
+
+    &[open]::backdrop {
+        @apply scale-x-100 scale-y-100;
+    }
+
+    /* Initial styles for smooth entry transition */
+    @starting-style {
+        &[open] {
+            @apply scale-0 opacity-0;
+        }
+
+        &[open]::backdrop {
+            @apply scale-x-100 scale-y-0;
+        }
+    }
+}
+
+@utility flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@utility animation-duration-1000 {
+    animation-duration: 1000ms;
+}
+
+@utility animation-duration-1500 {
+    animation-duration: 1500ms;
+}
+
+@utility animation-duration-2000 {
+    animation-duration: 2000ms;
+}
+
+@utility bg-primary {
+    /* -------------------------------------------------------------------------- */
+    /*                                Color Scheme                                */
+    /* -------------------------------------------------------------------------- */
+    @apply bg-light-primary dark:bg-dark-primary;
+}
+
+@utility bg-secondary {
+    @apply bg-light-secondary dark:bg-dark-secondary;
+}
+
+@utility bg-accent {
+    @apply bg-light-accent dark:bg-dark-accent;
+}
+
+@utility bg-highlight {
+    @apply bg-light-highlight dark:bg-dark-highlight;
+}
+
+@utility text-primary {
+    /* ------------------------------- Text Colors ------------------------------ */
+    @apply text-light-text-primary dark:text-dark-text-primary;
+}
+
+@utility text-secondary {
+    @apply text-light-text-secondary dark:text-dark-text-secondary;
+}
+
+@utility text-accent {
+    @apply text-light-accent dark:text-dark-accent;
+}
+
+@utility text-highlight {
+    @apply text-light-highlight dark:text-dark-highlight;
+}
+
+@utility text-theme-primary {
+    @apply text-light-primary dark:text-dark-primary;
+}
+
+@utility text-theme-secondary {
+    @apply text-light-secondary dark:text-dark-secondary;
+}
+
+@utility border-primary {
+    /* ------------------------------ Border Colors ----------------------------- */
+    @apply border-light-primary dark:border-dark-primary;
+}
+
+@utility border-secondary {
+    @apply border-light-secondary dark:border-dark-secondary;
+}
+
+@utility border-accent {
+    @apply border-light-accent dark:border-dark-accent;
+}
+
+@utility border-highlight {
+    @apply border-light-highlight dark:border-dark-highlight;
+}
+
+@utility scrollbar-thin {
+    /* -------------------------------------------------------------------------- */
+    /*                               Thin Scrollbar                               */
+    /* -------------------------------------------------------------------------- */
+    &::-webkit-scrollbar {
+        width: 6px; /* Set the width of the scrollbar */
+        height: 6px; /* Set the height of the scrollbar for vertical scrollbar */
+    }
+
+    /* Set the color of the scrollbar thumb */
+    &::-webkit-scrollbar-thumb {
+        @apply rounded-lg bg-dark-secondary dark:bg-light-secondary;
+    }
+
+    /* Set the color of the scrollbar thumb on hover */
+    &::-webkit-scrollbar-thumb:hover {
+        @apply bg-highlight;
+    }
+
+    &::-webkit-scrollbar-track {
+        @apply bg-gray-50 dark:bg-gray-700;
+    }
+}
+
+@layer utilities {
+    /* Remove default CSS */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        --header-height: 64px;
+        font-family: 'Indie Flower', cursive;
+        letter-spacing: 0.05em;
+    }
+
+    /* Reset styles */
+    .reset {
+        all: unset;
+    }
+
+    /* Animating the popover in */
+
+    /* IS-OPEN STATE   */
+    /* [popover]:popover-open {
     translate: 0 0;
 } */
 
-/* EXIT STATE   */
-/* [popover] {
+    /* EXIT STATE   */
+    /* [popover] {
     transition:
         translate 0.7s ease-out,
         display 0.7s ease-out allow-discrete;
     translate: 0 -22rem;
 } */
 
-/* 0. BEFORE-OPEN STATE   */
-/* @starting-style {
+    /* 0. BEFORE-OPEN STATE   */
+    /* @starting-style {
     [popover]:popover-open {
         translate: 0 -22rem;
     }
 } */
+}
 
 @layer components {
-    /* -------------------------------------------------------------------------- */
-    /*                                  form                                  */
-    /* -------------------------------------------------------------------------- */
-    .form-group,
-    .file-input-group {
-        @apply flex w-full flex-col gap-2;
-    }
-
-    .form-label,
-    .form-helper-text {
-        @apply text-secondary text-xs capitalize leading-3;
-    }
-
-    .form-label {
-        @apply order-1;
-    }
-
-    /*-- ------------------------- input-text ------------------------- */
-    .dropdown-select,
-    .input-textarea,
-    .input-text {
-        @apply bg-primary text-primary placeholder:text-secondary order-2 w-full appearance-none rounded-lg border border-light-secondary px-3 py-2 text-sm shadow-neumorphic-xs outline-none transition duration-300 focus:shadow-neumorphic-inset-xs dark:border-dark-secondary;
-    }
-
-    .input-text:focus ~ .form-label,
-    .input-textarea:focus ~ .form-label,
-    .dropdown-select:focus ~ .form-label,
-    .input-text:not(:placeholder-shown) ~ .form-label,
-    .input-textarea:not(:placeholder-shown) ~ .form-label,
-    .dropdown-select:not(:placeholder-shown) ~ .form-label {
-        @apply text-primary;
-    }
-
-    /* ------------------------- input-wrapper & Icon ------------------------- */
-    .input-wrapper {
-        @apply flex w-full items-center rounded-lg border border-light-secondary shadow-neumorphic-xs dark:border-dark-secondary;
-    }
-
-    .input-icon {
-        @apply text-secondary size-10 shrink-0 border-light-secondary px-2 dark:border-dark-secondary;
-    }
-
-    .input-group-start .input-text {
-        @apply m-1 ml-0 rounded-l-none rounded-r-md border-none py-1 shadow-none focus:shadow-neumorphic-inset-xs;
-    }
-
-    .input-group-start .input-icon {
-        @apply rounded-l-md rounded-r-none border-r;
-    }
-
-    .input-group-end .input-text {
-        @apply m-1 mr-0 rounded-l-md rounded-r-none border-none py-1 shadow-none focus:shadow-neumorphic-inset-xs;
-    }
-
-    .input-group-end .input-icon {
-        @apply rounded-l-none rounded-r-md border-l;
-    }
-
-    .input-wrapper:hover .input-text,
-    .input-wrapper:focus .input-text,
-    .input-wrapper:hover .input-icon,
-    .input-wrapper:focus-within .input-icon {
-        @apply text-primary;
-    }
-
-    .input-wrapper:focus-within .input-icon.error {
-        @apply border border-red-500 dark:border-red-500;
-    }
-
-    /* ------------------------- input-inset-outset ------------------------- */
-    .input-inset-outset {
-        @apply bg-primary appearance-none rounded-xl border-none shadow-neumorphic-inset-sm outline-none placeholder:tracking-wide;
-    }
-
-    .input-inset-outset:focus,
-    .input-inset-outset:hover,
-    .input-inset-outset:active {
-        @apply placeholder:text-primary shadow-neumorphic-md;
-    }
-
-    /* ----------------------------- dropdown-select ---------------------------- */
-    .dropdown-select {
-        @apply cursor-pointer appearance-none bg-no-repeat pr-10 ring-black focus:ring-1 dark:ring-white;
-
-        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="%23767676" d="M8.037 11.166L14.5 22.36c.825 1.43 2.175 1.43 3 0l6.463-11.195c.826-1.43.15-2.598-1.5-2.598H9.537c-1.65 0-2.326 1.17-1.5 2.6z"/></svg>');
-        background-position: right 0.5rem center;
-        background-size: 1.5rem 1.5rem;
-    }
-
-    /* ------------------------------- file-upload ---------------------------- */
-    .file-upload {
-        @apply hidden;
-    }
-
-    .file-upload-group label {
-        @apply bg-primary text-secondary hover:text-primary relative cursor-pointer overflow-hidden rounded-lg border border-light-secondary px-4 py-2 font-indie-flower shadow-neumorphic-xs transition duration-300 ease-in-out active:shadow-neumorphic-inset-sm dark:border-dark-secondary;
-    }
-
-    .file-upload-group label:after {
-        content: 'Browse';
-        @apply text-secondary bg-secondary absolute right-0 top-0 px-4 py-2 font-indie-flower;
-    }
-
-    .file-preview {
-        @apply bg-primary mx-auto size-fit rounded-lg border border-light-secondary p-3 shadow-neumorphic-inset-sm dark:border-dark-secondary;
-    }
-
-    /* ----------------------------- checkbox-input -------------------------- */
-    .checkbox-group {
-        @apply bg-primary flex flex-col items-start gap-2 rounded-2xl px-16 py-12 shadow-neumorphic-inset-xs;
-    }
-
-    .checkbox-label {
-        @apply inline-flex cursor-pointer items-center;
-    }
-
-    .checkbox-input {
-        @apply bg-primary flex-center disabled:text-secondary size-4 appearance-none rounded border border-light-secondary shadow-neumorphic-inset-xs outline-none transition-all duration-300 ease-in-out placeholder:tracking-wide dark:border-dark-secondary;
-    }
-
-    .checkbox-input:checked {
-        @apply bg-primary text-primary flex-center;
-    }
-
-    .checkbox-input:checked:after {
-        content: '\2713';
-        @apply text-primary flex-center size-full font-bold transition-all;
-    }
-
-    .checkbox-input:checked:after {
-        transform: scale(0.8);
-    }
-
-    .checkbox-text {
-        @apply text-secondary ml-2 font-indie-flower text-sm transition-all duration-500;
-    }
-
-    .checkbox-label:hover .checkbox-text,
-    .checkbox-input:checked ~ .checkbox-text {
-        @apply text-primary translate-x-2;
-    }
-
-    /* ------------------------------- radio-input --------------------------- */
-    .radio-group {
-        @apply bg-primary flex flex-col items-start gap-2 rounded-2xl px-16 py-12 shadow-neumorphic-inset-xs;
-    }
-
-    .radio-label {
-        @apply relative inline-flex cursor-pointer items-center;
-    }
-
-    .radio-input {
-        @apply sr-only;
-    }
-
-    .radio-indicator {
-        @apply relative size-5 overflow-hidden rounded-full shadow-neumorphic-xs before:absolute before:left-[10%] before:top-[10%] before:size-4/5 before:rounded-full before:shadow-neumorphic-md;
-    }
-
-    .radio-text {
-        @apply text-secondary ml-2 font-indie-flower transition-all duration-500;
-    }
-
-    .radio-label:hover .radio-text,
-    .radio-input:checked ~ .radio-text {
-        @apply text-primary translate-x-2;
-    }
-
-    .radio-input:checked ~ .radio-indicator:before {
-        @apply shadow-neumorphic-inset-xs;
-    }
-
-    /* ------------------------------- switch ------------------------------- */
-
-    .switch-label {
-        @apply relative inline-flex cursor-pointer items-center;
-    }
-
-    .toggle-switch {
-        @apply sr-only;
-    }
-
-    .switch-indicator {
-        @apply bg-primary h-12 w-24 rounded-full shadow-neumorphic-inset-sm outline-none ring-0;
-        @apply;
-    }
-
-    .switch-indicator:after {
-        @apply bg-primary ease-Out-back absolute left-1 top-1 flex size-10 -rotate-180 items-center justify-center rounded-full shadow-neumorphic-xs outline-none duration-300 content-['✖️'];
-    }
-
-    .toggle-switch:hover ~ .switch-indicator:after {
-        @apply scale-95;
-    }
-
-    .toggle-switch:checked ~ .switch-indicator:after {
-        @apply translate-x-12 rotate-0 content-['✔️'];
-    }
-
-    /* ------------------------------- slider ------------------------------- */
-    .range-slider-group {
-        @apply w-full;
-    }
-
-    .range-slider {
-        @apply bg-primary relative h-2 w-full appearance-none rounded-full shadow-neumorphic-xs outline-none;
-    }
-
-    .range-slider::-webkit-slider-thumb {
-        @apply bg-accent h-6 w-6 cursor-pointer appearance-none rounded-full shadow-neumorphic-xs transition duration-300 ease-in-out;
-    }
-
-    .range-slider::-moz-range-thumb {
-        @apply bg-accent relative h-6 w-6 cursor-pointer appearance-none rounded-full shadow-neumorphic-xs transition duration-300 ease-in-out;
-    }
-
-    .form-double-range-group {
-        @apply flex w-full flex-col gap-4;
-    }
-
-    /* -------------------------------------------------------------------------- */
-    /*                                calendar                                */
-    /* -------------------------------------------------------------------------- */
-    .calendar-container {
-        @apply relative w-72;
-    }
-
-    .calendar {
-        @apply bg-primary absolute left-0 top-12 z-50 mt-2 w-full overflow-hidden rounded-lg shadow-neumorphic-xs;
-    }
-
-    .calendar-header-button {
-        @apply flex items-center justify-between px-4 py-2 shadow-neumorphic-xs;
-    }
-
-    .calendar-header-button-btn {
-        @apply button p-1.5;
-    }
-
-    .calendar-header-title {
-        @apply button mx-3 w-full text-nowrap px-4 py-1.5 text-sm;
-    }
-
-    .calendar-body,
-    .calendar-body-days,
-    .calendar-body-months,
-    .calendar-body-years {
-        @apply m-1 grid gap-1 p-4 text-sm shadow-neumorphic-inset-xs;
-    }
-
-    .calendar-body-days {
-        @apply grid-cols-7;
-    }
-
-    .calendar-body-months {
-        @apply grid-cols-3;
-    }
-
-    .calendar-body-years {
-        @apply grid-cols-4;
-    }
-
-    .calendar-item {
-        @apply text-primary hover:bg-secondary flex cursor-pointer items-center justify-center rounded-lg p-2 transition hover:text-white hover:shadow-neumorphic-xs;
-    }
-
-    .calendar-item.active {
-        @apply bg-secondary text-white shadow-neumorphic-xs;
-    }
-
-    /* -------------------------------------------------------------------------- */
-    /*                                  badge                                 */
-    /* -------------------------------------------------------------------------- */
-    .badge {
-        @apply text-secondary rounded-full border border-light-secondary px-2 py-1 text-center font-indie-flower text-sm shadow-neumorphic-inset-sm dark:border-dark-secondary;
-    }
-
-    .badge-primary {
-        @apply text-primary;
-    }
-
-    .badge-secondary {
-        @apply text-secondary;
-    }
-
-    .badge-accent {
-        @apply text-accent;
-    }
-
-    .badge-highlight {
-        @apply text-highlight;
-    }
-
-    .badge-md {
-        @apply px-3 py-2;
-    }
-
-    .badge-lg {
-        @apply px-4 py-3 text-base;
-    }
-
-    .badge-xl {
-        @apply px-5 py-4 text-lg;
-    }
-
-    /* -------------------------------------------------------------------------- */
-    /*                                   button                                  */
-    /* -------------------------------------------------------------------------- */
-
-    .button {
-        @apply text-secondary bg-primary rounded-lg border border-light-secondary px-4 py-2 text-center text-sm shadow-neumorphic-xs transition-all duration-300 dark:border-dark-secondary;
-    }
-
-    .button.active,
-    .button:active {
-        @apply text-primary shadow-neumorphic-inset-xs;
-    }
-
-    .button:hover:not(.active),
-    .button:focus:not(.active) {
-        @apply text-primary scale-105 transform;
-    }
-
-    /*-- -------------------------------- button-pill -------------------------------- */
-    .button-pill {
-        @apply rounded-l-full rounded-r-full;
-    }
-
-    /*-- -------------------------------- button-with-icon -------------------------------- */
-    .button-with-icon {
-        @apply inline-flex items-center justify-center gap-2 text-sm;
-    }
-
-    /*-- -------------------------------- button-icon-only ------------------------------*/
-    .button-icon-only {
-        @apply rounded-full p-2 shadow-neumorphic-md;
-    }
-
-    .button-icon-only-square {
-        @apply rounded-lg p-2 shadow-neumorphic-md;
-    }
-
-    /*-- -------------------------------- button Sizes -------------------------------- */
-    .button-sm {
-        @apply px-2 py-1 text-xs;
-    }
-
-    .button-base {
-        @apply px-4 py-2 text-sm;
-    }
-
-    .button-lg {
-        @apply px-4 py-3 text-base;
-    }
-
-    .button-xl {
-        @apply px-5 py-4 text-lg;
-    }
-
     /* -------------------------------------------------------------------------- */
     /*                                    Modal                                   */
     /* -------------------------------------------------------------------------- */
@@ -412,7 +1077,7 @@ body {
             opacity 300ms,
             overlay 300ms allow-discrete,
             display 300ms allow-discrete;
-        @apply bg-primary outline-none;
+        @apply bg-primary outline-hidden;
     }
 
     dialog::backdrop {
@@ -422,170 +1087,5 @@ body {
             overlay 300ms allow-discrete,
             display 300ms allow-discrete;
         @apply bg-primary;
-    }
-
-    /* Side navigation animations */
-    .side-nav-animation {
-        @apply -translate-x-full -translate-y-full scale-0 opacity-0;
-    }
-
-    .side-nav-animation[open] {
-        @apply translate-x-0 translate-y-0 scale-100 opacity-100;
-    }
-
-    .side-nav-animation::backdrop {
-        @apply opacity-0;
-    }
-
-    .side-nav-animation[open]::backdrop {
-        @apply opacity-65;
-    }
-
-    /* Modal animations */
-    .modal-animation {
-        @apply m-auto hidden scale-0 opacity-0 ease-in-out;
-    }
-
-    .modal-animation::backdrop {
-        @apply scale-x-100 scale-y-0 opacity-65 ease-in-out;
-    }
-
-    /* Visible state for modal */
-    .modal-animation[open] {
-        @apply block scale-100 opacity-100 delay-300;
-    }
-
-    .modal-animation[open]::backdrop {
-        @apply scale-x-100 scale-y-100;
-    }
-
-    /* Initial styles for smooth entry transition */
-    @starting-style {
-        .modal-animation[open] {
-            @apply scale-0 opacity-0;
-        }
-
-        .modal-animation[open]::backdrop {
-            @apply scale-x-100 scale-y-0;
-        }
-
-        .side-nav-animation[open] {
-            @apply -translate-x-full -translate-y-full scale-0 opacity-0;
-        }
-
-        .side-nav-animation[open]::backdrop {
-            @apply opacity-0;
-        }
-    }
-}
-
-@layer utilities {
-    /* ---------------------------------- Error --------------------------------- */
-    .error {
-        @apply border-red-500 text-red-500 transition-all duration-300 focus-within:border-red-500 hover:border-red-500 focus:border-red-500 dark:border-red-600 dark:text-red-500 dark:focus-within:border-red-600 dark:hover:border-red-600 dark:focus:border-red-600;
-    }
-
-    .flex-center {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .animation-duration-1000 {
-        animation-duration: 1000ms;
-    }
-
-    .animation-duration-1500 {
-        animation-duration: 1500ms;
-    }
-
-    .animation-duration-2000 {
-        animation-duration: 2000ms;
-    }
-
-    /* -------------------------------------------------------------------------- */
-    /*                                Color Scheme                                */
-    /* -------------------------------------------------------------------------- */
-
-    .bg-primary {
-        @apply bg-light-primary dark:bg-dark-primary;
-    }
-
-    .bg-secondary {
-        @apply bg-light-secondary dark:bg-dark-secondary;
-    }
-
-    .bg-accent {
-        @apply bg-light-accent dark:bg-dark-accent;
-    }
-
-    .bg-highlight {
-        @apply bg-light-highlight dark:bg-dark-highlight;
-    }
-
-    /* ------------------------------- Text Colors ------------------------------ */
-    .text-primary {
-        @apply text-light-text-primary dark:text-dark-text-primary;
-    }
-
-    .text-secondary {
-        @apply text-light-text-secondary dark:text-dark-text-secondary;
-    }
-
-    .text-accent {
-        @apply text-light-accent dark:text-dark-accent;
-    }
-
-    .text-highlight {
-        @apply text-light-highlight dark:text-dark-highlight;
-    }
-
-    .text-theme-primary {
-        @apply text-light-primary dark:text-dark-primary;
-    }
-
-    .text-theme-secondary {
-        @apply text-light-secondary dark:text-dark-secondary;
-    }
-
-    /* ------------------------------ Border Colors ----------------------------- */
-    .border-primary {
-        @apply border-light-primary dark:border-dark-primary;
-    }
-
-    .border-secondary {
-        @apply border-light-secondary dark:border-dark-secondary;
-    }
-
-    .border-accent {
-        @apply border-light-accent dark:border-dark-accent;
-    }
-
-    .border-highlight {
-        @apply border-light-highlight dark:border-dark-highlight;
-    }
-
-    /* -------------------------------------------------------------------------- */
-    /*                               Thin Scrollbar                               */
-    /* -------------------------------------------------------------------------- */
-    .scrollbar-thin {
-        &::-webkit-scrollbar {
-            width: 6px; /* Set the width of the scrollbar */
-            height: 6px; /* Set the height of the scrollbar for vertical scrollbar */
-        }
-
-        /* Set the color of the scrollbar thumb */
-        &::-webkit-scrollbar-thumb {
-            @apply rounded-lg bg-dark-secondary dark:bg-light-secondary;
-        }
-
-        /* Set the color of the scrollbar thumb on hover */
-        &::-webkit-scrollbar-thumb:hover {
-            @apply bg-highlight;
-        }
-
-        &::-webkit-scrollbar-track {
-            @apply bg-gray-50 dark:bg-gray-700;
-        }
     }
 }

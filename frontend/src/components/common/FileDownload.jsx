@@ -48,7 +48,7 @@ const FileDownload = ({
 
     return (
         <div className="text-primary flex-center h-screen p-2 sm:p-6">
-            <div className="max-w-screen-lg rounded-3xl border border-light-secondary p-2 shadow-neumorphic-xs dark:border-dark-secondary sm:p-6 sm:shadow-neumorphic-lg">
+            <div className="max-w-(--breakpoint-lg) rounded-3xl border border-light-secondary p-2 shadow-neumorphic-xs dark:border-dark-secondary sm:p-6 sm:shadow-neumorphic-lg">
                 <div className="rounded-2xl border border-light-secondary p-6 text-center dark:border-dark-secondary sm:rounded-xl">
                     <h1 className="mb-6 text-2xl font-bold drop-shadow-lg">{title}</h1>
                     <p className="text-secondary mb-8">{description}</p>

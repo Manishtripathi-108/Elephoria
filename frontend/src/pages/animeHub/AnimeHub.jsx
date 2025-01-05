@@ -3,8 +3,8 @@ import React, { useEffect, useState } from 'react'
 import { Icon } from '@iconify/react'
 
 import NoContentCard from '../../components/common/NoContentCard'
-import { useAnimeHubContext } from '../../context/AnimeHubContext'
 import iconMap from '../../constants/iconMap'
+import { useAnimeHubContext } from '../../context/AnimeHubContext'
 import ImportMedia from './ImportMedia'
 import CardView from './components/CardView'
 import FilterPanel from './components/FilterPanel'
@@ -19,7 +19,7 @@ const AnimeHub = () => {
     const [isFilterApplied, setIsFilterApplied] = useState(false)
     const [isFilteringActive, setIsFilteringActive] = useState(false)
 
-    const { mediaContent, activeTab, isLoading, error } = useAnimeHubContext()    
+    const { mediaContent, activeTab, isLoading, error } = useAnimeHubContext()
 
     // Reset filtered content when the active tab changes
     useEffect(() => {

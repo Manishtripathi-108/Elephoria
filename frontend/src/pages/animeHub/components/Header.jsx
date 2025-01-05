@@ -45,7 +45,7 @@ const Header = () => {
         return (
             <header className="shadow-neumorphic-inset-lg">
                 <div className="flex h-full w-full items-end justify-center bg-white/20 dark:bg-black/30">
-                    <div className="flex w-5/6 max-w-screen-md items-end justify-start gap-5 pt-4 opacity-100 md:pt-20">
+                    <div className="max-w-(--breakpoint-md) flex w-5/6 items-end justify-start gap-5 pt-4 opacity-100 md:pt-20">
                         {/* Skeleton for avatar */}
 
                         {error ? (
@@ -53,7 +53,7 @@ const Header = () => {
                         ) : (
                             <>
                                 <div className="bg-secondary h-36 w-full max-w-28 animate-pulse rounded-t-lg md:h-48 md:max-w-36"></div>
-                                <div className="bg-secondary mb-5 h-8 w-1/2 animate-pulse rounded"></div>
+                                <div className="bg-secondary mb-5 h-8 w-1/2 animate-pulse rounded-sm"></div>
                             </>
                         )}
                     </div>
@@ -65,7 +65,7 @@ const Header = () => {
     return (
         <header className="h-[45dvh] shadow-neumorphic-inset-lg" style={bannerStyle}>
             <div className="flex h-full w-full items-end justify-center bg-white/20 dark:bg-black/30">
-                <div className="flex w-5/6 max-w-screen-md flex-wrap items-end justify-start gap-5 opacity-100 md:pt-20">
+                <div className="max-w-(--breakpoint-md) flex w-5/6 flex-wrap items-end justify-start gap-5 opacity-100 md:pt-20">
                     <img
                         src={userData?.avatar?.large}
                         alt={`${userData?.name}'s avatar`}

@@ -47,11 +47,11 @@ const Table = ({ heading, columns, rows }) => {
                                     {row.map((cell, cellIndex) => (
                                         <td
                                             key={cellIndex}
-                                            className="border-b border-slate-200 px-5 py-3 first:pl-3 last:sticky last:right-0 last:border-none last:bg-gradient-to-r last:from-transparent last:to-light-primary last:to-[12px] last:pl-5 last:pr-3 dark:last:to-dark-primary">
+                                            className="last:bg-linear-to-r border-b border-slate-200 px-5 py-3 first:pl-3 last:sticky last:right-0 last:border-none last:from-transparent last:to-light-primary last:to-[12px] last:pl-5 last:pr-3 dark:last:to-dark-primary">
                                             {cell}
                                         </td>
                                     ))}
-                                    <td className="border-b border-slate-200 px-5 py-3 first:pl-3 last:sticky last:right-0 last:border-none last:bg-gradient-to-r last:from-transparent last:to-light-primary last:to-[12px] last:pl-5 last:pr-3 dark:last:to-dark-primary">
+                                    <td className="last:bg-linear-to-r border-b border-slate-200 px-5 py-3 first:pl-3 last:sticky last:right-0 last:border-none last:from-transparent last:to-light-primary last:to-[12px] last:pl-5 last:pr-3 dark:last:to-dark-primary">
                                         <NeuButton>Edit</NeuButton>
                                     </td>
                                 </tr>

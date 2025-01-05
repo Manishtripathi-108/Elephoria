@@ -14,7 +14,7 @@ const ClassicTicTacToe = () => {
     return (
         <div className="relative z-0 w-fit animate-zoom-in rounded-xl border border-light-secondary p-2 shadow-neumorphic-md dark:border-dark-secondary">
             <div className="rounded-lg border border-light-secondary p-3 shadow-neumorphic-inset-sm dark:border-dark-secondary">
-                <div tabIndex={0} className="grid grid-cols-3 gap-3 outline-none">
+                <div tabIndex={0} className="outline-hidden grid grid-cols-3 gap-3">
                     {classicBoard.map((cell, index) => (
                         <Square
                             key={index}

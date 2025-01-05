@@ -19,7 +19,7 @@ const Progress = ({ percentage, timeLeft }) => {
 
                     <button
                         type="button"
-                        className="absolute right-3 top-3 inline-flex size-5 shrink-0 items-center justify-center rounded-lg text-gray-800 opacity-50 hover:opacity-100 focus:opacity-100 focus:outline-none dark:text-white"
+                        className="focus:outline-hidden absolute right-3 top-3 inline-flex size-5 shrink-0 items-center justify-center rounded-lg text-gray-800 opacity-50 hover:opacity-100 focus:opacity-100 dark:text-white"
                         aria-label="Close">
                         <span className="sr-only">Close</span>
                         <Icon icon={iconMap.closeAnimated} className="size-5" />
