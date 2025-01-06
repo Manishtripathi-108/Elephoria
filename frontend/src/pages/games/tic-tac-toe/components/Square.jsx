@@ -13,7 +13,7 @@ const Square = ({ squareValue, handleClick, isActive = false, iconSize = 'size-7
             aria-label={`Square ${squareValue || 'empty'}`}
             aria-pressed={!!squareValue}
             className={cn(
-                'flex-center text-secondary rounded-md p-1 font-julee shadow-neumorphic-xs transition-all active:shadow-neumorphic-inset-xs md:p-2',
+                'text-secondary font-julee shadow-neumorphic-xs active:shadow-neumorphic-inset-xs flex items-center justify-center rounded-md p-1 transition-all md:p-2',
                 iconSize,
                 {
                     'text-white [--lower-shadow:#29428e] [--upper-shadow:#5990ff] focus:scale-105 dark:text-black dark:[--lower-shadow:#135ba1] dark:[--upper-shadow:#29c5ff]':

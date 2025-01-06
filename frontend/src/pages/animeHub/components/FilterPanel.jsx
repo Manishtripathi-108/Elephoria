@@ -132,14 +132,14 @@ const FilterPanel = ({ data = [], onFilterUpdate, onFilterStatusChange, onFilter
         <div className="bg-primary text-primary h-full w-full p-2 md:max-w-64">
             {/* Search Input */}
             <div className="flex items-center justify-between gap-3 md:mb-4">
-                <div className="input-wrapper input-group-start">
+                <div className="form-field-wrapper">
                     <label htmlFor="media-search" className="sr-only">
                         Search Media
                     </label>
-                    <Icon icon={iconMap.search} className="input-icon" aria-hidden="true" />
+                    <Icon icon={iconMap.search} className="form-icon" aria-hidden="true" />
                     <input
                         id="media-search"
-                        className="input-text"
+                        className="form-field"
                         type="text"
                         placeholder="Search"
                         value={searchTerm}
@@ -159,7 +159,7 @@ const FilterPanel = ({ data = [], onFilterUpdate, onFilterStatusChange, onFilter
             {/* Filter Panel */}
             <div className={`${!isFilterMenuOpen ? 'animate-wipe-out-down' : 'animate-wipe-in-down'} p-2`}>
                 <div className="mt-4">
-                    <h3 className="form-label mb-2 text-base">Lists:</h3>
+                    <h3 className="form-text mb-2 text-base">Lists:</h3>
                     <div className="space-y-2">
                         {listOptions.map((list) => (
                             <button
@@ -173,7 +173,7 @@ const FilterPanel = ({ data = [], onFilterUpdate, onFilterStatusChange, onFilter
                 </div>
 
                 <div className="mt-4">
-                    <h3 className="form-label mb-2 text-base">Filters:</h3>
+                    <h3 className="form-text mb-2 text-base">Filters:</h3>
                     {filterOptions.map((option) => (
                         <div className="mb-2" key={option.name}>
                             <label htmlFor={`${option.name}-filter`} className="sr-only">
@@ -183,7 +183,7 @@ const FilterPanel = ({ data = [], onFilterUpdate, onFilterStatusChange, onFilter
                                 id={`${option.name}-filter`}
                                 onChange={(e) => handleFilterChange(option.name.toLowerCase(), e.target.value)}
                                 value={filters[option.name.toLowerCase()]}
-                                className="dropdown-select capitalize">
+                                className="form-field capitalize">
                                 <option value="">{option.name}</option>
                                 {option.options.map((item) => (
                                     <option key={item} value={item}>
@@ -195,8 +195,8 @@ const FilterPanel = ({ data = [], onFilterUpdate, onFilterStatusChange, onFilter
                     ))}
                 </div>
 
-                <div className="range-slider-group mt-4">
-                    <label htmlFor="filter-year" className="form-label text-secondary flex items-center justify-between text-base">
+                <div className="mt-4 w-full">
+                    <label htmlFor="filter-year" className="form-text text-secondary flex items-center justify-between text-base">
                         <span>Year: {filters.year}</span>
                         <button
                             aria-label="Reset Year Filter"
@@ -219,14 +219,14 @@ const FilterPanel = ({ data = [], onFilterUpdate, onFilterStatusChange, onFilter
                 </div>
 
                 <div className="form-group mt-4 w-full">
-                    <label className="form-label text-base" htmlFor="sort_by">
+                    <label className="form-text text-base" htmlFor="sort_by">
                         Sort By:
                     </label>
                     <select
                         value={filters.sort}
                         id="sort_by"
                         onChange={(e) => handleFilterChange('sort', e.target.value)}
-                        className="dropdown-select"
+                        className="form-field"
                         aria-label="Sort media by">
                         <option value="">Sort By</option>
                         {sortOptions.map((option) => (
@@ -238,7 +238,11 @@ const FilterPanel = ({ data = [], onFilterUpdate, onFilterStatusChange, onFilter
                 </div>
 
                 {/* Reset Filters Button */}
-                <button type="button" onClick={resetFilters} className="button button-with-icon mt-4 w-full" aria-label="Reset all filters">
+                <button
+                    type="button"
+                    onClick={resetFilters}
+                    className="button mt-4 inline-flex w-full items-center justify-center gap-2 text-sm"
+                    aria-label="Reset all filters">
                     <Icon icon={iconMap.refresh} className="size-6" /> Reset Filters
                 </button>
             </div>

@@ -10,11 +10,11 @@ const ElevateButton = React.forwardRef(({ children, onClick, title = '', classNa
             onClick={onClick}
             disabled={disabled}
             className={cn(
-                `group inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full border bg-[linear-gradient(145deg,var(--gradient-start),var(--gradient-end))] p-1.5 shadow-neumorphic-xs duration-500 hover:scale-105 ${className}`,
+                `group shadow-neumorphic-xs inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full border bg-[linear-gradient(145deg,var(--gradient-start),var(--gradient-end))] p-1.5 duration-500 hover:scale-105 ${className}`,
                 {
-                    'text-secondary border-light-secondary [--gradient-end:#e6a4a7] [--gradient-start:#ffc3c6] [--sh-end:#ffcfd3] [--sh-start:#db9d9f] dark:border-dark-secondary dark:[--gradient-end:#364253] dark:[--gradient-start:#1f2937] dark:[--sh-end:#324258] dark:[--sh-start:#0c1016]':
+                    'text-secondary border-light-secondary dark:border-dark-secondary [--gradient-end:#e6a4a7] [--gradient-start:#ffc3c6] [--sh-end:#ffcfd3] [--sh-start:#db9d9f] dark:[--gradient-end:#364253] dark:[--gradient-start:#1f2937] dark:[--sh-end:#324258] dark:[--sh-start:#0c1016]':
                         variant === 'primary',
-                    'text-primary border-light-primary [--gradient-end:#fff4f4] [--gradient-start:#FFE6E6] dark:border-dark-primary dark:[--gradient-end:#4b5a6c] dark:[--gradient-start:#334155]':
+                    'text-primary border-light-primary dark:border-dark-primary [--gradient-end:#fff4f4] [--gradient-start:#FFE6E6] dark:[--gradient-end:#4b5a6c] dark:[--gradient-start:#334155]':
                         variant === 'secondary',
                     'border-red-400 text-white [--gradient-end:#FF6347] [--gradient-start:#dc2626] [--sh-end:#ff3131] [--sh-start:#9a1b1b] dark:[--gradient-end:#FF6347]':
                         variant === 'danger',

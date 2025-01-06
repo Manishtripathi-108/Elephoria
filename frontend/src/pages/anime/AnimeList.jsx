@@ -68,7 +68,7 @@ const AnimeList = () => {
                         </div>
                     </div>
                     {/* Options */}
-                    <button className="absolute right-2 top-2 rounded-full bg-gray-700 p-1 hover:bg-gray-600">
+                    <button className="absolute top-2 right-2 rounded-full bg-gray-700 p-1 hover:bg-gray-600">
                         <Icon icon="mdi:dots-vertical" />
                     </button>
                 </div>

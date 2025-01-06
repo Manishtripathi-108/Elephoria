@@ -27,9 +27,9 @@ const PlayOnlineForm = () => {
     }
 
     return (
-        <div className="relative max-h-full w-full max-w-md p-8 md:p-10">
+        <div className="bg-primary relative max-h-full w-full max-w-md p-8 md:p-10">
             <Icon icon={iconMap.gamePadTurbo} className="mx-auto mb-4 h-12 w-12 text-red-500" />
-            <h2 className="text-highlight mb-3 text-center font-aladin text-4xl font-bold tracking-widest">Play Online</h2>
+            <h2 className="text-highlight font-aladin mb-3 text-center text-4xl font-bold tracking-widest">Play Online</h2>
             <h3 className="text-primary mb-5 text-center font-normal tracking-wider">Join a room or create a new one to start playing</h3>
 
             <div className="mb-5 flex justify-center gap-x-4">
@@ -57,7 +57,7 @@ const PlayOnlineForm = () => {
                     <Form id={isJoinForm ? 'joinRoomForm' : 'createRoomForm'} className="space-y-4">
                         {isJoinForm && (
                             <div className="form-group">
-                                <label className="form-label" htmlFor="roomId">
+                                <label className="form-text" htmlFor="roomId">
                                     Enter Room ID
                                 </label>
                                 <Field
@@ -65,18 +65,18 @@ const PlayOnlineForm = () => {
                                     id="roomId"
                                     name="roomId"
                                     placeholder="Room ID"
-                                    className="input-text"
+                                    className="form-field"
                                     disabled={isSubmitting}
                                     maxLength={6}
                                     autoComplete="off"
                                 />
-                                <ErrorMessage component="div" className="form-helper-text error" name="roomId" />
+                                <ErrorMessage component="div" className="form-text text-red-500 dark:text-red-500" name="roomId" />
                             </div>
                         )}
 
                         {!isJoinForm && (
                             <div className="form-group">
-                                <label className="form-label" htmlFor="roomName">
+                                <label className="form-text" htmlFor="roomName">
                                     Room Name
                                 </label>
                                 <Field
@@ -84,17 +84,17 @@ const PlayOnlineForm = () => {
                                     id="roomName"
                                     name="roomName"
                                     placeholder="Enter a room name"
-                                    className="input-text"
+                                    className="form-field"
                                     disabled={isSubmitting}
                                     maxLength={10}
                                     autoComplete="off"
                                 />
-                                <ErrorMessage component="div" className="form-helper-text error" name="roomName" />
+                                <ErrorMessage component="div" className="form-text text-red-500 dark:text-red-500" name="roomName" />
                             </div>
                         )}
 
                         <div className="form-group">
-                            <label className="form-label" htmlFor="playerName">
+                            <label className="form-text" htmlFor="playerName">
                                 Player Name
                             </label>
                             <Field
@@ -102,12 +102,12 @@ const PlayOnlineForm = () => {
                                 id="playerName"
                                 name="playerName"
                                 placeholder="Enter your name"
-                                className="input-text"
+                                className="form-field"
                                 disabled={isSubmitting}
                                 maxLength={20}
                                 autoComplete="off"
                             />
-                            <ErrorMessage component="div" className="form-helper-text error" name="playerName" />
+                            <ErrorMessage component="div" className="form-text text-red-500 dark:text-red-500" name="playerName" />
                         </div>
 
                         <button type="submit" className="button w-full" disabled={isSubmitting}>

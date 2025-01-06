@@ -19,7 +19,7 @@ const Progress = ({ percentage, timeLeft }) => {
 
                     <button
                         type="button"
-                        className="focus:outline-hidden absolute right-3 top-3 inline-flex size-5 shrink-0 items-center justify-center rounded-lg text-gray-800 opacity-50 hover:opacity-100 focus:opacity-100 dark:text-white"
+                        className="absolute top-3 right-3 inline-flex size-5 shrink-0 items-center justify-center rounded-lg text-gray-800 opacity-50 hover:opacity-100 focus:opacity-100 focus:outline-hidden dark:text-white"
                         aria-label="Close">
                         <span className="sr-only">Close</span>
                         <Icon icon={iconMap.closeAnimated} className="size-5" />
@@ -43,7 +43,7 @@ const Progress = ({ percentage, timeLeft }) => {
                             aria-valuemin="0"
                             aria-valuemax="100">
                             <div
-                                className="flex flex-col justify-center whitespace-nowrap bg-blue-600 text-center text-xs text-white dark:bg-neutral-200"
+                                className="flex flex-col justify-center bg-blue-600 text-center text-xs whitespace-nowrap text-white dark:bg-neutral-200"
                                 style={{ width: `${percentage}%` }}></div>
                         </div>
                     </div>

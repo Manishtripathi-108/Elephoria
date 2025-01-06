@@ -95,10 +95,10 @@ const JelloButton = ({
             )}>
             {/* Shadow Layer */}
             <span
-                className={`${roundness} absolute left-0 top-0 h-full w-full translate-y-0.5 bg-black/25 transition-transform duration-[600ms] ease-[cubic-bezier(0.3,0.7,0.4,1)] group-hover:translate-y-1 group-hover:duration-[250ms] group-focus:translate-y-1 group-focus:duration-[250ms] group-active:translate-y-px group-active:duration-[34ms]`}></span>
+                className={`${roundness} absolute top-0 left-0 h-full w-full translate-y-0.5 bg-black/25 transition-transform duration-[600ms] ease-[cubic-bezier(0.3,0.7,0.4,1)] group-hover:translate-y-1 group-hover:duration-[250ms] group-focus:translate-y-1 group-focus:duration-[250ms] group-active:translate-y-px group-active:duration-[34ms]`}></span>
 
             {/* Gradient Layer */}
-            <span className={`${gradientClass} ${roundness} absolute left-0 top-0 h-full w-full`}></span>
+            <span className={`${gradientClass} ${roundness} absolute top-0 left-0 h-full w-full`}></span>
 
             {/* Button Content */}
             <div

@@ -25,7 +25,7 @@ const ToastStack = () => {
     }, [addToast])
 
     return (
-        <div className="fixed bottom-5 right-5 z-50 flex flex-col justify-end gap-y-2">
+        <div className="fixed right-5 bottom-5 z-50 flex flex-col justify-end gap-y-2">
             <AnimatePresence>
                 {toasts.map(({ id, message, type, duration }) => (
                     <Toast key={id} message={message} duration={duration} type={type} onDismiss={() => removeToast(id)} />

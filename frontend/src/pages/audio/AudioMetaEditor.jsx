@@ -106,7 +106,7 @@ const AudioMetadataEditor = () => {
     const tagsToDisplay = showAllTags ? Object.entries(metaTags) : Object.entries(metaTags).slice(0, 10)
 
     return (
-        <div className="flex-center px-2 py-6">
+        <div className="flex items-center justify-center px-2 py-6">
             {downloadUrl ? (
                 <FileDownload
                     title="File Ready for Download"
@@ -116,9 +116,9 @@ const AudioMetadataEditor = () => {
                     fileName={metadata.title || 'edited_audio_file'}
                 />
             ) : (
-                <div className="max-w-(--breakpoint-lg) w-full rounded-3xl border border-light-secondary p-2 shadow-neumorphic-lg dark:border-dark-secondary sm:p-6">
-                    <div className="flex-center flex-col gap-4 rounded-2xl border border-light-secondary p-6 dark:border-dark-secondary sm:rounded-xl">
-                        <h1 className="text-primary text-center font-aladin text-2xl tracking-wider">Edit Tags</h1>
+                <div className="border-light-secondary shadow-neumorphic-lg dark:border-dark-secondary w-full max-w-(--breakpoint-lg) rounded-3xl border p-2 sm:p-6">
+                    <div className="border-light-secondary dark:border-dark-secondary flex flex-col items-center justify-center gap-4 rounded-2xl border p-6 sm:rounded-xl">
+                        <h1 className="text-primary font-aladin text-center text-2xl tracking-wider">Edit Tags</h1>
 
                         <Formik initialValues={initialFormValues} validationSchema={validationSchema} onSubmit={handleMetadataEdit}>
                             {({ isSubmitting, setFieldValue, resetForm }) => (
@@ -126,7 +126,7 @@ const AudioMetadataEditor = () => {
                                     <div className="relative size-3/4 max-w-72 shrink-0">
                                         <label
                                             htmlFor="cover"
-                                            className="block aspect-square cursor-pointer overflow-hidden rounded-xl border border-light-secondary p-2 shadow-neumorphic-inset-xs dark:border-dark-secondary">
+                                            className="border-light-secondary shadow-neumorphic-inset-xs dark:border-dark-secondary block aspect-square cursor-pointer overflow-hidden rounded-xl border p-2">
                                             <img
                                                 src={cover}
                                                 alt="Cover"
@@ -146,7 +146,7 @@ const AudioMetadataEditor = () => {
                                                 setCover(URL.createObjectURL(file))
                                             }}
                                         />
-                                        <ErrorMessage name="cover" component="p" className="form-helper-text error mt-1 w-full text-center" />
+                                        <ErrorMessage name="cover" component="p" className="form-text error mt-1 w-full text-center" />
                                     </div>
 
                                     <div className="grid w-full grid-cols-1 place-items-center gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -160,18 +160,18 @@ const AudioMetadataEditor = () => {
                                                     type={type || 'text'}
                                                     placeholder={placeholder}
                                                     autoComplete="off"
-                                                    className={type === 'textarea' ? 'input-textarea scrollbar-thin' : 'input-text'}
+                                                    className="form-field scrollbar-thin"
                                                 />
-                                                <label className="form-label" htmlFor={key}>
+                                                <label className="form-text" htmlFor={key}>
                                                     {key === 'date' ? 'Year' : key.replace('_', ' ')}
                                                 </label>
-                                                <ErrorMessage name={key} component="p" className="form-helper-text error order-3" />
+                                                <ErrorMessage name={key} component="p" className="form-text error order-3" />
                                             </div>
                                         ))}
 
                                         <div className="order-last col-span-1 flex w-full justify-end gap-4 sm:col-span-2 lg:col-span-3">
                                             <button
-                                                className="button button-sm button-with-icon gap-1"
+                                                className="button button-sm inline-flex items-center justify-center gap-2 text-sm"
                                                 type="button"
                                                 onClick={() => setShowAllTags((prev) => !prev)}>
                                                 {showAllTags ? 'Show Less' : 'Show All'}

@@ -267,7 +267,7 @@ const ImportMedia = () => {
     }
 
     return (
-        <div className="bg-primary container mx-auto grid place-items-center rounded-lg border border-light-secondary p-3 shadow-neumorphic-inset-sm dark:border-dark-secondary md:p-5">
+        <div className="bg-primary border-light-secondary shadow-neumorphic-inset-sm dark:border-dark-secondary container mx-auto grid place-items-center rounded-lg border p-3 md:p-5">
             {importState.importStatus === 'IDLE' && (
                 <div className="mt-10 grid w-fit place-items-center gap-5 md:grid-cols-2">
                     {/* Upload Input */}
@@ -310,12 +310,12 @@ const ImportMedia = () => {
 
             {importState.importStatus === 'IN_PROGRESS' && (
                 <>
-                    <h2 className="text-primary text-center font-aladin text-2xl font-semibold tracking-widest">Import Media</h2>
+                    <h2 className="text-primary font-aladin text-center text-2xl font-semibold tracking-widest">Import Media</h2>
                     <p className="text-secondary text-center tracking-wide">Import your anime or manga list from a JSON file to AniList</p>
                     <div className="mt-5 grid w-full place-items-center gap-5">
                         <ProgressBar total={importState.totalItems} current={importState.itemsProcessed} name={importState.currentItem} />
                         <button
-                            className="button button-with-icon text-red-500 hover:text-red-700 dark:text-red-500 dark:hover:text-red-700"
+                            className="button inline-flex items-center justify-center gap-2 text-sm text-red-500 hover:text-red-700 dark:text-red-500 dark:hover:text-red-700"
                             onClick={cancelImport}>
                             Cancel
                         </button>

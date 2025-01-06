@@ -30,10 +30,10 @@ const UploadProgressBar = ({ bytesUploaded, totalBytes, fileName, className, onR
     return (
         <div
             className={cn(
-                'bg-primary mx-auto w-full max-w-md rounded-xl border border-light-secondary p-6 shadow-neumorphic-lg dark:border-dark-secondary',
+                'bg-primary border-light-secondary shadow-neumorphic-lg dark:border-dark-secondary mx-auto w-full max-w-md rounded-xl border p-6',
                 className
             )}>
-            <h2 className="text-primary mb-4 font-aladin text-xl font-semibold tracking-widest">Uploading File</h2>
+            <h2 className="text-primary font-aladin mb-4 text-xl font-semibold tracking-widest">Uploading File</h2>
 
             {/* File Info */}
             <div className="bg-secondary my-4 flex items-center justify-between gap-3 rounded-lg p-3">
@@ -47,13 +47,13 @@ const UploadProgressBar = ({ bytesUploaded, totalBytes, fileName, className, onR
             </div>
 
             {/* Progress Bar */}
-            <div className="bg-primary relative block w-full rounded-full border border-light-secondary p-1 text-base leading-4 shadow-neumorphic-inset-xs dark:border-dark-secondary">
+            <div className="bg-primary border-light-secondary shadow-neumorphic-inset-xs dark:border-dark-secondary relative block w-full rounded-full border p-1 text-base leading-4">
                 <span
                     style={{
                         width: `${Math.min(uploadPercentage, 100)}%`,
                         transition: 'width 0.3s ease-in-out',
                     }}
-                    className="bg-linear-to-t relative inline-block h-5 overflow-hidden rounded-full border border-inherit from-light-accent/70 to-light-accent bg-cover align-middle after:absolute after:inset-0 after:animate-progress-after after:bg-[linear-gradient(_45deg,#ffffff_25%,rgba(0,0,0,0)_25%,rgba(0,0,0,0)_50%,#ffffff_50%,#ffffff_75%,rgba(0,0,0,0)_75%,rgba(0,0,0,0)_)] after:bg-[length:30px_30px] after:opacity-30 dark:from-dark-accent/70 dark:to-dark-accent"></span>
+                    className="from-light-accent/70 to-light-accent after:animate-progress-after dark:from-dark-accent/70 dark:to-dark-accent relative inline-block h-5 overflow-hidden rounded-full border border-inherit bg-linear-to-t bg-cover align-middle after:absolute after:inset-0 after:bg-[linear-gradient(_45deg,#ffffff_25%,rgba(0,0,0,0)_25%,rgba(0,0,0,0)_50%,#ffffff_50%,#ffffff_75%,rgba(0,0,0,0)_75%,rgba(0,0,0,0)_)] after:bg-[length:30px_30px] after:opacity-30"></span>
             </div>
 
             {/* Actions */}

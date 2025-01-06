@@ -3,18 +3,12 @@
 @variant dark (&:is(.dark *));
 
 @theme {
-    --animate-blob: blob 10s infinite cubic-bezier(0.68, -0.55, 0.27, 1.55);
-    --animate-loader-circle: loader-circle 0.5s var(--animation-delay, 0s) alternate infinite ease-in;
-    --animate-loader-shadow: loader-shadow 0.5s var(--animation-delay, 0s) alternate infinite ease-in;
-    --animate-pulse-slow: pulse-slow 1s ease-in-out infinite alternate;
-    --animate-progress-after: progress-after 1s infinite linear;
-    --animate-shimmer-ray: shimmer-ray 2.5s cubic-bezier(0, 0, 0.2, 1) infinite;
-    --animate-slide-left: slide-left 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.27) forwards;
-    --animate-slide-left-return: slide-left-return 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.27) forwards;
-    --animate-wipe-in-down: wipe-in-down 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.27) forwards;
-    --animate-wipe-out-down: wipe-out-down 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.27) forwards;
-    --animate-zoom-in: zoom-in 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.27) forwards;
-    --animate-zoom-out: zoom-out 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.27) forwards;
+    --font-indie-flower: 'Indie Flower', cursive, serif;
+    --font-aladin: 'Aladin', system-ui;
+    --font-julee: 'Julee', cursive;
+
+    --spacing-header-height: 64px;
+    --spacing-calc-full-height: calc(100vh - var(--header-height) - 2px);
 
     --background-image-primary-gradient: linear-gradient(
         to left,
@@ -30,6 +24,7 @@
         rgba(67, 76, 94, 1) 90%,
         rgba(51, 65, 85, 1) 100%
     );
+    /* todo: bg-gradient-to-r from-red-950 via-red-500 to-red-950 */
     --background-image-yellow-gradient: linear-gradient(to left, #eab308 0%, #facc15 10%, #facc15 90%, #eab308 100%);
     --background-image-green-gradient: linear-gradient(to left, #22c55e 0%, #4ade80 10%, #4ade80 90%, #22c55e 100%);
     --background-image-blue-gradient: linear-gradient(to left, #3b82f6 0%, #60a5fa 10%, #60a5fa 90%, #3b82f6 100%);
@@ -67,11 +62,18 @@
     --shadow-neumorphic-inset-lg: inset 10px 10px 20px var(--lower-shadow), inset -10px -10px 20px var(--upper-shadow);
     --shadow-neumorphic-inset-xl: inset 20px 20px 40px var(--lower-shadow), inset -20px -20px 40px var(--upper-shadow);
 
-    --font-indie-flower: 'Indie Flower', cursive, serif;
-    --font-aladin: 'Aladin', system-ui;
-    --font-julee: 'Julee', cursive;
-
-    --spacing-calc-full-height: calc(100vh - var(--header-height) - 2px);
+    --animate-blob: blob 10s infinite cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    --animate-loader-circle: loader-circle 0.5s var(--animation-delay, 0s) alternate infinite ease-in;
+    --animate-loader-shadow: loader-shadow 0.5s var(--animation-delay, 0s) alternate infinite ease-in;
+    --animate-pulse-slow: pulse-slow 1s ease-in-out infinite alternate;
+    --animate-progress-after: progress-after 1s infinite linear;
+    --animate-shimmer-ray: shimmer-ray 2.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+    --animate-slide-left: slide-left 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.27) forwards;
+    --animate-slide-left-return: slide-left-return 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.27) forwards;
+    --animate-wipe-in-down: wipe-in-down 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.27) forwards;
+    --animate-wipe-out-down: wipe-out-down 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.27) forwards;
+    --animate-zoom-in: zoom-in 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.27) forwards;
+    --animate-zoom-out: zoom-out 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.27) forwards;
 
     @keyframes shimmer-ray {
         0% {
@@ -207,14 +209,6 @@
     }
 }
 
-/*
-  The default border color has changed to `currentColor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
 @layer base {
     *,
     ::after,
@@ -222,5 +216,345 @@
     ::backdrop,
     ::file-selector-button {
         border-color: var(--color-gray-200, currentColor);
+    }
+}
+
+@layer components {
+    dialog {
+        transition:
+            transform 300ms,
+            opacity 300ms,
+            overlay 300ms allow-discrete,
+            display 300ms allow-discrete;
+        @apply outline-hidden;
+    }
+
+    dialog::backdrop {
+        transition:
+            transform 300ms,
+            opacity 300ms,
+            overlay 300ms allow-discrete,
+            display 300ms allow-discrete;
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                Color Scheme                                */
+/* -------------------------------------------------------------------------- */
+@utility bg-primary {
+    @apply bg-light-primary dark:bg-dark-primary;
+}
+
+@utility bg-secondary {
+    @apply bg-light-secondary dark:bg-dark-secondary;
+}
+
+@utility bg-accent {
+    @apply bg-light-accent dark:bg-dark-accent;
+}
+
+@utility bg-highlight {
+    @apply bg-light-highlight dark:bg-dark-highlight;
+}
+
+/* ------------------------------- Text Colors ------------------------------ */
+@utility text-primary {
+    @apply text-light-text-primary dark:text-dark-text-primary;
+}
+
+@utility text-secondary {
+    @apply text-light-text-secondary dark:text-dark-text-secondary;
+}
+
+@utility text-accent {
+    @apply text-light-accent dark:text-dark-accent;
+}
+
+@utility text-highlight {
+    @apply text-light-highlight dark:text-dark-highlight;
+}
+
+@utility text-theme-primary {
+    @apply text-light-primary dark:text-dark-primary;
+}
+
+@utility text-theme-secondary {
+    @apply text-light-secondary dark:text-dark-secondary;
+}
+
+/* ------------------------------ Border Colors ----------------------------- */
+@utility border-primary {
+    @apply border-light-primary dark:border-dark-primary;
+}
+
+@utility border-secondary {
+    @apply border-light-secondary dark:border-dark-secondary;
+}
+
+@utility border-accent {
+    @apply border-light-accent dark:border-dark-accent;
+}
+
+@utility border-highlight {
+    @apply border-light-highlight dark:border-dark-highlight;
+}
+
+@utility scrollbar-thin {
+    &::-webkit-scrollbar {
+        width: 6px; /* Set the width of the scrollbar */
+        height: 6px; /* Set the height of the scrollbar for vertical scrollbar */
+    }
+
+    /* Set the color of the scrollbar thumb */
+    &::-webkit-scrollbar-thumb {
+        @apply bg-dark-secondary dark:bg-light-secondary rounded-lg;
+    }
+
+    /* Set the color of the scrollbar thumb on hover */
+    &::-webkit-scrollbar-thumb:hover {
+        @apply bg-light-highlight dark:bg-dark-highlight;
+    }
+
+    &::-webkit-scrollbar-track {
+        @apply bg-gray-50 dark:bg-gray-700;
+    }
+}
+
+@utility side-nav-animation {
+    @apply -translate-x-full -translate-y-full scale-0 opacity-0;
+
+    &[open] {
+        @apply translate-x-0 translate-y-0 scale-100 opacity-100;
+    }
+
+    &::backdrop {
+        @apply opacity-0;
+    }
+
+    &[open]::backdrop {
+        @apply opacity-65;
+    }
+
+    @starting-style {
+        &[open] {
+            @apply -translate-x-full -translate-y-full scale-0 opacity-0;
+        }
+
+        &[open]::backdrop {
+            @apply opacity-0;
+        }
+    }
+}
+
+@utility modal-animation {
+    @apply m-auto hidden scale-0 opacity-0 ease-in-out;
+
+    &::backdrop {
+        @apply scale-x-100 scale-y-0 opacity-65 ease-in-out;
+    }
+
+    /* Visible state for modal */
+    &[open] {
+        @apply block scale-100 opacity-100 delay-300;
+    }
+
+    &[open]::backdrop {
+        @apply scale-x-100 scale-y-100;
+    }
+
+    @starting-style {
+        &[open] {
+            @apply scale-0 opacity-0;
+        }
+
+        &[open]::backdrop {
+            @apply scale-x-100 scale-y-0;
+        }
+    }
+}
+
+/* --------------------------------- Button --------------------------------- */
+@utility button {
+    @apply text-secondary bg-primary border-light-secondary shadow-neumorphic-xs dark:border-dark-secondary rounded-lg border px-4 py-2 text-center text-sm transition-all duration-300;
+
+    &.active,
+    &:active {
+        @apply text-primary shadow-neumorphic-inset-xs;
+    }
+
+    &:hover:not(.active),
+    &:focus:not(.active) {
+        @apply text-primary scale-105 transform;
+    }
+
+    /*----------------------------------- button Variants -------------------------------- */
+    &.button-icon-only {
+        @apply rounded-full p-2;
+    }
+
+    &.button-icon-only-square {
+        @apply rounded-lg p-2;
+    }
+
+    /*----------------------------------- button Sizes -------------------------------- */
+    &.button-sm {
+        @apply px-2 py-1 text-xs;
+    }
+
+    &.button-base {
+        @apply px-4 py-2 text-sm;
+    }
+
+    &.button-lg {
+        @apply px-4 py-3 text-base;
+    }
+
+    &.button-xl {
+        @apply px-5 py-4 text-lg;
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                    Form                                    */
+/* -------------------------------------------------------------------------- */
+@utility form-group {
+    @apply w-full space-y-2;
+
+    &:has(form-field:not(:placeholder-shown)) label,
+    &:has(form-field:focus) label {
+        @apply text-primary;
+    }
+}
+
+@utility form-text {
+    @apply text-secondary text-xs leading-3 capitalize transition-all duration-300;
+}
+
+/* ---------------------------------- Field --------------------------------- */
+@utility form-field {
+    @apply bg-primary text-primary placeholder:text-secondary border-light-secondary shadow-neumorphic-xs focus:shadow-neumorphic-inset-xs dark:border-dark-secondary field-sizing-content w-full appearance-none rounded-lg border px-3 py-2 text-sm outline-hidden transition duration-300;
+
+    select& {
+        @apply cursor-pointer bg-no-repeat pr-10 ring-black focus-visible:ring-1 dark:ring-white;
+
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="%23767676" d="M8.037 11.166L14.5 22.36c.825 1.43 2.175 1.43 3 0l6.463-11.195c.826-1.43.15-2.598-1.5-2.598H9.537c-1.65 0-2.326 1.17-1.5 2.6z"/></svg>');
+        background-position: right 0.5rem center;
+        background-size: 1.5rem 1.5rem;
+    }
+
+    textarea& {
+        @apply min-h-5;
+    }
+
+    &:user-invalid,
+    &:[data-error="true"] {
+        @apply border-red-500 text-red-500 dark:border-red-500 dark:text-red-500;
+    }
+}
+
+@utility form-field-wrapper {
+    @apply border-light-secondary shadow-neumorphic-xs divide-light-secondary dark:divide-dark-secondary dark:border-dark-secondary text-secondary hover:text-primary focus-within:text-primary flex w-full items-center justify-center divide-x rounded-lg border;
+
+    & .form-field {
+        @apply my-0.5 rounded-md border-none text-inherit shadow-none;
+    }
+
+    & .form-icon {
+        @apply size-10 shrink-0 px-2 text-inherit transition-colors;
+    }
+
+    .form-icon + .form-field {
+        @apply mr-0.5 rounded-l-none;
+    }
+
+    .form-field + .form-icon {
+        @apply ml-0.5 rounded-r-none;
+    }
+
+    &:focus-within .form-field {
+        @apply shadow-neumorphic-inset-xs;
+    }
+
+    &:has(.form-field:not(:placeholder-shown)) .form-icon {
+        @apply text-primary;
+    }
+
+    &:has(.form-field:user-invalid) .form-icon {
+        @apply text-red-500 dark:text-red-500;
+    }
+}
+
+/* ---------------------------------- Radio --------------------------------- */
+@utility form-radio {
+    @apply inline-flex cursor-pointer items-center;
+
+    .form-text {
+        @apply ml-2 text-base;
+    }
+
+    .radio-field {
+        @apply appearance-none;
+
+        &:not(:disabled, :checked):focus-visible ~ .radio-indicator {
+            @apply outline;
+        }
+
+        &:checked ~ .form-text {
+            @apply text-highlight translate-x-2;
+        }
+
+        &:checked ~ .radio-indicator:before {
+            @apply shadow-neumorphic-inset-xs;
+        }
+
+        &:not(:disabled, :checked):focus ~ .form-text {
+            @apply text-primary translate-x-2;
+        }
+    }
+
+    .radio-indicator {
+        @apply shadow-neumorphic-xs before:shadow-neumorphic-xs relative size-5 overflow-hidden rounded-full before:absolute before:top-[10%] before:left-[10%] before:size-4/5 before:rounded-full;
+    }
+
+    &:hover .radio-field:not(:disabled, :checked) ~ .form-text {
+        @apply text-primary translate-x-2;
+    }
+}
+
+/* -------------------------------- Checkbox -------------------------------- */
+@utility form-checkbox {
+    @apply inline-flex cursor-pointer items-center;
+
+    .form-text {
+        @apply ml-2 text-base;
+    }
+
+    .checkbox-field {
+        @apply bg-primary border-secondary checked:shadow-neumorphic-inset-xs disabled:bg-secondary checked:text-primary flex size-4 appearance-none items-center justify-center overflow-hidden rounded-sm border text-center text-xs transition-shadow duration-300 ease-in-out checked:after:size-full checked:after:font-bold checked:after:content-['\2713'];
+
+        &:checked ~ .form-text {
+            @apply text-highlight translate-x-2;
+        }
+
+        &:not(:disabled, :checked):focus ~ .form-text {
+            @apply text-primary translate-x-2;
+        }
+    }
+
+    &:hover .checkbox-field:not(:disabled, :checked) ~ .form-text {
+        @apply text-primary translate-x-2;
+    }
+}
+
+/* ------------------------------- slider ------------------------------- */
+@utility range-slider {
+    @apply bg-primary shadow-neumorphic-xs relative h-2 w-full appearance-none rounded-full outline-hidden;
+
+    &::-webkit-slider-thumb {
+        @apply bg-accent shadow-neumorphic-xs h-6 w-6 cursor-pointer appearance-none rounded-full transition duration-300 ease-in-out;
+    }
+
+    &::-moz-range-thumb {
+        @apply bg-accent shadow-neumorphic-xs relative h-6 w-6 cursor-pointer appearance-none rounded-full transition duration-300 ease-in-out;
     }
 }

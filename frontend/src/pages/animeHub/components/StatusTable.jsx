@@ -18,12 +18,12 @@ const StatusTable = ({ data, title, failed = false }) => {
     const displayData = filteredData.length > 0 ? filteredData : data
 
     return (
-        <div className="bg-primary w-full max-w-2xl rounded-2xl border border-light-secondary shadow-neumorphic-sm dark:border-dark-secondary">
-            <header className="flex w-full items-center justify-between border-b border-light-secondary px-4 py-3 dark:border-dark-secondary">
-                <h2 className="text-primary text-nowrap font-aladin text-xl font-semibold tracking-widest">
+        <div className="bg-primary border-light-secondary shadow-neumorphic-sm dark:border-dark-secondary w-full max-w-2xl rounded-2xl border">
+            <header className="border-light-secondary dark:border-dark-secondary flex w-full items-center justify-between border-b px-4 py-3">
+                <h2 className="text-primary font-aladin text-xl font-semibold tracking-widest text-nowrap">
                     {title} ({data.length})
                 </h2>
-                <select className="dropdown-select max-w-40" aria-label="Filter by status" onChange={(e) => handleCategoryChange(e.target.value)}>
+                <select className="form-field max-w-40" aria-label="Filter by status" onChange={(e) => handleCategoryChange(e.target.value)}>
                     <option value="All">All</option>
                     {uniqueStatusTexts.map((status, index) => (
                         <option key={index} value={status}>
@@ -46,9 +46,9 @@ const StatusTable = ({ data, title, failed = false }) => {
                                 {displayData.map((item, index) => (
                                     <tr
                                         key={index}
-                                        className="border-b border-light-secondary transition-all duration-300 ease-in-out first:rounded-t-lg last:rounded-b-lg hover:border-transparent hover:shadow-neumorphic-md dark:border-dark-secondary dark:hover:border-transparent">
+                                        className="border-light-secondary hover:shadow-neumorphic-md dark:border-dark-secondary border-b transition-all duration-300 ease-in-out first:rounded-t-lg last:rounded-b-lg hover:border-transparent dark:hover:border-transparent">
                                         <td className="px-5 py-3">{item.name}</td>
-                                        <td className={`text-nowrap px-5 py-3 ${failed ? 'text-red-500' : 'text-green-500'}`}>{item.statusText}</td>
+                                        <td className={`px-5 py-3 text-nowrap ${failed ? 'text-red-500' : 'text-green-500'}`}>{item.statusText}</td>
                                     </tr>
                                 ))}
                             </tbody>
