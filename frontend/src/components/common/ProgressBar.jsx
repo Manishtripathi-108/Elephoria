@@ -8,7 +8,7 @@ const ProgressBar = ({ total, current, percentage = '', name = '' }) => {
     return (
         <div className="bg-primary shadow-neumorphic-md grid w-full max-w-sm place-items-center gap-3 rounded-2xl p-5">
             {/* Progress Bar */}
-            <div className="bg-primary border-light-secondary shadow-neumorphic-inset-xs dark:border-dark-secondary relative block w-full rounded-full border p-1 text-base leading-4">
+            <div className="bg-primary shadow-neumorphic-inset-xs relative block w-full rounded-full border p-1 text-base leading-4">
                 <span
                     style={{
                         width: `${Math.min(percentage, 100)}%`,

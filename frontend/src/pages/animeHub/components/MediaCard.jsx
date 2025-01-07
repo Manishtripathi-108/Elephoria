@@ -12,11 +12,9 @@ const MediaCard = ({ mediaItem, isFavouriteList = false }) => {
     const media = isFavouriteList ? mediaItem : mediaItem?.media
 
     return (
-        <div
-            id={`card-${media.id}`}
-            className="border-light-secondary shadow-neumorphic-sm dark:border-dark-secondary relative min-h-44 rounded-lg border">
+        <div id={`card-${media.id}`} className="shadow-neumorphic-sm relative min-h-44 rounded-lg border">
             <img
-                className="text-secondary border-light-secondary dark:border-dark-secondary h-4/5 max-h-56 w-full rounded-t-lg border-b object-cover sm:max-h-72"
+                className="text-secondary h-4/5 max-h-56 w-full rounded-t-lg border-b object-cover sm:max-h-72"
                 src={media?.coverImage?.large}
                 alt={media?.title?.english || media?.title?.native}
                 loading="lazy"
@@ -61,7 +59,7 @@ const MediaCard = ({ mediaItem, isFavouriteList = false }) => {
             <div
                 id={`description-popover-${media.id}`}
                 popover="auto"
-                className="border-light-secondary bg-light-primary/60 dark:border-dark-secondary dark:bg-dark-primary/50 w-72 rounded-lg border p-3 shadow-lg backdrop-blur-md backdrop-saturate-150">
+                className="bg-light-primary/60 dark:bg-dark-primary/50 w-72 rounded-lg border p-3 shadow-lg backdrop-blur-md backdrop-saturate-150">
                 <div className="mb-2">
                     <h3 className="text-primary font-aladin text-xl font-bold tracking-widest" aria-live="polite">
                         {media?.title?.english || media?.title?.native || media?.title?.romaji || 'Unknown Title'}

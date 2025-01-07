@@ -73,7 +73,7 @@ const AnimeHub = () => {
                         )}
 
                         <div
-                            className={`bg-primary border-light-secondary shadow-neumorphic-inset-sm dark:border-dark-secondary relative mx-auto w-full rounded-lg border p-2 md:p-5 ${
+                            className={`bg-primary shadow-neumorphic-inset-sm relative mx-auto w-full rounded-lg border p-2 md:p-5 ${
                                 isFilteringActive
                                     ? 'after:bg-primary after:absolute after:top-0 after:right-0 after:z-40 after:size-full after:animate-pulse after:opacity-60'
                                     : ''

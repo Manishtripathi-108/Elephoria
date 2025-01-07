@@ -67,7 +67,7 @@ const WaitingRoom = ({ onExit, onStart, playerO = '', playerX = '', roomId, room
 
     // Reusable Player Block Component
     const PlayerBlock = ({ player, label }) => (
-        <div className="border-light-secondary shadow-neumorphic-inset-md dark:border-dark-secondary w-full max-w-sm shrink-0 rounded-xl border p-3 text-center">
+        <div className="shadow-neumorphic-inset-md w-full max-w-sm shrink-0 rounded-xl border p-3 text-center">
             <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}

@@ -116,8 +116,8 @@ const AudioMetadataEditor = () => {
                     fileName={metadata.title || 'edited_audio_file'}
                 />
             ) : (
-                <div className="border-light-secondary shadow-neumorphic-lg dark:border-dark-secondary w-full max-w-(--breakpoint-lg) rounded-3xl border p-2 sm:p-6">
-                    <div className="border-light-secondary dark:border-dark-secondary flex flex-col items-center justify-center gap-4 rounded-2xl border p-6 sm:rounded-xl">
+                <div className="shadow-neumorphic-lg w-full max-w-(--breakpoint-lg) rounded-3xl border p-2 sm:p-6">
+                    <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border p-6 sm:rounded-xl">
                         <h1 className="text-primary font-aladin text-center text-2xl tracking-wider">Edit Tags</h1>
 
                         <Formik initialValues={initialFormValues} validationSchema={validationSchema} onSubmit={handleMetadataEdit}>
@@ -126,7 +126,7 @@ const AudioMetadataEditor = () => {
                                     <div className="relative size-3/4 max-w-72 shrink-0">
                                         <label
                                             htmlFor="cover"
-                                            className="border-light-secondary shadow-neumorphic-inset-xs dark:border-dark-secondary block aspect-square cursor-pointer overflow-hidden rounded-xl border p-2">
+                                            className="shadow-neumorphic-inset-xs block aspect-square cursor-pointer overflow-hidden rounded-xl border p-2">
                                             <img
                                                 src={cover}
                                                 alt="Cover"

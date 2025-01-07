@@ -16,14 +16,12 @@ const CorrectInvalidStatuses = ({ correctedStatusList, setCorrectedStatusList, v
     }
 
     return (
-        <div className="bg-primary border-light-secondary shadow-neumorphic-lg dark:border-dark-secondary my-3 w-full max-w-lg rounded-lg border p-6">
+        <div className="bg-primary shadow-neumorphic-lg my-3 w-full max-w-lg rounded-lg border p-6">
             <h2 className="text-primary font-aladin mb-6 text-2xl font-semibold tracking-widest">Correct Invalid Statuses</h2>
 
             <div className="space-y-4">
                 {correctedStatusList.map((statusItem, index) => (
-                    <div
-                        key={index}
-                        className="bg-primary form-group border-light-secondary shadow-neumorphic-inset-sm dark:border-dark-secondary rounded-md border p-4">
+                    <div key={index} className="bg-primary form-group shadow-neumorphic-inset-sm rounded-md border p-4">
                         <label className="form-text">
                             Invalid Status: <span className="font-bold text-red-500">{statusItem.status}</span>
                         </label>

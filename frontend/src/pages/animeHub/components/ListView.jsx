@@ -6,7 +6,7 @@ import MediaRow from './MediaRow'
 const ListView = ({ data = [], isFavourite = false }) => {
     // Render Table Header for media list
     const renderTableHeader = () => (
-        <thead className="bg-primary text-secondary border-light-secondary dark:border-dark-secondary border-x border-b">
+        <thead className="bg-primary text-secondary border-x border-b">
             <tr className="hidden sm:table-row">
                 <th className="sr-only"></th>
                 <th className="font-aladin w-2/3 p-2 text-left font-normal tracking-widest">Title</th>
@@ -19,7 +19,7 @@ const ListView = ({ data = [], isFavourite = false }) => {
     // Render a regular media table (for Anime/Manga)
     const MediaTable = ({ list }) => (
         <div key={list.name} className="shadow-neumorphic-sm mb-5 w-full overflow-hidden rounded-xl">
-            <div className="bg-secondary border-light-secondary dark:border-dark-secondary rounded-t-xl border">
+            <div className="bg-secondary rounded-t-xl border">
                 <h2 className="text-primary font-aladin p-3 text-lg tracking-widest">{list.name}</h2>
             </div>
             <table className="w-full table-auto">
@@ -42,7 +42,7 @@ const ListView = ({ data = [], isFavourite = false }) => {
     // Render a Favourite media table (for Anime/Manga)
     const FavouriteTable = ({ type, media }) => (
         <div className="shadow-neumorphic-sm mb-5 w-full overflow-hidden rounded-xl">
-            <div className="bg-secondary border-light-secondary dark:border-dark-secondary rounded-t-xl border">
+            <div className="bg-secondary rounded-t-xl border">
                 <h2 className="text-primary font-aladin p-3 text-lg tracking-widest">Favourite {type}</h2>
             </div>
             <table className="w-full table-auto">

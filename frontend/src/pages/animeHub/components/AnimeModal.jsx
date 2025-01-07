@@ -93,7 +93,7 @@ const AnimeModal = ({ entryId, modalId, media, mediaStatus = '', mediaProgress =
                 style={bannerStyle}></div>
 
             {/* Cover image */}
-            <div className="bg-primary border-light-secondary shadow-neumorphic-inset-xs dark:border-dark-secondary relative -mt-24 ml-5 w-full max-w-40 rounded-lg border p-3">
+            <div className="bg-primary shadow-neumorphic-inset-xs relative -mt-24 ml-5 w-full max-w-40 rounded-lg border p-3">
                 <img
                     className="size-full rounded-lg object-cover"
                     src={media?.coverImage?.large}

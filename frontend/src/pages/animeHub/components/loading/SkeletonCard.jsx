@@ -8,10 +8,8 @@ const SkeletonCard = () => {
             </div>
             <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5">
                 {Array.from({ length: 5 }).map((_, index) => (
-                    <div
-                        key={index}
-                        className="bg-primary border-light-secondary shadow-neumorphic-sm dark:border-dark-secondary overflow-hidden rounded-xl border">
-                        <div className="bg-secondary border-light-secondary dark:border-dark-secondary h-40 w-full animate-pulse border-b md:h-64"></div>
+                    <div key={index} className="bg-primary shadow-neumorphic-sm overflow-hidden rounded-xl border">
+                        <div className="bg-secondary h-40 w-full animate-pulse border-b md:h-64"></div>
 
                         <div className="space-y-2 p-2">
                             <div className="bg-secondary h-4 w-full animate-pulse rounded-sm"></div>

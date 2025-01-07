@@ -267,7 +267,7 @@ const ImportMedia = () => {
     }
 
     return (
-        <div className="bg-primary border-light-secondary shadow-neumorphic-inset-sm dark:border-dark-secondary container mx-auto grid place-items-center rounded-lg border p-3 md:p-5">
+        <div className="bg-primary shadow-neumorphic-inset-sm container mx-auto grid place-items-center rounded-lg border p-3 md:p-5">
             {importState.importStatus === 'IDLE' && (
                 <div className="mt-10 grid w-fit place-items-center gap-5 md:grid-cols-2">
                     {/* Upload Input */}

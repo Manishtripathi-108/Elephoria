@@ -3,11 +3,11 @@ import React from 'react'
 const SkeletonList = () => {
     return (
         <div className="shadow-neumorphic-sm w-full overflow-hidden rounded-xl">
-            <div className="bg-secondary border-light-secondary dark:border-dark-secondary block rounded-t-xl border">
+            <div className="bg-secondary block rounded-t-xl border">
                 <div className="bg-primary m-3 h-8 w-1/3 animate-pulse rounded-lg"></div>
             </div>
             <table className="w-full table-auto">
-                <thead className="bg-primary text-secondary border-light-secondary dark:border-dark-secondary border-x border-b">
+                <thead className="bg-primary text-secondary border-x border-b">
                     <tr className="hidden sm:table-row">
                         <th className="sr-only"></th>
                         <th className="w-2/3 p-2">
@@ -26,7 +26,7 @@ const SkeletonList = () => {
                     {Array.from({ length: 5 }).map((_, index) => (
                         <tr
                             key={index}
-                            className="border-light-secondary hover:shadow-neumorphic-xs dark:border-dark-secondary border-x border-b p-2 transition-all duration-300 ease-in-out last:rounded-b-lg hover:border-transparent dark:hover:border-transparent">
+                            className="hover:shadow-neumorphic-xs border-x border-b p-2 transition-all duration-300 ease-in-out last:rounded-b-lg hover:border-transparent dark:hover:border-transparent">
                             <td className="p-3">
                                 <div className="bg-secondary size-20 animate-pulse rounded-lg"></div>
                             </td>

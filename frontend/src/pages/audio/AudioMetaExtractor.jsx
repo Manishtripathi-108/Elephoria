@@ -143,7 +143,7 @@ const AudioMetaExtractor = () => {
                 <form
                     id="audio-upload-form"
                     onSubmit={handleAudioUpload}
-                    className="border-light-secondary shadow-neumorphic-lg dark:border-dark-secondary flex w-full max-w-2xl flex-col items-center justify-center rounded-3xl border p-6">
+                    className="shadow-neumorphic-lg flex w-full max-w-2xl flex-col items-center justify-center rounded-3xl border p-6">
                     <h2 className="text-primary font-aladin mb-2 text-2xl tracking-wider">Upload Audio</h2>
                     <p className="text-primary mb-6 text-center">Upload an audio file to extract metadata and edit tags.</p>
 

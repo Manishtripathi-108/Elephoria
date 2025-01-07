@@ -34,7 +34,7 @@ const AnimeHubAuth = () => {
 
     return (
         <div className="bg-primary grid h-[calc(100dvh-4rem)] w-full place-items-center">
-            <div className="bg-primary border-light-secondary shadow-neumorphic-md dark:border-dark-secondary w-full max-w-md rounded-lg border p-6">
+            <div className="bg-primary shadow-neumorphic-md w-full max-w-md rounded-lg border p-6">
                 <h1 className="text-primary font-aladin mb-4 text-center text-2xl font-semibold tracking-widest">Anime Authorization</h1>
                 <p className="text-secondary mb-4 text-center tracking-wide">
                     Please go to the AniList page, authorize the application, and paste your Auth Pin below.

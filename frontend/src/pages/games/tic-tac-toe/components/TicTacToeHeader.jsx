@@ -9,8 +9,7 @@ const TicTacToeHeader = ({ title, playingOnline }) => {
     const isInternetConnected = useNetworkStatus()
 
     return (
-        <div
-            className={`border-light-secondary dark:border-dark-secondary grid border-b py-3 md:grid-cols-2 ${playingOnline ? 'grid-cols-2' : 'grid-cols-4'}`}>
+        <div className={`grid border-b py-3 md:grid-cols-2 ${playingOnline ? 'grid-cols-2' : 'grid-cols-4'}`}>
             <h1 className="text-primary flex items-center justify-center text-center text-lg font-bold tracking-wider capitalize md:text-2xl">
                 {title}
             </h1>

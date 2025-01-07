@@ -93,7 +93,7 @@ const AnimeLayout = () => {
     return (
         <div className="bg-primary grid min-h-screen place-items-center">
             {/* Header */}
-            <header className="border-secondary shadow-neumorphic-inset-lg w-full border-b" style={bannerStyle}>
+            <header className="shadow-neumorphic-inset-lg w-full border-b" style={bannerStyle}>
                 <div className="flex h-full w-full items-end justify-center bg-white/20 dark:bg-black/30">
                     <div className="flex w-5/6 max-w-(--breakpoint-md) flex-wrap items-end justify-start gap-5 opacity-100 md:pt-20">
                         <img
@@ -151,10 +151,10 @@ const AnimeLayout = () => {
                 <input type="checkbox" name="open-menu" id="open-menu" className="peer sr-only" />
                 <label
                     htmlFor="open-menu"
-                    className="bg-primary text-secondary hover:text-primary peer-checked:text-primary border-secondary flex h-10 grow-0 cursor-pointer items-center justify-center rounded-l-lg border-y border-l p-2 sm:h-20">
+                    className="bg-primary text-secondary hover:text-primary peer-checked:text-primary flex h-10 grow-0 cursor-pointer items-center justify-center rounded-l-lg border-y border-l p-2 sm:h-20">
                     <Icon icon={iconMap.arrowOpenLeft} className="size-4" />
                 </label>
-                <div className="bg-primary text-secondary border-secondary hidden place-items-center gap-4 rounded-tr-xl rounded-bl-xl border px-2 py-4 peer-checked:grid">
+                <div className="bg-primary text-secondary hidden place-items-center gap-4 rounded-tr-xl rounded-bl-xl border px-2 py-4 peer-checked:grid">
                     <NavLink to={APP_ROUTES.ANIME.ANIMELIST} title="Anime List">
                         <Icon icon={iconMap.anime} className="size-6" />
                     </NavLink>

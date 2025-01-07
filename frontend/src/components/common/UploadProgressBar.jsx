@@ -28,11 +28,7 @@ const UploadProgressBar = ({ bytesUploaded, totalBytes, fileName, className, onR
     const uploadPercentage = ((bytesUploaded / totalBytes) * 100).toFixed(1)
 
     return (
-        <div
-            className={cn(
-                'bg-primary border-light-secondary shadow-neumorphic-lg dark:border-dark-secondary mx-auto w-full max-w-md rounded-xl border p-6',
-                className
-            )}>
+        <div className={cn('bg-primary shadow-neumorphic-lg mx-auto w-full max-w-md rounded-xl border p-6', className)}>
             <h2 className="text-primary font-aladin mb-4 text-xl font-semibold tracking-widest">Uploading File</h2>
 
             {/* File Info */}
@@ -47,7 +43,7 @@ const UploadProgressBar = ({ bytesUploaded, totalBytes, fileName, className, onR
             </div>
 
             {/* Progress Bar */}
-            <div className="bg-primary border-light-secondary shadow-neumorphic-inset-xs dark:border-dark-secondary relative block w-full rounded-full border p-1 text-base leading-4">
+            <div className="bg-primary shadow-neumorphic-inset-xs relative block w-full rounded-full border p-1 text-base leading-4">
                 <span
                     style={{
                         width: `${Math.min(uploadPercentage, 100)}%`,

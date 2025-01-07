@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 
-@variant dark (&:is(.dark *));
+@variant dark (&:where(.dark, .dark *));
 
 @theme {
     --font-indie-flower: 'Indie Flower', cursive, serif;
@@ -8,36 +8,11 @@
     --font-julee: 'Julee', cursive;
 
     --spacing-header-height: 64px;
-    --spacing-calc-full-height: calc(100vh - var(--header-height) - 2px);
+    --spacing-calc-full-height: calc(100vh - var(--spacing-header-height) - 2px);
 
-    --background-image-primary-gradient: linear-gradient(
-        to left,
-        rgba(31, 41, 55, 1) 0%,
-        rgba(51, 65, 85, 1) 10%,
-        rgba(51, 65, 85, 1) 90%,
-        rgba(31, 41, 55, 1) 100%
-    );
-    --background-image-secondary-gradient: linear-gradient(
-        to left,
-        rgba(51, 65, 85, 1) 0%,
-        rgba(67, 76, 94, 1) 10%,
-        rgba(67, 76, 94, 1) 90%,
-        rgba(51, 65, 85, 1) 100%
-    );
-    /* todo: bg-gradient-to-r from-red-950 via-red-500 to-red-950 */
-    --background-image-yellow-gradient: linear-gradient(to left, #eab308 0%, #facc15 10%, #facc15 90%, #eab308 100%);
-    --background-image-green-gradient: linear-gradient(to left, #22c55e 0%, #4ade80 10%, #4ade80 90%, #22c55e 100%);
-    --background-image-blue-gradient: linear-gradient(to left, #3b82f6 0%, #60a5fa 10%, #60a5fa 90%, #3b82f6 100%);
-    --background-image-red-gradient: linear-gradient(
-        to left,
-        rgba(220, 38, 38, 1) 0%,
-        rgba(239, 68, 68, 1) 10%,
-        rgba(239, 68, 68, 1) 90%,
-        rgba(220, 38, 38, 1) 100%
-    );
-    --background-image-shimmer-ray-accent: radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(255, 99, 71, 1) 100%);
-    --background-image-shimmer-ray-highlight: radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(30, 144, 255, 1) 100%);
-
+    /* -------------------------------------------------------------------------- */
+    /*                                   Colors                                   */
+    /* -------------------------------------------------------------------------- */
     --color-light-primary: #ffb6b9;
     --color-light-secondary: #ffe6e6;
     --color-light-text-primary: #333333;
@@ -51,6 +26,21 @@
     --color-dark-accent: #ff6347;
     --color-dark-highlight: #1e90ff;
 
+    /* -------------------------------------------------------------------------- */
+    /*                                  Gradients                                 */
+    /* -------------------------------------------------------------------------- */
+    --background-image-primary-gradient: linear-gradient(to left, #ffb6b9 0%, #ffe6e6 10%, #ffe6e6 90%, #ffb6b9 100%);
+    --background-image-secondary-gradient: linear-gradient(to left, #ffb6b9 0%, #ffd9da 10%, #ffd9da 90%, #ffb6b9 100%);
+    --background-image-dark-primary-gradient: linear-gradient(to left, #1f2937 0%, #334155 10%, #334155 90%, #1f2937 100%);
+    --background-image-dark-secondary-gradient: linear-gradient(to left, #1f2937 0%, #575d65 10%, #575d65 90%, #1f2937 100%);
+    --background-image-yellow-gradient: linear-gradient(to left, #a37b00 0%, #ffdf20 10%, #ffdf20 90%, #a37b00 100%);
+    --background-image-green-gradient: linear-gradient(to left, #009335 0%, #4ade80 10%, #4ade80 90%, #009335 100%);
+    --background-image-blue-gradient: linear-gradient(to left, #003688 0%, #50a2ff 10%, #50a2ff 90%, #003688 100%);
+    --background-image-red-gradient: linear-gradient(to left, #8f0007 0%, #ff6467 10%, #ff6467 90%, #8f0007 100%);
+
+    /* -------------------------------------------------------------------------- */
+    /*                                   Shadows                                  */
+    /* -------------------------------------------------------------------------- */
     --shadow-neumorphic-xs: 3px 3px 5px var(--lower-shadow), -3px -3px 5px var(--upper-shadow);
     --shadow-neumorphic-sm: 5px 5px 10px var(--lower-shadow), -5px -5px 10px var(--upper-shadow);
     --shadow-neumorphic-md: 6px 6px 12px var(--lower-shadow), -6px -6px 12px var(--upper-shadow);
@@ -62,6 +52,9 @@
     --shadow-neumorphic-inset-lg: inset 10px 10px 20px var(--lower-shadow), inset -10px -10px 20px var(--upper-shadow);
     --shadow-neumorphic-inset-xl: inset 20px 20px 40px var(--lower-shadow), inset -20px -20px 40px var(--upper-shadow);
 
+    /* -------------------------------------------------------------------------- */
+    /*                                  Animation                                 */
+    /* -------------------------------------------------------------------------- */
     --animate-blob: blob 10s infinite cubic-bezier(0.68, -0.55, 0.27, 1.55);
     --animate-loader-circle: loader-circle 0.5s var(--animation-delay, 0s) alternate infinite ease-in;
     --animate-loader-shadow: loader-shadow 0.5s var(--animation-delay, 0s) alternate infinite ease-in;
@@ -215,7 +208,11 @@
     ::before,
     ::backdrop,
     ::file-selector-button {
-        border-color: var(--color-gray-200, currentColor);
+        border-color: var(--color-light-secondary, currentColor);
+
+        &:where(.dark, .dark *) {
+            border-color: var(--color-dark-secondary, currentColor);
+        }
     }
 }
 
@@ -280,23 +277,6 @@
 
 @utility text-theme-secondary {
     @apply text-light-secondary dark:text-dark-secondary;
-}
-
-/* ------------------------------ Border Colors ----------------------------- */
-@utility border-primary {
-    @apply border-light-primary dark:border-dark-primary;
-}
-
-@utility border-secondary {
-    @apply border-light-secondary dark:border-dark-secondary;
-}
-
-@utility border-accent {
-    @apply border-light-accent dark:border-dark-accent;
-}
-
-@utility border-highlight {
-    @apply border-light-highlight dark:border-dark-highlight;
 }
 
 @utility scrollbar-thin {
@@ -375,7 +355,7 @@
 
 /* --------------------------------- Button --------------------------------- */
 @utility button {
-    @apply text-secondary bg-primary border-light-secondary shadow-neumorphic-xs dark:border-dark-secondary rounded-lg border px-4 py-2 text-center text-sm transition-all duration-300;
+    @apply text-secondary bg-primary shadow-neumorphic-xs rounded-lg border px-4 py-2 text-center text-sm transition-all duration-300;
 
     &.active,
     &:active {
@@ -432,7 +412,7 @@
 
 /* ---------------------------------- Field --------------------------------- */
 @utility form-field {
-    @apply bg-primary text-primary placeholder:text-secondary border-light-secondary shadow-neumorphic-xs focus:shadow-neumorphic-inset-xs dark:border-dark-secondary field-sizing-content w-full appearance-none rounded-lg border px-3 py-2 text-sm outline-hidden transition duration-300;
+    @apply bg-primary text-primary placeholder:text-secondary shadow-neumorphic-xs focus:shadow-neumorphic-inset-xs field-sizing-content w-full appearance-none rounded-lg border px-3 py-2 text-sm outline-hidden transition duration-300;
 
     select& {
         @apply cursor-pointer bg-no-repeat pr-10 ring-black focus-visible:ring-1 dark:ring-white;
@@ -453,7 +433,7 @@
 }
 
 @utility form-field-wrapper {
-    @apply border-light-secondary shadow-neumorphic-xs divide-light-secondary dark:divide-dark-secondary dark:border-dark-secondary text-secondary hover:text-primary focus-within:text-primary flex w-full items-center justify-center divide-x rounded-lg border;
+    @apply shadow-neumorphic-xs divide-light-secondary dark:divide-dark-secondary text-secondary hover:text-primary focus-within:text-primary flex w-full items-center justify-center divide-x rounded-lg border;
 
     & .form-field {
         @apply my-0.5 rounded-md border-none text-inherit shadow-none;
@@ -530,7 +510,7 @@
     }
 
     .checkbox-field {
-        @apply bg-primary border-secondary checked:shadow-neumorphic-inset-xs disabled:bg-secondary checked:text-primary flex size-4 appearance-none items-center justify-center overflow-hidden rounded-sm border text-center text-xs transition-shadow duration-300 ease-in-out checked:after:size-full checked:after:font-bold checked:after:content-['\2713'];
+        @apply bg-primary checked:shadow-neumorphic-inset-xs disabled:bg-secondary checked:text-primary flex size-4 appearance-none items-center justify-center overflow-hidden rounded-sm border text-center text-xs transition-shadow duration-300 ease-in-out checked:after:size-full checked:after:font-bold checked:after:content-['\2713'];
 
         &:checked ~ .form-text {
             @apply text-highlight translate-x-2;

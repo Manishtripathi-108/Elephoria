@@ -17,7 +17,7 @@ const UltimateTicTacToe = () => {
     return (
         <div
             tabIndex={0}
-            className="animate-zoom-in border-light-secondary shadow-neumorphic-md dark:border-dark-secondary relative z-0 grid w-fit grid-cols-3 gap-2 rounded-xl border p-2 outline-hidden">
+            className="animate-zoom-in shadow-neumorphic-md relative z-0 grid w-fit grid-cols-3 gap-2 rounded-xl border p-2 outline-hidden">
             {ultimateBoard.map((macroBoard, macroIndex) => (
                 <div
                     key={macroIndex}

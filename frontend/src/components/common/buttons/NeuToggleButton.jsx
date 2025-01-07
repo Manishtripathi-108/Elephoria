@@ -9,7 +9,7 @@ const NeuToggleButton = ({ handleClick, active, alignment = 'center', additional
 
     return (
         <button
-            className={`group border-light-secondary shadow-neumorphic-xs active:shadow-neumorphic-inset-md dark:border-dark-secondary flex size-10 shrink-0 grow-0 cursor-pointer flex-col justify-center rounded-lg border p-2 transition-shadow duration-500 ${alignmentStyles[active ? 'center' : alignment]} ${additionalClasses || ''}`}
+            className={`group shadow-neumorphic-xs active:shadow-neumorphic-inset-md flex size-10 shrink-0 grow-0 cursor-pointer flex-col justify-center rounded-lg border p-2 transition-shadow duration-500 ${alignmentStyles[active ? 'center' : alignment]} ${additionalClasses || ''}`}
             onClick={handleClick}
             {...props}>
             <span
