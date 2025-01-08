@@ -21,14 +21,16 @@ const LoadingState = ({ baseHeight = '40%', circleSize = '30px', jumpHeight = '3
         '--loader-jump-height': jumpHeight,
     }
     return (
-        <div className={`flex-center ${width ? `${width}` : 'w-full'} ${height ? `${height}` : 'h-calc-full-height'}`} style={styles}>
+        <div
+            className={`flex items-center justify-center ${width ? `${width}` : 'w-full'} ${height ? `${height}` : 'h-calc-full-height'}`}
+            style={styles}>
             <div className="relative h-full min-h-20 w-full max-w-sm">
-                <div className="bg-highlight absolute bottom-[calc(var(--loader-base-height)+var(--loader-jump-height))] left-[calc(25%-var(--loader-circle-size)/2)] size-[var(--loader-circle-size)] origin-center animate-loader-circle rounded-full"></div>
-                <div className="bg-highlight absolute bottom-[calc(var(--loader-base-height)+var(--loader-jump-height))] left-[calc(50%-var(--loader-circle-size)/2)] size-[var(--loader-circle-size)] origin-center animate-loader-circle rounded-full [--animation-delay:.1s]"></div>
-                <div className="bg-highlight absolute bottom-[calc(var(--loader-base-height)+var(--loader-jump-height))] left-[calc(75%-var(--loader-circle-size)/2)] size-[var(--loader-circle-size)] origin-center animate-loader-circle rounded-full [--animation-delay:.2s]"></div>
-                <div className="absolute bottom-[calc(var(--loader-base-height)-4px)] left-[calc(25%-var(--loader-circle-size)/2)] -z-10 h-1 w-[var(--loader-circle-size)] origin-center animate-loader-shadow rounded-full bg-black blur-[1px]"></div>
-                <div className="absolute bottom-[calc(var(--loader-base-height)-4px)] left-[calc(50%-var(--loader-circle-size)/2)] -z-10 h-1 w-[var(--loader-circle-size)] origin-center animate-loader-shadow rounded-full bg-black blur-[1px] [--animation-delay:.1s]"></div>
-                <div className="absolute bottom-[calc(var(--loader-base-height)-4px)] left-[calc(75%-var(--loader-circle-size)/2)] -z-10 h-1 w-[var(--loader-circle-size)] origin-center animate-loader-shadow rounded-full bg-black blur-[1px] [--animation-delay:.2s]"></div>
+                <div className="bg-highlight animate-loader-circle absolute bottom-[calc(var(--loader-base-height)+var(--loader-jump-height))] left-[calc(25%-var(--loader-circle-size)/2)] size-[var(--loader-circle-size)] origin-center rounded-full"></div>
+                <div className="bg-highlight animate-loader-circle absolute bottom-[calc(var(--loader-base-height)+var(--loader-jump-height))] left-[calc(50%-var(--loader-circle-size)/2)] size-[var(--loader-circle-size)] origin-center rounded-full [--animation-delay:.1s]"></div>
+                <div className="bg-highlight animate-loader-circle absolute bottom-[calc(var(--loader-base-height)+var(--loader-jump-height))] left-[calc(75%-var(--loader-circle-size)/2)] size-[var(--loader-circle-size)] origin-center rounded-full [--animation-delay:.2s]"></div>
+                <div className="animate-loader-shadow absolute bottom-[calc(var(--loader-base-height)-4px)] left-[calc(25%-var(--loader-circle-size)/2)] -z-10 h-1 w-[var(--loader-circle-size)] origin-center rounded-full bg-black blur-[1px]"></div>
+                <div className="animate-loader-shadow absolute bottom-[calc(var(--loader-base-height)-4px)] left-[calc(50%-var(--loader-circle-size)/2)] -z-10 h-1 w-[var(--loader-circle-size)] origin-center rounded-full bg-black blur-[1px] [--animation-delay:.1s]"></div>
+                <div className="animate-loader-shadow absolute bottom-[calc(var(--loader-base-height)-4px)] left-[calc(75%-var(--loader-circle-size)/2)] -z-10 h-1 w-[var(--loader-circle-size)] origin-center rounded-full bg-black blur-[1px] [--animation-delay:.2s]"></div>
             </div>
         </div>
     )

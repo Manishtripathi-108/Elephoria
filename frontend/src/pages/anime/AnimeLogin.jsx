@@ -46,9 +46,9 @@ const AnimeLogin = () => {
     if (loading) return <LoadingState />
 
     return (
-        <div className="bg-primary grid h-calc-full-height w-full place-items-center p-2">
-            <div className="bg-primary border-secondary w-full max-w-md space-y-6 rounded-2xl border p-6 shadow-neumorphic-lg">
-                <h1 className="text-primary text-center font-aladin text-2xl font-semibold tracking-widest">Login with AniList</h1>
+        <div className="bg-primary h-calc-full-height grid w-full place-items-center p-2">
+            <div className="bg-primary shadow-neumorphic-lg w-full max-w-md space-y-6 rounded-2xl border p-6">
+                <h1 className="text-primary font-aladin text-center text-2xl font-semibold tracking-widest">Login with AniList</h1>
                 <p className="text-secondary text-center tracking-wide">Use the button below to authorize and connect your AniList account.</p>
                 <div className="grid w-full place-items-center">
                     <a

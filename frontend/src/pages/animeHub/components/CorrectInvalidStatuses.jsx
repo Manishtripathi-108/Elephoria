@@ -16,21 +16,16 @@ const CorrectInvalidStatuses = ({ correctedStatusList, setCorrectedStatusList, v
     }
 
     return (
-        <div className="bg-primary my-3 w-full max-w-lg rounded-lg border border-light-secondary p-6 shadow-neumorphic-lg dark:border-dark-secondary">
-            <h2 className="text-primary mb-6 font-aladin text-2xl font-semibold tracking-widest">Correct Invalid Statuses</h2>
+        <div className="bg-primary shadow-neumorphic-lg my-3 w-full max-w-lg rounded-lg border p-6">
+            <h2 className="text-primary font-aladin mb-6 text-2xl font-semibold tracking-widest">Correct Invalid Statuses</h2>
 
             <div className="space-y-4">
                 {correctedStatusList.map((statusItem, index) => (
-                    <div
-                        key={index}
-                        className="bg-primary form-group rounded-md border border-light-secondary p-4 shadow-neumorphic-inset-sm dark:border-dark-secondary">
-                        <label className="form-label">
-                            Invalid Status: <span className="error font-bold">{statusItem.status}</span>
+                    <div key={index} className="bg-primary form-group shadow-neumorphic-inset-sm rounded-md border p-4">
+                        <label className="form-text">
+                            Invalid Status: <span className="font-bold text-red-500">{statusItem.status}</span>
                         </label>
-                        <select
-                            className="dropdown-select"
-                            value={statusItem.corrected}
-                            onChange={(e) => updateCorrectedStatus(index, e.target.value)}>
+                        <select className="form-field" value={statusItem.corrected} onChange={(e) => updateCorrectedStatus(index, e.target.value)}>
                             <option value="" disabled>
                                 Select valid status
                             </option>
@@ -43,7 +38,7 @@ const CorrectInvalidStatuses = ({ correctedStatusList, setCorrectedStatusList, v
                     </div>
                 ))}
             </div>
-            <div className="flex-center mt-5 gap-5">
+            <div className="mt-5 flex items-center justify-center gap-5">
                 <button type="submit" className="button" onClick={handleContinue}>
                     Continue
                 </button>

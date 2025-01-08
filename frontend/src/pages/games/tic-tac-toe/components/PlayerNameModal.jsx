@@ -4,8 +4,8 @@ import { Icon } from '@iconify/react'
 
 import { DialogModal } from '../../../../components/common/PrimaryModal'
 import ElevateButton from '../../../../components/common/buttons/ElevateButton'
-import { useTicTacToeContext } from '../../../../context/TicTacToe/TicTacToeContext'
 import iconMap from '../../../../constants/iconMap'
+import { useTicTacToeContext } from '../../../../context/TicTacToe/TicTacToeContext'
 
 const PlayerNameModal = () => {
     const [validationError, setValidationError] = useState('')
@@ -64,18 +64,18 @@ const PlayerNameModal = () => {
                 {/* Error Message */}
                 {validationError && (
                     <div className="flex gap-2 rounded-xl pl-2 tracking-wider">
-                        <Icon icon={iconMap.error} className="error size-5 shrink-0" />
-                        <span className="error text-sm">{validationError}</span>
+                        <Icon icon={iconMap.error} className="size-5 shrink-0 text-red-500" />
+                        <span className="text-sm text-red-500">{validationError}</span>
                     </div>
                 )}
 
                 {/* Player X Input */}
-                <div className="input-wrapper input-group-start">
-                    <span className="input-icon flex-center text-center font-julee text-2xl">X</span>
+                <div className="form-field-wrapper">
+                    <span className="form-icon font-julee flex items-center justify-center text-center text-2xl">X</span>
                     <input
                         id="playerXInput"
                         name="playerXInput"
-                        className="input-text"
+                        className="form-field"
                         type="text"
                         aria-label="Player 1 Name"
                         placeholder="Player 1 Name"
@@ -89,12 +89,12 @@ const PlayerNameModal = () => {
                 </div>
 
                 {/* Player O Input */}
-                <div className="input-wrapper input-group-start">
-                    <span className="input-icon flex-center text-center font-julee text-2xl">O</span>
+                <div className="form-field-wrapper">
+                    <span className="form-icon font-julee flex items-center justify-center text-center text-2xl">O</span>
                     <input
                         id="playerOInput"
                         name="playerOInput"
-                        className="input-text"
+                        className="form-field"
                         type="text"
                         aria-label="Player 2 Name"
                         placeholder="Player 2 Name"

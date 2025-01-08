@@ -2,7 +2,6 @@ import axios from 'axios'
 
 import API_ROUTES, { API_TYPES } from '../constants/apiRoutes'
 
-
 /**
  * Creates an axios client instance with auth token handling for the specified API type.
  * It will add the auth token to the headers of each request if it exists.

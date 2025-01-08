@@ -27,10 +27,10 @@ const AuthState = () => {
             {user ? (
                 <div>
                     <div className="mt-4 w-full px-3 pt-24 md:w-1/2 md:pt-20">
-                        <div className="bg-primary rounded-lg border border-light-secondary p-6 shadow-neumorphic-xs dark:border-dark-secondary">
-                            <div className="bg-primary relative -mt-24 size-44 rounded-full border border-light-secondary p-3 shadow-neumorphic-inset-xs dark:border-dark-secondary">
+                        <div className="bg-primary shadow-neumorphic-xs rounded-lg border p-6">
+                            <div className="bg-primary shadow-neumorphic-inset-xs relative -mt-24 size-44 rounded-full border p-3">
                                 <img
-                                    className="size-full rounded-full object-cover p-3 shadow-neumorphic-xs"
+                                    className="shadow-neumorphic-xs size-full rounded-full object-cover p-3"
                                     src={user.photoURL}
                                     alt={user.displayName}
                                 />

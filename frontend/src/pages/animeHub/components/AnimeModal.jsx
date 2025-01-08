@@ -7,8 +7,8 @@ import * as Yup from 'yup'
 import { deleteMediaEntry, saveMediaEntry, toggleFavourite } from '../../../api/animeHubApi'
 import { DialogModal, closeModal } from '../../../components/common/PrimaryModal'
 import JelloButton from '../../../components/common/buttons/JelloButton'
-import { useAnimeHubContext } from '../../../context/AnimeHubContext'
 import iconMap from '../../../constants/iconMap'
+import { useAnimeHubContext } from '../../../context/AnimeHubContext'
 import { validStatusOptions } from '../utils/constants'
 
 const AnimeModal = ({ entryId, modalId, media, mediaStatus = '', mediaProgress = '0' }) => {
@@ -93,7 +93,7 @@ const AnimeModal = ({ entryId, modalId, media, mediaStatus = '', mediaProgress =
                 style={bannerStyle}></div>
 
             {/* Cover image */}
-            <div className="bg-primary relative -mt-24 ml-5 w-full max-w-40 rounded-lg border border-light-secondary p-3 shadow-neumorphic-inset-xs dark:border-dark-secondary">
+            <div className="bg-primary shadow-neumorphic-inset-xs relative -mt-24 ml-5 w-full max-w-40 rounded-lg border p-3">
                 <img
                     className="size-full rounded-lg object-cover"
                     src={media?.coverImage?.large}
@@ -103,14 +103,14 @@ const AnimeModal = ({ entryId, modalId, media, mediaStatus = '', mediaProgress =
             </div>
 
             {/* Title */}
-            <h2 className="text-primary mb-6 ml-7 mt-4 font-aladin text-xl font-normal capitalize leading-none tracking-widest">
+            <h2 className="text-primary font-aladin mt-4 mb-6 ml-7 text-xl leading-none font-normal tracking-widest capitalize">
                 {media?.title?.english || media?.title?.native || media?.title?.romaji || 'Unknown Title'}
             </h2>
 
             {/* Favourite button */}
             <button
                 type="button"
-                className={`button button-icon-only absolute right-8 top-2/4 ${isLiked ? 'active' : ''}`}
+                className={`button button-icon-only absolute top-2/4 right-8 ${isLiked ? 'active' : ''}`}
                 onClick={toggleLike}
                 disabled={isToggling}>
                 <Icon icon={iconMap.heart} className={`size-5 ${isLiked ? 'text-[#ff4545]' : ''}`} />
@@ -120,12 +120,12 @@ const AnimeModal = ({ entryId, modalId, media, mediaStatus = '', mediaProgress =
                 {({ isSubmitting }) => (
                     <Form className="px-4 pb-4">
                         {/* Status and Progress fields */}
-                        <div className="flex-center gap-4">
+                        <div className="flex items-center justify-center gap-4">
                             <div className="form-group">
-                                <label htmlFor="status" className="form-label">
+                                <label htmlFor="status" className="form-text">
                                     Status:
                                 </label>
-                                <Field as="select" name="status" className="dropdown-select">
+                                <Field as="select" name="status" className="form-field">
                                     <option value="">Select Status</option>
                                     {validStatusOptions.map((option) => (
                                         <option key={option} value={option}>
@@ -133,15 +133,15 @@ const AnimeModal = ({ entryId, modalId, media, mediaStatus = '', mediaProgress =
                                         </option>
                                     ))}
                                 </Field>
-                                <ErrorMessage name="status" component="div" className="form-helper-text error" />
+                                <ErrorMessage name="status" component="div" className="form-text text-red-500 dark:text-red-500" />
                             </div>
 
                             <div className="form-group">
-                                <label htmlFor="progress" className="form-label">
+                                <label htmlFor="progress" className="form-text">
                                     Episode Progress:
                                 </label>
-                                <Field type="number" name="progress" min="0" max={maxProgress} className="input-text text-center" />
-                                <ErrorMessage name="progress" component="div" className="form-helper-text error" />
+                                <Field type="number" name="progress" min="0" max={maxProgress} className="form-field text-center" />
+                                <ErrorMessage name="progress" component="div" className="form-text text-red-500 dark:text-red-500" />
                             </div>
                         </div>
 

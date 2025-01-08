@@ -6,8 +6,8 @@ import { Icon } from '@iconify/react'
 
 import { logoutUser } from '../../../api/animeHubApi'
 import { ConfirmationModal, openModal } from '../../../components/common/PrimaryModal'
-import { useAnimeHubContext } from '../../../context/AnimeHubContext'
 import iconMap from '../../../constants/iconMap'
+import { useAnimeHubContext } from '../../../context/AnimeHubContext'
 
 const NavigationBar = () => {
     const { activeTab, setActiveTab } = useAnimeHubContext()
@@ -22,13 +22,13 @@ const NavigationBar = () => {
 
     return (
         <>
-            <nav className="bg-primary mx-auto block w-full max-w-screen-lg px-4 py-2 lg:px-8 lg:py-3">
+            <nav className="bg-primary mx-auto block w-full max-w-(--breakpoint-lg) px-4 py-2 lg:px-8 lg:py-3">
                 <div className="container mx-auto flex flex-wrap items-center justify-center gap-3 md:gap-5">
                     <button
                         type="button"
                         title="Anime List"
                         onClick={() => setActiveTab('ANIME')}
-                        className={`button ${activeTab === 'ANIME' ? 'active' : ''} button-with-icon gap-1 text-nowrap px-2 py-2 md:gap-2 md:px-4 md:py-2 md:text-base`}>
+                        className={`button ${activeTab === 'ANIME' ? 'active' : ''} inline-flex items-center justify-center gap-1 gap-2 px-2 py-2 text-sm text-nowrap md:gap-2 md:px-4 md:py-2 md:text-base`}>
                         <Icon icon={iconMap.anime} className="size-4 shrink-0 md:size-5" />
                         Anime List
                     </button>
@@ -36,7 +36,7 @@ const NavigationBar = () => {
                         type="button"
                         title="Manga List"
                         onClick={() => setActiveTab('MANGA')}
-                        className={`button ${activeTab === 'MANGA' ? 'active' : ''} button-with-icon gap-1 text-nowrap px-2 py-2 md:gap-2 md:px-4 md:py-2 md:text-base`}>
+                        className={`button ${activeTab === 'MANGA' ? 'active' : ''} inline-flex items-center justify-center gap-1 gap-2 px-2 py-2 text-sm text-nowrap md:gap-2 md:px-4 md:py-2 md:text-base`}>
                         <Icon icon={iconMap.manga} className="size-4 shrink-0 md:size-5" />
                         Manga List
                     </button>
@@ -44,7 +44,7 @@ const NavigationBar = () => {
                         type="button"
                         title="Favourite List"
                         onClick={() => setActiveTab('FAVOURITES')}
-                        className={`button ${activeTab === 'FAVOURITES' ? 'active' : ''} button-with-icon gap-1 text-nowrap px-2 py-2 md:gap-2 md:px-4 md:py-2 md:text-base`}>
+                        className={`button ${activeTab === 'FAVOURITES' ? 'active' : ''} inline-flex items-center justify-center gap-1 gap-2 px-2 py-2 text-sm text-nowrap md:gap-2 md:px-4 md:py-2 md:text-base`}>
                         <Icon icon={iconMap.heart} className="size-4 shrink-0 md:size-5" />
                         Favourites
                     </button>
@@ -52,7 +52,7 @@ const NavigationBar = () => {
                         type="button"
                         title="Favourite List"
                         onClick={() => setActiveTab('IMPORT')}
-                        className={`button ${activeTab === 'IMPORT' ? 'active' : ''} button-with-icon gap-1 text-nowrap px-2 py-2 md:gap-2 md:px-4 md:py-2 md:text-base`}>
+                        className={`button ${activeTab === 'IMPORT' ? 'active' : ''} inline-flex items-center justify-center gap-1 gap-2 px-2 py-2 text-sm text-nowrap md:gap-2 md:px-4 md:py-2 md:text-base`}>
                         <Icon icon={iconMap.upload} className="size-4 shrink-0 md:size-5" />
                         Import List
                     </button>
@@ -60,7 +60,7 @@ const NavigationBar = () => {
                         type="button"
                         title="Log Out"
                         onClick={() => openModal('anime-hub-logout-modal')}
-                        className="button button-with-icon gap-1 text-nowrap px-2 py-2 text-red-500 dark:text-red-500 md:gap-2 md:px-4 md:py-2 md:text-base">
+                        className="button inline-flex items-center justify-center gap-1 gap-2 px-2 py-2 text-sm text-nowrap text-red-500 md:gap-2 md:px-4 md:py-2 md:text-base dark:text-red-500">
                         <Icon icon={iconMap.logOut} className="size-4 shrink-0 md:size-5" />
                         Log Out
                     </button>

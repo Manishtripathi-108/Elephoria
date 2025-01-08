@@ -43,11 +43,11 @@ const DialogModal = ({ modalId, maxWidthAndClasses = 'w-full max-w-2xl', showClo
         <dialog
             id={modalId}
             onClick={(e) => e.target === e.currentTarget && closeModal(modalId)}
-            className={`modal-animation scrollbar-thin rounded-xl border border-light-secondary p-5 shadow-neumorphic-inset-md dark:border-dark-secondary ${maxWidthAndClasses}`}>
-            <div className="overflow-hidden rounded-lg border border-light-secondary shadow-neumorphic-md dark:border-dark-secondary">
+            className={`modal-animation scrollbar-thin bg-primary shadow-neumorphic-inset-md rounded-xl border p-5 ${maxWidthAndClasses}`}>
+            <div className="shadow-neumorphic-md overflow-hidden rounded-lg border">
                 {showCloseButton && (
                     <button
-                        className="text-secondary hover:text-primary absolute right-2 top-2 z-20 select-none rounded-full bg-light-secondary p-1 text-lg dark:bg-dark-secondary"
+                        className="text-secondary hover:text-primary bg-light-secondary dark:bg-dark-secondary absolute top-2 right-2 z-20 rounded-full p-1 text-lg select-none"
                         onClick={() => closeModal(modalId)}
                         aria-label="Close Modal">
                         <Icon icon={iconMap.close} className="size-6" />
@@ -76,10 +76,10 @@ const ConfirmationModal = ({ modalId, icon, onConfirm, onCancel, confirmText = '
         <dialog
             id={modalId}
             onClick={(e) => e.target === e.currentTarget && closeModal(modalId)}
-            className={`modal-animation w-fit max-w-2xl rounded-xl border border-light-secondary p-5 shadow-neumorphic-inset-md dark:border-dark-secondary`}>
-            <div className="overflow-hidden rounded-lg border border-light-secondary shadow-neumorphic-md dark:border-dark-secondary">
+            className={`modal-animation shadow-neumorphic-inset-md w-fit max-w-2xl rounded-xl border p-5`}>
+            <div className="shadow-neumorphic-md overflow-hidden rounded-lg border">
                 <div className="relative max-h-full w-full max-w-md p-8 text-center md:p-10">
-                    <Icon icon={icon} className="error mx-auto mb-4 size-12" />
+                    <Icon icon={icon} className="mx-auto mb-4 size-12 text-red-500" />
                     <h3 className="text-primary mb-5 text-lg font-normal">{children}</h3>
                     <JelloButton
                         onClick={() => {
@@ -92,7 +92,7 @@ const ConfirmationModal = ({ modalId, icon, onConfirm, onCancel, confirmText = '
                     </JelloButton>
                     <JelloButton
                         title={cancelText}
-                        className="ml-4 mt-4"
+                        className="mt-4 ml-4"
                         variant={!isConfirmDanger ? 'danger' : 'primary'}
                         onClick={
                             onCancel

@@ -5,8 +5,8 @@ import { useNavigate } from 'react-router-dom'
 import { Icon } from '@iconify/react'
 import { signInWithPopup } from 'firebase/auth'
 
-import { auth, provider } from '../../firebase'
 import iconMap from '../../constants/iconMap'
+import { auth, provider } from '../../firebase'
 
 const GoogleLogin = () => {
     const navigate = useNavigate()

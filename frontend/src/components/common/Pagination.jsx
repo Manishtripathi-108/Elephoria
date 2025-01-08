@@ -49,10 +49,10 @@ const Pagination = ({ className = '', currentPage, totalPages, setPage }) => {
     }
 
     return (
-        <div className={cn('bg-primary border-secondary rounded-full border p-3 shadow-neumorphic-xs', className)}>
-            <ul className="flex-center list-none">
+        <div className={cn('bg-primary shadow-neumorphic-xs rounded-full border p-3', className)}>
+            <ul className="flex list-none items-center justify-center">
                 {/* Previous Arrow */}
-                <li className="bg-primary border-secondary mx-1 flex-1 rounded-full border shadow-neumorphic-xs first:mr-2 last:ml-2 active:shadow-neumorphic-inset-xs sm:first:mr-4 sm:last:ml-4">
+                <li className="bg-primary shadow-neumorphic-xs active:shadow-neumorphic-inset-xs mx-1 flex-1 rounded-full border first:mr-2 last:ml-2 sm:first:mr-4 sm:last:ml-4">
                     <button
                         className="text-secondary hover:text-primary font-karla block px-2 py-1"
                         onClick={() => handlePageChange(Math.max(1, currentPage - 1))}>
@@ -64,7 +64,7 @@ const Pagination = ({ className = '', currentPage, totalPages, setPage }) => {
                 {getPageNumbers().map((page) => (
                     <li
                         key={page}
-                        className={`bg-primary border-secondary mx-1 flex-1 rounded-full border ${currentPage === page ? 'text-primary shadow-neumorphic-inset-xs' : 'text-secondary hover:text-primary shadow-neumorphic-xs active:shadow-neumorphic-inset-xs'}`}>
+                        className={`bg-primary mx-1 flex-1 rounded-full border ${currentPage === page ? 'text-primary shadow-neumorphic-inset-xs' : 'text-secondary hover:text-primary shadow-neumorphic-xs active:shadow-neumorphic-inset-xs'}`}>
                         <button className="block min-w-7 p-1 text-center" onClick={() => handlePageChange(page)}>
                             {page}
                         </button>
@@ -73,13 +73,13 @@ const Pagination = ({ className = '', currentPage, totalPages, setPage }) => {
 
                 {/* Ellipsis for Hidden Pages */}
                 {totalPages > maxVisible && currentPage < totalPages - 1 && (
-                    <li className="bg-primary border-secondary mx-1 flex-1 rounded-full border shadow-neumorphic-xs">
+                    <li className="bg-primary shadow-neumorphic-xs mx-1 flex-1 rounded-full border">
                         <span className="text-secondary font-karla block min-w-7 p-1 text-center">...</span>
                     </li>
                 )}
 
                 {/* Next Arrow */}
-                <li className="bg-primary mx-1 flex-1 rounded-full shadow-neumorphic-xs first:mr-2 last:ml-2 active:shadow-neumorphic-inset-xs sm:first:mr-4 sm:last:ml-4">
+                <li className="bg-primary shadow-neumorphic-xs active:shadow-neumorphic-inset-xs mx-1 flex-1 rounded-full first:mr-2 last:ml-2 sm:first:mr-4 sm:last:ml-4">
                     <button
                         className="text-secondary hover:text-primary font-karla block px-2 py-1 text-center"
                         onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}>

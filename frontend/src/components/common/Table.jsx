@@ -31,11 +31,11 @@ const Table = ({ heading, columns, rows }) => {
                                 {columns.map((column, index) => (
                                     <th
                                         key={index}
-                                        className="bg-secondary px-5 py-2 first:rounded-l first:pl-3 last:sticky last:right-0 last:rounded-r last:pl-5 last:pr-3">
+                                        className="bg-secondary px-5 py-2 first:rounded-l first:pl-3 last:sticky last:right-0 last:rounded-r last:pr-3 last:pl-5">
                                         <div className="text-left font-medium">{column}</div>
                                     </th>
                                 ))}
-                                <th className="bg-secondary px-5 py-2 first:rounded-l first:pl-3 last:sticky last:right-0 last:rounded-r last:pl-5 last:pr-3">
+                                <th className="bg-secondary px-5 py-2 first:rounded-l first:pl-3 last:sticky last:right-0 last:rounded-r last:pr-3 last:pl-5">
                                     <div className="sr-only text-left font-medium">Action</div>
                                 </th>
                             </tr>
@@ -47,11 +47,11 @@ const Table = ({ heading, columns, rows }) => {
                                     {row.map((cell, cellIndex) => (
                                         <td
                                             key={cellIndex}
-                                            className="border-b border-slate-200 px-5 py-3 first:pl-3 last:sticky last:right-0 last:border-none last:bg-gradient-to-r last:from-transparent last:to-light-primary last:to-[12px] last:pl-5 last:pr-3 dark:last:to-dark-primary">
+                                            className="last:to-light-primary dark:last:to-dark-primary border-b border-slate-200 px-5 py-3 first:pl-3 last:sticky last:right-0 last:border-none last:bg-linear-to-r last:from-transparent last:to-[12px] last:pr-3 last:pl-5">
                                             {cell}
                                         </td>
                                     ))}
-                                    <td className="border-b border-slate-200 px-5 py-3 first:pl-3 last:sticky last:right-0 last:border-none last:bg-gradient-to-r last:from-transparent last:to-light-primary last:to-[12px] last:pl-5 last:pr-3 dark:last:to-dark-primary">
+                                    <td className="last:to-light-primary dark:last:to-dark-primary border-b border-slate-200 px-5 py-3 first:pl-3 last:sticky last:right-0 last:border-none last:bg-linear-to-r last:from-transparent last:to-[12px] last:pr-3 last:pl-5">
                                         <NeuButton>Edit</NeuButton>
                                     </td>
                                 </tr>

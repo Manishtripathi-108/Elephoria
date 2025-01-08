@@ -47,9 +47,9 @@ const FileDownload = ({
     }
 
     return (
-        <div className="text-primary flex-center h-screen p-2 sm:p-6">
-            <div className="max-w-screen-lg rounded-3xl border border-light-secondary p-2 shadow-neumorphic-xs dark:border-dark-secondary sm:p-6 sm:shadow-neumorphic-lg">
-                <div className="rounded-2xl border border-light-secondary p-6 text-center dark:border-dark-secondary sm:rounded-xl">
+        <div className="text-primary flex h-screen items-center justify-center p-2 sm:p-6">
+            <div className="shadow-neumorphic-xs sm:shadow-neumorphic-lg max-w-(--breakpoint-lg) rounded-3xl border p-2 sm:p-6">
+                <div className="rounded-2xl border p-6 text-center sm:rounded-xl">
                     <h1 className="mb-6 text-2xl font-bold drop-shadow-lg">{title}</h1>
                     <p className="text-secondary mb-8">{description}</p>
                     <JelloButton title={buttonText} icon={iconMap.download} className="mt-6" onClick={handleDownload}>

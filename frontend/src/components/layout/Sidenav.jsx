@@ -54,10 +54,10 @@ const Sidenav = ({ onDismiss }) => {
     return (
         <dialog
             id="sidenav"
-            className="side-nav-animation bg-primary my-auto flex h-screen w-72 flex-col overflow-hidden rounded-e-lg shadow-neumorphic-md"
+            className="side-nav-animation bg-primary shadow-neumorphic-md my-auto flex h-screen w-72 flex-col overflow-hidden rounded-e-lg"
             onClick={(e) => e.target === e.currentTarget && onDismiss()}>
             {/* Profile Section */}
-            <div className="flex items-center justify-between gap-4 border-b border-dotted border-light-secondary p-4 dark:border-dark-secondary">
+            <div className="flex items-center justify-between gap-4 border-b border-dotted p-4">
                 <div className="flex items-center gap-3">
                     <img className="h-12 w-12 rounded-full" src={avatarImage} alt="Avatar" />
                     <div>
@@ -80,7 +80,7 @@ const Sidenav = ({ onDismiss }) => {
                                 <Link
                                     to={item.link}
                                     onClick={onDismiss}
-                                    className="hover:text-primary text-secondary flex w-full cursor-pointer items-center justify-between rounded-lg border border-transparent bg-inherit p-3 text-left font-aladin tracking-widest transition hover:border-light-secondary hover:shadow-neumorphic-xs dark:hover:border-dark-secondary">
+                                    className="hover:text-primary text-secondary font-aladin hover: hover:shadow-neumorphic-xs dark:hover:border-dark-secondary flex w-full cursor-pointer items-center justify-between rounded-lg border border-transparent bg-inherit p-3 text-left tracking-widest transition">
                                     <div className="flex items-center gap-3">
                                         <Icon icon={item.icon} className="size-6" />
                                         <span className="flex-1">{item.title}</span>
@@ -92,7 +92,7 @@ const Sidenav = ({ onDismiss }) => {
                                     <input type="radio" name="menu" id={`menu-${index}`} className="peer hidden" />
                                     <label
                                         htmlFor={`menu-${index}`}
-                                        className="peer-checked:text-primary hover:text-primary text-secondary flex w-full cursor-pointer items-center justify-between rounded-lg border border-transparent bg-inherit p-3 text-left font-aladin tracking-widest transition hover:border-light-secondary hover:shadow-neumorphic-xs peer-checked:border-light-secondary peer-checked:shadow-neumorphic-xs dark:hover:border-dark-secondary dark:peer-checked:border-dark-secondary">
+                                        className="peer-checked:text-primary hover:text-primary text-secondary font-aladin hover: hover:shadow-neumorphic-xs peer-checked: peer-checked:shadow-neumorphic-xs dark:hover:border-dark-secondary dark:peer-checked:border-dark-secondary flex w-full cursor-pointer items-center justify-between rounded-lg border border-transparent bg-inherit p-3 text-left tracking-widest transition">
                                         <div className="flex items-center gap-3">
                                             <Icon icon={item.icon} className="size-6" />
                                             <span className="flex-1">{item.title}</span>
@@ -116,7 +116,7 @@ const Sidenav = ({ onDismiss }) => {
                                                 <Link
                                                     to={child.link}
                                                     onClick={onDismiss}
-                                                    className="text-secondary hover:text-primary flex w-full items-center gap-3 rounded-lg border border-transparent bg-inherit p-2 text-sm transition hover:border-light-secondary hover:shadow-neumorphic-xs dark:hover:border-dark-secondary">
+                                                    className="text-secondary hover:text-primary hover: hover:shadow-neumorphic-xs dark:hover:border-dark-secondary flex w-full items-center gap-3 rounded-lg border border-transparent bg-inherit p-2 text-sm transition">
                                                     {child.name}
                                                 </Link>
                                             ) : (
@@ -124,7 +124,7 @@ const Sidenav = ({ onDismiss }) => {
                                                     <input type="radio" name="sub-menu" id={`sub-menu-${index}`} className="peer hidden" />
                                                     <label
                                                         htmlFor={`sub-menu-${index}`}
-                                                        className="peer-checked:text-primary hover:text-primary text-secondary flex w-full cursor-pointer items-center justify-between rounded-lg border border-transparent bg-inherit p-2 text-left text-sm transition hover:border-light-secondary hover:shadow-neumorphic-xs peer-checked:border-light-secondary peer-checked:shadow-neumorphic-xs dark:hover:border-dark-secondary dark:peer-checked:border-dark-secondary">
+                                                        className="peer-checked:text-primary hover:text-primary text-secondary hover: hover:shadow-neumorphic-xs peer-checked: peer-checked:shadow-neumorphic-xs dark:hover:border-dark-secondary dark:peer-checked:border-dark-secondary flex w-full cursor-pointer items-center justify-between rounded-lg border border-transparent bg-inherit p-2 text-left text-sm transition">
                                                         <div className="flex-1">{child.name}</div>
                                                         {child.children && (
                                                             <Icon
@@ -144,7 +144,7 @@ const Sidenav = ({ onDismiss }) => {
                                                             key={subIdx}
                                                             to={subChild.link}
                                                             onClick={onDismiss}
-                                                            className="text-secondary hover:text-primary ml-4 block rounded-lg border border-transparent bg-inherit p-2 text-sm transition hover:border-light-secondary hover:shadow-neumorphic-xs dark:hover:border-dark-secondary">
+                                                            className="text-secondary hover:text-primary hover: hover:shadow-neumorphic-xs dark:hover:border-dark-secondary ml-4 block rounded-lg border border-transparent bg-inherit p-2 text-sm transition">
                                                             {subChild.name}
                                                         </Link>
                                                     ))}
@@ -158,11 +158,11 @@ const Sidenav = ({ onDismiss }) => {
                     </div>
                 ))}
 
-                <div className="border-t border-dotted border-light-secondary dark:border-dark-secondary"></div>
+                <div className="border-t border-dotted"></div>
 
                 <Link
                     onClick={onDismiss}
-                    className="hover:text-primary text-secondary flex w-full cursor-pointer items-center justify-between rounded-lg border border-transparent bg-inherit p-3 text-left font-aladin tracking-widest transition hover:border-light-secondary hover:shadow-neumorphic-xs dark:hover:border-dark-secondary">
+                    className="hover:text-primary text-secondary font-aladin hover: hover:shadow-neumorphic-xs dark:hover:border-dark-secondary flex w-full cursor-pointer items-center justify-between rounded-lg border border-transparent bg-inherit p-3 text-left tracking-widest transition">
                     <div className="flex items-center gap-3">
                         <Icon icon={iconMap.settings} className="size-6" />
                         <span className="flex-1">Settings</span>
@@ -171,7 +171,7 @@ const Sidenav = ({ onDismiss }) => {
 
                 <Link
                     onClick={onDismiss}
-                    className="flex w-full cursor-pointer items-center justify-between rounded-lg border border-transparent bg-inherit p-3 text-left font-aladin tracking-widest text-red-500 transition hover:border-light-secondary hover:text-red-600 hover:shadow-neumorphic-xs dark:hover:border-dark-secondary">
+                    className="font-aladin hover: hover:shadow-neumorphic-xs dark:hover:border-dark-secondary flex w-full cursor-pointer items-center justify-between rounded-lg border border-transparent bg-inherit p-3 text-left tracking-widest text-red-500 transition hover:text-red-600">
                     <div className="flex items-center gap-3">
                         <Icon icon={iconMap.logOut} className="size-6" />
                         <span className="flex-1">Log Out</span>

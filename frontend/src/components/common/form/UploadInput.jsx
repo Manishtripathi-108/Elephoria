@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import { Icon } from '@iconify/react'
 
-import cn from '../../../utils/cn'
 import iconMap from '../../../constants/iconMap'
+import cn from '../../../utils/cn'
 
 /**
  * UploadInput
@@ -46,12 +46,12 @@ const UploadInput = ({ acceptType, className, file, id, setFile }) => {
     return (
         <div
             className={cn(
-                'bg-primary flex size-80 flex-col items-center justify-between gap-2 rounded-lg border border-light-secondary p-2.5 shadow-neumorphic-sm dark:border-dark-secondary',
+                'bg-primary shadow-neumorphic-sm flex size-80 flex-col items-center justify-between gap-2 rounded-lg border p-2.5',
                 className
             )}>
             <label
                 htmlFor={id}
-                className="text-highlight flex w-full flex-1 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-light-highlight dark:border-dark-highlight">
+                className="text-highlight border-light-highlight dark:border-dark-highlight flex w-full flex-1 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed">
                 <Icon icon={file ? iconMap.success : iconMap.upload} className="size-28" />
                 <p className="text-primary p-1 text-center tracking-wider">
                     {fileName !== 'Upload File' ? 'File Uploaded! Click on the button below to upload!' : 'Browse File to upload!'}

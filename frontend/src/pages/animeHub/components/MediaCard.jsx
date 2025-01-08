@@ -12,11 +12,9 @@ const MediaCard = ({ mediaItem, isFavouriteList = false }) => {
     const media = isFavouriteList ? mediaItem : mediaItem?.media
 
     return (
-        <div
-            id={`card-${media.id}`}
-            className="relative min-h-44 rounded-lg border border-light-secondary shadow-neumorphic-sm dark:border-dark-secondary">
+        <div id={`card-${media.id}`} className="shadow-neumorphic-sm relative min-h-44 rounded-lg border">
             <img
-                className="text-secondary h-4/5 max-h-56 w-full rounded-t-lg border-b border-light-secondary object-cover dark:border-dark-secondary sm:max-h-72"
+                className="text-secondary h-4/5 max-h-56 w-full rounded-t-lg border-b object-cover sm:max-h-72"
                 src={media?.coverImage?.large}
                 alt={media?.title?.english || media?.title?.native}
                 loading="lazy"
@@ -24,7 +22,7 @@ const MediaCard = ({ mediaItem, isFavouriteList = false }) => {
 
             <div className="flex h-1/5 flex-col items-start justify-center p-2">
                 <h2
-                    className={`text-primary line-clamp-1 shrink-0 font-aladin text-sm font-normal capitalize leading-none tracking-widest ${isFavouriteList && 'flex'}`}>
+                    className={`text-primary font-aladin line-clamp-1 shrink-0 text-sm leading-none font-normal tracking-widest capitalize ${isFavouriteList && 'flex'}`}>
                     {media?.title?.english || media?.title?.native || media?.title?.romaji || 'Unknown Title'}
                 </h2>
                 {!isFavouriteList && (
@@ -50,7 +48,7 @@ const MediaCard = ({ mediaItem, isFavouriteList = false }) => {
 
             {/* Info Button to Trigger Popover */}
             <button
-                className="bg-secondary text-secondary absolute bottom-12 right-2 rounded-full p-1"
+                className="bg-secondary text-secondary absolute right-2 bottom-12 rounded-full p-1"
                 popovertarget={`description-popover-${media.id}`}
                 popovertargetaction="toggle"
                 aria-label="Show Description">
@@ -61,7 +59,7 @@ const MediaCard = ({ mediaItem, isFavouriteList = false }) => {
             <div
                 id={`description-popover-${media.id}`}
                 popover="auto"
-                className="w-72 rounded-lg border border-light-secondary bg-light-primary/60 p-3 shadow-lg backdrop-blur-md backdrop-saturate-150 dark:border-dark-secondary dark:bg-dark-primary/50">
+                className="bg-light-primary/60 dark:bg-dark-primary/50 w-72 rounded-lg border p-3 shadow-lg backdrop-blur-md backdrop-saturate-150">
                 <div className="mb-2">
                     <h3 className="text-primary font-aladin text-xl font-bold tracking-widest" aria-live="polite">
                         {media?.title?.english || media?.title?.native || media?.title?.romaji || 'Unknown Title'}
@@ -102,7 +100,7 @@ const MediaCard = ({ mediaItem, isFavouriteList = false }) => {
                     <button
                         type="button"
                         onClick={() => openModal(`modal_${media.id}`)}
-                        className="bg-secondary text-secondary absolute right-1 top-1 flex items-center justify-center rounded-lg p-0.5">
+                        className="bg-secondary text-secondary absolute top-1 right-1 flex items-center justify-center rounded-lg p-0.5">
                         <Icon icon={iconMap.moreDots} className="size-6" />
                     </button>
 

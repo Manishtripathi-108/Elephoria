@@ -2,19 +2,19 @@ import React from 'react'
 
 import { Icon } from '@iconify/react'
 
-import cn from '../../../utils/cn'
 import iconMap from '../../../constants/iconMap'
+import cn from '../../../utils/cn'
 
 const variants = {
     primary: {
         backgroundClass: 'bg-primary',
-        gradientClass: 'bg-primary-gradient',
+        gradientClass: 'bg-primary-gradient dark:bg-primary-dark-gradient',
         textClass: 'text-primary',
-        borderClass: 'border-light-secondary dark:border-dark-secondary',
+        borderClass: '',
     },
     secondary: {
         backgroundClass: 'bg-secondary',
-        gradientClass: 'bg-secondary-gradient',
+        gradientClass: 'bg-secondary-gradient dark:bg-secondary-dark-gradient',
         textClass: 'text-primary',
         borderClass: 'border-light-primary dark:border-dark-primary',
     },
@@ -22,22 +22,22 @@ const variants = {
         backgroundClass: 'bg-red-600',
         gradientClass: 'bg-red-gradient',
         textClass: 'text-white',
-        borderClass: 'border-red-500',
+        borderClass: 'border-red-400',
     },
     warning: {
-        backgroundClass: 'bg-yellow-500',
+        backgroundClass: 'dark:bg-yellow-500 bg-yellow-400',
         gradientClass: 'bg-yellow-gradient',
         textClass: 'text-black',
-        borderClass: 'border-yellow-400',
+        borderClass: 'border-yellow-300',
     },
     success: {
         backgroundClass: 'bg-green-500',
         gradientClass: 'bg-green-gradient',
         textClass: 'text-white',
-        borderClass: 'border-green-400',
+        borderClass: 'border-green-300',
     },
     info: {
-        backgroundClass: 'bg-blue-500',
+        backgroundClass: 'dark:bg-blue-600 bg-blue-500',
         gradientClass: 'bg-blue-gradient',
         textClass: 'text-white',
         borderClass: 'border-blue-400',
@@ -95,10 +95,10 @@ const JelloButton = ({
             )}>
             {/* Shadow Layer */}
             <span
-                className={`${roundness} absolute left-0 top-0 h-full w-full translate-y-0.5 bg-black/25 transition-transform duration-[600ms] ease-[cubic-bezier(0.3,0.7,0.4,1)] group-hover:translate-y-1 group-hover:duration-[250ms] group-focus:translate-y-1 group-focus:duration-[250ms] group-active:translate-y-px group-active:duration-[34ms]`}></span>
+                className={`${roundness} absolute top-0 left-0 h-full w-full translate-y-0.5 bg-black/25 transition-transform duration-[600ms] ease-[cubic-bezier(0.3,0.7,0.4,1)] group-hover:translate-y-1 group-hover:duration-[250ms] group-focus:translate-y-1 group-focus:duration-[250ms] group-active:translate-y-px group-active:duration-[34ms]`}></span>
 
             {/* Gradient Layer */}
-            <span className={`${gradientClass} ${roundness} absolute left-0 top-0 h-full w-full`}></span>
+            <span className={`${gradientClass} ${roundness} absolute top-0 left-0 h-full w-full`}></span>
 
             {/* Button Content */}
             <div

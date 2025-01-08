@@ -138,18 +138,18 @@ const AudioMetaExtractor = () => {
     }
 
     return (
-        <div className="flex-center min-h-calc-full-height flex-col gap-6 p-2">
+        <div className="min-h-calc-full-height flex flex-col items-center justify-center gap-6 p-2">
             {status === 'idle' && (
                 <form
                     id="audio-upload-form"
                     onSubmit={handleAudioUpload}
-                    className="flex-center w-full max-w-2xl flex-col rounded-3xl border border-light-secondary p-6 shadow-neumorphic-lg dark:border-dark-secondary">
-                    <h2 className="text-primary mb-2 font-aladin text-2xl tracking-wider">Upload Audio</h2>
+                    className="shadow-neumorphic-lg flex w-full max-w-2xl flex-col items-center justify-center rounded-3xl border p-6">
+                    <h2 className="text-primary font-aladin mb-2 text-2xl tracking-wider">Upload Audio</h2>
                     <p className="text-primary mb-6 text-center">Upload an audio file to extract metadata and edit tags.</p>
 
                     <UploadInput
                         acceptType="audio/*"
-                        className="mb-6 shadow-neumorphic-xs"
+                        className="shadow-neumorphic-xs mb-6"
                         id="audio-upload-input"
                         file={selectedAudioFile}
                         setFile={setSelectedAudioFile}
@@ -159,7 +159,7 @@ const AudioMetaExtractor = () => {
                         Edit Tags
                     </JelloButton>
 
-                    {errorMessage && <p className="error mt-4">{errorMessage}</p>}
+                    {errorMessage && <p className="mt-4 text-red-500">{errorMessage}</p>}
                 </form>
             )}
 

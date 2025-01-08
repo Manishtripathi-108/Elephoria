@@ -11,7 +11,7 @@ const CardView = ({ data = [], isFavourite = false }) => {
                 {/* Favourite Anime Section */}
                 {data.anime.length > 0 && (
                     <div className="mb-5 w-full">
-                        <h2 className="text-primary bg-secondary mb-2 rounded-t-xl p-3 font-aladin text-lg tracking-widest shadow-neumorphic-sm">
+                        <h2 className="text-primary bg-secondary font-aladin shadow-neumorphic-sm mb-2 rounded-t-xl p-3 text-lg tracking-widest">
                             Favourite Anime
                         </h2>
                         <div className="grid grid-cols-2 gap-1 sm:grid-cols-3 sm:gap-3 lg:grid-cols-5">
@@ -25,7 +25,7 @@ const CardView = ({ data = [], isFavourite = false }) => {
                 {/* Favourite Manga Section */}
                 {data.manga.length > 0 && (
                     <div className="w-full">
-                        <h2 className="text-primary bg-secondary mb-2 rounded-t-xl p-3 font-aladin text-lg tracking-widest shadow-neumorphic-sm">
+                        <h2 className="text-primary bg-secondary font-aladin shadow-neumorphic-sm mb-2 rounded-t-xl p-3 text-lg tracking-widest">
                             Favourite Manga
                         </h2>
                         <div className="grid grid-cols-2 gap-1 sm:grid-cols-3 sm:gap-3 lg:grid-cols-5">
@@ -46,7 +46,7 @@ const CardView = ({ data = [], isFavourite = false }) => {
         data.map((list) => (
             <div key={list.name} className="mb-5 w-full">
                 {/* Category Header */}
-                <h2 className="text-primary bg-secondary mb-2 rounded-t-xl p-3 font-aladin text-lg tracking-widest shadow-neumorphic-sm">
+                <h2 className="text-primary bg-secondary font-aladin shadow-neumorphic-sm mb-2 rounded-t-xl p-3 text-lg tracking-widest">
                     {list.name}
                 </h2>
 

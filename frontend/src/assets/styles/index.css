@@ -1,418 +1,229 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-/* Remove default CSS */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+@variant dark (&:where(.dark, .dark *));
 
-body {
-    --header-height: 64px;
-    font-family: 'Indie Flower', cursive;
-    letter-spacing: 0.05em;
-}
+@theme {
+    --font-indie-flower: 'Indie Flower', cursive, serif;
+    --font-aladin: 'Aladin', system-ui;
+    --font-julee: 'Julee', cursive;
 
-/* Reset styles */
-.reset {
-    all: unset;
-}
+    --spacing-header-height: 64px;
+    --spacing-calc-full-height: calc(100vh - var(--spacing-header-height) - 2px);
 
-/* Animating the popover in */
+    /* -------------------------------------------------------------------------- */
+    /*                                   Colors                                   */
+    /* -------------------------------------------------------------------------- */
+    --color-light-primary: #ffb6b9;
+    --color-light-secondary: #ffe6e6;
+    --color-light-text-primary: #333333;
+    --color-light-text-secondary: #666666;
+    --color-light-accent: #dc2626;
+    --color-light-highlight: #4169e1;
+    --color-dark-primary: #1f2937;
+    --color-dark-secondary: #334155;
+    --color-dark-text-primary: #ffffff;
+    --color-dark-text-secondary: #9ca3af;
+    --color-dark-accent: #ff6347;
+    --color-dark-highlight: #1e90ff;
 
-/* IS-OPEN STATE   */
-/* [popover]:popover-open {
-    translate: 0 0;
-} */
+    /* -------------------------------------------------------------------------- */
+    /*                                  Gradients                                 */
+    /* -------------------------------------------------------------------------- */
+    --background-image-primary-gradient: linear-gradient(to left, #ffb6b9 0%, #ffe6e6 10%, #ffe6e6 90%, #ffb6b9 100%);
+    --background-image-secondary-gradient: linear-gradient(to left, #ffb6b9 0%, #ffd9da 10%, #ffd9da 90%, #ffb6b9 100%);
+    --background-image-dark-primary-gradient: linear-gradient(to left, #1f2937 0%, #334155 10%, #334155 90%, #1f2937 100%);
+    --background-image-dark-secondary-gradient: linear-gradient(to left, #1f2937 0%, #575d65 10%, #575d65 90%, #1f2937 100%);
+    --background-image-yellow-gradient: linear-gradient(to left, #a37b00 0%, #ffdf20 10%, #ffdf20 90%, #a37b00 100%);
+    --background-image-green-gradient: linear-gradient(to left, #009335 0%, #4ade80 10%, #4ade80 90%, #009335 100%);
+    --background-image-blue-gradient: linear-gradient(to left, #003688 0%, #50a2ff 10%, #50a2ff 90%, #003688 100%);
+    --background-image-red-gradient: linear-gradient(to left, #8f0007 0%, #ff6467 10%, #ff6467 90%, #8f0007 100%);
 
-/* EXIT STATE   */
-/* [popover] {
-    transition:
-        translate 0.7s ease-out,
-        display 0.7s ease-out allow-discrete;
-    translate: 0 -22rem;
-} */
+    /* -------------------------------------------------------------------------- */
+    /*                                   Shadows                                  */
+    /* -------------------------------------------------------------------------- */
+    --shadow-neumorphic-xs: 3px 3px 5px var(--lower-shadow), -3px -3px 5px var(--upper-shadow);
+    --shadow-neumorphic-sm: 5px 5px 10px var(--lower-shadow), -5px -5px 10px var(--upper-shadow);
+    --shadow-neumorphic-md: 6px 6px 12px var(--lower-shadow), -6px -6px 12px var(--upper-shadow);
+    --shadow-neumorphic-lg: 10px 10px 20px var(--lower-shadow), -10px -10px 20px var(--upper-shadow);
+    --shadow-neumorphic-xl: 20px 20px 40px var(--lower-shadow), -20px -20px 40px var(--upper-shadow);
+    --shadow-neumorphic-inset-xs: inset 3px 3px 7px var(--lower-shadow), inset -3px -3px 7px var(--upper-shadow);
+    --shadow-neumorphic-inset-sm: inset 5px 5px 10px var(--lower-shadow), inset -5px -5px 10px var(--upper-shadow);
+    --shadow-neumorphic-inset-md: inset 6px 6px 12px var(--lower-shadow), inset -6px -6px 12px var(--upper-shadow);
+    --shadow-neumorphic-inset-lg: inset 10px 10px 20px var(--lower-shadow), inset -10px -10px 20px var(--upper-shadow);
+    --shadow-neumorphic-inset-xl: inset 20px 20px 40px var(--lower-shadow), inset -20px -20px 40px var(--upper-shadow);
 
-/* 0. BEFORE-OPEN STATE   */
-/* @starting-style {
-    [popover]:popover-open {
-        translate: 0 -22rem;
+    /* -------------------------------------------------------------------------- */
+    /*                                  Animation                                 */
+    /* -------------------------------------------------------------------------- */
+    --animate-blob: blob 10s infinite cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    --animate-loader-circle: loader-circle 0.5s var(--animation-delay, 0s) alternate infinite ease-in;
+    --animate-loader-shadow: loader-shadow 0.5s var(--animation-delay, 0s) alternate infinite ease-in;
+    --animate-pulse-slow: pulse-slow 1s ease-in-out infinite alternate;
+    --animate-progress-after: progress-after 1s infinite linear;
+    --animate-shimmer-ray: shimmer-ray 2.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+    --animate-slide-left: slide-left 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.27) forwards;
+    --animate-slide-left-return: slide-left-return 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.27) forwards;
+    --animate-wipe-in-down: wipe-in-down 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.27) forwards;
+    --animate-wipe-out-down: wipe-out-down 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.27) forwards;
+    --animate-zoom-in: zoom-in 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.27) forwards;
+    --animate-zoom-out: zoom-out 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.27) forwards;
+
+    @keyframes shimmer-ray {
+        0% {
+            left: -30%;
+            opacity: 0;
+            width: 0;
+        }
+        100% {
+            left: 100%;
+            opacity: 1;
+            width: 35%;
+        }
     }
-} */
+    @keyframes pulse-slow {
+        0% {
+            opacity: 1;
+            transform: scale(1.2);
+        }
+        to {
+            opacity: 0.5;
+            transform: scale(0.8);
+        }
+    }
+    @keyframes slide-left-return {
+        0% {
+            transform-origin: 0 0;
+            transform: translate(-100%);
+        }
+        100% {
+            transform-origin: 0 0;
+            transform: translate(0);
+        }
+    }
+    @keyframes slide-left {
+        0% {
+            transform-origin: 0 0;
+            transform: translate(0);
+        }
+        100% {
+            transform-origin: 0 0;
+            transform: translate(-100%);
+        }
+    }
+    @keyframes wipe-in-down {
+        0% {
+            clip-path: inset(0 0 100% 0);
+            display: none;
+        }
+        100% {
+            clip-path: inset(0 0 0 0);
+            display: block;
+        }
+    }
+    @keyframes wipe-out-down {
+        0% {
+            clip-path: inset(0 0 0 0);
+            display: block;
+        }
+        100% {
+            clip-path: inset(0 0 100% 0);
+            display: none;
+        }
+    }
+    @keyframes zoom-in {
+        0% {
+            transform: scale(0);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+    @keyframes zoom-out {
+        0% {
+            transform: scale(1);
+        }
+        100% {
+            transform: scale(0);
+        }
+    }
+    @keyframes blob {
+        0% {
+            border-radius: 40% 60% 55% 45% / 50% 45% 55% 50%;
+        }
+        25% {
+            border-radius: 60% 40% 45% 55% / 55% 60% 40% 45%;
+        }
+        50% {
+            border-radius: 50% 50% 60% 40% / 45% 55% 50% 60%;
+        }
+        75% {
+            border-radius: 45% 55% 50% 50% / 60% 40% 55% 45%;
+        }
+        100% {
+            border-radius: 40% 60% 55% 45% / 50% 45% 55% 50%;
+        }
+    }
+    @keyframes loader-shadow {
+        0% {
+            transform: scaleX(0.2);
+            opacity: 0.4;
+        }
+        80% {
+            transform: scaleX(1);
+            opacity: 0.7;
+        }
+        100% {
+            transform: scaleX(1.5);
+        }
+    }
+    @keyframes loader-circle {
+        0% {
+            bottom: calc(var(--loader-base-height) + var(--loader-jump-height));
+        }
+        80% {
+            height: var(--loader-circle-size);
+            border-radius: 50%;
+            transform: scaleX(1);
+        }
+        100% {
+            bottom: var(--loader-base-height);
+            height: 5px;
+            border-radius: 50px 50px 25px 25px;
+            transform: scaleX(1.7);
+        }
+    }
+    @keyframes progress-after {
+        0% {
+            background-position: 0 100%;
+        }
+        100% {
+            background-position: 30px 100%;
+        }
+    }
+}
+
+@layer base {
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-light-secondary, currentColor);
+
+        &:where(.dark, .dark *) {
+            border-color: var(--color-dark-secondary, currentColor);
+        }
+    }
+}
 
 @layer components {
-    /* -------------------------------------------------------------------------- */
-    /*                                  form                                  */
-    /* -------------------------------------------------------------------------- */
-    .form-group,
-    .file-input-group {
-        @apply flex w-full flex-col gap-2;
-    }
-
-    .form-label,
-    .form-helper-text {
-        @apply text-secondary text-xs capitalize leading-3;
-    }
-
-    .form-label {
-        @apply order-1;
-    }
-
-    /*-- ------------------------- input-text ------------------------- */
-    .dropdown-select,
-    .input-textarea,
-    .input-text {
-        @apply bg-primary text-primary placeholder:text-secondary order-2 w-full appearance-none rounded-lg border border-light-secondary px-3 py-2 text-sm shadow-neumorphic-xs outline-none transition duration-300 focus:shadow-neumorphic-inset-xs dark:border-dark-secondary;
-    }
-
-    .input-text:focus ~ .form-label,
-    .input-textarea:focus ~ .form-label,
-    .dropdown-select:focus ~ .form-label,
-    .input-text:not(:placeholder-shown) ~ .form-label,
-    .input-textarea:not(:placeholder-shown) ~ .form-label,
-    .dropdown-select:not(:placeholder-shown) ~ .form-label {
-        @apply text-primary;
-    }
-
-    /* ------------------------- input-wrapper & Icon ------------------------- */
-    .input-wrapper {
-        @apply flex w-full items-center rounded-lg border border-light-secondary shadow-neumorphic-xs dark:border-dark-secondary;
-    }
-
-    .input-icon {
-        @apply text-secondary size-10 shrink-0 border-light-secondary px-2 dark:border-dark-secondary;
-    }
-
-    .input-group-start .input-text {
-        @apply m-1 ml-0 rounded-l-none rounded-r-md border-none py-1 shadow-none focus:shadow-neumorphic-inset-xs;
-    }
-
-    .input-group-start .input-icon {
-        @apply rounded-l-md rounded-r-none border-r;
-    }
-
-    .input-group-end .input-text {
-        @apply m-1 mr-0 rounded-l-md rounded-r-none border-none py-1 shadow-none focus:shadow-neumorphic-inset-xs;
-    }
-
-    .input-group-end .input-icon {
-        @apply rounded-l-none rounded-r-md border-l;
-    }
-
-    .input-wrapper:hover .input-text,
-    .input-wrapper:focus .input-text,
-    .input-wrapper:hover .input-icon,
-    .input-wrapper:focus-within .input-icon {
-        @apply text-primary;
-    }
-
-    .input-wrapper:focus-within .input-icon.error {
-        @apply border border-red-500 dark:border-red-500;
-    }
-
-    /* ------------------------- input-inset-outset ------------------------- */
-    .input-inset-outset {
-        @apply bg-primary appearance-none rounded-xl border-none shadow-neumorphic-inset-sm outline-none placeholder:tracking-wide;
-    }
-
-    .input-inset-outset:focus,
-    .input-inset-outset:hover,
-    .input-inset-outset:active {
-        @apply placeholder:text-primary shadow-neumorphic-md;
-    }
-
-    /* ----------------------------- dropdown-select ---------------------------- */
-    .dropdown-select {
-        @apply cursor-pointer appearance-none bg-no-repeat pr-10 ring-black focus:ring-1 dark:ring-white;
-
-        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="%23767676" d="M8.037 11.166L14.5 22.36c.825 1.43 2.175 1.43 3 0l6.463-11.195c.826-1.43.15-2.598-1.5-2.598H9.537c-1.65 0-2.326 1.17-1.5 2.6z"/></svg>');
-        background-position: right 0.5rem center;
-        background-size: 1.5rem 1.5rem;
-    }
-
-    /* ------------------------------- file-upload ---------------------------- */
-    .file-upload {
-        @apply hidden;
-    }
-
-    .file-upload-group label {
-        @apply bg-primary text-secondary hover:text-primary relative cursor-pointer overflow-hidden rounded-lg border border-light-secondary px-4 py-2 font-indie-flower shadow-neumorphic-xs transition duration-300 ease-in-out active:shadow-neumorphic-inset-sm dark:border-dark-secondary;
-    }
-
-    .file-upload-group label:after {
-        content: 'Browse';
-        @apply text-secondary bg-secondary absolute right-0 top-0 px-4 py-2 font-indie-flower;
-    }
-
-    .file-preview {
-        @apply bg-primary mx-auto size-fit rounded-lg border border-light-secondary p-3 shadow-neumorphic-inset-sm dark:border-dark-secondary;
-    }
-
-    /* ----------------------------- checkbox-input -------------------------- */
-    .checkbox-group {
-        @apply bg-primary flex flex-col items-start gap-2 rounded-2xl px-16 py-12 shadow-neumorphic-inset-xs;
-    }
-
-    .checkbox-label {
-        @apply inline-flex cursor-pointer items-center;
-    }
-
-    .checkbox-input {
-        @apply bg-primary flex-center disabled:text-secondary size-4 appearance-none rounded border border-light-secondary shadow-neumorphic-inset-xs outline-none transition-all duration-300 ease-in-out placeholder:tracking-wide dark:border-dark-secondary;
-    }
-
-    .checkbox-input:checked {
-        @apply bg-primary text-primary flex-center;
-    }
-
-    .checkbox-input:checked:after {
-        content: '\2713';
-        @apply text-primary flex-center size-full font-bold transition-all;
-    }
-
-    .checkbox-input:checked:after {
-        transform: scale(0.8);
-    }
-
-    .checkbox-text {
-        @apply text-secondary ml-2 font-indie-flower text-sm transition-all duration-500;
-    }
-
-    .checkbox-label:hover .checkbox-text,
-    .checkbox-input:checked ~ .checkbox-text {
-        @apply text-primary translate-x-2;
-    }
-
-    /* ------------------------------- radio-input --------------------------- */
-    .radio-group {
-        @apply bg-primary flex flex-col items-start gap-2 rounded-2xl px-16 py-12 shadow-neumorphic-inset-xs;
-    }
-
-    .radio-label {
-        @apply relative inline-flex cursor-pointer items-center;
-    }
-
-    .radio-input {
-        @apply sr-only;
-    }
-
-    .radio-indicator {
-        @apply relative size-5 overflow-hidden rounded-full shadow-neumorphic-xs before:absolute before:left-[10%] before:top-[10%] before:size-4/5 before:rounded-full before:shadow-neumorphic-md;
-    }
-
-    .radio-text {
-        @apply text-secondary ml-2 font-indie-flower transition-all duration-500;
-    }
-
-    .radio-label:hover .radio-text,
-    .radio-input:checked ~ .radio-text {
-        @apply text-primary translate-x-2;
-    }
-
-    .radio-input:checked ~ .radio-indicator:before {
-        @apply shadow-neumorphic-inset-xs;
-    }
-
-    /* ------------------------------- switch ------------------------------- */
-
-    .switch-label {
-        @apply relative inline-flex cursor-pointer items-center;
-    }
-
-    .toggle-switch {
-        @apply sr-only;
-    }
-
-    .switch-indicator {
-        @apply bg-primary h-12 w-24 rounded-full shadow-neumorphic-inset-sm outline-none ring-0;
-        @apply;
-    }
-
-    .switch-indicator:after {
-        @apply bg-primary ease-Out-back absolute left-1 top-1 flex size-10 -rotate-180 items-center justify-center rounded-full shadow-neumorphic-xs outline-none duration-300 content-['✖️'];
-    }
-
-    .toggle-switch:hover ~ .switch-indicator:after {
-        @apply scale-95;
-    }
-
-    .toggle-switch:checked ~ .switch-indicator:after {
-        @apply translate-x-12 rotate-0 content-['✔️'];
-    }
-
-    /* ------------------------------- slider ------------------------------- */
-    .range-slider-group {
-        @apply w-full;
-    }
-
-    .range-slider {
-        @apply bg-primary relative h-2 w-full appearance-none rounded-full shadow-neumorphic-xs outline-none;
-    }
-
-    .range-slider::-webkit-slider-thumb {
-        @apply bg-accent h-6 w-6 cursor-pointer appearance-none rounded-full shadow-neumorphic-xs transition duration-300 ease-in-out;
-    }
-
-    .range-slider::-moz-range-thumb {
-        @apply bg-accent relative h-6 w-6 cursor-pointer appearance-none rounded-full shadow-neumorphic-xs transition duration-300 ease-in-out;
-    }
-
-    .form-double-range-group {
-        @apply flex w-full flex-col gap-4;
-    }
-
-    /* -------------------------------------------------------------------------- */
-    /*                                calendar                                */
-    /* -------------------------------------------------------------------------- */
-    .calendar-container {
-        @apply relative w-72;
-    }
-
-    .calendar {
-        @apply bg-primary absolute left-0 top-12 z-50 mt-2 w-full overflow-hidden rounded-lg shadow-neumorphic-xs;
-    }
-
-    .calendar-header-button {
-        @apply flex items-center justify-between px-4 py-2 shadow-neumorphic-xs;
-    }
-
-    .calendar-header-button-btn {
-        @apply button p-1.5;
-    }
-
-    .calendar-header-title {
-        @apply button mx-3 w-full text-nowrap px-4 py-1.5 text-sm;
-    }
-
-    .calendar-body,
-    .calendar-body-days,
-    .calendar-body-months,
-    .calendar-body-years {
-        @apply m-1 grid gap-1 p-4 text-sm shadow-neumorphic-inset-xs;
-    }
-
-    .calendar-body-days {
-        @apply grid-cols-7;
-    }
-
-    .calendar-body-months {
-        @apply grid-cols-3;
-    }
-
-    .calendar-body-years {
-        @apply grid-cols-4;
-    }
-
-    .calendar-item {
-        @apply text-primary hover:bg-secondary flex cursor-pointer items-center justify-center rounded-lg p-2 transition hover:text-white hover:shadow-neumorphic-xs;
-    }
-
-    .calendar-item.active {
-        @apply bg-secondary text-white shadow-neumorphic-xs;
-    }
-
-    /* -------------------------------------------------------------------------- */
-    /*                                  badge                                 */
-    /* -------------------------------------------------------------------------- */
-    .badge {
-        @apply text-secondary rounded-full border border-light-secondary px-2 py-1 text-center font-indie-flower text-sm shadow-neumorphic-inset-sm dark:border-dark-secondary;
-    }
-
-    .badge-primary {
-        @apply text-primary;
-    }
-
-    .badge-secondary {
-        @apply text-secondary;
-    }
-
-    .badge-accent {
-        @apply text-accent;
-    }
-
-    .badge-highlight {
-        @apply text-highlight;
-    }
-
-    .badge-md {
-        @apply px-3 py-2;
-    }
-
-    .badge-lg {
-        @apply px-4 py-3 text-base;
-    }
-
-    .badge-xl {
-        @apply px-5 py-4 text-lg;
-    }
-
-    /* -------------------------------------------------------------------------- */
-    /*                                   button                                  */
-    /* -------------------------------------------------------------------------- */
-
-    .button {
-        @apply text-secondary bg-primary rounded-lg border border-light-secondary px-4 py-2 text-center text-sm shadow-neumorphic-xs transition-all duration-300 dark:border-dark-secondary;
-    }
-
-    .button.active,
-    .button:active {
-        @apply text-primary shadow-neumorphic-inset-xs;
-    }
-
-    .button:hover:not(.active),
-    .button:focus:not(.active) {
-        @apply text-primary scale-105 transform;
-    }
-
-    /*-- -------------------------------- button-pill -------------------------------- */
-    .button-pill {
-        @apply rounded-l-full rounded-r-full;
-    }
-
-    /*-- -------------------------------- button-with-icon -------------------------------- */
-    .button-with-icon {
-        @apply inline-flex items-center justify-center gap-2 text-sm;
-    }
-
-    /*-- -------------------------------- button-icon-only ------------------------------*/
-    .button-icon-only {
-        @apply rounded-full p-2 shadow-neumorphic-md;
-    }
-
-    .button-icon-only-square {
-        @apply rounded-lg p-2 shadow-neumorphic-md;
-    }
-
-    /*-- -------------------------------- button Sizes -------------------------------- */
-    .button-sm {
-        @apply px-2 py-1 text-xs;
-    }
-
-    .button-base {
-        @apply px-4 py-2 text-sm;
-    }
-
-    .button-lg {
-        @apply px-4 py-3 text-base;
-    }
-
-    .button-xl {
-        @apply px-5 py-4 text-lg;
-    }
-
-    /* -------------------------------------------------------------------------- */
-    /*                                    Modal                                   */
-    /* -------------------------------------------------------------------------- */
-    /* Base dialog styling */
     dialog {
         transition:
             transform 300ms,
             opacity 300ms,
             overlay 300ms allow-discrete,
             display 300ms allow-discrete;
-        @apply bg-primary outline-none;
+        @apply outline-hidden;
     }
 
     dialog::backdrop {
@@ -421,171 +232,309 @@ body {
             opacity 300ms,
             overlay 300ms allow-discrete,
             display 300ms allow-discrete;
-        @apply bg-primary;
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                Color Scheme                                */
+/* -------------------------------------------------------------------------- */
+@utility bg-primary {
+    @apply bg-light-primary dark:bg-dark-primary;
+}
+
+@utility bg-secondary {
+    @apply bg-light-secondary dark:bg-dark-secondary;
+}
+
+@utility bg-accent {
+    @apply bg-light-accent dark:bg-dark-accent;
+}
+
+@utility bg-highlight {
+    @apply bg-light-highlight dark:bg-dark-highlight;
+}
+
+/* ------------------------------- Text Colors ------------------------------ */
+@utility text-primary {
+    @apply text-light-text-primary dark:text-dark-text-primary;
+}
+
+@utility text-secondary {
+    @apply text-light-text-secondary dark:text-dark-text-secondary;
+}
+
+@utility text-accent {
+    @apply text-light-accent dark:text-dark-accent;
+}
+
+@utility text-highlight {
+    @apply text-light-highlight dark:text-dark-highlight;
+}
+
+@utility text-theme-primary {
+    @apply text-light-primary dark:text-dark-primary;
+}
+
+@utility text-theme-secondary {
+    @apply text-light-secondary dark:text-dark-secondary;
+}
+
+@utility scrollbar-thin {
+    &::-webkit-scrollbar {
+        width: 6px; /* Set the width of the scrollbar */
+        height: 6px; /* Set the height of the scrollbar for vertical scrollbar */
     }
 
-    /* Side navigation animations */
-    .side-nav-animation {
-        @apply -translate-x-full -translate-y-full scale-0 opacity-0;
+    /* Set the color of the scrollbar thumb */
+    &::-webkit-scrollbar-thumb {
+        @apply bg-dark-secondary dark:bg-light-secondary rounded-lg;
     }
 
-    .side-nav-animation[open] {
+    /* Set the color of the scrollbar thumb on hover */
+    &::-webkit-scrollbar-thumb:hover {
+        @apply bg-light-highlight dark:bg-dark-highlight;
+    }
+
+    &::-webkit-scrollbar-track {
+        @apply bg-gray-50 dark:bg-gray-700;
+    }
+}
+
+@utility side-nav-animation {
+    @apply -translate-x-full -translate-y-full scale-0 opacity-0;
+
+    &[open] {
         @apply translate-x-0 translate-y-0 scale-100 opacity-100;
     }
 
-    .side-nav-animation::backdrop {
+    &::backdrop {
         @apply opacity-0;
     }
 
-    .side-nav-animation[open]::backdrop {
+    &[open]::backdrop {
         @apply opacity-65;
     }
 
-    /* Modal animations */
-    .modal-animation {
-        @apply m-auto hidden scale-0 opacity-0 ease-in-out;
-    }
-
-    .modal-animation::backdrop {
-        @apply scale-x-100 scale-y-0 opacity-65 ease-in-out;
-    }
-
-    /* Visible state for modal */
-    .modal-animation[open] {
-        @apply block scale-100 opacity-100 delay-300;
-    }
-
-    .modal-animation[open]::backdrop {
-        @apply scale-x-100 scale-y-100;
-    }
-
-    /* Initial styles for smooth entry transition */
     @starting-style {
-        .modal-animation[open] {
-            @apply scale-0 opacity-0;
-        }
-
-        .modal-animation[open]::backdrop {
-            @apply scale-x-100 scale-y-0;
-        }
-
-        .side-nav-animation[open] {
+        &[open] {
             @apply -translate-x-full -translate-y-full scale-0 opacity-0;
         }
 
-        .side-nav-animation[open]::backdrop {
+        &[open]::backdrop {
             @apply opacity-0;
         }
     }
 }
 
-@layer utilities {
-    /* ---------------------------------- Error --------------------------------- */
-    .error {
-        @apply border-red-500 text-red-500 transition-all duration-300 focus-within:border-red-500 hover:border-red-500 focus:border-red-500 dark:border-red-600 dark:text-red-500 dark:focus-within:border-red-600 dark:hover:border-red-600 dark:focus:border-red-600;
+@utility modal-animation {
+    @apply m-auto hidden scale-0 opacity-0 ease-in-out;
+
+    &::backdrop {
+        @apply scale-x-100 scale-y-0 opacity-65 ease-in-out;
     }
 
-    .flex-center {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+    /* Visible state for modal */
+    &[open] {
+        @apply block scale-100 opacity-100 delay-300;
     }
 
-    .animation-duration-1000 {
-        animation-duration: 1000ms;
+    &[open]::backdrop {
+        @apply scale-x-100 scale-y-100;
     }
 
-    .animation-duration-1500 {
-        animation-duration: 1500ms;
-    }
-
-    .animation-duration-2000 {
-        animation-duration: 2000ms;
-    }
-
-    /* -------------------------------------------------------------------------- */
-    /*                                Color Scheme                                */
-    /* -------------------------------------------------------------------------- */
-
-    .bg-primary {
-        @apply bg-light-primary dark:bg-dark-primary;
-    }
-
-    .bg-secondary {
-        @apply bg-light-secondary dark:bg-dark-secondary;
-    }
-
-    .bg-accent {
-        @apply bg-light-accent dark:bg-dark-accent;
-    }
-
-    .bg-highlight {
-        @apply bg-light-highlight dark:bg-dark-highlight;
-    }
-
-    /* ------------------------------- Text Colors ------------------------------ */
-    .text-primary {
-        @apply text-light-text-primary dark:text-dark-text-primary;
-    }
-
-    .text-secondary {
-        @apply text-light-text-secondary dark:text-dark-text-secondary;
-    }
-
-    .text-accent {
-        @apply text-light-accent dark:text-dark-accent;
-    }
-
-    .text-highlight {
-        @apply text-light-highlight dark:text-dark-highlight;
-    }
-
-    .text-theme-primary {
-        @apply text-light-primary dark:text-dark-primary;
-    }
-
-    .text-theme-secondary {
-        @apply text-light-secondary dark:text-dark-secondary;
-    }
-
-    /* ------------------------------ Border Colors ----------------------------- */
-    .border-primary {
-        @apply border-light-primary dark:border-dark-primary;
-    }
-
-    .border-secondary {
-        @apply border-light-secondary dark:border-dark-secondary;
-    }
-
-    .border-accent {
-        @apply border-light-accent dark:border-dark-accent;
-    }
-
-    .border-highlight {
-        @apply border-light-highlight dark:border-dark-highlight;
-    }
-
-    /* -------------------------------------------------------------------------- */
-    /*                               Thin Scrollbar                               */
-    /* -------------------------------------------------------------------------- */
-    .scrollbar-thin {
-        &::-webkit-scrollbar {
-            width: 6px; /* Set the width of the scrollbar */
-            height: 6px; /* Set the height of the scrollbar for vertical scrollbar */
+    @starting-style {
+        &[open] {
+            @apply scale-0 opacity-0;
         }
 
-        /* Set the color of the scrollbar thumb */
-        &::-webkit-scrollbar-thumb {
-            @apply rounded-lg bg-dark-secondary dark:bg-light-secondary;
+        &[open]::backdrop {
+            @apply scale-x-100 scale-y-0;
+        }
+    }
+}
+
+/* --------------------------------- Button --------------------------------- */
+@utility button {
+    @apply text-secondary bg-primary shadow-neumorphic-xs rounded-lg border px-4 py-2 text-center text-sm transition-all duration-300;
+
+    &.active,
+    &:active {
+        @apply text-primary shadow-neumorphic-inset-xs;
+    }
+
+    &:hover:not(.active),
+    &:focus:not(.active) {
+        @apply text-primary scale-105 transform;
+    }
+
+    /*----------------------------------- button Variants -------------------------------- */
+    &.button-icon-only {
+        @apply rounded-full p-2;
+    }
+
+    &.button-icon-only-square {
+        @apply rounded-lg p-2;
+    }
+
+    /*----------------------------------- button Sizes -------------------------------- */
+    &.button-sm {
+        @apply px-2 py-1 text-xs;
+    }
+
+    &.button-base {
+        @apply px-4 py-2 text-sm;
+    }
+
+    &.button-lg {
+        @apply px-4 py-3 text-base;
+    }
+
+    &.button-xl {
+        @apply px-5 py-4 text-lg;
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                    Form                                    */
+/* -------------------------------------------------------------------------- */
+@utility form-group {
+    @apply w-full space-y-2;
+
+    &:has(form-field:not(:placeholder-shown)) label,
+    &:has(form-field:focus) label {
+        @apply text-primary;
+    }
+}
+
+@utility form-text {
+    @apply text-secondary text-xs leading-3 capitalize transition-all duration-300;
+}
+
+/* ---------------------------------- Field --------------------------------- */
+@utility form-field {
+    @apply bg-primary text-primary placeholder:text-secondary shadow-neumorphic-xs focus:shadow-neumorphic-inset-xs field-sizing-content w-full appearance-none rounded-lg border px-3 py-2 text-sm outline-hidden transition duration-300;
+
+    select& {
+        @apply cursor-pointer bg-no-repeat pr-10 ring-black focus-visible:ring-1 dark:ring-white;
+
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="%23767676" d="M8.037 11.166L14.5 22.36c.825 1.43 2.175 1.43 3 0l6.463-11.195c.826-1.43.15-2.598-1.5-2.598H9.537c-1.65 0-2.326 1.17-1.5 2.6z"/></svg>');
+        background-position: right 0.5rem center;
+        background-size: 1.5rem 1.5rem;
+    }
+
+    textarea& {
+        @apply min-h-5;
+    }
+
+    &:user-invalid,
+    &:[data-error="true"] {
+        @apply border-red-500 text-red-500 dark:border-red-500 dark:text-red-500;
+    }
+}
+
+@utility form-field-wrapper {
+    @apply shadow-neumorphic-xs divide-light-secondary dark:divide-dark-secondary text-secondary hover:text-primary focus-within:text-primary flex w-full items-center justify-center divide-x rounded-lg border;
+
+    & .form-field {
+        @apply my-0.5 rounded-md border-none text-inherit shadow-none;
+    }
+
+    & .form-icon {
+        @apply size-10 shrink-0 px-2 text-inherit transition-colors;
+    }
+
+    .form-icon + .form-field {
+        @apply mr-0.5 rounded-l-none;
+    }
+
+    .form-field + .form-icon {
+        @apply ml-0.5 rounded-r-none;
+    }
+
+    &:focus-within .form-field {
+        @apply shadow-neumorphic-inset-xs;
+    }
+
+    &:has(.form-field:not(:placeholder-shown)) .form-icon {
+        @apply text-primary;
+    }
+
+    &:has(.form-field:user-invalid) .form-icon {
+        @apply text-red-500 dark:text-red-500;
+    }
+}
+
+/* ---------------------------------- Radio --------------------------------- */
+@utility form-radio {
+    @apply inline-flex cursor-pointer items-center;
+
+    .form-text {
+        @apply ml-2 text-base;
+    }
+
+    .radio-field {
+        @apply appearance-none;
+
+        &:not(:disabled, :checked):focus-visible ~ .radio-indicator {
+            @apply outline;
         }
 
-        /* Set the color of the scrollbar thumb on hover */
-        &::-webkit-scrollbar-thumb:hover {
-            @apply bg-highlight;
+        &:checked ~ .form-text {
+            @apply text-highlight translate-x-2;
         }
 
-        &::-webkit-scrollbar-track {
-            @apply bg-gray-50 dark:bg-gray-700;
+        &:checked ~ .radio-indicator:before {
+            @apply shadow-neumorphic-inset-xs;
         }
+
+        &:not(:disabled, :checked):focus ~ .form-text {
+            @apply text-primary translate-x-2;
+        }
+    }
+
+    .radio-indicator {
+        @apply shadow-neumorphic-xs before:shadow-neumorphic-xs relative size-5 overflow-hidden rounded-full before:absolute before:top-[10%] before:left-[10%] before:size-4/5 before:rounded-full;
+    }
+
+    &:hover .radio-field:not(:disabled, :checked) ~ .form-text {
+        @apply text-primary translate-x-2;
+    }
+}
+
+/* -------------------------------- Checkbox -------------------------------- */
+@utility form-checkbox {
+    @apply inline-flex cursor-pointer items-center;
+
+    .form-text {
+        @apply ml-2 text-base;
+    }
+
+    .checkbox-field {
+        @apply bg-primary checked:shadow-neumorphic-inset-xs disabled:bg-secondary checked:text-primary flex size-4 appearance-none items-center justify-center overflow-hidden rounded-sm border text-center text-xs transition-shadow duration-300 ease-in-out checked:after:size-full checked:after:font-bold checked:after:content-['\2713'];
+
+        &:checked ~ .form-text {
+            @apply text-highlight translate-x-2;
+        }
+
+        &:not(:disabled, :checked):focus ~ .form-text {
+            @apply text-primary translate-x-2;
+        }
+    }
+
+    &:hover .checkbox-field:not(:disabled, :checked) ~ .form-text {
+        @apply text-primary translate-x-2;
+    }
+}
+
+/* ------------------------------- slider ------------------------------- */
+@utility range-slider {
+    @apply bg-primary shadow-neumorphic-xs relative h-2 w-full appearance-none rounded-full outline-hidden;
+
+    &::-webkit-slider-thumb {
+        @apply bg-accent shadow-neumorphic-xs h-6 w-6 cursor-pointer appearance-none rounded-full transition duration-300 ease-in-out;
+    }
+
+    &::-moz-range-thumb {
+        @apply bg-accent shadow-neumorphic-xs relative h-6 w-6 cursor-pointer appearance-none rounded-full transition duration-300 ease-in-out;
     }
 }

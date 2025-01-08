@@ -76,7 +76,7 @@ const NotFound = () => {
                 </svg>
 
                 <div className="mt-4 text-center tracking-widest">
-                    <span className="text-primary block font-aladin text-6xl">4 0 4</span>
+                    <span className="text-primary font-aladin block text-6xl">4 0 4</span>
                     <span className="text-primary text-xl">Sorry, We couldn't find what you are looking for!</span>
                 </div>
 

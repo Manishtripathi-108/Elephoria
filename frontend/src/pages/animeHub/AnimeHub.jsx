@@ -3,8 +3,8 @@ import React, { useEffect, useState } from 'react'
 import { Icon } from '@iconify/react'
 
 import NoContentCard from '../../components/common/NoContentCard'
-import { useAnimeHubContext } from '../../context/AnimeHubContext'
 import iconMap from '../../constants/iconMap'
+import { useAnimeHubContext } from '../../context/AnimeHubContext'
 import ImportMedia from './ImportMedia'
 import CardView from './components/CardView'
 import FilterPanel from './components/FilterPanel'
@@ -19,7 +19,7 @@ const AnimeHub = () => {
     const [isFilterApplied, setIsFilterApplied] = useState(false)
     const [isFilteringActive, setIsFilteringActive] = useState(false)
 
-    const { mediaContent, activeTab, isLoading, error } = useAnimeHubContext()    
+    const { mediaContent, activeTab, isLoading, error } = useAnimeHubContext()
 
     // Reset filtered content when the active tab changes
     useEffect(() => {
@@ -73,9 +73,9 @@ const AnimeHub = () => {
                         )}
 
                         <div
-                            className={`bg-primary relative mx-auto w-full rounded-lg border border-light-secondary p-2 shadow-neumorphic-inset-sm dark:border-dark-secondary md:p-5 ${
+                            className={`bg-primary shadow-neumorphic-inset-sm relative mx-auto w-full rounded-lg border p-2 md:p-5 ${
                                 isFilteringActive
-                                    ? 'after:bg-primary after:absolute after:right-0 after:top-0 after:z-40 after:size-full after:animate-pulse after:opacity-60'
+                                    ? 'after:bg-primary after:absolute after:top-0 after:right-0 after:z-40 after:size-full after:animate-pulse after:opacity-60'
                                     : ''
                             }`}>
                             {isFilterApplied && filteredContent.length === 0 ? (

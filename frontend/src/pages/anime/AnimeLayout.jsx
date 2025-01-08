@@ -93,15 +93,15 @@ const AnimeLayout = () => {
     return (
         <div className="bg-primary grid min-h-screen place-items-center">
             {/* Header */}
-            <header className="border-secondary w-full border-b shadow-neumorphic-inset-lg" style={bannerStyle}>
+            <header className="shadow-neumorphic-inset-lg w-full border-b" style={bannerStyle}>
                 <div className="flex h-full w-full items-end justify-center bg-white/20 dark:bg-black/30">
-                    <div className="flex w-5/6 max-w-screen-md flex-wrap items-end justify-start gap-5 opacity-100 md:pt-20">
+                    <div className="flex w-5/6 max-w-(--breakpoint-md) flex-wrap items-end justify-start gap-5 opacity-100 md:pt-20">
                         <img
                             src="https://picsum.photos/150"
                             alt="Hello"
                             className="max-h-36 w-full max-w-28 rounded-t-lg align-text-top md:max-h-48 md:max-w-36"
                         />
-                        <h1 className="text-primary mb-5 font-aladin text-3xl font-bold tracking-widest">hello</h1>
+                        <h1 className="text-primary font-aladin mb-5 text-3xl font-bold tracking-widest">hello</h1>
                     </div>
                 </div>
             </header>
@@ -147,14 +147,14 @@ const AnimeLayout = () => {
                 <Outlet context={dataToPass} />
             </div>
 
-            <nav className="fixed right-0 top-1/4 flex">
+            <nav className="fixed top-1/4 right-0 flex">
                 <input type="checkbox" name="open-menu" id="open-menu" className="peer sr-only" />
                 <label
                     htmlFor="open-menu"
-                    className="bg-primary text-secondary hover:text-primary peer-checked:text-primary border-secondary flex h-10 grow-0 cursor-pointer items-center justify-center rounded-l-lg border-y border-l p-2 sm:h-20">
+                    className="bg-primary text-secondary hover:text-primary peer-checked:text-primary flex h-10 grow-0 cursor-pointer items-center justify-center rounded-l-lg border-y border-l p-2 sm:h-20">
                     <Icon icon={iconMap.arrowOpenLeft} className="size-4" />
                 </label>
-                <div className="bg-primary text-secondary border-secondary hidden place-items-center gap-4 rounded-bl-xl rounded-tr-xl border px-2 py-4 peer-checked:grid">
+                <div className="bg-primary text-secondary hidden place-items-center gap-4 rounded-tr-xl rounded-bl-xl border px-2 py-4 peer-checked:grid">
                     <NavLink to={APP_ROUTES.ANIME.ANIMELIST} title="Anime List">
                         <Icon icon={iconMap.anime} className="size-6" />
                     </NavLink>
@@ -185,14 +185,14 @@ const AnimeLayout = () => {
                     <div className="bg-primary text-primary h-full w-full p-2 md:max-w-64">
                         {/* Search Input */}
                         <div className="flex items-center justify-between gap-3 md:mb-4">
-                            <div className="input-wrapper input-group-start">
+                            <div className="form-field-wrapper">
                                 <label htmlFor="media-search" className="sr-only">
                                     Search Media
                                 </label>
-                                <Icon icon={iconMap.search} className="input-icon" aria-hidden="true" />
+                                <Icon icon={iconMap.search} className="form-icon" aria-hidden="true" />
                                 <input
                                     id="media-search"
-                                    className="input-text"
+                                    className="form-field"
                                     type="text"
                                     placeholder="Search"
                                     // value={searchTerm}
@@ -203,8 +203,8 @@ const AnimeLayout = () => {
 
                         {/* Filter Panel */}
                         <div className={`p-2`}>
-                            <div className="range-slider-group mt-4">
-                                <label htmlFor="filter-year" className="form-label text-secondary flex items-center justify-between text-base">
+                            <div className="mt-4 w-full">
+                                <label htmlFor="filter-year" className="form-text text-secondary flex items-center justify-between text-base">
                                     <span>Year:</span>
                                     <button
                                         aria-label="Reset Year Filter"
@@ -227,14 +227,14 @@ const AnimeLayout = () => {
                             </div>
 
                             <div className="form-group mt-4 w-full">
-                                <label className="form-label text-base" htmlFor="sort_by">
+                                <label className="form-text text-base" htmlFor="sort_by">
                                     Sort By:
                                 </label>
                                 <select
                                     // value={filters.sort}
                                     id="sort_by"
                                     // onChange={(e) => handleFilterChange('sort', e.target.value)}
-                                    className="dropdown-select"
+                                    className="form-field"
                                     aria-label="Sort media by">
                                     <option value="">Sort By</option>
                                     {/* {sortOptions.map((option) => (
@@ -249,7 +249,7 @@ const AnimeLayout = () => {
                             <button
                                 type="button"
                                 // onClick={resetFilters}
-                                className="button button-with-icon mt-4 w-full"
+                                className="button mt-4 inline-flex w-full items-center justify-center gap-2 text-sm"
                                 aria-label="Reset all filters">
                                 <Icon icon={iconMap.refresh} className="size-6" /> Reset Filters
                             </button>
