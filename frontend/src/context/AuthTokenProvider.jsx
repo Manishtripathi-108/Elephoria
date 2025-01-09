@@ -5,6 +5,18 @@ import useApiClient from '../hooks/useApiClient'
 
 const AuthTokenContext = createContext()
 
+/**
+ * Custom hook to access the authentication token context.
+ *
+ * @returns {Object} The context value containing authentication state and functions.
+ * @property {Object} isAuth - The authentication state for the app and AniList.
+ * @property {Function} setIsAuth - Function to update the authentication state.
+ * @property {boolean} loading - The loading state indicating if authentication check is in progress.
+ * @property {Function} setLoading - Function to update the loading state.
+ * @property {Function} checkAuth - Function to check authentication status for a given API type.
+ * @property {Object} appApiClient - API client for the app.
+ * @property {Object} anilistApiClient - API client for AniList.
+ */
 export const useAuthToken = () => useContext(AuthTokenContext)
 
 const AuthTokenProvider = ({ children }) => {
@@ -22,12 +34,9 @@ const AuthTokenProvider = ({ children }) => {
         setLoading,
     })
 
-    /**
-     * Checks authentication for a specific API type.
-     * @param {string} apiType - The API type to check ('app' or 'anilist').
-     */
     const checkAuth = useCallback(
         async (apiType) => {
+            apiType = apiType.toLowerCase()
             if (abortControllerRef.current) {
                 abortControllerRef.current.abort()
             }
