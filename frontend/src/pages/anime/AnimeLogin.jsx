@@ -4,7 +4,6 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import { exchangeCode } from '../../api/animeHubApi'
 import LoadingState from '../../components/Loading'
-import { API_TYPES } from '../../constants/apiRoutes'
 import APP_ROUTES from '../../constants/appRoutes'
 import { useAuthToken } from '../../context/AuthTokenProvider'
 
@@ -39,9 +38,14 @@ const AnimeLogin = () => {
     }
 
     useEffect(() => {
-        isAuth.anilist && navigate(APP_ROUTES.ANIME.ANIMELIST, { replace: true })
-        code ? handleSubmit(code) : setLoading(false)
-    }, [isAuth, code, navigate, handleSubmit])
+        if (isAuth.anilist) {
+            navigate(APP_ROUTES.ANIME.ANIMELIST, { replace: true })
+        } else if (code) {
+            handleSubmit(code)
+        } else {
+            setLoading(false)
+        }
+    }, [isAuth, code])
 
     if (loading) return <LoadingState />
 
@@ -53,9 +57,7 @@ const AnimeLogin = () => {
                 <div className="grid w-full place-items-center">
                     <a
                         className="button w-3/4"
-                        href={`https://anilist.co/api/v2/oauth/authorize?client_id=${import.meta.env.VITE_ANILIST_CLIENT_ID}&redirect_uri=${import.meta.env.VITE_ANILIST_REDIRECT_URI}&response_type=code`}
-                        target="_blank"
-                        rel="noopener noreferrer">
+                        href={`https://anilist.co/api/v2/oauth/authorize?client_id=${import.meta.env.VITE_ANILIST_CLIENT_ID}&redirect_uri=${import.meta.env.VITE_ANILIST_REDIRECT_URI}&response_type=code`}>
                         Login with AniList
                     </a>
                 </div>
