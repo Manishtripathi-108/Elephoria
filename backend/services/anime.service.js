@@ -34,10 +34,6 @@ const renewAniListToken = async (refreshToken) => {
         userId: response.data.user_id,
     });
 
-    if (!response.data.access_token) {
-        return null;
-    }
-
     response.data.expires_in = parseInt(response.data.expires_in) / 1000;
 
     return response.data;

@@ -5,7 +5,7 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "dev host": "vite --host",
+        "dev_host": "vite --host",
         "format": "prettier --write .",
         "build": "vite build",
         "lint": "eslint .",

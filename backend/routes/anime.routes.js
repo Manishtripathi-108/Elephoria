@@ -9,15 +9,15 @@ import {
     saveMedia,
     toggleFavouriteMedia,
     deleteMedia,
-    refreshToken,
 } from '../controllers/anime.controller.js';
 import verifyAuth from '../middlewares/auth.middleware.js';
+import { refreshAnilistToken } from '../services/refreshAllTokens.service.js';
 import { Router } from 'express';
 
 const router = Router();
 
 router.post('/login', handleCodeExchange);
-router.post('/refresh-token', refreshToken);
+router.post('/refresh-token', refreshAnilistToken);
 router.post('/check-auth', verifyAuth, (req, res) => res.status(200).json({ success: true }));
 
 router.post('/user-data', verifyAuth, getUserData);

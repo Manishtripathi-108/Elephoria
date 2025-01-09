@@ -6,6 +6,7 @@ import { Icon } from '@iconify/react'
 
 import Modal, { openModal } from '../../components/common/Modals'
 import Pagination from '../../components/common/Pagination'
+import TabNavigation from '../../components/common/TabNavigation'
 import APP_ROUTES from '../../constants/appRoutes'
 import iconMap from '../../constants/iconMap'
 
@@ -132,16 +133,7 @@ const AnimeLayout = () => {
                 </div>
 
                 {/* Tabs */}
-                <div className="mb-6 flex space-x-2 sm:space-x-4">
-                    {tabs.map((tab, index) => (
-                        <button
-                            key={index}
-                            onClick={() => handleTabChange(tab)}
-                            className={`button button-sm sm:button-base ${selectedTab === tab ? 'active' : ''}`}>
-                            {tab}
-                        </button>
-                    ))}
-                </div>
+                <TabNavigation tabs={tabs} currentTab={selectedTab} setCurrentTab={handleTabChange} />
 
                 {/* Watch List Cards */}
                 <Outlet context={dataToPass} />

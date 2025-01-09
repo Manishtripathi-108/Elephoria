@@ -63,7 +63,7 @@ export const exchangeCode = async (pin, abortSignal) => {
     try {
         const response = await axios.post(API_ROUTES.ANIME_HUB.LOGIN, { pin }, { signal: abortSignal })
         if (!response.data.success) {
-            return { success: false, message: response.data.message }
+            return { success: false, message: response.data?.message }
         }
 
         return response.data

@@ -7,23 +7,16 @@ import {
     saveMediaEntry,
     toggleFavourite,
     deleteMediaEntry,
-    renewAniListToken,
 } from '../services/anime.service.js';
+import { setSecureCookie } from '../utils/cookie.utils.js';
 import { successResponse, anilistErrorResponse } from '../utils/response.utils.js';
 
 const handleTokenResponse = (res, data) => {
     if (data.access_token) {
-        res.cookie('anilistRefreshToken', data.refresh_token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
-            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-        });
+        setSecureCookie(res, 'anilistAccessToken', data.access_token, data.expires_in);
+        setSecureCookie(res, 'anilistRefreshToken', data.refresh_token);
 
-        return successResponse(res, {
-            anilistAccessToken: data.access_token,
-            expiresIn: data.expires_in,
-        });
+        return successResponse(res);
     } else {
         return anilistErrorResponse(res, 'Failed to Login. Please try again', data);
     }
@@ -35,31 +28,6 @@ export const handleCodeExchange = async (req, res) => {
         return handleTokenResponse(res, data);
     } catch (error) {
         return anilistErrorResponse(res, 'Failed to Login. Please try again', error);
-    }
-};
-
-export const refreshToken = async (req, res) => {
-    try {
-        console.log('Refreshing anilist access token...');
-
-        const { anilistRefreshToken } = req.cookies;
-
-        if (!anilistRefreshToken) {
-            return res.status(401).json({ message: 'Unauthorized: No refresh token provided' });
-        }
-
-        const data = await renewAniListToken(anilistRefreshToken);
-
-        if (!data) {
-            return res.status(401).json({ message: 'Unauthorized: Invalid refresh token' });
-        }
-
-        return handleTokenResponse(res, data);
-    } catch (error) {
-        if (error.response?.status === 401) {
-            return res.status(401).json({ message: 'Unauthorized: Invalid refresh token' });
-        }
-        return res.status(500).json({ message: 'Internal Server Error' });
     }
 };
 

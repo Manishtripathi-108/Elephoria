@@ -10,7 +10,7 @@ import { useAuthToken } from '../../context/AuthTokenProvider'
 
 const AnimeLogin = () => {
     const navigate = useNavigate()
-    const { isAuth, setToken } = useAuthToken()
+    const { isAuth, setIsAuth } = useAuthToken()
     const [searchParams, setSearchParams] = useSearchParams()
     const [loading, setLoading] = useState(true)
     const code = searchParams.get('code')
@@ -21,14 +21,14 @@ const AnimeLogin = () => {
         setLoading(true)
         try {
             const result = await exchangeCode(code)
-            if (result.anilistAccessToken) {
+            if (result.success) {
                 window.addToast('login successful!', 'success')
                 console.log('login successful!')
 
-                setToken(API_TYPES.ANILIST, result.anilistAccessToken, result.expiresIn)
+                setIsAuth((prev) => ({ ...prev, anilist: true }))
                 navigate(APP_ROUTES.ANIME.ANIMELIST, { replace: true })
             } else {
-                throw result.data
+                throw result
             }
         } catch (error) {
             console.error('Error during anime login:', error)
@@ -41,7 +41,7 @@ const AnimeLogin = () => {
     useEffect(() => {
         isAuth.anilist && navigate(APP_ROUTES.ANIME.ANIMELIST, { replace: true })
         code ? handleSubmit(code) : setLoading(false)
-    }, [])
+    }, [isAuth, code, navigate, handleSubmit])
 
     if (loading) return <LoadingState />
 

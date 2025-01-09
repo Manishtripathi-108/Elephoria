@@ -12,7 +12,6 @@ const Header = () => {
     const [isSidenavOpen, setIsSidenavOpen] = useState(false)
     const location = useLocation()
     const headerHeight = parseInt(getComputedStyle(root).getPropertyValue('--spacing-header-height').trim())
-    console.log(headerHeight)
 
     // Toggle Sidenav visibility
     const toggleSidenav = () => {

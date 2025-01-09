@@ -79,7 +79,7 @@ const Pagination = ({ className = '', currentPage, totalPages, setPage }) => {
                 )}
 
                 {/* Next Arrow */}
-                <li className="bg-primary shadow-neumorphic-xs active:shadow-neumorphic-inset-xs mx-1 flex-1 rounded-full first:mr-2 last:ml-2 sm:first:mr-4 sm:last:ml-4">
+                <li className="bg-primary shadow-neumorphic-xs active:shadow-neumorphic-inset-xs mx-1 flex-1 rounded-full border first:mr-2 last:ml-2 sm:first:mr-4 sm:last:ml-4">
                     <button
                         className="text-secondary hover:text-primary font-karla block px-2 py-1 text-center"
                         onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}>
