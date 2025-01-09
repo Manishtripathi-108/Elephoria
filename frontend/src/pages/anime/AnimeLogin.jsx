@@ -9,7 +9,7 @@ import { useAuthToken } from '../../context/AuthTokenProvider'
 
 const AnimeLogin = () => {
     const navigate = useNavigate()
-    const { isAuth, setIsAuth } = useAuthToken()
+    const { isAuth, checkAuth } = useAuthToken()
     const [searchParams, setSearchParams] = useSearchParams()
     const [loading, setLoading] = useState(true)
     const code = searchParams.get('code')
@@ -20,12 +20,13 @@ const AnimeLogin = () => {
         setLoading(true)
         try {
             const result = await exchangeCode(code)
+            code = null
             if (result.success) {
                 window.addToast('login successful!', 'success')
                 console.log('login successful!')
 
-                setIsAuth((prev) => ({ ...prev, anilist: true }))
                 navigate(APP_ROUTES.ANIME.ANIMELIST, { replace: true })
+                checkAuth('anilist')
             } else {
                 throw result
             }
@@ -45,7 +46,7 @@ const AnimeLogin = () => {
         } else {
             setLoading(false)
         }
-    }, [isAuth, code])
+    }, [isAuth])
 
     if (loading) return <LoadingState />
 
