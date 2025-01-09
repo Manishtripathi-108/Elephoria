@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { Icon } from '@iconify/react'
 
 import { logoutUser } from '../../../api/animeHubApi'
-import { ConfirmationModal, openModal } from '../../../components/common/PrimaryModal'
+import { ConfirmationModal, openModal } from '../../../components/common/Modals'
 import iconMap from '../../../constants/iconMap'
 import { useAnimeHubContext } from '../../../context/AnimeHubContext'
 

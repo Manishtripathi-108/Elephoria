@@ -216,25 +216,6 @@
     }
 }
 
-@layer components {
-    dialog {
-        transition:
-            transform 300ms,
-            opacity 300ms,
-            overlay 300ms allow-discrete,
-            display 300ms allow-discrete;
-        @apply outline-hidden;
-    }
-
-    dialog::backdrop {
-        transition:
-            transform 300ms,
-            opacity 300ms,
-            overlay 300ms allow-discrete,
-            display 300ms allow-discrete;
-    }
-}
-
 /* -------------------------------------------------------------------------- */
 /*                                Color Scheme                                */
 /* -------------------------------------------------------------------------- */
@@ -300,60 +281,9 @@
     }
 }
 
-@utility side-nav-animation {
-    @apply -translate-x-full -translate-y-full scale-0 opacity-0;
-
-    &[open] {
-        @apply translate-x-0 translate-y-0 scale-100 opacity-100;
-    }
-
-    &::backdrop {
-        @apply opacity-0;
-    }
-
-    &[open]::backdrop {
-        @apply opacity-65;
-    }
-
-    @starting-style {
-        &[open] {
-            @apply -translate-x-full -translate-y-full scale-0 opacity-0;
-        }
-
-        &[open]::backdrop {
-            @apply opacity-0;
-        }
-    }
-}
-
-@utility modal-animation {
-    @apply m-auto hidden scale-0 opacity-0 ease-in-out;
-
-    &::backdrop {
-        @apply scale-x-100 scale-y-0 opacity-65 ease-in-out;
-    }
-
-    /* Visible state for modal */
-    &[open] {
-        @apply block scale-100 opacity-100 delay-300;
-    }
-
-    &[open]::backdrop {
-        @apply scale-x-100 scale-y-100;
-    }
-
-    @starting-style {
-        &[open] {
-            @apply scale-0 opacity-0;
-        }
-
-        &[open]::backdrop {
-            @apply scale-x-100 scale-y-0;
-        }
-    }
-}
-
-/* --------------------------------- Button --------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                   Button                                   */
+/* -------------------------------------------------------------------------- */
 @utility button {
     @apply text-secondary bg-primary shadow-neumorphic-xs rounded-lg border px-4 py-2 text-center text-sm transition-all duration-300;
 

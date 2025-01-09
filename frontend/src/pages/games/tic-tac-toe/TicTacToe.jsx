@@ -6,7 +6,7 @@ import { Icon } from '@iconify/react'
 import { AnimatePresence } from 'motion/react'
 
 import Loading from '../../../components/Loading'
-import { ConfirmationModal, DialogModal, openModal } from '../../../components/common/PrimaryModal'
+import Modal, { ConfirmationModal, openModal } from '../../../components/common/Modals'
 import ElevateButton from '../../../components/common/buttons/ElevateButton'
 import iconMap from '../../../constants/iconMap'
 import { useTicTacToeContext } from '../../../context/TicTacToe/TicTacToeContext'
@@ -119,9 +119,9 @@ const TicTacToe = () => {
                         Are you sure you want to clear the board?
                     </ConfirmationModal>
 
-                    <DialogModal modalId={'play_online'} maxWidthAndClasses="w-fit">
+                    <Modal modalId={'play_online'} className="w-fit">
                         <PlayOnlineForm />
-                    </DialogModal>
+                    </Modal>
                 </>
             )}
         </>

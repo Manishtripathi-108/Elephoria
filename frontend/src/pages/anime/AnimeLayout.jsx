@@ -4,8 +4,8 @@ import { NavLink, Outlet, useSearchParams } from 'react-router-dom'
 
 import { Icon } from '@iconify/react'
 
+import Modal, { openModal } from '../../components/common/Modals'
 import Pagination from '../../components/common/Pagination'
-import { DialogModal, openModal } from '../../components/common/PrimaryModal'
 import APP_ROUTES from '../../constants/appRoutes'
 import iconMap from '../../constants/iconMap'
 
@@ -179,7 +179,7 @@ const AnimeLayout = () => {
                 }}
             />
 
-            <DialogModal modalId="filters-modal" maxWidthAndClasses="w-fit">
+            <Modal modalId="filters-modal" className="w-fit">
                 <div className="grid place-items-center p-4">
                     <h2 className="text-primary text-2xl font-bold">Filters</h2>
                     <div className="bg-primary text-primary h-full w-full p-2 md:max-w-64">
@@ -256,7 +256,7 @@ const AnimeLayout = () => {
                         </div>
                     </div>
                 </div>
-            </DialogModal>
+            </Modal>
         </div>
     )
 }

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import { Icon } from '@iconify/react'
 
-import { DialogModal } from '../../../../components/common/PrimaryModal'
+import Modal from '../../../../components/common/Modals'
 import ElevateButton from '../../../../components/common/buttons/ElevateButton'
 import iconMap from '../../../../constants/iconMap'
 import { useTicTacToeContext } from '../../../../context/TicTacToe/TicTacToeContext'
@@ -57,7 +57,7 @@ const PlayerNameModal = () => {
     }
 
     return (
-        <DialogModal modalId="playerNameModal" showCloseButton={false} maxWidthAndClasses="w-full max-w-96">
+        <Modal modalId="playerNameModal" showCloseButton={false} className="w-full max-w-96">
             <div className="bg-primary grid gap-5 p-5">
                 <h2 className="text-primary text-center text-xl font-bold">Set Player Names</h2>
 
@@ -112,7 +112,7 @@ const PlayerNameModal = () => {
                     <span className="text-sm font-semibold">Close</span>
                 </ElevateButton>
             </div>
-        </DialogModal>
+        </Modal>
     )
 }
 

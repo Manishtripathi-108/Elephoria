@@ -8,13 +8,13 @@ import cn from '../../../utils/cn'
 const variants = {
     primary: {
         backgroundClass: 'bg-primary',
-        gradientClass: 'bg-primary-gradient dark:bg-primary-dark-gradient',
+        gradientClass: 'bg-primary-gradient dark:bg-dark-primary-gradient',
         textClass: 'text-primary',
         borderClass: '',
     },
     secondary: {
         backgroundClass: 'bg-secondary',
-        gradientClass: 'bg-secondary-gradient dark:bg-secondary-dark-gradient',
+        gradientClass: 'bg-secondary-gradient dark:bg-dark-secondary-gradient',
         textClass: 'text-primary',
         borderClass: 'border-light-primary dark:border-dark-primary',
     },
