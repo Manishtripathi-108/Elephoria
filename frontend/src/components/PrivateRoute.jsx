@@ -9,12 +9,11 @@ import Loading from './Loading'
 const ProtectedRoute = ({ children, isAnilistRoute = false }) => {
     const { loading, isAuth } = useAuthToken()
     const navigate = useNavigate()
-    console.log('ProtectedRoute:', { loading, isAuth, isAnilistRoute })
+    // console.log('ProtectedRoute:', { loading, isAuth, isAnilistRoute })
 
     useEffect(() => {
         if (loading) return
         if (isAnilistRoute && !isAuth.anilist) {
-            console.log('Navigating to Anilist login route')
             window.addToast('Please login to Anilist to continue', 'info')
             navigate(APP_ROUTES.ANIME.LOGIN, { replace: true })
         } else if (!isAnilistRoute && !isAuth.app) {

@@ -166,7 +166,7 @@ const fetchUserMedia = async (token, userId, mediaType, onlyIds = false) => {
         }
     );
 
-    return response.data.data.MediaListCollection;
+    return { mediaList: response.data.data.MediaListCollection.lists };
 };
 
 const fetchUserFavourites = async (token, userId) => {

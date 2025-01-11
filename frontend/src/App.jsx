@@ -15,7 +15,6 @@ import './utils/iconUtils'
 const Home = lazy(() => import('./pages/Home'))
 const NotFound = lazy(() => import('./pages/404-page'))
 const Shadows = lazy(() => import('./pages/ShadowsGrid'))
-const AnimeLayout = lazy(() => import('./pages/anime/AnimeLayout'))
 const AnimeList = lazy(() => import('./pages/anime/AnimeList'))
 const AnimeLogin = lazy(() => import('./pages/anime/AnimeLogin'))
 const AnimeHub = lazy(() => import('./pages/animeHub/AnimeHub'))
@@ -63,17 +62,11 @@ const router = createBrowserRouter([
                 element: <AnimeHubProvider>{withSuspense(AnimeHubAuth)}</AnimeHubProvider>,
             },
             /* -------------------------------------------------------------------------- */
-            /*                                    Anime                                   */
+            /*                                    Anilist                                 */
             /* -------------------------------------------------------------------------- */
-            {
-                path: '/anime',
-                element: withProtectedRoute(withSuspense(AnimeLayout), true),
-                children: [
-                    { index: true, element: <Navigate to="animelist" replace /> },
-                    { path: 'animelist', element: withSuspense(AnimeList) },
-                ],
-            },
-            { path: '/anime/login', element: withSuspense(AnimeLogin) },
+            { path: '/anilist', element: <Navigate to="anime" replace /> },
+            { path: '/anilist/anime', element: withProtectedRoute(withSuspense(AnimeList), true) },
+            { path: '/anilist/login', element: withSuspense(AnimeLogin) },
             /* -------------------------------------------------------------------------- */
             /*                                    Games                                   */
             /* -------------------------------------------------------------------------- */

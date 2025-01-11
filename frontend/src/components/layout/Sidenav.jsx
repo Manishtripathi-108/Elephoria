@@ -33,7 +33,6 @@ export const sidenavMenuItems = [
                     { name: 'Ultimate', link: APP_ROUTES.GAMES.TIC_TAC_TOE.ULTIMATE },
                 ],
             },
-            { name: 'Snake', link: '/anime' },
             { name: 'Ludo', link: '/games/ludo' },
         ],
     },

@@ -100,22 +100,20 @@ export const fetchUserData = async (abortSignal) => {
  * If the fetch is successful, the "success" property is true and the "mediaList" contains the data.
  * If the fetch fails, the "success" property is false and an error message is provided.
  */
-export const fetchUserMediaList = async (mediaType, favourite = false, abortSignal) => {
+export const fetchUserMediaList = async (mediaType, { favourite = false, abortSignal = null }) => {
     try {
-        if (!['ANIME', 'MANGA', 'FAVOURITES'].includes(mediaType)) {
-            return { success: false, message: 'Invalid media type' }
+        const endpoint = favourite ? API_ROUTES.ANIME_HUB.FAVOURITE : API_ROUTES.ANIME_HUB.USER_MEDIA
+        const response = await axios.post(endpoint, mediaType, { withCredentials: true, signal: abortSignal })
+
+        const { success, mediaList } = response.data
+
+        if (!success) {
+            throw new Error('Failed to load list. Please try again later.')
         }
-        let endpoint = API_ROUTES.ANIME_HUB.USER_MEDIA
-        if (favourite) {
-            endpoint = API_ROUTES.ANIME_HUB.FAVOURITE
-        }
-        const response = await axios.post(endpoint, { mediaType }, { withCredentials: true, signal: abortSignal })
-        return {
-            success: response.data.success,
-            mediaList: response.data?.lists || response.data?.favourites || [],
-        }
+
+        return { success, mediaList }
     } catch (error) {
-        return handleError('Failed to load user media list. Please try again later.', error)
+        return handleError('Failed to load list. Please try again later.', error)
     }
 }
 

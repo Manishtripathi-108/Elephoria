@@ -76,7 +76,7 @@ export const getUserFavourites = async (req, res) => {
         }
 
         return successResponse(res, {
-            favourites: {
+            mediaList: {
                 anime: data.anime?.nodes || [],
                 manga: data.manga?.nodes || [],
             },

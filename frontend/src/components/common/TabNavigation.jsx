@@ -45,7 +45,7 @@ const TabNavigation = ({ tabs, currentTab, setCurrentTab, className = '' }) => {
                 </button>
             ))}
             <div
-                className="bg-primary absolute top-1 max-h-[calc(100%-0.5rem)] rounded-lg shadow-sm transition-all duration-300"
+                className="bg-primary absolute top-1 max-h-[calc(100%-0.5rem)] rounded-lg shadow-sm transition-all duration-500 ease-out"
                 style={indicatorStyle}></div>
         </nav>
     )

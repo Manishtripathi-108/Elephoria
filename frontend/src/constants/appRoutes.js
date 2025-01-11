@@ -6,9 +6,8 @@ const APP_ROUTES = {
         TAGS_EXTRACTOR: '/audio/tags-extractor',
     },
     ANIME: {
-        ROOT: '/anime',
-        ANIMELIST: '/anime/animelist',
-        LOGIN: '/anime/login',
+        ANIMELIST: '/anilist/anime',
+        LOGIN: '/anilist/login',
     },
     ANIME_HUB: {
         ROOT: '/anime-hub',

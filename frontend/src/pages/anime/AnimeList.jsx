@@ -1,80 +1,207 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
-import { useOutletContext } from 'react-router-dom'
+import { NavLink, useSearchParams } from 'react-router-dom'
 
 import { Icon } from '@iconify/react'
 
-const AnimeList = () => {
-    // const { watchList } = useOutletContext();
-    const watchList = [
-        {
-            title: 'Trapped in a Dating Sim',
-            img: 'https://picsum.photos/200/300',
-            type: 'TV',
-            duration: '24m',
-            subs: 12,
-            dubs: 12,
-        },
-        {
-            title: 'Rurouni Kenshin: Meiji',
-            img: 'https://picsum.photos/200/300',
-            type: 'TV',
-            duration: '22m',
-            subs: 24,
-            dubs: 24,
-        },
-        {
-            title: 'Bleach',
-            img: 'https://picsum.photos/200/300',
-            type: 'TV',
-            duration: '24m',
-            subs: 366,
-            dubs: 366,
-        },
-        {
-            title: 'Gokushufudou Part 2',
-            img: 'https://picsum.photos/600/300',
-            type: 'ONA',
-            duration: '17m',
-            subs: 5,
-            dubs: 5,
-        },
-        {
-            title: 'The Way of the Househusband',
-            img: 'https://picsum.photos/300/200',
-            type: 'ONA',
-            duration: '17m',
-            subs: 5,
-            dubs: 5,
-        },
-    ]
+import { fetchUserMediaList } from '../../api/animeHubApi'
+import Modal, { openModal } from '../../components/common/Modals'
+import TabNavigation from '../../components/common/TabNavigation'
+import APP_ROUTES from '../../constants/appRoutes'
+import iconMap from '../../constants/iconMap'
+import useFilteredData from '../../hooks/useFilteredData'
+import usePagination from '../../hooks/usePagination'
+import MediaCard from './MediaCard'
+
+const TABS = ['All', 'Watching', 'Paused', 'Planning', 'Dropped', 'Completed']
+const ITEMS_PER_PAGE = 8
+
+const AnimeWatchList = () => {
+    const [viewMode, setViewMode] = useState('card')
+    const [mediaList, setMediaList] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
+    const [selectedTab, setSelectedTab] = useState('All')
+    const [currentPage, setCurrentPage] = useState(1)
+
+    const [searchParams, setSearchParams] = useSearchParams()
+    const abortControllerRef = useRef(null)
+
+    const abortPreviousRequest = () => {
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort()
+            abortControllerRef.current = null
+        }
+        abortControllerRef.current = new AbortController()
+    }
+
+    const fetchWatchList = async () => {
+        try {
+            abortPreviousRequest()
+            setLoading(true)
+            setError(null)
+
+            const {
+                mediaList: fetchedMedia,
+                success,
+                message,
+            } = await fetchUserMediaList('anime', {
+                abortSignal: abortControllerRef.current.signal,
+            })
+
+            if (success) {
+                setMediaList((prevMediaList) => (JSON.stringify(prevMediaList) !== JSON.stringify(fetchedMedia) ? fetchedMedia : prevMediaList))
+            } else {
+                setError(message || 'Error fetching data.')
+            }
+        } catch (fetchError) {
+            setError('Failed to fetch media content.')
+            console.error('Error fetching media content:', fetchError)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    // Update selected tab and page based on URL parameters
+    useEffect(() => {
+        console.log('useEffect -> searchParams')
+        const tab = searchParams.get('tab') || 'All'
+        const page = parseInt(searchParams.get('page') || '1', 10)
+
+        if (selectedTab !== tab) {
+            setSelectedTab(tab)
+        }
+
+        if (currentPage !== page) {
+            setCurrentPage(page)
+        }
+    }, [searchParams])
+
+    // Fetch media list on component mount
+    useEffect(() => {
+        console.log('useEffect -> fetchWatchList')
+        fetchWatchList()
+    }, [])
+
+    // Filtered data based on the selected tab
+    const filteredData = useFilteredData(mediaList, {}, selectedTab)
+
+    const { currentData, Pagination } = usePagination(filteredData, ITEMS_PER_PAGE, {
+        current: currentPage,
+        setCurrent: (page) => setSearchParams({ tab: selectedTab, page }),
+    })
+
+    if (loading) return <div>Loading...</div>
+    // if (error) return <div>Error: {error}</div>
+
+    const bannerStyle = {
+        backgroundImage: `url(https://picsum.photos/1920/1080)`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+    }
+
     return (
-        <div className="grid grid-cols-2 gap-1 sm:grid-cols-3 sm:gap-3 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
-            {watchList.map((item, index) => (
-                <div key={index} className="relative overflow-hidden rounded-lg bg-gray-800 shadow-lg">
-                    <img src={item.img} alt={item.title} className="h-48 w-full object-cover" />
-                    <div className="p-4">
-                        <h3 className="text-lg font-bold">{item.title}</h3>
-                        <p className="text-sm text-gray-400">
-                            {item.type} • {item.duration}
-                        </p>
-                        <div className="mt-2 flex items-center gap-2">
-                            <span className="flex items-center gap-1 text-gray-400">
-                                <Icon icon="mdi:subtitles-outline" /> {item.subs}
-                            </span>
-                            <span className="flex items-center gap-1 text-gray-400">
-                                <Icon icon="mdi:volume-high" /> {item.dubs}
-                            </span>
-                        </div>
+        <div className="bg-inherit">
+            <header className="shadow-neumorphic-inset-lg w-full border-b" style={bannerStyle}>
+                <div className="flex h-full w-full items-end justify-center bg-white/20 dark:bg-black/30">
+                    <div className="flex w-5/6 max-w-(--breakpoint-md) flex-wrap items-end justify-start gap-5 opacity-100 md:pt-20">
+                        <img
+                            src="https://picsum.photos/150"
+                            alt="Hello"
+                            className="max-h-36 w-full max-w-28 rounded-t-lg align-text-top md:max-h-48 md:max-w-36"
+                        />
+                        <h1 className="text-primary font-aladin mb-5 text-3xl font-bold tracking-widest">hello</h1>
                     </div>
-                    {/* Options */}
-                    <button className="absolute top-2 right-2 rounded-full bg-gray-700 p-1 hover:bg-gray-600">
-                        <Icon icon="mdi:dots-vertical" />
+                </div>
+            </header>
+
+            {/* Main Content */}
+            <div className="container p-6">
+                {/* Controls */}
+                <div className="mb-4 flex items-center justify-between">
+                    <h2 className="text-highlight text-3xl font-bold">Your Anime List</h2>
+                    <div className="flex items-center justify-end px-4">
+                        <button
+                            className={`text-primary button rounded-e-none border-r-0 p-2 shadow-none ${viewMode === 'list' ? 'active' : ''}`}
+                            onClick={() => setViewMode('list')}>
+                            <Icon icon={iconMap.list} className="size-4" />
+                        </button>
+                        <button
+                            className={`text-primary button rounded-s-none p-2 shadow-none ${viewMode === 'card' ? 'active' : ''}`}
+                            onClick={() => setViewMode('card')}>
+                            <Icon icon={iconMap.card} className="size-4" />
+                        </button>
+
+                        <button className="button button-icon-only-square text-highlight ml-4" onClick={() => openModal('filters-modal')}>
+                            <Icon icon={iconMap.filter} className="size-4" />
+                        </button>
+                    </div>
+                </div>
+
+                {/* Tabs */}
+                <TabNavigation
+                    tabs={TABS}
+                    currentTab={selectedTab}
+                    setCurrentTab={(tab) => {
+                        setSearchParams({ tab, page: 1 })
+                    }}
+                />
+
+                {/* Media List */}
+                <div className="grid grid-cols-2 gap-1 sm:grid-cols-3 sm:gap-3 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
+                    {currentData?.map((entry) => (
+                        <MediaCard key={entry.media?.id} mediaItem={entry} />
+                    ))}
+                </div>
+            </div>
+
+            <nav className="fixed top-1/4 right-0 flex">
+                <input type="checkbox" name="open-menu" id="open-menu" className="peer sr-only" />
+                <label
+                    htmlFor="open-menu"
+                    className="bg-primary text-secondary hover:text-primary peer-checked:text-primary flex h-10 grow-0 cursor-pointer items-center justify-center rounded-l-lg border-y border-l p-2 sm:h-20">
+                    <Icon icon={iconMap.arrowOpenLeft} className="size-4" />
+                </label>
+                <div className="bg-primary text-secondary hidden place-items-center gap-4 rounded-tr-xl rounded-bl-xl border px-2 py-4 peer-checked:grid">
+                    <NavLink to={APP_ROUTES.ANIME.ANIMELIST} title="Anime List">
+                        <Icon icon={iconMap.anime} className="size-6" />
+                    </NavLink>
+                    <NavLink to={APP_ROUTES.ANIME.ROOT} title="Manga List">
+                        <Icon icon={iconMap.manga} className="size-6" />
+                    </NavLink>
+                    <NavLink to={APP_ROUTES.ANIME.ROOT} title="Import Anime/Manga">
+                        <Icon icon={iconMap.upload} className="size-6" />
+                    </NavLink>
+                    <button type="button" to={APP_ROUTES.ANIME.ROOT} title="Log Out">
+                        <Icon icon={iconMap.logOut} className="size-6 text-red-500" />
                     </button>
                 </div>
-            ))}
+            </nav>
+
+            {/* Pagination */}
+            <Pagination />
+
+            {/* Filters Modal */}
+            <Modal modalId="filters-modal">
+                <div className="filter-modal">
+                    <h2 className="modal-title">Filters</h2>
+                    <div className="modal-body">
+                        <div className="filter-section">
+                            <label htmlFor="filter-year">Year:</label>
+                            <input id="filter-year" type="range" min="1985" className="filter-slider" />
+                        </div>
+                        <div className="filter-section">
+                            <label htmlFor="sort-by">Sort By:</label>
+                            <select id="sort-by" className="filter-select">
+                                <option value="">Select...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button className="reset-filters">Reset Filters</button>
+                </div>
+            </Modal>
         </div>
     )
 }
 
-export default AnimeList
+export default AnimeWatchList
