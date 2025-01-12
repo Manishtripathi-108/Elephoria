@@ -4,16 +4,37 @@ import { Icon } from '@iconify/react'
 
 import { openModal } from '../../components/common/Modals'
 import iconMap from '../../constants/iconMap'
+import cn from '../../utils/cn'
 import { convertMonthNumberToName } from '../animeHub/utils/constants'
 
-// import AnimeModal from './AnimeModal'
+const getMediaDetails = (media, mediaItem) => {
+    if (media?.type === 'ANIME') {
+        if (media?.format === 'MOVIE') {
+            return <> &#8226; {media?.duration ?? '??'} min</>
+        } else {
+            return (
+                <>
+                    &nbsp;&#8226; {mediaItem?.progress ?? 0}/{media?.episodes ?? '??'} &#8226; {media?.duration ?? '??'} min/ep
+                </>
+            )
+        }
+    } else {
+        // For manga, display chapters
+        return (
+            <>
+                &nbsp;&#8226; Chapters: {mediaItem?.progress ?? 0}/{media?.chapters ?? '??'}
+            </>
+        )
+    }
+}
 
 const MediaCard = ({ mediaItem, isFavouriteList = false }) => {
     // Handle favourites, which don't have the `media` nesting.
     const media = isFavouriteList ? mediaItem : mediaItem?.media
 
     return (
-        <div id={`card-${media.id}`} className="shadow-neumorphic-sm relative min-h-44 rounded-lg border">
+        <div id={`card-${media.id}`} className="shadow-neumorphic-sm bg-primary relative min-h-62 rounded-lg border">
+            {/* Cover Image */}
             <img
                 className="text-secondary h-4/5 max-h-56 w-full rounded-t-lg border-b object-cover sm:max-h-72"
                 src={media?.coverImage?.large}
@@ -21,53 +42,65 @@ const MediaCard = ({ mediaItem, isFavouriteList = false }) => {
                 loading="lazy"
             />
 
+            {/* Title and Info */}
             <div className="flex h-1/5 flex-col items-start justify-center p-2">
                 <h2
-                    className={`text-primary font-aladin line-clamp-1 shrink-0 text-sm leading-none font-normal tracking-widest capitalize ${isFavouriteList && 'flex'}`}>
+                    className={cn('text-primary font-aladin w-full truncate text-sm leading-none font-normal tracking-widest capitalize', {
+                        flex: isFavouriteList,
+                    })}>
                     {media?.title?.english || media?.title?.native || media?.title?.romaji || 'Unknown Title'}
                 </h2>
                 {!isFavouriteList && (
                     <span className="text-secondary shrink-0 text-xs tracking-wider">
                         {media?.format || 'Unknown Format'}
-                        {media?.type === 'ANIME' ? (
-                            media?.format === 'MOVIE' ? (
-                                <> &#8226; {media?.duration ?? '??'} min</>
-                            ) : (
-                                <>
-                                    &nbsp;&#8226; {mediaItem?.progress ?? 0}/{media?.episodes ?? '??'} &#8226; {media?.duration ?? '??'} min/ep
-                                </>
-                            )
-                        ) : (
-                            // For manga, display chapters
-                            <>
-                                &nbsp;&#8226; Chapters: {mediaItem?.progress ?? 0}/{media?.chapters ?? '??'}
-                            </>
-                        )}
+                        {getMediaDetails(media, mediaItem)}
                     </span>
                 )}
             </div>
 
-            {/* Info Button to Trigger Popover */}
+            {/* Info Button */}
             <button
-                className="bg-secondary text-secondary absolute right-2 bottom-12 rounded-full p-1"
+                className="text-secondary hover:text-primary absolute right-1 bottom-10 cursor-pointer rounded-full bg-inherit p-1"
                 popovertarget={`description-popover-${media.id}`}
                 popovertargetaction="toggle"
                 aria-label="Show Description">
-                <Icon icon={iconMap.infoOutlined} className="text-primary size-5" />
+                <Icon icon={iconMap.infoOutlined} className="size-4" />
             </button>
 
+            {/* Modal */}
+            {!isFavouriteList && (
+                <>
+                    <button
+                        type="button"
+                        onClick={() => openModal(`modal_${media.id}`)}
+                        className="bg-secondary text-secondary hover:text-primary absolute top-1 right-1 flex cursor-pointer items-center justify-center rounded-full p-0.5">
+                        <Icon icon={iconMap.moreDots} className="size-4" />
+                    </button>
+
+                    {/* <AnimeModal
+                        modalId={`modal_${media.id}`}
+                        entryId={mediaItem.id}
+                        media={media}
+                        mediaStatus={mediaItem?.status}
+                        mediaProgress={mediaItem?.progress}
+                    /> */}
+                </>
+            )}
+
             {/* Description Popover */}
+            {/* // ToDo: Implement Popover with anchor when supported */}
             <div
                 id={`description-popover-${media.id}`}
                 popover="auto"
-                className="bg-light-primary/60 dark:bg-dark-primary/50 w-72 rounded-lg border p-3 shadow-lg backdrop-blur-md backdrop-saturate-150">
+                className={cn(
+                    'bg-light-primary/60 dark:bg-dark-primary/50 top-1/2 left-1/12 w-72 rounded-lg border p-3 opacity-0 shadow-lg backdrop-blur-md backdrop-saturate-150 transition-all transition-discrete duration-500',
+                    'open:opacity-100 sm:left-1/3 starting:open:opacity-0'
+                )}>
                 <div className="mb-2">
                     <h3 className="text-primary font-aladin text-xl font-bold tracking-widest" aria-live="polite">
                         {media?.title?.english || media?.title?.native || media?.title?.romaji || 'Unknown Title'}
                     </h3>
                 </div>
-
-                {/* Description Section */}
                 <p className="text-secondary mb-3 line-clamp-5 text-sm" aria-live="polite">
                     {media?.description || 'No description available.'}
                 </p>
@@ -94,26 +127,6 @@ const MediaCard = ({ mediaItem, isFavouriteList = false }) => {
                     )}
                 </div>
             </div>
-
-            {/* Modal */}
-            {!isFavouriteList && (
-                <>
-                    <button
-                        type="button"
-                        onClick={() => openModal(`modal_${media.id}`)}
-                        className="bg-secondary text-secondary absolute top-1 right-1 flex items-center justify-center rounded-lg p-0.5">
-                        <Icon icon={iconMap.moreDots} className="size-6" />
-                    </button>
-
-                    {/* <AnimeModal
-                        modalId={`modal_${media.id}`}
-                        entryId={mediaItem.id}
-                        media={media}
-                        mediaStatus={mediaItem?.status}
-                        mediaProgress={mediaItem?.progress}
-                    /> */}
-                </>
-            )}
         </div>
     )
 }

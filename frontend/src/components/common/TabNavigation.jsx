@@ -31,7 +31,7 @@ const TabNavigation = ({ tabs, currentTab, setCurrentTab, className = '' }) => {
     }, [currentTab, tabs])
 
     return (
-        <nav className={cn('bg-secondary relative mb-6 flex w-fit flex-wrap gap-1 rounded-xl p-1', className)}>
+        <nav className={cn('bg-secondary relative  flex w-fit flex-wrap gap-1 rounded-xl p-1', className)}>
             {tabs.map((tab, index) => (
                 <button
                     key={index}

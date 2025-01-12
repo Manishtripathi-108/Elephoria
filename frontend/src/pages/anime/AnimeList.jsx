@@ -12,9 +12,10 @@ import iconMap from '../../constants/iconMap'
 import useFilteredData from '../../hooks/useFilteredData'
 import usePagination from '../../hooks/usePagination'
 import MediaCard from './MediaCard'
+import AnimeSkeleton from './Skeleton'
 
 const TABS = ['All', 'Watching', 'Paused', 'Planning', 'Dropped', 'Completed']
-const ITEMS_PER_PAGE = 8
+const ITEMS_PER_PAGE = 50
 
 const AnimeWatchList = () => {
     const [viewMode, setViewMode] = useState('card')
@@ -37,6 +38,8 @@ const AnimeWatchList = () => {
 
     const fetchWatchList = async () => {
         try {
+            console.log('fetchWatchList')
+
             abortPreviousRequest()
             setLoading(true)
             setError(null)
@@ -50,6 +53,8 @@ const AnimeWatchList = () => {
             })
 
             if (success) {
+                console.log('Fetched media')
+
                 setMediaList((prevMediaList) => (JSON.stringify(prevMediaList) !== JSON.stringify(fetchedMedia) ? fetchedMedia : prevMediaList))
             } else {
                 setError(message || 'Error fetching data.')
@@ -58,6 +63,8 @@ const AnimeWatchList = () => {
             setError('Failed to fetch media content.')
             console.error('Error fetching media content:', fetchError)
         } finally {
+            console.log('fetchWatchList -> finally')
+
             setLoading(false)
         }
     }
@@ -91,7 +98,7 @@ const AnimeWatchList = () => {
         setCurrent: (page) => setSearchParams({ tab: selectedTab, page }),
     })
 
-    if (loading) return <div>Loading...</div>
+    if (loading) return <AnimeSkeleton />
     // if (error) return <div>Error: {error}</div>
 
     const bannerStyle = {
@@ -116,7 +123,7 @@ const AnimeWatchList = () => {
             </header>
 
             {/* Main Content */}
-            <div className="container p-6">
+            <div className="container mx-auto p-3 sm:p-6">
                 {/* Controls */}
                 <div className="mb-4 flex items-center justify-between">
                     <h2 className="text-highlight text-3xl font-bold">Your Anime List</h2>
@@ -140,6 +147,7 @@ const AnimeWatchList = () => {
 
                 {/* Tabs */}
                 <TabNavigation
+                    className="mb-6"
                     tabs={TABS}
                     currentTab={selectedTab}
                     setCurrentTab={(tab) => {
@@ -148,7 +156,7 @@ const AnimeWatchList = () => {
                 />
 
                 {/* Media List */}
-                <div className="grid grid-cols-2 gap-1 sm:grid-cols-3 sm:gap-3 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-3">
                     {currentData?.map((entry) => (
                         <MediaCard key={entry.media?.id} mediaItem={entry} />
                     ))}

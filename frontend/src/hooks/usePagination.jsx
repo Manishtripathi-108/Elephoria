@@ -78,7 +78,8 @@ const usePagination = (data, itemsPerPage, { current = 1, setCurrent: externalSe
                     {/* Previous Arrow */}
                     <li className="bg-primary shadow-neumorphic-xs active:shadow-neumorphic-inset-xs mx-1 flex-1 rounded-full border first:mr-2 last:ml-2 sm:first:mr-4 sm:last:ml-4">
                         <button
-                            className="text-secondary hover:text-primary font-karla block px-2 py-1"
+                            disabled={currentPage === 1}
+                            className="text-secondary hover:text-primary font-karla block cursor-pointer px-2 py-1"
                             onClick={() => handlePageChange(Math.max(1, currentPage - 1))}>
                             <Icon icon={iconMap.leftArrow} className="size-5" />
                         </button>
@@ -93,7 +94,10 @@ const usePagination = (data, itemsPerPage, { current = 1, setCurrent: externalSe
                                     ? 'text-primary shadow-neumorphic-inset-xs'
                                     : 'text-secondary hover:text-primary shadow-neumorphic-xs active:shadow-neumorphic-inset-xs'
                             }`}>
-                            <button className="block min-w-7 p-1 text-center" onClick={() => handlePageChange(page)}>
+                            <button
+                                className="block min-w-7 cursor-pointer p-1 text-center"
+                                disabled={currentPage === page}
+                                onClick={() => handlePageChange(page)}>
                                 {page}
                             </button>
                         </li>
@@ -109,7 +113,8 @@ const usePagination = (data, itemsPerPage, { current = 1, setCurrent: externalSe
                     {/* Next Arrow */}
                     <li className="bg-primary shadow-neumorphic-xs active:shadow-neumorphic-inset-xs mx-1 flex-1 rounded-full border first:mr-2 last:ml-2 sm:first:mr-4 sm:last:ml-4">
                         <button
-                            className="text-secondary hover:text-primary font-karla block px-2 py-1 text-center"
+                            disabled={currentPage === totalPages}
+                            className="text-secondary hover:text-primary font-karla block cursor-pointer px-2 py-1 text-center"
                             onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}>
                             <Icon icon={iconMap.rightArrow} className="size-5" />
                         </button>
