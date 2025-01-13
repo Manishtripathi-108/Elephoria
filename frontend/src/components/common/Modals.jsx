@@ -34,17 +34,28 @@ const openModal = (modalId) => {
  * @param {Function} [shouldClose=() => true] - A function to call to determine whether the modal
  * should be closed when the user clicks the backdrop.
  */
-const Modal = ({ modalId, className = '', showCloseButton = true, children, shouldClose = () => true }) => {
+const Modal = ({ modalId, className = '', showCloseButton = true, children, shouldClose = () => true, onClose }) => {
     const handleBackdropClick = (e) => {
         if (e.target === e.currentTarget && shouldClose()) {
             closeModal(modalId)
         }
     }
 
+    const handleCloseClick = () => {
+        if (shouldClose()) {
+            closeModal(modalId)
+        }
+    }
+
+    const handleDialogClose = () => {
+        if (onClose) onClose()
+    }
+
     return (
         <dialog
             id={modalId}
             onClick={handleBackdropClick}
+            onClose={handleDialogClose}
             className={cn(
                 'bg-light-primary dark:bg-dark-primary shadow-neumorphic-inset-md m-auto hidden w-full max-w-2xl scale-0 overflow-visible rounded-xl border p-5 opacity-0 outline-hidden transition-all transition-discrete duration-300 ease-in-out',
                 'backdrop:bg-light-primary dark:backdrop:bg-dark-primary backdrop:opacity-75 backdrop:transition-all backdrop:transition-discrete backdrop:duration-300 backdrop:ease-in',
@@ -57,7 +68,7 @@ const Modal = ({ modalId, className = '', showCloseButton = true, children, shou
                     <button
                         title="Close Modal"
                         className="text-secondary hover:text-primary bg-light-secondary dark:bg-dark-secondary absolute top-2 right-2 z-20 cursor-pointer rounded-full p-1 text-lg select-none"
-                        onClick={() => shouldClose() && closeModal(modalId)}
+                        onClick={handleCloseClick}
                         aria-label="Close Modal">
                         <Icon icon={iconMap.close} className="size-6" />
                     </button>
@@ -94,6 +105,7 @@ const ConfirmationModal = ({
     children,
     isConfirmDanger = false,
     shouldClose = () => true,
+    onClose,
 }) => {
     const handleCancelClick = () => {
         if (onCancel) {
@@ -117,10 +129,15 @@ const ConfirmationModal = ({
         }
     }
 
+    const handleDialogClose = () => {
+        if (onClose) onClose()
+    }
+
     return (
         <dialog
             id={modalId}
             onClick={handleBackdropClick}
+            onClose={handleDialogClose}
             className="bg-light-primary dark:bg-dark-primary shadow-neumorphic-inset-md backdrop:bg-light-primary dark:backdrop:bg-dark-primary m-auto hidden w-fit max-w-2xl scale-0 rounded-xl border p-5 opacity-0 outline-hidden transition-all transition-discrete duration-300 ease-in-out backdrop:opacity-75 backdrop:transition-all backdrop:transition-discrete backdrop:duration-300 backdrop:ease-in open:block open:scale-100 open:opacity-100 open:delay-300 open:backdrop:scale-100 starting:open:scale-0 starting:open:opacity-0 starting:open:backdrop:scale-x-100 starting:open:backdrop:scale-y-0">
             <div className="shadow-neumorphic-md overflow-hidden rounded-lg border">
                 <div className="relative max-h-full w-full max-w-md p-8 text-center md:p-10">

@@ -30,9 +30,7 @@ const AnilistFilter = ({ filters, setFilters }) => {
         <form onSubmit={formik.handleSubmit} className="space-y-6 rounded-lg bg-inherit p-6 shadow-lg">
             {/* Format */}
             <div className="form-group relative">
-                <label htmlFor="format" className="form-text text-primary text-base">
-                    Format:
-                </label>
+                <p className="form-text text-primary text-base">Format:</p>
                 <TabNavigation
                     tabs={FILTER_OPTIONS.format}
                     currentTab={formik.values.format}
@@ -50,31 +48,37 @@ const AnilistFilter = ({ filters, setFilters }) => {
 
             {/* Genres */}
             <div>
-                <label className="form-text text-primary text-base">Genres:</label>
+                <p className="form-text text-primary text-base">Genres:</p>
                 <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-3">
-                    {FILTER_OPTIONS.genres.map((genre) => (
-                        <label key={genre} className="form-checkbox">
-                            <input
-                                type="checkbox"
-                                value={genre}
-                                checked={formik.values.genres.includes(genre)}
-                                onChange={(e) => {
-                                    const updatedGenres = e.target.checked
-                                        ? [...formik.values.genres, genre]
-                                        : formik.values.genres.filter((g) => g !== genre)
-                                    formik.setFieldValue('genres', updatedGenres)
-                                }}
-                                className="checkbox-field"
-                            />
-                            <span className="form-text">{genre}</span>
-                        </label>
-                    ))}
+                    {FILTER_OPTIONS.genres.map((genre, index) => {
+                        return (
+                            <div key={genre} className="form-checkbox">
+                                <input
+                                    type="checkbox"
+                                    id={`genre-${index}`}
+                                    name="genres"
+                                    value={genre}
+                                    checked={formik.values.genres.includes(genre)}
+                                    onChange={(e) => {
+                                        const updatedGenres = e.target.checked
+                                            ? [...formik.values.genres, genre]
+                                            : formik.values.genres.filter((g) => g !== genre)
+                                        formik.setFieldValue('genres', updatedGenres)
+                                    }}
+                                    className="checkbox-field"
+                                />
+                                <label htmlFor={`genre-${index}`} className="form-text">
+                                    {genre}
+                                </label>
+                            </div>
+                        )
+                    })}
                 </div>
             </div>
 
             {/* Status */}
             <div className="form-group relative">
-                <label className="form-text text-primary text-base">Status:</label>
+                <p className="form-text text-primary text-base">Status:</p>
                 <TabNavigation
                     tabs={FILTER_OPTIONS.status}
                     currentTab={formik.values.status}

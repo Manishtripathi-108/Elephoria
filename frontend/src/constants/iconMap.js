@@ -8,6 +8,8 @@ const iconMap = {
     closeAnimated: 'line-md:close-small',
     desktop: 'noto:desktop-computer',
     down: 'formkit:down',
+    edit: 'hugeicons:pencil-edit-02',
+    editProfile: 'fluent:person-edit-24-filled',
     email: 'line-md:email-alt-filled',
     error: 'meteocons:code-red-fill',
     filePlus: 'line-md:file-plus-filled',

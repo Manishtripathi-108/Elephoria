@@ -1,44 +1,43 @@
 import React, { useDeferredValue, useMemo } from 'react'
 
 /**
- * Custom Hook for filtering and sorting data.
+ * Custom hook to filter and sort a dataset based on specified criteria.
  *
- * @param {Array} data - The original dataset.
- * @param {Object} filters - Filters to apply, including format, status, genres, sort, search, and year.
- * @param {string} selectedList - The name of the list to filter by. If 'All', no list filtering is applied.
- *
- * @returns {Array} - The filtered and sorted data.
+ * @param {Array} data - The dataset to be filtered and sorted.
+ * @param {Object} filters - The filtering criteria which may include search, year, format, status, genres, and sort.
+ * @param {string} [selectedList='All'] - The name of the list to filter by, or 'All' to include all lists.
+ * @param {boolean} isFavourite - Flag to indicate if the dataset is a list of favourites.
+ * @returns {Array} - The filtered and sorted dataset.
  */
-const useFilteredData = (data, filters = {}, selectedList = 'All') => {
+const useFilteredData = (data, filters = {}, selectedList = 'All', isFavourite) => {
     const deferredSearchTerm = useDeferredValue(filters.search)
 
     const filteredData = useMemo(() => {
         // Early exit for empty or invalid inputs
-        if (!Array.isArray(data) || data.length === 0) {
-            console.log('No data to filter')
+        if ((Array.isArray(data) && data.length === 0) || !Object.keys(data).length === 0) {
             return []
         }
 
         if (selectedList === 'All' && !filters.search && !filters.year && !filters.format && !filters.status && !filters.genres && !filters.sort) {
-            console.log('No filters applied, returning original data')
-            return data.flatMap((list) => list.entries || [])
+            return isFavourite ? Object.values(data).flat() : data.flatMap((list) => list.entries || [])
         }
 
         let result = data
 
         // Step 1: Apply list selection filter
         if (selectedList !== 'All') {
-            result = result.filter((item) => item.name.trim().toLowerCase() === selectedList.trim().toLowerCase())
+            result = isFavourite
+                ? data[selectedList.trim().toLowerCase()]
+                : result.filter((item) => item.name.trim().toLowerCase() === selectedList.trim().toLowerCase())
         }
 
-        result = result.flatMap((list) => list.entries || [])
-        // console.log('After list filtering:', result)
+        result = isFavourite ? (selectedList !== 'All' ? result : Object.values(data).flat()) : result.flatMap((list) => list.entries || [])
 
         // Step 2: Apply deferred search term filter
         if (deferredSearchTerm) {
             const searchTerm = deferredSearchTerm.toLowerCase()
             result = result.filter((entry) => {
-                const { english, romaji, native } = entry.media.title || {}
+                const { english, romaji, native } = isFavourite ? entry.title : entry.media.title || {}
                 return (
                     english?.toLowerCase().includes(searchTerm) ||
                     romaji?.toLowerCase().includes(searchTerm) ||
@@ -47,12 +46,9 @@ const useFilteredData = (data, filters = {}, selectedList = 'All') => {
             })
         }
 
-        // console.log('After search filter:', result)
-        console.log(filters.search, deferredSearchTerm)
-
         // Step 3: Apply additional filters
         result = result.filter((entry) => {
-            const { format, status, genres, startDate } = entry.media || {}
+            const { format, status, genres, startDate } = isFavourite ? entry : entry.media || {}
             const matchFormat = filters.format ? format?.toUpperCase() === filters.format.toUpperCase() : true
             const matchStatus = filters.status ? status?.toUpperCase() === filters.status.toUpperCase() : true
             const matchGenres = filters.genres
@@ -65,13 +61,11 @@ const useFilteredData = (data, filters = {}, selectedList = 'All') => {
             return matchFormat && matchStatus && matchGenres && matchYear
         })
 
-        // console.log('After additional filters:', result)
-
         // Step 4: Apply sorting
         if (filters.sort) {
             result = result.sort((a, b) => {
-                const titleA = a.media.title || {}
-                const titleB = b.media.title || {}
+                const titleA = isFavourite ? a.title : a.media.title || {}
+                const titleB = isFavourite ? b.title : b.media.title || {}
                 switch (filters.sort) {
                     case 'Title':
                         return (
@@ -80,24 +74,22 @@ const useFilteredData = (data, filters = {}, selectedList = 'All') => {
                             titleA.native?.localeCompare(titleB.native)
                         )
                     case 'Year':
-                        return a.media.startDate.year - b.media.startDate.year
+                        return isFavourite ? a.startDate.year - b.startDate.year : a.media.startDate.year - b.media.startDate.year
                     case 'Average Score':
-                        return b.media.averageScore - a.media.averageScore
+                        return isFavourite ? true : b.media.averageScore - a.media.averageScore
                     case 'Popularity':
-                        return b.media.popularity - a.media.popularity
+                        return isFavourite ? true : b.media.popularity - a.media.popularity
                     case 'Progress':
-                        return b.progress - a.progress
+                        return isFavourite ? true : b.progress - a.progress
                     case 'Last Updated':
-                        return new Date(b.updatedAt || 0) - new Date(a.updatedAt || 0)
+                        return isFavourite ? true : new Date(b.updatedAt || 0) - new Date(a.updatedAt || 0)
                     case 'Last Added':
-                        return new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+                        return isFavourite ? true : new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
                     default:
-                        return new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+                        return isFavourite ? true : new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
                 }
             })
         }
-
-        // console.log('After sorting:', result)
 
         return result
     }, [data, filters, selectedList, deferredSearchTerm])

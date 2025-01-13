@@ -71,6 +71,7 @@ const Header = () => {
                 />
 
                 <Link to="/" aria-current={location.pathname === '/' ? 'page' : undefined} className="text-primary ml-5 flex items-center gap-2">
+                    <p className="sr-only">Go to Home</p>
                     <AppLogo className="w-12" />
                     <AppName className="w-20" />
                 </Link>

@@ -8,6 +8,8 @@ const APP_ROUTES = {
     ANILIST: {
         ANIME: '/anilist/anime',
         MANGA: '/anilist/manga',
+        FAVOURITES: '/anilist/favourites',
+        IMPORT_EXPORT: '/anilist/import-export',
         LOGIN: '/anilist/login',
     },
     ANIME_HUB: {
