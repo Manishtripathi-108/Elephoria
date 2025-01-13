@@ -12,7 +12,7 @@ import iconMap from '../../../constants/iconMap'
 
 const EditMedia = ({ entry = [] }) => {
     const bannerStyle = { backgroundImage: `url(${entry?.media?.bannerImage})` }
-    const [isLiked, setIsLiked] = useState(entry?.media.isFavourite || false)
+    const [isLiked, setIsLiked] = useState(entry?.media?.isFavourite || false)
     const [isToggling, setIsToggling] = useState(false)
     const maxProgress = entry?.media?.episodes || entry?.media?.chapters || 100000
 

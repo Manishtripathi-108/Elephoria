@@ -1,13 +1,13 @@
 import React, { useDeferredValue, useMemo } from 'react'
 
 /**
- * Custom Hook for filtering and sorting data.
+ * Custom hook to filter and sort a dataset based on specified criteria.
  *
- * @param {Array} data - The original dataset.
- * @param {Object} filters - Filters to apply, including format, status, genres, sort, search, and year.
- * @param {string} selectedList - The name of the list to filter by. If 'All', no list filtering is applied.
- *
- * @returns {Array} - The filtered and sorted data.
+ * @param {Array} data - The dataset to be filtered and sorted.
+ * @param {Object} filters - The filtering criteria which may include search, year, format, status, genres, and sort.
+ * @param {string} [selectedList='All'] - The name of the list to filter by, or 'All' to include all lists.
+ * @param {boolean} isFavourite - Flag to indicate if the dataset is a list of favourites.
+ * @returns {Array} - The filtered and sorted dataset.
  */
 const useFilteredData = (data, filters = {}, selectedList = 'All', isFavourite) => {
     const deferredSearchTerm = useDeferredValue(filters.search)
