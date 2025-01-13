@@ -4,11 +4,13 @@ import { Icon } from '@iconify/react'
 
 import { openModal } from '../../components/common/Modals'
 import iconMap from '../../constants/iconMap'
+import { useAnilist } from '../../context/AnilistContext'
 import cn from '../../utils/cn'
 import { convertMonthNumberToName } from '../animeHub/utils/constants'
 import AnimeModal from './components/AnimeModal'
 
 const MediaCard = ({ mediaItem, isFavouriteList = false }) => {
+    const { setEditEntry } = useAnilist()
     // Handle favourites, which don't have the `media` nesting.
     const media = isFavouriteList ? mediaItem : mediaItem?.media
 
@@ -56,18 +58,18 @@ const MediaCard = ({ mediaItem, isFavouriteList = false }) => {
                 <>
                     <button
                         type="button"
-                        onClick={() => openModal(`modal_${media.id}`)}
+                        onClick={() => setEditEntry(mediaItem)}
                         className="bg-secondary text-secondary hover:text-primary absolute top-1 right-1 flex cursor-pointer items-center justify-center rounded-full p-0.5">
                         <Icon icon={iconMap.moreDots} className="size-4" />
                     </button>
 
-                    <AnimeModal
+                    {/* <AnimeModal
                         modalId={`modal_${media.id}`}
                         entryId={mediaItem.id}
                         media={media}
                         mediaStatus={mediaItem?.status}
                         mediaProgress={mediaItem?.progress}
-                    />
+                    /> */}
                 </>
             )}
 

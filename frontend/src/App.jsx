@@ -10,14 +10,13 @@ import { AnimeHubProvider } from './context/AnimeHubContext'
 import AuthTokenProvider from './context/AuthTokenProvider'
 import { LoadingBarProvider } from './context/LoadingBarContext'
 import { TicTacToeProvider } from './context/TicTacToe/TicTacToeContext'
-import MangaList from './pages/anime/MangaList'
 import './utils/iconUtils'
 
 // Lazy-loaded components
 const Home = lazy(() => import('./pages/Home'))
 const NotFound = lazy(() => import('./pages/404-page'))
 const Shadows = lazy(() => import('./pages/ShadowsGrid'))
-const AnimeList = lazy(() => import('./pages/anime/AnimeList'))
+const Anilist = lazy(() => import('./pages/anime/Anilist'))
 const AnimeLogin = lazy(() => import('./pages/anime/AnimeLogin'))
 const AnimeHub = lazy(() => import('./pages/animeHub/AnimeHub'))
 const AnimeHubAuth = lazy(() => import('./pages/animeHub/AnimeHubAuth'))
@@ -67,13 +66,8 @@ const router = createBrowserRouter([
             /*                                    Anilist                                 */
             /* -------------------------------------------------------------------------- */
             {
-                path: '/anilist',
-                element: withProtectedRoute(<AnilistProvider />, true),
-                children: [
-                    { index: true, element: withSuspense(AnimeList) },
-                    { path: 'anime', element: withSuspense(AnimeList) },
-                    { path: 'manga', element: withSuspense(MangaList) },
-                ],
+                path: '/anilist/:type',
+                element: withProtectedRoute(<AnilistProvider>{withSuspense(Anilist)}</AnilistProvider>, true),
             },
             { path: '/anilist/login', element: withSuspense(AnimeLogin) },
             /* -------------------------------------------------------------------------- */

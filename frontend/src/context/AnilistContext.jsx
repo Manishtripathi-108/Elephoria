@@ -1,21 +1,22 @@
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { use } from 'react'
 
-import { Outlet, useLocation } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 import { fetchUserMediaList } from '../api/animeHubApi'
+import NotFound from '../pages/404-page'
 
 const AnilistContext = createContext()
 
-export const AnilistProvider = () => {
+export const AnilistProvider = ({ children }) => {
     const [watchList, setWatchList] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
-    const [modalId, setModalId] = useState(null)
+    const [editEntry, setEditEntry] = useState(null)
     const abortControllerRef = useRef(null)
-    const location = useLocation()
-
-    const activeURL = decodeURIComponent(location.pathname.split('/').pop().toLowerCase())
-    console.log(activeURL)
+    const params = useParams()
+    const mediaType = params?.type || 'anime'
+    console.log(mediaType)
 
     const abortPreviousRequest = () => {
         if (abortControllerRef.current) {
@@ -33,7 +34,7 @@ export const AnilistProvider = () => {
             setLoading(true)
             setError(null)
 
-            const { success, mediaList, message } = await fetchUserMediaList(activeURL, abortControllerRef.current.signal)
+            const { success, mediaList, message } = await fetchUserMediaList(mediaType, abortControllerRef.current.signal)
 
             if (success) {
                 console.log('Media content fetched successfully.', mediaList)
@@ -48,17 +49,24 @@ export const AnilistProvider = () => {
         } finally {
             setLoading(false)
         }
-    }, [activeURL])
+    }, [mediaType])
 
     useEffect(() => {
-        if (['anime', 'manga', 'favourites'].includes(activeURL)) {
+        if (['anime', 'manga', 'favourites'].includes(mediaType)) {
             fetchWatchList()
         }
     }, [fetchWatchList])
 
+    useEffect(() => {
+        const editModal = document.getElementById('modal-edit-media')
+        if (editModal) {
+            editEntry?.id ? editModal.showModal() : editModal.close()
+        }
+    }, [editEntry])
+
     return (
-        <AnilistContext.Provider value={{ watchList, loading, error, modalId, setModalId, fetchWatchList }}>
-            <Outlet />
+        <AnilistContext.Provider value={{ mediaType, watchList, loading, error, editEntry, setEditEntry, fetchWatchList }}>
+            {['anime', 'manga', 'favourites'].includes(mediaType) ? children : <NotFound />}
         </AnilistContext.Provider>
     )
 }

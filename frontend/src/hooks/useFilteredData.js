@@ -48,7 +48,6 @@ const useFilteredData = (data, filters = {}, selectedList = 'All') => {
         }
 
         // console.log('After search filter:', result)
-        console.log(filters.search, deferredSearchTerm)
 
         // Step 3: Apply additional filters
         result = result.filter((entry) => {

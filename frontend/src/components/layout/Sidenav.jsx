@@ -48,7 +48,7 @@ const Sidenav = ({ onDismiss }) => {
     return (
         <dialog
             id="sidenav"
-            className="bg-primary backdrop:bg-light-primary dark:backdrop:bg-dark-primary shadow-neumorphic-md my-auto flex h-screen w-72 -translate-x-full -translate-y-full scale-0 flex-col overflow-hidden rounded-e-lg opacity-0 transition-all transition-discrete duration-300 backdrop:opacity-65 backdrop:transition-opacity backdrop:transition-discrete backdrop:duration-300 open:translate-x-0 open:translate-y-0 open:scale-100 open:opacity-100 starting:open:-translate-x-full starting:open:-translate-y-full starting:open:scale-0 starting:open:opacity-0 starting:open:backdrop:opacity-0"
+            className="bg-primary backdrop:bg-light-primary dark:backdrop:bg-dark-primary shadow-neumorphic-md my-auto flex h-screen max-h-dvh w-72 -translate-x-full -translate-y-full scale-0 flex-col overflow-hidden rounded-e-lg border-r opacity-0 transition-all transition-discrete duration-300 backdrop:opacity-65 backdrop:transition-opacity backdrop:transition-discrete backdrop:duration-300 open:translate-x-0 open:translate-y-0 open:scale-100 open:opacity-100 starting:open:-translate-x-full starting:open:-translate-y-full starting:open:scale-0 starting:open:opacity-0 starting:open:backdrop:opacity-0"
             onClick={(e) => e.target === e.currentTarget && onDismiss()}>
             {/* Profile Section */}
             <div className="flex items-center justify-between gap-4 border-b border-dotted p-4">
@@ -59,7 +59,12 @@ const Sidenav = ({ onDismiss }) => {
                         <p className="text-secondary text-sm">Sword Master</p>
                     </div>
                 </div>
-                <button className="text-secondary hover:text-primary" onClick={onDismiss}>
+                <button
+                    type="button"
+                    aria-label="close"
+                    title="Close"
+                    className="text-secondary hover:text-primary cursor-pointer"
+                    onClick={onDismiss}>
                     <Icon icon={iconMap.close} className="size-6" />
                 </button>
             </div>

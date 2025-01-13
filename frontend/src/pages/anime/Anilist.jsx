@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { useSearchParams } from 'react-router-dom'
 
@@ -6,7 +6,7 @@ import { Icon } from '@iconify/react'
 
 import Modal, { openModal } from '../../components/common/Modals'
 import TabNavigation from '../../components/common/TabNavigation'
-import { ANILIST_ANIME_TABS, ANILIST_MANGA_TABS, MODAL_EDIT_MEDIA_ID } from '../../constants/anilist'
+import { getTabOptions } from '../../constants/anilist'
 import iconMap from '../../constants/iconMap'
 import { useAnilist } from '../../context/AnilistContext'
 import useFilteredData from '../../hooks/useFilteredData'
@@ -20,8 +20,8 @@ import NavigationBar from './components/NavigationBar'
 
 const ITEMS_PER_PAGE = 50
 
-const AnimeList = () => {
-    const { activeURL, watchList, loading, editEntry, setEditEntry } = useAnilist()
+const Anilist = () => {
+    const { mediaType, watchList, loading, editEntry, setEditEntry } = useAnilist()
     const [viewMode, setViewMode] = useState('card')
     const [filters, setFilters] = useState({})
     const [selectedTab, setSelectedTab] = useState('All')
@@ -64,7 +64,7 @@ const AnimeList = () => {
                     <div className="container mx-auto p-3 sm:p-6">
                         {/* Controls */}
                         <div className="mb-4 flex items-center justify-between gap-4">
-                            <h2 className="text-highlight text-2xl font-bold text-nowrap capitalize sm:text-3xl">Your {activeURL} List</h2>
+                            <h2 className="text-highlight text-2xl font-bold text-nowrap capitalize sm:text-3xl">Your {mediaType} List</h2>
                             <div className="form-field-wrapper hidden max-w-86 sm:flex">
                                 <input
                                     type="text"
@@ -102,7 +102,7 @@ const AnimeList = () => {
                         {/* Tabs */}
                         <TabNavigation
                             className="mb-6"
-                            tabs={activeURL === 'anime' ? ANILIST_ANIME_TABS : ANILIST_MANGA_TABS}
+                            tabs={getTabOptions(mediaType)}
                             currentTab={selectedTab}
                             setCurrentTab={(tab) => {
                                 setSearchParams({ tab, page: 1 })
@@ -123,7 +123,7 @@ const AnimeList = () => {
                     <Pagination />
 
                     {/* Edit Modal */}
-                    <Modal modalId={MODAL_EDIT_MEDIA_ID} onClose={() => setEditEntry(null)}>
+                    <Modal modalId="modal-anilist-edit-media" onClose={() => setEditEntry(null)}>
                         <EditMedia entry={editEntry} />
                     </Modal>
 
@@ -137,4 +137,4 @@ const AnimeList = () => {
     )
 }
 
-export default AnimeList
+export default Anilist
