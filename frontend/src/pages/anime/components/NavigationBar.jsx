@@ -30,8 +30,14 @@ const NavigationBar = () => {
                     <Icon icon={iconMap.manga} className="size-6" />
                 </NavLink>
                 <NavLink
-                    to={APP_ROUTES.ANILIST.ANIME}
-                    title="Import Anime/Manga"
+                    to={APP_ROUTES.ANILIST.FAVOURITES}
+                    title="Favourites"
+                    className={({ isActive }) => (isActive ? 'text-highlight' : 'hover:text-primary')}>
+                    <Icon icon={iconMap.heart} className="size-6" />
+                </NavLink>
+                <NavLink
+                    to={APP_ROUTES.ANILIST.IMPORT_EXPORT}
+                    title="Import/Export Anime/Manga"
                     className={({ isActive }) => (isActive ? 'text-highlight' : 'hover:text-primary')}>
                     <Icon icon={iconMap.upload} className="size-6" />
                 </NavLink>

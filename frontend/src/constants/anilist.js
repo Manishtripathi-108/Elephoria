@@ -43,6 +43,8 @@ export const getTabOptions = (mediaType) => {
             return ANILIST_ANIME_TABS
         case 'manga':
             return ANILIST_MANGA_TABS
+        case 'favourites':
+            return ['All', 'Anime', 'Manga']
         default:
             return ANILIST_ANIME_TABS
     }

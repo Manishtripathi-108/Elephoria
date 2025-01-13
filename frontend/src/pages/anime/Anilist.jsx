@@ -31,7 +31,6 @@ const Anilist = () => {
 
     // Update selected tab and page based on URL parameters
     useEffect(() => {
-        console.log('useEffect -> searchParams')
         const tab = searchParams.get('tab') || 'All'
         const page = parseInt(searchParams.get('page') || '1', 10)
 
@@ -45,7 +44,7 @@ const Anilist = () => {
     }, [searchParams])
 
     // Filtered data based on the selected tab
-    const filteredData = useFilteredData(watchList, filters, selectedTab)
+    const filteredData = useFilteredData(watchList, filters, selectedTab, mediaType === 'favourites')
 
     const { currentData, Pagination } = usePagination(filteredData, ITEMS_PER_PAGE, {
         current: currentPage,
@@ -112,7 +111,7 @@ const Anilist = () => {
                         {/* Media List */}
                         <div className="grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-3">
                             {currentData?.map((entry) => (
-                                <MediaCard key={entry.media?.id} mediaItem={entry} />
+                                <MediaCard key={entry?.id} mediaItem={entry} isFavouriteList={mediaType === 'favourites'} />
                             ))}
                         </div>
                     </div>

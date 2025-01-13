@@ -6,7 +6,6 @@ import LoadingState from './components/Loading'
 import ProtectedRoute from './components/PrivateRoute'
 import RootLayout from './components/layout/RootLayout'
 import { AnilistProvider } from './context/AnilistContext'
-import { AnimeHubProvider } from './context/AnimeHubContext'
 import AuthTokenProvider from './context/AuthTokenProvider'
 import { LoadingBarProvider } from './context/LoadingBarContext'
 import { TicTacToeProvider } from './context/TicTacToe/TicTacToeContext'
@@ -18,8 +17,6 @@ const NotFound = lazy(() => import('./pages/404-page'))
 const Shadows = lazy(() => import('./pages/ShadowsGrid'))
 const Anilist = lazy(() => import('./pages/anime/Anilist'))
 const AnimeLogin = lazy(() => import('./pages/anime/AnimeLogin'))
-const AnimeHub = lazy(() => import('./pages/animeHub/AnimeHub'))
-const AnimeHubAuth = lazy(() => import('./pages/animeHub/AnimeHubAuth'))
 const AudioMetaExtractor = lazy(() => import('./pages/audio/AudioMetaExtractor'))
 const AudioMetadataEditor = lazy(() => import('./pages/audio/AudioMetaEditor'))
 const TicTacToe = lazy(() => import('./pages/games/tic-tac-toe/TicTacToe'))
@@ -51,17 +48,6 @@ const router = createBrowserRouter([
             /* -------------------------------------------------------------------------- */
             { path: '/audio/tags-extractor', element: withSuspense(AudioMetaExtractor) },
             { path: '/audio/tags-editor', element: withSuspense(AudioMetadataEditor) },
-            /* -------------------------------------------------------------------------- */
-            /*                                  Anime Hub                                 */
-            /* -------------------------------------------------------------------------- */
-            {
-                path: '/anime-hub',
-                element: <AnimeHubProvider>{withSuspense(AnimeHub)}</AnimeHubProvider>,
-            },
-            {
-                path: '/anime-hub/auth',
-                element: <AnimeHubProvider>{withSuspense(AnimeHubAuth)}</AnimeHubProvider>,
-            },
             /* -------------------------------------------------------------------------- */
             /*                                    Anilist                                 */
             /* -------------------------------------------------------------------------- */

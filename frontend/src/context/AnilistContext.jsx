@@ -58,7 +58,7 @@ export const AnilistProvider = ({ children }) => {
     }, [fetchWatchList])
 
     useEffect(() => {
-        const editModal = document.getElementById('modal-edit-media')
+        const editModal = document.getElementById('modal-anilist-edit-media')
         if (editModal) {
             editEntry?.id ? editModal.showModal() : editModal.close()
         }
