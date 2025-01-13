@@ -48,11 +48,11 @@ const AuthTokenProvider = ({ children }) => {
                     // Example: Uncomment this line when the API is ready
                     // const { data } = await appApiClient.post(API_ROUTES.APP.CHECK_AUTH);
                     // setIsAuth((prev) => ({ ...prev, app: data.success }));
-                    console.log('Checked App authentication.')
+                    // console.log('Checked App authentication.')
                 } else if (apiType === API_TYPES.ANILIST) {
                     const { data } = await anilistApiClient.post(API_ROUTES.ANIME_HUB.CHECK_AUTH, { signal: abortControllerRef.current.signal })
                     setIsAuth((prev) => ({ ...prev, anilist: data.success }))
-                    console.log('Checked AniList authentication.')
+                    // console.log('Checked AniList authentication.')
                 }
             } catch (error) {
                 console.error(`Error checking authentication for ${apiType}:`, error)
@@ -66,7 +66,7 @@ const AuthTokenProvider = ({ children }) => {
 
     useEffect(() => {
         ;(async () => {
-            console.log('AuthTokenProvider: Initializing authentication checks.')
+            // console.log('AuthTokenProvider: Initializing authentication checks.')
             // await checkAuth(API_TYPES.APP)
             await checkAuth(API_TYPES.ANILIST)
         })()

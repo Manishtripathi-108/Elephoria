@@ -61,7 +61,7 @@ const variants = {
  * @param {string} [props.roundness='rounded-lg'] - Rounding style for the button.
  * @param {string} [props.title] - Tooltip text for the button.
  * @param {string} [props.type='button'] - Type of the button element.
- * @param {string} [props.variant='primary'] - Visual variant of the button.
+ * @param {string} [props.variant='primary'] - Visual variant of the button. i.e., primary, secondary, danger, warning, success, info.
  * @returns {React.Element}
  */
 const JelloButton = ({

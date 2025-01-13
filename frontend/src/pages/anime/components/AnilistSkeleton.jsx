@@ -1,15 +1,8 @@
 import React from 'react'
 
-const AnimeSkeleton = () => {
+const AnilistSkeleton = () => {
     return (
         <div className="animate-pulse bg-inherit">
-            <header className="shadow-neumorphic-inset-lg w-full border-b">
-                <div className="flex h-full w-full items-end justify-center">
-                    <div className="bg-secondary h-36 w-28 rounded-t-lg md:h-48 md:w-36"></div>
-                    <div className="bg-secondary ml-3 h-8 w-36 rounded-lg"></div>
-                </div>
-            </header>
-
             {/* Main Content */}
             <div className="container mx-auto p-6">
                 {/* Controls */}
@@ -41,4 +34,4 @@ const AnimeSkeleton = () => {
     )
 }
 
-export default AnimeSkeleton
+export default AnilistSkeleton

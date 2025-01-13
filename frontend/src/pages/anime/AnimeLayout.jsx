@@ -147,16 +147,16 @@ const AnimeLayout = () => {
                     <Icon icon={iconMap.arrowOpenLeft} className="size-4" />
                 </label>
                 <div className="bg-primary text-secondary hidden place-items-center gap-4 rounded-tr-xl rounded-bl-xl border px-2 py-4 peer-checked:grid">
-                    <NavLink to={APP_ROUTES.ANIME.ANIMELIST} title="Anime List">
+                    <NavLink to={APP_ROUTES.ANILIST.ANIME} title="Anime List">
                         <Icon icon={iconMap.anime} className="size-6" />
                     </NavLink>
-                    <NavLink to={APP_ROUTES.ANIME.ROOT} title="Manga List">
+                    <NavLink to={APP_ROUTES.ANILIST.ROOT} title="Manga List">
                         <Icon icon={iconMap.manga} className="size-6" />
                     </NavLink>
-                    <NavLink to={APP_ROUTES.ANIME.ROOT} title="Import Anime/Manga">
+                    <NavLink to={APP_ROUTES.ANILIST.ROOT} title="Import Anime/Manga">
                         <Icon icon={iconMap.upload} className="size-6" />
                     </NavLink>
-                    <button type="button" to={APP_ROUTES.ANIME.ROOT} title="Log Out">
+                    <button type="button" to={APP_ROUTES.ANILIST.ROOT} title="Log Out">
                         <Icon icon={iconMap.logOut} className="size-6 text-red-500" />
                     </button>
                 </div>

@@ -95,7 +95,7 @@ const AuthComponent = () => {
                                             placeholder="Enter your name"
                                         />
                                     </div>
-                                    <ErrorMessage name="registerName" component="div" className="form-text text-red-500 dark:text-red-500" />
+                                    <ErrorMessage name="registerName" component="p" className="form-text text-red-500 dark:text-red-500" />
                                 </div>
 
                                 {/* Email Field */}
@@ -113,7 +113,7 @@ const AuthComponent = () => {
                                             placeholder="Enter your email address"
                                         />
                                     </div>
-                                    <ErrorMessage name="registerEmail" component="div" className="form-text text-red-500 dark:text-red-500" />
+                                    <ErrorMessage name="registerEmail" component="p" className="form-text text-red-500 dark:text-red-500" />
                                 </div>
 
                                 {/* Password Field */}
@@ -131,7 +131,7 @@ const AuthComponent = () => {
                                             placeholder="Create a secure password"
                                         />
                                     </div>
-                                    <ErrorMessage name="registerPassword" component="div" className="form-text text-red-500 dark:text-red-500" />
+                                    <ErrorMessage name="registerPassword" component="p" className="form-text text-red-500 dark:text-red-500" />
                                 </div>
 
                                 {/* Confirm Password Field */}
@@ -149,11 +149,7 @@ const AuthComponent = () => {
                                             placeholder="Confirm your password"
                                         />
                                     </div>
-                                    <ErrorMessage
-                                        name="confirmRegisterPassword"
-                                        component="div"
-                                        className="form-text text-red-500 dark:text-red-500"
-                                    />
+                                    <ErrorMessage name="confirmRegisterPassword" component="p" className="form-text text-red-500 dark:text-red-500" />
                                 </div>
 
                                 <button className="button mt-5" type="submit">
@@ -197,7 +193,7 @@ const AuthComponent = () => {
                                             placeholder="Enter your email address"
                                         />
                                     </div>
-                                    <ErrorMessage name="loginEmail" component="div" className="form-text text-red-500 dark:text-red-500" />
+                                    <ErrorMessage name="loginEmail" component="p" className="form-text text-red-500 dark:text-red-500" />
                                 </div>
 
                                 {/* Password Field */}
@@ -215,7 +211,7 @@ const AuthComponent = () => {
                                             placeholder="Enter your password"
                                         />
                                     </div>
-                                    <ErrorMessage name="loginPassword" component="div" className="form-text text-red-500 dark:text-red-500" />
+                                    <ErrorMessage name="loginPassword" component="p" className="form-text text-red-500 dark:text-red-500" />
                                 </div>
 
                                 <a

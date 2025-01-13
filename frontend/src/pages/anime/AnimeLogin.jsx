@@ -25,7 +25,7 @@ const AnimeLogin = () => {
                 window.addToast('login successful!', 'success')
                 console.log('login successful!')
 
-                navigate(APP_ROUTES.ANIME.ANIMELIST, { replace: true })
+                navigate(APP_ROUTES.ANILIST.ANIME, { replace: true })
                 checkAuth('anilist')
             } else {
                 throw result
@@ -40,7 +40,7 @@ const AnimeLogin = () => {
 
     useEffect(() => {
         if (isAuth.anilist) {
-            navigate(APP_ROUTES.ANIME.ANIMELIST, { replace: true })
+            navigate(APP_ROUTES.ANILIST.ANIME, { replace: true })
         } else if (code) {
             handleSubmit(code)
         } else {

@@ -7,20 +7,18 @@ import * as Yup from 'yup'
 import { deleteMediaEntry, saveMediaEntry, toggleFavourite } from '../../../api/animeHubApi'
 import Modal, { closeModal } from '../../../components/common/Modals'
 import JelloButton from '../../../components/common/buttons/JelloButton'
+import { VALID_STATUSES } from '../../../constants/anilist'
 import iconMap from '../../../constants/iconMap'
-import { useAnimeHubContext } from '../../../context/AnimeHubContext'
-import { validStatusOptions } from '../utils/constants'
 
 const AnimeModal = ({ entryId, modalId, media, mediaStatus = '', mediaProgress = '0' }) => {
     const bannerStyle = { backgroundImage: `url(${media?.bannerImage})` }
     const [isLiked, setIsLiked] = useState(media.isFavourite || false)
     const [isToggling, setIsToggling] = useState(false)
-    const { refetchMedia } = useAnimeHubContext()
     const maxProgress = media?.episodes || media?.chapters || 100000
 
     // Form validation schema
     const validationSchema = Yup.object({
-        status: Yup.string().oneOf(validStatusOptions).required('Status is required'),
+        status: Yup.string().oneOf(VALID_STATUSES).required('Status is required'),
         progress: Yup.number()
             .min(0, 'Progress must be zero or more')
             .max(maxProgress, `Progress must be less than ${maxProgress}`)
@@ -43,7 +41,6 @@ const AnimeModal = ({ entryId, modalId, media, mediaStatus = '', mediaProgress =
 
         if (result.success) {
             window.addToast('Entry updated successfully', 'success')
-            refetchMedia()
             closeModal(modalId)
         } else if (result.retryAfterSeconds > 0) {
             window.addToast(`Rate limit exceeded. Please try again in ${result.retryAfterSeconds} seconds.`, 'error')
@@ -76,7 +73,6 @@ const AnimeModal = ({ entryId, modalId, media, mediaStatus = '', mediaProgress =
 
         if (result.success) {
             window.addToast('Entry deleted successfully', 'success')
-            refetchMedia()
             closeModal(modalId)
         } else if (result.retryAfterSeconds > 0) {
             window.addToast(`Rate limit exceeded. Please try again in ${result.retryAfterSeconds} seconds.`, 'error')
@@ -110,10 +106,10 @@ const AnimeModal = ({ entryId, modalId, media, mediaStatus = '', mediaProgress =
             {/* Favourite button */}
             <button
                 type="button"
-                className={`button button-icon-only absolute top-2/4 right-8 ${isLiked ? 'active' : ''}`}
+                className={`button button-icon-only absolute top-2/4 right-8 cursor-pointer ${isLiked ? 'shadow-neumorphic-inset-xs text-red-500 dark:text-red-500' : ''}`}
                 onClick={toggleLike}
                 disabled={isToggling}>
-                <Icon icon={iconMap.heart} className={`size-5 ${isLiked ? 'text-[#ff4545]' : ''}`} />
+                <Icon icon={iconMap.heart} className="size-5 text-inherit" />
             </button>
 
             <Formik initialValues={{ status: mediaStatus, progress: mediaProgress }} validationSchema={validationSchema} onSubmit={handleSave}>
@@ -127,7 +123,7 @@ const AnimeModal = ({ entryId, modalId, media, mediaStatus = '', mediaProgress =
                                 </label>
                                 <Field as="select" name="status" className="form-field">
                                     <option value="">Select Status</option>
-                                    {validStatusOptions.map((option) => (
+                                    {VALID_STATUSES.map((option) => (
                                         <option key={option} value={option}>
                                             {option}
                                         </option>

@@ -11,7 +11,6 @@ import React, { useDeferredValue, useMemo } from 'react'
  */
 const useFilteredData = (data, filters = {}, selectedList = 'All') => {
     const deferredSearchTerm = useDeferredValue(filters.search)
-    const deferredYear = useDeferredValue(filters.year)
 
     const filteredData = useMemo(() => {
         // Early exit for empty or invalid inputs
@@ -49,6 +48,7 @@ const useFilteredData = (data, filters = {}, selectedList = 'All') => {
         }
 
         // console.log('After search filter:', result)
+        console.log(filters.search, deferredSearchTerm)
 
         // Step 3: Apply additional filters
         result = result.filter((entry) => {
@@ -57,10 +57,10 @@ const useFilteredData = (data, filters = {}, selectedList = 'All') => {
             const matchStatus = filters.status ? status?.toUpperCase() === filters.status.toUpperCase() : true
             const matchGenres = filters.genres
                 ? Array.isArray(filters.genres)
-                    ? filters.genres.some((genre) => genres?.map((g) => g.toUpperCase()).includes(genre.toUpperCase()))
+                    ? filters.genres.every((genre) => genres?.map((g) => g.toUpperCase()).includes(genre.toUpperCase()))
                     : genres?.map((genre) => genre.toUpperCase()).includes(filters.genres.toUpperCase())
                 : true
-            const matchYear = deferredYear ? startDate?.year === deferredYear : true
+            const matchYear = filters.year ? startDate?.year === filters.year : true
 
             return matchFormat && matchStatus && matchGenres && matchYear
         })
@@ -92,7 +92,7 @@ const useFilteredData = (data, filters = {}, selectedList = 'All') => {
                     case 'Last Added':
                         return new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
                     default:
-                        return 0
+                        return new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
                 }
             })
         }
@@ -100,7 +100,7 @@ const useFilteredData = (data, filters = {}, selectedList = 'All') => {
         // console.log('After sorting:', result)
 
         return result
-    }, [data, filters, selectedList, deferredSearchTerm, deferredYear])
+    }, [data, filters, selectedList, deferredSearchTerm])
 
     return filteredData
 }

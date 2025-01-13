@@ -28,14 +28,21 @@ const TabNavigation = ({ tabs, currentTab, setCurrentTab, className = '' }) => {
                 })
             }
         }
+
+        if (!currentTab)
+            setIndicatorStyle({
+                width: 0,
+                height: 0,
+            })
     }, [currentTab, tabs])
 
     return (
-        <nav className={cn('bg-secondary relative  flex w-fit flex-wrap gap-1 rounded-xl p-1', className)}>
+        <nav className={cn('bg-secondary relative flex w-fit flex-wrap gap-1 rounded-xl p-1', className)}>
             {tabs.map((tab, index) => (
                 <button
                     key={index}
                     role="tab"
+                    type="button"
                     ref={(el) => (buttonRefs.current[index] = el)}
                     data-selected={currentTab === tab}
                     aria-selected={currentTab === tab}

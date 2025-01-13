@@ -5,10 +5,12 @@ import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import LoadingState from './components/Loading'
 import ProtectedRoute from './components/PrivateRoute'
 import RootLayout from './components/layout/RootLayout'
+import { AnilistProvider } from './context/AnilistContext'
 import { AnimeHubProvider } from './context/AnimeHubContext'
 import AuthTokenProvider from './context/AuthTokenProvider'
 import { LoadingBarProvider } from './context/LoadingBarContext'
 import { TicTacToeProvider } from './context/TicTacToe/TicTacToeContext'
+import MangaList from './pages/anime/MangaList'
 import './utils/iconUtils'
 
 // Lazy-loaded components
@@ -64,8 +66,15 @@ const router = createBrowserRouter([
             /* -------------------------------------------------------------------------- */
             /*                                    Anilist                                 */
             /* -------------------------------------------------------------------------- */
-            { path: '/anilist', element: <Navigate to="anime" replace /> },
-            { path: '/anilist/anime', element: withProtectedRoute(withSuspense(AnimeList), true) },
+            {
+                path: '/anilist',
+                element: withProtectedRoute(<AnilistProvider />, true),
+                children: [
+                    { index: true, element: withSuspense(AnimeList) },
+                    { path: 'anime', element: withSuspense(AnimeList) },
+                    { path: 'manga', element: withSuspense(MangaList) },
+                ],
+            },
             { path: '/anilist/login', element: withSuspense(AnimeLogin) },
             /* -------------------------------------------------------------------------- */
             /*                                    Games                                   */

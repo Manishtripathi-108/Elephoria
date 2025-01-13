@@ -70,7 +70,7 @@ const PlayOnlineForm = () => {
                                     maxLength={6}
                                     autoComplete="off"
                                 />
-                                <ErrorMessage component="div" className="form-text text-red-500 dark:text-red-500" name="roomId" />
+                                <ErrorMessage component="p" className="form-text text-red-500 dark:text-red-500" name="roomId" />
                             </div>
                         )}
 
@@ -89,7 +89,7 @@ const PlayOnlineForm = () => {
                                     maxLength={10}
                                     autoComplete="off"
                                 />
-                                <ErrorMessage component="div" className="form-text text-red-500 dark:text-red-500" name="roomName" />
+                                <ErrorMessage component="p" className="form-text text-red-500 dark:text-red-500" name="roomName" />
                             </div>
                         )}
 
@@ -107,7 +107,7 @@ const PlayOnlineForm = () => {
                                 maxLength={20}
                                 autoComplete="off"
                             />
-                            <ErrorMessage component="div" className="form-text text-red-500 dark:text-red-500" name="playerName" />
+                            <ErrorMessage component="p" className="form-text text-red-500 dark:text-red-500" name="playerName" />
                         </div>
 
                         <button type="submit" className="button w-full" disabled={isSubmitting}>

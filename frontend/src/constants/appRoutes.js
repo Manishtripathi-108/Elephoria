@@ -5,8 +5,9 @@ const APP_ROUTES = {
         TAGS_EDITOR: '/audio/tags-editor',
         TAGS_EXTRACTOR: '/audio/tags-extractor',
     },
-    ANIME: {
-        ANIMELIST: '/anilist/anime',
+    ANILIST: {
+        ANIME: '/anilist/anime',
+        MANGA: '/anilist/manga',
         LOGIN: '/anilist/login',
     },
     ANIME_HUB: {

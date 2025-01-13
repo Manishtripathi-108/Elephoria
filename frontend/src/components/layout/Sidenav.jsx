@@ -10,17 +10,12 @@ import iconMap from '../../constants/iconMap'
 
 export const sidenavMenuItems = [
     {
-        title: 'Anime Hub',
+        title: 'AniList',
         icon: iconMap.anime,
         children: [
-            { name: 'Anime Hub', link: APP_ROUTES.ANIME_HUB.ROOT },
-            { name: 'Authorize', link: APP_ROUTES.ANIME_HUB.LOGIN },
+            { name: 'Anime', link: APP_ROUTES.ANILIST.ANIME },
+            { name: 'Manga', link: APP_ROUTES.ANILIST.MANGA },
         ],
-    },
-    {
-        title: 'Anime',
-        icon: iconMap.anime,
-        link: APP_ROUTES.ANIME.ANIMELIST,
     },
     {
         title: 'Games',

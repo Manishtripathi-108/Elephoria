@@ -74,117 +74,143 @@
             opacity: 0;
             width: 0;
         }
+
         100% {
             left: 100%;
             opacity: 1;
             width: 35%;
         }
     }
+
     @keyframes pulse-slow {
         0% {
             opacity: 1;
             transform: scale(1.2);
         }
+
         to {
             opacity: 0.5;
             transform: scale(0.8);
         }
     }
+
     @keyframes slide-left-return {
         0% {
             transform-origin: 0 0;
             transform: translate(-100%);
         }
+
         100% {
             transform-origin: 0 0;
             transform: translate(0);
         }
     }
+
     @keyframes slide-left {
         0% {
             transform-origin: 0 0;
             transform: translate(0);
         }
+
         100% {
             transform-origin: 0 0;
             transform: translate(-100%);
         }
     }
+
     @keyframes wipe-in-down {
         0% {
             clip-path: inset(0 0 100% 0);
             display: none;
         }
+
         100% {
             clip-path: inset(0 0 0 0);
             display: block;
         }
     }
+
     @keyframes wipe-out-down {
         0% {
             clip-path: inset(0 0 0 0);
             display: block;
         }
+
         100% {
             clip-path: inset(0 0 100% 0);
             display: none;
         }
     }
+
     @keyframes zoom-in {
         0% {
             transform: scale(0);
         }
+
         100% {
             transform: scale(1);
         }
     }
+
     @keyframes zoom-out {
         0% {
             transform: scale(1);
         }
+
         100% {
             transform: scale(0);
         }
     }
+
     @keyframes blob {
         0% {
             border-radius: 40% 60% 55% 45% / 50% 45% 55% 50%;
         }
+
         25% {
             border-radius: 60% 40% 45% 55% / 55% 60% 40% 45%;
         }
+
         50% {
             border-radius: 50% 50% 60% 40% / 45% 55% 50% 60%;
         }
+
         75% {
             border-radius: 45% 55% 50% 50% / 60% 40% 55% 45%;
         }
+
         100% {
             border-radius: 40% 60% 55% 45% / 50% 45% 55% 50%;
         }
     }
+
     @keyframes loader-shadow {
         0% {
             transform: scaleX(0.2);
             opacity: 0.4;
         }
+
         80% {
             transform: scaleX(1);
             opacity: 0.7;
         }
+
         100% {
             transform: scaleX(1.5);
         }
     }
+
     @keyframes loader-circle {
         0% {
             bottom: calc(var(--loader-base-height) + var(--loader-jump-height));
         }
+
         80% {
             height: var(--loader-circle-size);
             border-radius: 50%;
             transform: scaleX(1);
         }
+
         100% {
             bottom: var(--loader-base-height);
             height: 5px;
@@ -192,10 +218,12 @@
             transform: scaleX(1.7);
         }
     }
+
     @keyframes progress-after {
         0% {
             background-position: 0 100%;
         }
+
         100% {
             background-position: 30px 100%;
         }
@@ -262,8 +290,10 @@
 
 @utility scrollbar-thin {
     &::-webkit-scrollbar {
-        width: 6px; /* Set the width of the scrollbar */
-        height: 6px; /* Set the height of the scrollbar for vertical scrollbar */
+        width: 6px;
+        /* Set the width of the scrollbar */
+        height: 6px;
+        /* Set the height of the scrollbar for vertical scrollbar */
     }
 
     /* Set the color of the scrollbar thumb */
@@ -285,7 +315,7 @@
 /*                                   Button                                   */
 /* -------------------------------------------------------------------------- */
 @utility button {
-    @apply text-secondary bg-primary shadow-neumorphic-xs rounded-lg border px-4 py-2 text-center text-sm transition-all duration-300;
+    @apply text-secondary bg-primary shadow-neumorphic-xs cursor-pointer rounded-lg border px-4 py-2 text-center text-sm transition-all duration-300;
 
     &.active,
     &:active {
@@ -330,8 +360,8 @@
 @utility form-group {
     @apply w-full space-y-2;
 
-    &:has(form-field:not(:placeholder-shown)) label,
-    &:has(form-field:focus) label {
+    &:has(.form-field:not(:placeholder-shown)) label,
+    &:has(.form-field:focus) label {
         @apply text-primary;
     }
 }
@@ -357,13 +387,13 @@
     }
 
     &:user-invalid,
-    &:[data-error="true"] {
+    &[data-error='true'] {
         @apply border-red-500 text-red-500 dark:border-red-500 dark:text-red-500;
     }
 }
 
 @utility form-field-wrapper {
-    @apply shadow-neumorphic-xs divide-light-secondary dark:divide-dark-secondary text-secondary hover:text-primary focus-within:text-primary flex w-full items-center justify-center divide-x rounded-lg border;
+    @apply shadow-neumorphic-xs text-secondary hover:text-primary focus-within:text-primary flex w-full items-center justify-center divide-x rounded-lg border;
 
     & .form-field {
         @apply my-0.5 rounded-md border-none text-inherit shadow-none;
@@ -373,12 +403,16 @@
         @apply size-10 shrink-0 px-2 text-inherit transition-colors;
     }
 
-    .form-icon + .form-field {
+    &:has(.form-icon + .form-field) .form-field {
         @apply mr-0.5 rounded-l-none;
     }
 
-    .form-field + .form-icon {
+    &:has(.form-field + .form-icon) .form-field {
         @apply ml-0.5 rounded-r-none;
+    }
+
+    &:has(.form-field + .form-icon) .form-icon {
+        @apply border-l;
     }
 
     &:focus-within .form-field {
@@ -440,7 +474,7 @@
     }
 
     .checkbox-field {
-        @apply bg-primary checked:shadow-neumorphic-inset-xs disabled:bg-secondary checked:text-primary flex size-4 appearance-none items-center justify-center overflow-hidden rounded-sm border text-center text-xs transition-shadow duration-300 ease-in-out checked:after:size-full checked:after:font-bold checked:after:content-['\2713'];
+        @apply bg-primary checked:shadow-neumorphic-inset-xs disabled:bg-secondary checked:text-primary flex size-4 shrink-0 cursor-pointer appearance-none items-center justify-center overflow-hidden rounded-sm border text-center text-xs transition-shadow duration-300 ease-in-out checked:after:size-full checked:after:font-bold checked:after:content-['\2713'];
 
         &:checked ~ .form-text {
             @apply text-highlight translate-x-2;

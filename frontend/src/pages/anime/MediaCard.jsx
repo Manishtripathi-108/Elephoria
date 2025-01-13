@@ -6,27 +6,7 @@ import { openModal } from '../../components/common/Modals'
 import iconMap from '../../constants/iconMap'
 import cn from '../../utils/cn'
 import { convertMonthNumberToName } from '../animeHub/utils/constants'
-
-const getMediaDetails = (media, mediaItem) => {
-    if (media?.type === 'ANIME') {
-        if (media?.format === 'MOVIE') {
-            return <> &#8226; {media?.duration ?? '??'} min</>
-        } else {
-            return (
-                <>
-                    &nbsp;&#8226; {mediaItem?.progress ?? 0}/{media?.episodes ?? '??'} &#8226; {media?.duration ?? '??'} min/ep
-                </>
-            )
-        }
-    } else {
-        // For manga, display chapters
-        return (
-            <>
-                &nbsp;&#8226; Chapters: {mediaItem?.progress ?? 0}/{media?.chapters ?? '??'}
-            </>
-        )
-    }
-}
+import AnimeModal from './components/AnimeModal'
 
 const MediaCard = ({ mediaItem, isFavouriteList = false }) => {
     // Handle favourites, which don't have the `media` nesting.
@@ -53,7 +33,11 @@ const MediaCard = ({ mediaItem, isFavouriteList = false }) => {
                 {!isFavouriteList && (
                     <span className="text-secondary shrink-0 text-xs tracking-wider">
                         {media?.format || 'Unknown Format'}
-                        {getMediaDetails(media, mediaItem)}
+                        {media?.type === 'ANIME'
+                            ? media?.format === 'MOVIE'
+                                ? ` ${media?.duration ?? '??'} min`
+                                : ` ${mediaItem?.progress ?? 0}/${media?.episodes ?? '??'}  ${media?.duration ?? '??'} min/ep`
+                            : ` ${mediaItem?.progress ?? 0}/${media?.chapters ?? '??'} chapters`}
                     </span>
                 )}
             </div>
@@ -77,13 +61,13 @@ const MediaCard = ({ mediaItem, isFavouriteList = false }) => {
                         <Icon icon={iconMap.moreDots} className="size-4" />
                     </button>
 
-                    {/* <AnimeModal
+                    <AnimeModal
                         modalId={`modal_${media.id}`}
                         entryId={mediaItem.id}
                         media={media}
                         mediaStatus={mediaItem?.status}
                         mediaProgress={mediaItem?.progress}
-                    /> */}
+                    />
                 </>
             )}
 

@@ -57,7 +57,7 @@ const AnimeHubAuth = () => {
                                     Enter Auth Pin:
                                 </label>
                                 <Field type="text" id="pin" name="pin" className="form-field" placeholder="Enter Auth Pin:" autoComplete="off" />
-                                <ErrorMessage name="pin" component="div" className="form-text mt-1 ml-2 text-red-500" />
+                                <ErrorMessage name="pin" component="p" className="form-text mt-1 ml-2 text-red-500" />
                             </div>
                             <div className="grid w-full place-items-center">
                                 <button type="submit" className="button" disabled={isSubmitting}>

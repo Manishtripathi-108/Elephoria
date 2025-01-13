@@ -15,7 +15,7 @@ const ProtectedRoute = ({ children, isAnilistRoute = false }) => {
         if (loading) return
         if (isAnilistRoute && !isAuth.anilist) {
             window.addToast('Please login to Anilist to continue', 'info')
-            navigate(APP_ROUTES.ANIME.LOGIN, { replace: true })
+            navigate(APP_ROUTES.ANILIST.LOGIN, { replace: true })
         } else if (!isAnilistRoute && !isAuth.app) {
             console.log('Navigating to root login route')
             navigate(APP_ROUTES.ROOT, { replace: true })

@@ -10,7 +10,7 @@ import API_ROUTES from '../constants/apiRoutes'
  */
 const handleError = (message, error) => {
     // Check if the error was due to cancellation
-    if (axios.isCancel(error)) {
+    if (error.name !== 'AbortError') {
         return { success: false, message: 'Request canceled' }
     }
     console.log(error)
@@ -92,18 +92,18 @@ export const fetchUserData = async (abortSignal) => {
 
 /**
  * Fetches the user's media list from the server.
- * @param {String} mediaType The type of media to fetch (e.g. "ANIME" or "MANGA").
- * @param {Boolean} [favourite=false] Whether to fetch only favourite media.
- * @param {AbortSignal} abortSignal The signal to abort the request.
+ * @param {String} mediaType The type of media to fetch (e.g. "ANIME", "MANGA", "FAVOURITES").
+ * @param {AbortSignal} [abortSignal] The signal to abort the request.
  * @returns {Promise<Object>} A promise that resolves to an object with a "success" property and a "mediaList" property.
- * The "mediaList" property is an array of media entries or favourites, depending on the "favourite" parameter.
- * If the fetch is successful, the "success" property is true and the "mediaList" contains the data.
+ * The "mediaList" property is an array of media items, or undefined if the fetch fails.
  * If the fetch fails, the "success" property is false and an error message is provided.
  */
-export const fetchUserMediaList = async (mediaType, { favourite = false, abortSignal = null }) => {
+export const fetchUserMediaList = async (mediaType, abortSignal = null) => {
     try {
+        mediaType = mediaType.toUpperCase()
+        const favourite = mediaType === 'FAVOURITES'
         const endpoint = favourite ? API_ROUTES.ANIME_HUB.FAVOURITE : API_ROUTES.ANIME_HUB.USER_MEDIA
-        const response = await axios.post(endpoint, mediaType, { withCredentials: true, signal: abortSignal })
+        const response = await axios.post(endpoint, { mediaType }, { withCredentials: true, signal: abortSignal })
 
         const { success, mediaList } = response.data
 
