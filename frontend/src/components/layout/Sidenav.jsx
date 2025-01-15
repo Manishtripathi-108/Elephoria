@@ -34,7 +34,7 @@ export const sidenavMenuItems = [
     {
         title: 'Audio',
         icon: iconMap.music,
-        children: [{ name: 'Music Editor', link: APP_ROUTES.AUDIO.TAGS_EXTRACTOR }],
+        children: [{ name: 'Tags Editor', link: APP_ROUTES.AUDIO.TAGS_EDITOR }],
     },
     {
         title: 'Profile',

@@ -1,49 +1,20 @@
 import { extractAudioMetadata, editAudioMetadata } from '../services/audio.service.js';
-import {
-    downloadAudioFromCloudinary,
-    uploadAudioToCloudinary,
-    uploadImageToCloudinary,
-} from '../services/cloudinary.service.js';
-import { backendLogger } from '../utils/logger.utils.js';
-import { cleanupFile, getTempPath } from '../utils/pathAndFile.utils.js';
+import { getTempPath } from '../utils/pathAndFile.utils.js';
 import { successResponse, errorResponse } from '../utils/response.utils.js';
 import { resizeAndCropImage } from '../utils/sharp.utils.js';
+import { existsSync } from 'fs';
 import { extname } from 'path';
 
-export const handleAudioUpload = async (req, res) => {
+export const handleExtractMetadata = async (req, res) => {
     try {
-        // * Change the code here (if not using Buffer)
-        const file = req.file.buffer;
+        const file = req.file;
 
         if (!file) {
             return errorResponse(res, 'No file uploaded. Please upload a valid audio file.', null, 400);
         }
 
-        const uploadResult = await uploadAudioToCloudinary(file);
-
-        if (!uploadResult.success) {
-            return errorResponse(res, 'Failed to upload the audio file. Please try again.', uploadResult.error);
-        }
-
-        return successResponse(res, { publicId: uploadResult.publicId, url: uploadResult.url });
-    } catch (error) {
-        req.file?.path ? cleanupFile(req.file?.path) : null;
-        return errorResponse(res, 'Unexpected error occurred while uploading. Please try again.', error);
-    }
-};
-
-export const handleExtractMetadata = async (req, res) => {
-    try {
-        // Get file details from the request body
-        const { audioFileId, audioFileUrl } = req.body;
-
-        if (!audioFileId && !audioFileUrl) {
-            return errorResponse(res, 'File details are missing. Please provide a valid file to process.', null, 400);
-        }
-
-        const controller = new AbortController();
-
         // TODO: Implement cancellation logic
+        // const controller = new AbortController();
         // This would involve listening for the 'close' or 'aborted' events on the request object
         // and calling controller.abort() to cancel the extraction process
 
@@ -55,21 +26,12 @@ export const handleExtractMetadata = async (req, res) => {
         //     console.log('aborted');
         // });
 
-        let fileDownloadUrl = audioFileUrl;
-        if (!audioFileUrl) {
-            const downloadResult = await downloadAudioFromCloudinary(audioFileId, controller.signal);
-            if (!downloadResult.success) {
-                return errorResponse(res, 'Failed to retrieve the file. Please try again.', downloadResult.error);
-            }
-            fileDownloadUrl = downloadResult.url;
-        }
-
-        const metadataResult = await extractAudioMetadata(fileDownloadUrl, controller.signal);
+        const metadataResult = await extractAudioMetadata(file.path);
         if (!metadataResult.success) {
-            return errorResponse(res, 'Failed to extract metadata. Please try again.', metadataResult.error);
+            return errorResponse(res, metadataResult.message, metadataResult.error);
         }
 
-        return successResponse(res, { metadata: metadataResult.metadata, coverImage: metadataResult.coverImage });
+        return successResponse(res, { ...metadataResult, audioFileName: file.filename });
     } catch (error) {
         return errorResponse(res, 'Unexpected error occurred while extracting metadata. Please try again.', error);
     }
@@ -77,42 +39,44 @@ export const handleExtractMetadata = async (req, res) => {
 
 export const handleEditMetadata = async (req, res) => {
     try {
-        const { audioFileId, audioFileUrl } = req.body;
+        const audioFileName = req.body.audioFileName;
         const metadata = typeof req.body.metadata === 'string' ? JSON.parse(req.body.metadata) : req.body.metadata;
 
         // Validate audio file information
-        if (!audioFileId && !audioFileUrl) {
+        if (!audioFileName || !metadata) {
             return errorResponse(
                 res,
-                'File details are missing. Please provide a valid file to edit metadata.',
+                'Audio file or metadata is missing. Please provide a valid audio file and metadata to edit.',
                 null,
                 400
             );
         }
 
-        // Download audio file if URL is not provided
-        const fileDownloadUrl = audioFileUrl || (await downloadAudioFromCloudinary(audioFileId)).url;
+        const fileTempUrl = getTempPath('audio', audioFileName);
 
-        if (!fileDownloadUrl) {
-            return errorResponse(res, 'Failed to retrieve the file. Please try again.', null, 500);
+        if (!existsSync(fileTempUrl)) {
+            return errorResponse(res, 'Audio file not found. Please reupload a valid audio file.', null, 404);
         }
 
-        const fileExtension = extname(fileDownloadUrl);
+        const fileExt = extname(audioFileName);
 
-        // * Change the code here (if not using Buffer): { resizeAndCropImage(req.file.path, false, getTempPath('images', `cover_${Date.now()}.jpg`)).path }
-        const coverImage = req.file ? await resizeAndCropImage(req.file.buffer, true) : null;
-        const coverUrl = coverImage ? await uploadImageToCloudinary(coverImage) : null;
+        const coverUrl = req.file
+            ? await resizeAndCropImage(req.file.path, false, getTempPath('images', `cover_${Date.now()}.jpg`))
+            : null;
 
-        // Edit metadata
-        const editResult = await editAudioMetadata(fileDownloadUrl, fileExtension, metadata, coverUrl);
+        const editResult = await editAudioMetadata(fileTempUrl, fileExt, metadata, coverUrl?.path);
 
         if (!editResult.success) {
-            return errorResponse(res, 'Failed to edit metadata. Please try again.', editResult.error);
+            return errorResponse(res, editResult.message, editResult.error);
         }
 
-        return successResponse(res, { editedFileUrl: editResult.url });
+        // return successResponse(res, { editedFileUrl: editResult.fileUrl });
+        res.download(editResult.fileUrl, `edited_audio${fileExt}`, (err) => {
+            if (err) {
+                return errorResponse(res, 'Failed to download the edited file.', err);
+            }
+        });
     } catch (error) {
-        req.file?.path ? cleanupFile(req.file?.path) : null;
         return errorResponse(res, 'Unexpected error occurred while editing metadata. Please try again.', error);
     }
 };

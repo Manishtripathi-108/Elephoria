@@ -1,58 +1,31 @@
 import React, { useEffect, useRef, useState } from 'react'
 
-import { useLocation, useNavigate } from 'react-router-dom'
-
 import { Icon } from '@iconify/react'
 import axios from 'axios'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
-import FileDownload from '../../components/common/FileDownload'
 import JelloButton from '../../components/common/buttons/JelloButton'
 import API_ROUTES from '../../constants/apiRoutes'
-import APP_ROUTES from '../../constants/appRoutes'
+import { META_TAGS } from '../../constants/audio.constants'
 import iconMap from '../../constants/iconMap'
-import { metaTags } from './utils.js/constants'
 
-const AudioMetadataEditor = () => {
-    const location = useLocation()
-    const navigate = useNavigate()
-
-    const { metadata, coverImage, audioFileId, audioFileUrl } = location.state || {}
-
-    const [downloadUrl, setDownloadUrl] = useState(null)
+const AudioMetadataEditor = ({ metadata, coverImage, audioFileName, onCancel, onSuccess }) => {
     const [cover, setCover] = useState(coverImage)
+    const [error, setError] = useState(null)
     const [showAllTags, setShowAllTags] = useState(false)
     const abortControllerRef = useRef(null)
 
-    // Check sessionStorage for the flag
-    const fromExtractor = sessionStorage.getItem('fromExtractor') === 'true'
-
     useEffect(() => {
-        // If not from the extractor, redirect to the AudioTagsExtractor page
-        if (!fromExtractor) {
-            navigate(APP_ROUTES.AUDIO.TAGS_EXTRACTOR)
-        }
-
-        // Clear the sessionStorage flag after redirect or navigation
         return () => {
-            sessionStorage.removeItem('fromExtractor')
-        }
-    }, [fromExtractor, navigate])
-
-    if (!fromExtractor) return null
-
-    useEffect(() => {
-        if (abortControllerRef.current) {
-            console.log('Aborting previous request...')
-
-            abortControllerRef.current.abort()
+            if (abortControllerRef.current) {
+                abortControllerRef.current.abort()
+            }
         }
     }, [])
 
-    // Validation schema for Formik
     const validationSchema = Yup.object({
-        ...Object.entries(metaTags).reduce((schema, [key, { validate }]) => {
+        ...Object.entries(META_TAGS).reduce((schema, [key, { validate }]) => {
             if (validate) {
                 schema[key] = validate
             }
@@ -64,152 +37,151 @@ const AudioMetadataEditor = () => {
     })
 
     const handleMetadataEdit = async (values, { setSubmitting }) => {
-        setSubmitting(true)
         try {
+            setSubmitting(true)
+            setError(null)
+
             const formData = new FormData()
-            formData.append('audioFileId', audioFileId)
-            formData.append('audioFileUrl', audioFileUrl)
+            formData.append('audioFileName', audioFileName)
             if (values.cover) formData.append('cover', values.cover || '')
             values.cover = ''
 
             formData.append('metadata', JSON.stringify(values))
 
-            // Set up AbortController for cancellation
             abortControllerRef.current = new AbortController()
             const signal = abortControllerRef.current.signal
 
-            const response = await axios.post(API_ROUTES.AUDIO.EDIT_METADATA, formData, { signal })
+            const response = await axios.post(API_ROUTES.AUDIO.EDIT_METADATA, formData, { signal, responseType: 'blob' })
 
-            console.log('Edit Metadata Response:', response.data)
-            if (response.data?.success) {
-                setDownloadUrl(response.data.editedFileUrl)
-                window.addToast('Metadata edited successfully!', 'success')
-            } else {
-                throw new Error(response.data?.message || 'An error occurred.')
-            }
+            const url = window.URL.createObjectURL(new Blob([response.data]))
+            const link = document.createElement('a')
+            link.href = url
+            link.setAttribute('download', `${values.title || 'edited_audio_file'}.${audioFileName.split('.').pop()}`)
+            document.body.appendChild(link)
+            link.click()
+
+            link.parentNode.removeChild(link)
+            window.URL.revokeObjectURL(url)
+
+            if (onSuccess) onSuccess()
         } catch (error) {
-            console.error('Error editing metadata:', error)
-            window.addToast(error.response?.data?.message || 'Failed to edit metadata.', 'error')
+            if (error.name !== 'AbortError') {
+                console.error('Error editing metadata:', error)
+                setError(error.response?.data?.message || 'Failed to edit metadata.')
+            }
         } finally {
             setSubmitting(false)
         }
     }
 
     const initialFormValues = {
-        ...Object.keys(metaTags).reduce((values, key) => {
+        ...Object.keys(META_TAGS).reduce((values, key) => {
             values[key] = metadata[key] || ''
             return values
         }, {}),
         cover: '',
     }
 
-    const tagsToDisplay = showAllTags ? Object.entries(metaTags) : Object.entries(metaTags).slice(0, 10)
+    const tagsToDisplay = showAllTags ? Object.entries(META_TAGS) : Object.entries(META_TAGS).slice(0, 10)
 
     return (
-        <div className="flex items-center justify-center px-2 py-6">
-            {downloadUrl ? (
-                <FileDownload
-                    title="File Ready for Download"
-                    description="The file has been successfully edited. Click below to download it."
-                    buttonText="Download"
-                    fileUrl={downloadUrl}
-                    fileName={metadata.title || 'edited_audio_file'}
-                />
-            ) : (
-                <div className="shadow-neumorphic-lg w-full max-w-(--breakpoint-lg) rounded-3xl border p-2 sm:p-6">
-                    <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border p-6 sm:rounded-xl">
-                        <h1 className="text-primary font-aladin text-center text-2xl tracking-wider">Edit Tags</h1>
+        <section aria-labelledby="editor-title" className="shadow-neumorphic-lg w-full max-w-(--breakpoint-lg) rounded-3xl border p-2 sm:p-6">
+            <div className="grid place-items-center gap-4 rounded-2xl border p-6 sm:rounded-xl">
+                <h1 className="text-primary font-aladin text-center text-3xl tracking-wider">Edit Tags</h1>
 
-                        <Formik initialValues={initialFormValues} validationSchema={validationSchema} onSubmit={handleMetadataEdit}>
-                            {({ isSubmitting, setFieldValue, resetForm }) => (
-                                <Form className="flex w-full flex-col items-center justify-center gap-6 md:flex-row md:items-start">
-                                    <div className="relative size-3/4 max-w-72 shrink-0">
-                                        <label
-                                            htmlFor="cover"
-                                            className="shadow-neumorphic-inset-xs block aspect-square cursor-pointer overflow-hidden rounded-xl border p-2">
-                                            <img
-                                                src={cover}
-                                                alt="Cover"
-                                                className="size-full rounded-lg object-cover"
-                                                title="Upload a 1:1 aspect ratio image. Other ratios will be adjusted automatically."
-                                            />
+                <Formik initialValues={initialFormValues} validationSchema={validationSchema} onSubmit={handleMetadataEdit}>
+                    {({ isSubmitting, setFieldValue, resetForm }) => (
+                        <Form className="flex w-full flex-col items-center justify-center gap-6 md:flex-row md:items-start">
+                            <div className="relative size-3/4 max-w-72 shrink-0">
+                                <label
+                                    htmlFor="cover"
+                                    className="shadow-neumorphic-inset-xs block aspect-square cursor-pointer overflow-hidden rounded-xl border p-2">
+                                    <img
+                                        src={cover}
+                                        alt="Cover"
+                                        className="size-full rounded-lg object-cover"
+                                        title="Upload a 1:1 aspect ratio image. Other ratios will be adjusted automatically."
+                                    />
+                                </label>
+                                <input
+                                    id="cover"
+                                    name="cover"
+                                    type="file"
+                                    className="sr-only"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        const file = e.target.files[0]
+                                        setFieldValue('cover', file)
+                                        setCover(URL.createObjectURL(file))
+                                    }}
+                                />
+                                <ErrorMessage
+                                    name="cover"
+                                    component="p"
+                                    className="form-text mt-1 w-full text-center text-red-500 dark:text-red-500"
+                                />
+                            </div>
+
+                            <div className="grid w-full grid-cols-1 place-items-center gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                                {tagsToDisplay.map(([key, { className, placeholder, type }]) => (
+                                    <div key={key} className={`form-group ${className}`}>
+                                        <label className="form-text" htmlFor={key}>
+                                            {key === 'date' ? 'Year' : key.replace('_', ' ')}
                                         </label>
-                                        <input
-                                            id="cover"
-                                            name="cover"
-                                            type="file"
-                                            className="sr-only"
-                                            accept="image/*"
-                                            onChange={(e) => {
-                                                const file = e.target.files[0]
-                                                setFieldValue('cover', file)
-                                                setCover(URL.createObjectURL(file))
-                                            }}
+                                        <Field
+                                            id={key}
+                                            name={key}
+                                            as={type === 'textarea' ? 'textarea' : 'input'}
+                                            rows={type === 'textarea' ? 6 : undefined}
+                                            type={type || 'text'}
+                                            placeholder={placeholder}
+                                            autoComplete="off"
+                                            className="form-field scrollbar-thin"
                                         />
-                                        <ErrorMessage name="cover" component="p" className="form-text error mt-1 w-full text-center" />
+                                        <ErrorMessage name={key} component="p" className="form-text text-red-500 dark:text-red-500" />
                                     </div>
+                                ))}
 
-                                    <div className="grid w-full grid-cols-1 place-items-center gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                                        {tagsToDisplay.map(([key, { className, placeholder, type }]) => (
-                                            <div key={key} className={`form-group ${className}`}>
-                                                <Field
-                                                    id={key}
-                                                    name={key}
-                                                    as={type === 'textarea' ? 'textarea' : 'input'}
-                                                    rows={type === 'textarea' ? 6 : undefined}
-                                                    type={type || 'text'}
-                                                    placeholder={placeholder}
-                                                    autoComplete="off"
-                                                    className="form-field scrollbar-thin"
-                                                />
-                                                <label className="form-text" htmlFor={key}>
-                                                    {key === 'date' ? 'Year' : key.replace('_', ' ')}
-                                                </label>
-                                                <ErrorMessage name={key} component="p" className="form-text error order-3" />
-                                            </div>
-                                        ))}
+                                <button
+                                    className="button button-sm order-last col-span-full inline-flex items-center justify-center gap-2 text-sm"
+                                    type="button"
+                                    onClick={() => setShowAllTags((prev) => !prev)}>
+                                    {showAllTags ? 'Show Less Tags' : 'Show All Tags'}
+                                    <Icon icon={iconMap[showAllTags ? 'minus' : 'plus']} />
+                                </button>
 
-                                        <div className="order-last col-span-1 flex w-full justify-end gap-4 sm:col-span-2 lg:col-span-3">
-                                            <button
-                                                className="button button-sm inline-flex items-center justify-center gap-2 text-sm"
-                                                type="button"
-                                                onClick={() => setShowAllTags((prev) => !prev)}>
-                                                {showAllTags ? 'Show Less' : 'Show All'}
-                                                <Icon icon={iconMap[showAllTags ? 'up' : 'down']} className="size-4" />
-                                            </button>
-                                        </div>
+                                <div className="order-last col-span-full flex w-full justify-end gap-3 pt-6">
+                                    <JelloButton type="submit" disabled={isSubmitting} isSubmitting={isSubmitting}>
+                                        Save Changes
+                                    </JelloButton>
+                                    <JelloButton
+                                        variant="secondary"
+                                        disabled={isSubmitting}
+                                        onClick={(e) => {
+                                            e.preventDefault()
+                                            resetForm()
+                                            setCover(coverImage)
+                                        }}>
+                                        Reset
+                                    </JelloButton>
+                                    <JelloButton
+                                        variant="danger"
+                                        onClick={(e) => {
+                                            e.preventDefault()
+                                            abortControllerRef.current?.abort()
+                                            onCancel()
+                                        }}>
+                                        Cancel
+                                    </JelloButton>
+                                </div>
+                            </div>
 
-                                        <div className="order-last col-span-1 flex w-full justify-end gap-4 pt-8 sm:col-span-2 lg:col-span-3">
-                                            <JelloButton type="submit" disabled={isSubmitting} isSubmitting={isSubmitting}>
-                                                Save Changes
-                                            </JelloButton>
-                                            <JelloButton
-                                                variant="secondary"
-                                                disabled={isSubmitting}
-                                                onClick={(e) => {
-                                                    e.preventDefault()
-                                                    resetForm()
-                                                    setCover(coverImage)
-                                                }}>
-                                                Reset
-                                            </JelloButton>
-                                            <JelloButton
-                                                variant="danger"
-                                                onClick={(e) => {
-                                                    e.preventDefault()
-                                                    abortControllerRef.current?.abort()
-                                                }}>
-                                                Cancel
-                                            </JelloButton>
-                                        </div>
-                                    </div>
-                                </Form>
-                            )}
-                        </Formik>
-                    </div>
-                </div>
-            )}
-        </div>
+                            {error && <p className="col-span-full text-red-500 dark:text-red-500">{error}</p>}
+                        </Form>
+                    )}
+                </Formik>
+            </div>
+        </section>
     )
 }
 
