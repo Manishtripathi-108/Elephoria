@@ -46,8 +46,7 @@ const router = createBrowserRouter([
             /* -------------------------------------------------------------------------- */
             /*                                    Audio                                   */
             /* -------------------------------------------------------------------------- */
-            { path: '/audio/tags-extractor', element: withSuspense(AudioMetaExtractor) },
-            { path: '/audio/tags-editor', element: withSuspense(AudioMetadataEditor) },
+            { path: '/audio/tags-editor', element: withSuspense(AudioMetaExtractor) },
             /* -------------------------------------------------------------------------- */
             /*                                    Anilist                                 */
             /* -------------------------------------------------------------------------- */
