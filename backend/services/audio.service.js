@@ -1,9 +1,8 @@
 import { backendLogger } from '../utils/logger.utils.js';
 import { createDirectoryIfNotExists, getTempPath } from '../utils/pathAndFile.utils.js';
-import { uploadAudioToCloudinary, uploadImageToCloudinary } from './cloudinary.service.js';
+import { uploadImageToCloudinary } from './cloudinary.service.js';
 import { exec } from 'child_process';
 import ffmpeg from 'fluent-ffmpeg';
-import { PassThrough } from 'stream';
 
 // Constants
 const FALLBACK_IMAGE_URL =
@@ -14,13 +13,14 @@ const FALLBACK_IMAGE_URL =
  * @param {string} fileUrl - URL of the audio file.
  * @returns {Promise<object>} - Extracted metadata.
  */
-const getMetadataFromFFprobe = (fileUrl) => {
+const getMetadataFromFFprobe = async (fileUrl) => {
     return new Promise((resolve, reject) => {
         ffmpeg.ffprobe(fileUrl, (error, metadata) => {
             if (error) {
-                return reject(new Error('Error extracting metadata with FFprobe.'));
+                reject(new Error('Failed to extracting metadata.'));
+            } else {
+                resolve(metadata);
             }
-            resolve(metadata);
         });
     });
 };
@@ -30,20 +30,21 @@ const getMetadataFromFFprobe = (fileUrl) => {
  * @param {string} fileUrl - URL of the audio file.
  * @returns {Promise<string>} - Extracted lyrics or a default message.
  */
-const extractLyrics = (fileUrl) => {
+const extractLyrics = async (fileUrl) => {
     return new Promise((resolve) => {
         const command = `ffprobe -i "${fileUrl}" -show_entries format_tags=lyrics -of json`;
         exec(command, (error, stdout) => {
             if (error) {
                 backendLogger.warn('Error extracting lyrics', { error });
-                return resolve('No lyrics found');
-            }
-            try {
-                const lyrics = JSON.parse(stdout)?.format?.tags?.lyrics || 'No lyrics found';
-                resolve(lyrics);
-            } catch (parseError) {
-                backendLogger.warn('Error parsing lyrics data', { parseError });
                 resolve('No lyrics found');
+            } else {
+                try {
+                    const lyrics = JSON.parse(stdout)?.format?.tags?.lyrics || 'No lyrics found';
+                    resolve(lyrics);
+                } catch (parseError) {
+                    backendLogger.warn('Error parsing lyrics data', { parseError });
+                    resolve('No lyrics found');
+                }
             }
         });
     });
@@ -56,14 +57,12 @@ const extractLyrics = (fileUrl) => {
  * @returns {Promise<{success: boolean, metadata?: object, coverImage?: string, message?: string, error?: object}>}
  */
 export const extractAudioMetadata = async (fileUrl, abortSignal) => {
-    // * Change the code here (if not using Buffer): uncomment the line below
-    // const tempDir = getTempPath('images');
-    // const coverImagePath = getTempPath('images', `cover_${Date.now()}.jpg`);
-
     try {
-        // await createDirectoryIfNotExists(tempDir);
+        const coverImagePath = getTempPath('images', `cover_${Date.now()}.jpg`);
+        await createDirectoryIfNotExists(getTempPath('images'));
 
-        const [metadata, lyrics] = await Promise.all([getMetadataFromFFprobe(fileUrl), extractLyrics(fileUrl)]);
+        const metadata = await getMetadataFromFFprobe(fileUrl);
+        const lyrics = await extractLyrics(fileUrl);
 
         metadata.format = { ...(metadata.format || {}), tags: { ...metadata.format?.tags, lyrics } };
 
@@ -72,51 +71,43 @@ export const extractAudioMetadata = async (fileUrl, abortSignal) => {
             (stream) => stream.codec_name === 'mjpeg' || stream.codec_type === 'video'
         );
 
-        const coverImage =
-            coverStream &&
-            (await new Promise((resolve) => {
-                // * Change the code here (if not using Buffer): remove the 2 lines below
-                const outputBuffer = [];
-                const outputStream = new PassThrough();
+        let coverImage = FALLBACK_IMAGE_URL;
+        if (coverStream) {
+            try {
+                await new Promise((resolve, reject) => {
+                    ffmpeg(fileUrl)
+                        .outputOptions('-map', `0:${coverStream.index}`)
+                        .save(coverImagePath)
+                        .on('end', resolve)
+                        .on('error', reject);
+                });
+                const uploadResult = await uploadImageToCloudinary(coverImagePath, abortSignal);
+                coverImage = uploadResult.success ? uploadResult.url : FALLBACK_IMAGE_URL;
+            } catch (error) {
+                backendLogger.warn('Error uploading cover image or extracting it', { error });
+            }
+        }
 
-                ffmpeg(fileUrl)
-                    .outputOptions('-map', `0:${coverStream.index}`)
-                    // * Change the code here (if not using Buffer): uncomment the line below and remove .toFormat, .pipe & .on('data') + both finalBuffer lines
-                    // .save(coverImagePath)
-                    .toFormat('image2')
-                    .pipe(outputStream, { end: true })
-                    .on('data', (chunk) => outputBuffer.push(chunk))
-                    .on('end', async () => {
-                        try {
-                            const finalBuffer = Buffer.concat(outputBuffer);
-                            const uploadResult = await uploadImageToCloudinary(finalBuffer, abortSignal);
-                            // const uploadResult = await uploadImageToCloudinary(coverImagePath, abortSignal);
-                            resolve(uploadResult.success ? uploadResult.url : FALLBACK_IMAGE_URL);
-                        } catch (uploadError) {
-                            backendLogger.warn('Error uploading cover image', { uploadError });
-                            resolve(FALLBACK_IMAGE_URL);
-                        }
-                    })
-                    .on('error', (extractError) => {
-                        backendLogger.warn('Error extracting cover image', { extractError });
-                        resolve(FALLBACK_IMAGE_URL);
-                    });
-            }).catch((error) => {
-                backendLogger.error('Error during cover image processing', { error });
-                return FALLBACK_IMAGE_URL;
-            }));
-
-        return { success: true, metadata, coverImage: coverImage || FALLBACK_IMAGE_URL };
+        return { success: true, metadata: metadata?.format?.tags, coverImage };
     } catch (error) {
-        backendLogger.error('Error processing metadata extraction', { error });
+        backendLogger.error('Unexpected error in extractAudioMetadata', error);
         return { success: false, message: error.message, error };
     }
 };
 
+/**
+ * Edits audio metadata and optionally attaches a cover image.
+ * @param {string} fileUrl - The URL of the audio file to process.
+ * @param {string} fileExtension - File extension of the audio file.
+ * @param {object} metadata - Metadata to edit.
+ * @param {string} [coverImagePath] - Path to the cover image file.
+ * @returns {Promise<{success: boolean, fileUrl?: string, message?: string, error?: object}>}
+ */
 export const editAudioMetadata = async (fileUrl, fileExtension, metadata, coverImagePath) => {
-    const outputFilePath = getTempPath('audio', `edited_${Date.now()}${fileExtension}`);
-
     try {
+        const outputFilePath = getTempPath('audio', `edited_${Date.now()}${fileExtension}`);
+        await createDirectoryIfNotExists(getTempPath('audio'));
+
         const command = ffmpeg(fileUrl);
 
         // Attach cover image if provided
@@ -133,26 +124,13 @@ export const editAudioMetadata = async (fileUrl, fileExtension, metadata, coverI
             command
                 .outputOptions('-c', 'copy') // Use 'copy' to avoid re-encoding
                 .save(outputFilePath)
-                .on('error', (processError) => {
-                    backendLogger.error('Error during metadata editing', { processError });
-                    reject({ success: false, message: 'Failed to edit metadata.', error: processError });
-                })
                 .on('end', resolve)
-                .on('error', (processError) => {
-                    backendLogger.error('Error during metadata editing', { processError });
-                    reject({ success: false, message: 'Failed to edit metadata.', error: processError });
-                });
+                .on('error', (error) => reject(error));
         });
 
-        const uploadResult = await uploadAudioToCloudinary(outputFilePath);
-
-        if (uploadResult.success) {
-            return { success: true, url: uploadResult.url };
-        } else {
-            throw { success: false, message: 'Failed to upload the edited file.', error: uploadResult.error };
-        }
+        return { success: true, fileUrl: outputFilePath };
     } catch (error) {
-        backendLogger.error('Unexpected error in editAudioMetadata function', { error });
-        return { success: false, message: error.message, error };
+        backendLogger.error('Unexpected error in editAudioMetadata', error);
+        return { success: false, message: 'Failed to edit audio metadata', error };
     }
 };

@@ -1,4 +1,4 @@
-import { handleAudioUpload, handleExtractMetadata, handleEditMetadata } from '../controllers/audio.controller.js';
+import { handleExtractMetadata, handleEditMetadata } from '../controllers/audio.controller.js';
 import { createDirectoryIfNotExists, getTempPath } from '../utils/pathAndFile.utils.js';
 import { Router } from 'express';
 import multer, { diskStorage } from 'multer';
@@ -7,7 +7,7 @@ import { extname } from 'path';
 const router = Router();
 
 /* ------------------ Multer configuration for file uploads ----------------- */
-const storage = diskStorage({
+const audioStorage = diskStorage({
     destination: async (req, file, cb) => {
         const uploadPath = getTempPath('audio');
         try {
@@ -19,6 +19,22 @@ const storage = diskStorage({
     },
     filename: (req, file, cb) => {
         const filenameFormat = `audio_${Date.now()}${extname(file.originalname)}`;
+        cb(null, filenameFormat);
+    },
+});
+
+const imageStorage = diskStorage({
+    destination: async (req, file, cb) => {
+        const uploadPath = getTempPath('images');
+        try {
+            await createDirectoryIfNotExists(uploadPath);
+            cb(null, uploadPath);
+        } catch (error) {
+            cb(error, uploadPath);
+        }
+    },
+    filename: (req, file, cb) => {
+        const filenameFormat = `image_${Date.now()}${extname(file.originalname)}`;
         cb(null, filenameFormat);
     },
 });
@@ -40,9 +56,9 @@ const imageFileFilter = (req, file, cb) => {
 };
 
 // * Change the code here (if not using Buffer)
-const uploadAudio = multer({ storage: multer.memoryStorage(), fileFilter: audioFileFilter });
+const uploadAudio = multer({ storage: audioStorage, fileFilter: audioFileFilter });
 
-const uploadImage = multer({ storage: multer.memoryStorage(), fileFilter: imageFileFilter });
+const uploadImage = multer({ storage: imageStorage, fileFilter: imageFileFilter });
 
 /* ------------------------ Error Handling Middleware ----------------------- */
 const uploadAudioMiddleware = (req, res, next) => {
@@ -70,8 +86,7 @@ const uploadImageMiddleware = (req, res, next) => {
 };
 
 /* ------------------------------ Routes Setup ------------------------------ */
-router.post('/upload', uploadAudioMiddleware, handleAudioUpload);
-router.post('/extract-metadata', handleExtractMetadata);
+router.post('/extract-metadata', uploadAudioMiddleware, handleExtractMetadata);
 router.post('/edit-metadata', uploadImageMiddleware, handleEditMetadata);
 
 export default router;

@@ -1,6 +1,6 @@
 import * as Yup from 'yup'
 
-export const metaTags = {
+export const META_TAGS = {
     title: {
         className: 'order-1 col-span-1 sm:col-span-2',
         placeholder: 'e.g., My Song',
@@ -24,7 +24,7 @@ export const metaTags = {
     genre: {
         className: 'order-5 col-span-1 sm:col-span-2 lg:col-span-2',
         placeholder: 'e.g., Pop, Rock, Country',
-        validate: Yup.string().required('Genre is required'),
+        validate: Yup.string(),
     },
     date: {
         className: 'order-6 col-span-1',
@@ -55,7 +55,7 @@ export const metaTags = {
         validate: Yup.string(),
     },
     lyrics: {
-        className: 'order-10 col-span-1 sm:col-span-2 lg:col-span-3',
+        className: 'order-10 col-span-full',
         placeholder: 'Lyrics here...',
         type: 'textarea',
         validate: Yup.string(),

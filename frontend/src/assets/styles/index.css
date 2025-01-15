@@ -56,8 +56,8 @@
     /*                                  Animation                                 */
     /* -------------------------------------------------------------------------- */
     --animate-blob: blob 10s infinite cubic-bezier(0.68, -0.55, 0.27, 1.55);
-    --animate-loader-circle: loader-circle 0.5s var(--animation-delay, 0s) alternate infinite ease-in;
-    --animate-loader-shadow: loader-shadow 0.5s var(--animation-delay, 0s) alternate infinite ease-in;
+    --animate-loader-circle: loader-circle 0.5s alternate infinite ease-in;
+    --animate-loader-shadow: loader-shadow 0.5s alternate infinite ease-in;
     --animate-pulse-slow: pulse-slow 1s ease-in-out infinite alternate;
     --animate-progress-after: progress-after 1s infinite linear;
     --animate-shimmer-ray: shimmer-ray 2.5s cubic-bezier(0, 0, 0.2, 1) infinite;

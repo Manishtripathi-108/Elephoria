@@ -46,7 +46,7 @@ const UploadInput = ({ acceptType, className, file, id, setFile }) => {
     return (
         <div
             className={cn(
-                'bg-primary shadow-neumorphic-sm flex size-80 flex-col items-center justify-between gap-2 rounded-lg border p-2.5',
+                'bg-primary shadow-neumorphic-sm flex aspect-square w-full max-w-80 flex-col items-center justify-between gap-2 rounded-lg border p-2.5',
                 className
             )}>
             <label
