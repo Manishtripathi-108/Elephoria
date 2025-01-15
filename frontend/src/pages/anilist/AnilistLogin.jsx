@@ -4,10 +4,10 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import { exchangeCode } from '../../api/animeHubApi'
 import LoadingState from '../../components/Loading'
-import APP_ROUTES from '../../constants/appRoutes'
+import APP_ROUTES from '../../constants/app.constants'
 import { useAuthToken } from '../../context/AuthTokenProvider'
 
-const AnimeLogin = () => {
+const AnilistLogin = () => {
     const navigate = useNavigate()
     const { isAuth, checkAuth } = useAuthToken()
     const [searchParams, setSearchParams] = useSearchParams()
@@ -67,4 +67,4 @@ const AnimeLogin = () => {
     )
 }
 
-export default AnimeLogin
+export default AnilistLogin

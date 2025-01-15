@@ -4,7 +4,7 @@ import { use } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { fetchUserMediaList } from '../api/animeHubApi'
-import NotFound from '../pages/404-page'
+import Page404 from '../pages/Page404'
 
 const AnilistContext = createContext()
 
@@ -66,7 +66,7 @@ export const AnilistProvider = ({ children }) => {
 
     return (
         <AnilistContext.Provider value={{ mediaType, watchList, loading, error, editEntry, setEditEntry, fetchWatchList }}>
-            {['anime', 'manga', 'favourites'].includes(mediaType) ? children : <NotFound />}
+            {['anime', 'manga', 'favourites'].includes(mediaType) ? children : <Page404 />}
         </AnilistContext.Provider>
     )
 }

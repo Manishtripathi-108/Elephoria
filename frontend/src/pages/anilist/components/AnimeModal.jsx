@@ -5,16 +5,16 @@ import { ErrorMessage, Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
 import { deleteMediaEntry, saveMediaEntry, toggleFavourite } from '../../../api/animeHubApi'
-import { closeModal } from '../../../components/common/Modals'
+import Modal, { closeModal } from '../../../components/common/Modals'
 import JelloButton from '../../../components/common/buttons/JelloButton'
-import { VALID_STATUSES } from '../../../constants/anilist'
+import { VALID_STATUSES } from '../../../constants/anilist.constants'
 import iconMap from '../../../constants/iconMap'
 
-const EditMedia = ({ entry = [] }) => {
-    const bannerStyle = { backgroundImage: `url(${entry?.media?.bannerImage})` }
-    const [isLiked, setIsLiked] = useState(entry?.media?.isFavourite || false)
+const AnimeModal = ({ entryId, modalId, media, mediaStatus = '', mediaProgress = '0' }) => {
+    const bannerStyle = { backgroundImage: `url(${media?.bannerImage})` }
+    const [isLiked, setIsLiked] = useState(media.isFavourite || false)
     const [isToggling, setIsToggling] = useState(false)
-    const maxProgress = entry?.media?.episodes || entry?.media?.chapters || 100000
+    const maxProgress = media?.episodes || media?.chapters || 100000
 
     // Form validation schema
     const validationSchema = Yup.object({
@@ -27,12 +27,12 @@ const EditMedia = ({ entry = [] }) => {
 
     // Save media entry updates
     const handleSave = async (values) => {
-        if (values.status === entry.status && values.progress === entry.progress) {
+        if (values.status === mediaStatus && values.progress === mediaProgress) {
             window.addToast('No changes to save.', 'info')
-            closeModal('modal-anilist-edit-media')
+            closeModal(modalId)
             return
         }
-        const result = await saveMediaEntry(entry.media.id, values.status, values.progress)
+        const result = await saveMediaEntry(media.id, values.status, values.progress)
 
         if (result === -1) {
             window.addToast('ID not found', 'error')
@@ -41,7 +41,7 @@ const EditMedia = ({ entry = [] }) => {
 
         if (result.success) {
             window.addToast('Entry updated successfully', 'success')
-            closeModal('modal-anilist-edit-media')
+            closeModal(modalId)
         } else if (result.retryAfterSeconds > 0) {
             window.addToast(`Rate limit exceeded. Please try again in ${result.retryAfterSeconds} seconds.`, 'error')
         } else {
@@ -52,7 +52,7 @@ const EditMedia = ({ entry = [] }) => {
     // Toggle the favourite status of a media item
     const toggleLike = async () => {
         setIsToggling(true)
-        const result = await toggleFavourite(entry.media.id, entry.media.type)
+        const result = await toggleFavourite(media.id, media.type)
         setIsToggling(false)
 
         if (result.success) {
@@ -68,12 +68,12 @@ const EditMedia = ({ entry = [] }) => {
     // Delete media entry
     const deleteEntry = async () => {
         setIsToggling(true)
-        const result = await deleteMediaEntry(entry.id)
+        const result = await deleteMediaEntry(entryId)
         setIsToggling(false)
 
         if (result.success) {
             window.addToast('Entry deleted successfully', 'success')
-            closeModal('modal-anilist-edit-media')
+            closeModal(modalId)
         } else if (result.retryAfterSeconds > 0) {
             window.addToast(`Rate limit exceeded. Please try again in ${result.retryAfterSeconds} seconds.`, 'error')
         } else {
@@ -81,10 +81,8 @@ const EditMedia = ({ entry = [] }) => {
         }
     }
 
-    if (!entry?.media) return null
-
     return (
-        <>
+        <Modal modalId={modalId}>
             {/* Banner image */}
             <div
                 className="after:bg-secondary relative h-44 rounded-t-lg bg-cover bg-center after:absolute after:size-full after:rounded-t-lg after:opacity-40 md:h-64"
@@ -94,15 +92,15 @@ const EditMedia = ({ entry = [] }) => {
             <div className="bg-primary shadow-neumorphic-inset-xs relative -mt-24 ml-5 w-full max-w-40 rounded-lg border p-3">
                 <img
                     className="size-full rounded-lg object-cover"
-                    src={entry.media?.coverImage?.large}
-                    alt={entry.media?.title?.english || entry.media?.title?.native}
+                    src={media?.coverImage?.large}
+                    alt={media?.title?.english || media?.title?.native}
                     loading="lazy"
                 />
             </div>
 
             {/* Title */}
             <h2 className="text-primary font-aladin mt-4 mb-6 ml-7 text-xl leading-none font-normal tracking-widest capitalize">
-                {entry.media?.title?.english || entry.media?.title?.native || entry.media?.title?.romaji || 'Unknown Title'}
+                {media?.title?.english || media?.title?.native || media?.title?.romaji || 'Unknown Title'}
             </h2>
 
             {/* Favourite button */}
@@ -114,7 +112,7 @@ const EditMedia = ({ entry = [] }) => {
                 <Icon icon={iconMap.heart} className="size-5 text-inherit" />
             </button>
 
-            <Formik initialValues={{ status: entry.status, progress: entry.progress }} validationSchema={validationSchema} onSubmit={handleSave}>
+            <Formik initialValues={{ status: mediaStatus, progress: mediaProgress }} validationSchema={validationSchema} onSubmit={handleSave}>
                 {({ isSubmitting }) => (
                     <Form className="px-4 pb-4">
                         {/* Status and Progress fields */}
@@ -162,8 +160,8 @@ const EditMedia = ({ entry = [] }) => {
                     </Form>
                 )}
             </Formik>
-        </>
+        </Modal>
     )
 }
 
-export default EditMedia
+export default AnimeModal

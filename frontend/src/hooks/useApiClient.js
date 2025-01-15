@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import API_ROUTES, { API_TYPES } from '../constants/apiRoutes'
+import API_ROUTES, { API_TYPES } from '../constants/api.constants'
 
 const useApiClient = (apiType, { setAuth, setLoading }) => {
     const client = axios.create({ withCredentials: true })

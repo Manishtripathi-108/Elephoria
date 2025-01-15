@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
 
-import API_ROUTES, { API_TYPES } from '../constants/apiRoutes'
+import API_ROUTES, { API_TYPES } from '../constants/api.constants'
 import useApiClient from '../hooks/useApiClient'
 
 const AuthTokenContext = createContext()

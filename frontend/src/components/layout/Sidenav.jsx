@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { Icon } from '@iconify/react'
 
 import avatarImage from '../../assets/images/square/logo.png'
-import APP_ROUTES from '../../constants/appRoutes'
+import APP_ROUTES from '../../constants/app.constants'
 import iconMap from '../../constants/iconMap'
 
 export const sidenavMenuItems = [

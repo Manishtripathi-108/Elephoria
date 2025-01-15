@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom'
 
 import JelloButton from '../components/common/buttons/JelloButton'
 
-const NotFound = () => {
+const Page404 = () => {
     return (
-        <section className="bg-primary grid h-dvh place-items-center">
+        <section className="bg-primary h-calc-full-height grid place-items-center">
             <div className="grid place-items-center">
                 <svg
                     className="mt-24 animate-bounce"
@@ -90,4 +90,4 @@ const NotFound = () => {
     )
 }
 
-export default NotFound
+export default Page404

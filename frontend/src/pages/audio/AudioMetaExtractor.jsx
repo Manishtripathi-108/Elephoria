@@ -3,15 +3,15 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { Icon } from '@iconify/react/dist/iconify.js'
-import axios from 'axios'
 
 import LoadingState from '../../components/Loading'
 import UploadProgressBar from '../../components/common/UploadProgressBar'
 import JelloButton from '../../components/common/buttons/JelloButton'
 import UploadInput from '../../components/common/form/UploadInput'
-import API_ROUTES from '../../constants/apiRoutes'
-import APP_ROUTES from '../../constants/appRoutes'
+import API_ROUTES from '../../constants/api.constants'
+import APP_ROUTES from '../../constants/app.constants'
 import iconMap from '../../constants/iconMap'
+import { useAuthToken } from '../../context/AuthTokenProvider'
 import AudioMetadataEditor from './AudioMetaEditor'
 
 const INITIAL_UPLOAD_STATE = {
@@ -27,6 +27,7 @@ const INITIAL_EXTRACT_STATE = {
 }
 
 const AudioMetaExtractor = () => {
+    const { appApiClient } = useAuthToken()
     const [selectedAudioFile, setSelectedAudioFile] = useState(null)
     const [uploadState, setUploadState] = useState(INITIAL_UPLOAD_STATE)
     const [extractedData, setExtractedData] = useState(INITIAL_EXTRACT_STATE)
@@ -62,7 +63,7 @@ const AudioMetaExtractor = () => {
             abortControllerRef.current = new AbortController()
             const signal = abortControllerRef.current.signal
 
-            const response = await axios.post(API_ROUTES.AUDIO.EXTRACT_METADATA, formData, {
+            const response = await appApiClient.post(API_ROUTES.AUDIO.EXTRACT_METADATA, formData, {
                 signal,
                 onUploadProgress: (event) => {
                     setUploadState((prev) => ({ ...prev, progress: event }))

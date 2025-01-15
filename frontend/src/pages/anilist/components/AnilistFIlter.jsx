@@ -5,7 +5,7 @@ import * as Yup from 'yup'
 
 import TabNavigation from '../../../components/common/TabNavigation'
 import JelloButton from '../../../components/common/buttons/JelloButton'
-import { FILTER_OPTIONS } from '../../../constants/anilist'
+import { FILTER_OPTIONS } from '../../../constants/anilist.constants'
 
 const AnilistFilter = ({ filters, setFilters }) => {
     const formik = useFormik({

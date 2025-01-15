@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 
 import { useNavigate } from 'react-router-dom'
 
-import APP_ROUTES from '../constants/appRoutes'
+import APP_ROUTES from '../constants/app.constants'
 import { useAuthToken } from '../context/AuthTokenProvider'
 import Loading from './Loading'
 

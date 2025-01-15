@@ -13,12 +13,11 @@ import './utils/iconUtils'
 
 // Lazy-loaded components
 const Home = lazy(() => import('./pages/Home'))
-const NotFound = lazy(() => import('./pages/404-page'))
+const Page404 = lazy(() => import('./pages/Page404'))
 const Shadows = lazy(() => import('./pages/ShadowsGrid'))
-const Anilist = lazy(() => import('./pages/anime/Anilist'))
-const AnimeLogin = lazy(() => import('./pages/anime/AnimeLogin'))
+const Anilist = lazy(() => import('./pages/anilist/Anilist'))
+const AnilistLogin = lazy(() => import('./pages/anilist/AnilistLogin'))
 const AudioMetaExtractor = lazy(() => import('./pages/audio/AudioMetaExtractor'))
-const AudioMetadataEditor = lazy(() => import('./pages/audio/AudioMetaEditor'))
 const TicTacToe = lazy(() => import('./pages/games/tic-tac-toe/TicTacToe'))
 const ClassicTicTacToe = lazy(() => import('./pages/games/tic-tac-toe/ClassicTicTacToe'))
 const UltimateTicTacToe = lazy(() => import('./pages/games/tic-tac-toe/UltimateTicTacToe'))
@@ -54,7 +53,7 @@ const router = createBrowserRouter([
                 path: '/anilist/:type',
                 element: withProtectedRoute(<AnilistProvider>{withSuspense(Anilist)}</AnilistProvider>, true),
             },
-            { path: '/anilist/login', element: withSuspense(AnimeLogin) },
+            { path: '/anilist/login', element: withSuspense(AnilistLogin) },
             /* -------------------------------------------------------------------------- */
             /*                                    Games                                   */
             /* -------------------------------------------------------------------------- */
@@ -73,7 +72,7 @@ const router = createBrowserRouter([
                     },
                 ],
             },
-            { path: '*', element: withSuspense(NotFound) },
+            { path: '*', element: withSuspense(Page404) },
         ],
     },
 ])

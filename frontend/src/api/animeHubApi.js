@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import API_ROUTES from '../constants/apiRoutes'
+import API_ROUTES from '../constants/api.constants'
 
 /**
  * Handles API errors and returns a standardized error object.

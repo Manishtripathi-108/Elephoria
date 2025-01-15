@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom'
 
 import { Icon } from '@iconify/react/dist/iconify.js'
 
-import APP_ROUTES from '../../../constants/appRoutes'
+import APP_ROUTES from '../../../constants/app.constants'
 import iconMap from '../../../constants/iconMap'
 
 const NavigationBar = () => {

@@ -6,7 +6,7 @@ import { Icon } from '@iconify/react'
 
 import Modal, { openModal } from '../../components/common/Modals'
 import TabNavigation from '../../components/common/TabNavigation'
-import { getTabOptions } from '../../constants/anilist'
+import { getTabOptions } from '../../constants/anilist.constants'
 import iconMap from '../../constants/iconMap'
 import { useAnilist } from '../../context/AnilistContext'
 import useFilteredData from '../../hooks/useFilteredData'

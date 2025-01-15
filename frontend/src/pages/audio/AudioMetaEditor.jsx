@@ -1,16 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react'
 
 import { Icon } from '@iconify/react'
-import axios from 'axios'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
 import JelloButton from '../../components/common/buttons/JelloButton'
-import API_ROUTES from '../../constants/apiRoutes'
+import API_ROUTES from '../../constants/api.constants'
 import { META_TAGS } from '../../constants/audio.constants'
 import iconMap from '../../constants/iconMap'
+import { useAuthToken } from '../../context/AuthTokenProvider'
 
 const AudioMetadataEditor = ({ metadata, coverImage, audioFileName, onCancel, onSuccess }) => {
+    const { appApiClient } = useAuthToken()
+
     const [cover, setCover] = useState(coverImage)
     const [error, setError] = useState(null)
     const [showAllTags, setShowAllTags] = useState(false)
@@ -51,7 +53,7 @@ const AudioMetadataEditor = ({ metadata, coverImage, audioFileName, onCancel, on
             abortControllerRef.current = new AbortController()
             const signal = abortControllerRef.current.signal
 
-            const response = await axios.post(API_ROUTES.AUDIO.EDIT_METADATA, formData, { signal, responseType: 'blob' })
+            const response = await appApiClient.post(API_ROUTES.AUDIO.EDIT_METADATA, formData, { signal, responseType: 'blob' })
 
             const url = window.URL.createObjectURL(new Blob([response.data]))
             const link = document.createElement('a')
