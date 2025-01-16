@@ -68,7 +68,6 @@ const AudioMetadataEditor = ({ metadata, coverImage, audioFileName, onCancel, on
             if (onSuccess) onSuccess()
         } catch (error) {
             if (error.name !== 'AbortError') {
-                console.error('Error editing metadata:', error)
                 setError(error.response?.data?.message || 'Failed to edit metadata.')
             }
         } finally {

@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
 
-import API_ROUTES, { API_TYPES } from '../constants/api.constants'
+import API_ROUTES, { API_TYPE } from '../constants/api.constants'
 import useApiClient from '../hooks/useApiClient'
 
 const AuthTokenContext = createContext()
@@ -24,19 +24,10 @@ export const AuthTokenProvider = ({ children }) => {
     const [loading, setLoading] = useState(true)
     const abortControllerRef = useRef(null)
 
-    // API Clients for app and AniList
-    const appApiClient = useApiClient(API_TYPES.APP, {
-        setAuth: (isAuthenticated) => setIsAuth((prev) => ({ ...prev, app: isAuthenticated })),
-        setLoading,
-    })
-    const anilistApiClient = useApiClient(API_TYPES.ANILIST, {
-        setAuth: (isAuthenticated) => setIsAuth((prev) => ({ ...prev, anilist: isAuthenticated })),
-        setLoading,
-    })
-    const spotifyApiClient = useApiClient(API_TYPES.SPOTIFY, {
-        setAuth: (isAuthenticated) => setIsAuth((prev) => ({ ...prev, spotify: isAuthenticated })),
-        setLoading,
-    })
+    /* ------------------------------- API Clients ------------------------------ */
+    const appApiClient = useApiClient(API_TYPE.APP, (isAuthenticated) => setIsAuth((prev) => ({ ...prev, app: isAuthenticated })))
+    const anilistApiClient = useApiClient(API_TYPE.ANILIST, (isAuthenticated) => setIsAuth((prev) => ({ ...prev, anilist: isAuthenticated })))
+    const spotifyApiClient = useApiClient(API_TYPE.SPOTIFY, (isAuthenticated) => setIsAuth((prev) => ({ ...prev, spotify: isAuthenticated })))
 
     const checkAuth = useCallback(
         async (apiType) => {
@@ -48,13 +39,13 @@ export const AuthTokenProvider = ({ children }) => {
             abortControllerRef.current = new AbortController()
             setLoading(true)
             try {
-                if (apiType === API_TYPES.APP) {
+                if (apiType === API_TYPE.APP) {
                     // Example: Uncomment this line when the API is ready
                     // const { data } = await appApiClient.post(API_ROUTES.APP.CHECK_AUTH);
                     // setIsAuth((prev) => ({ ...prev, app: data.success }));
                     // console.log('Checked App authentication.')
-                } else if (apiType === API_TYPES.ANILIST) {
-                    const { data } = await anilistApiClient.post(API_ROUTES.ANIME_HUB.CHECK_AUTH, { signal: abortControllerRef.current.signal })
+                } else if (apiType === API_TYPE.ANILIST) {
+                    const { data } = await anilistApiClient.post(API_ROUTES.ANILIST.CHECK_AUTH, { signal: abortControllerRef.current.signal })
                     setIsAuth((prev) => ({ ...prev, anilist: data.success }))
                     // console.log('Checked AniList authentication.')
                 }
@@ -71,9 +62,9 @@ export const AuthTokenProvider = ({ children }) => {
     useEffect(() => {
         ;(async () => {
             // console.log('AuthTokenProvider: Initializing authentication checks.')
-            // await checkAuth(API_TYPES.APP)
-            await checkAuth(API_TYPES.ANILIST)
-            // await checkAuth(API_TYPES.SPOTIFY)
+            // await checkAuth(API_TYPE.APP)
+            await checkAuth(API_TYPE.ANILIST)
+            // await checkAuth(API_TYPE.SPOTIFY)
         })()
     }, [])
 

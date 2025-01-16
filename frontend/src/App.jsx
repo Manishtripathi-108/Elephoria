@@ -16,10 +16,11 @@ const Home = lazy(() => import('./pages/Home'))
 const Page404 = lazy(() => import('./pages/Page404'))
 const Shadows = lazy(() => import('./pages/ShadowsGrid'))
 const Anilist = lazy(() => import('./pages/anilist/Anilist'))
-const AnilistLogin = lazy(() => import('./pages/anilist/AnilistLogin'))
+const AnilistLogin = lazy(() => import('./components/PlatformLogin').then((module) => ({ default: module.AnilistLogin })))
+const AnilistRedirect = lazy(() => import('./components/PlatformRedirect').then((module) => ({ default: module.AnilistRedirect })))
 const AudioMetaExtractor = lazy(() => import('./pages/audio/AudioMetaExtractor'))
-const SpotifyLogin = lazy(() => import('./pages/spotify/SpotifyLogin'))
-const SpotifyRedirect = lazy(() => import('./pages/spotify/SpotifyRedirect'))
+const SpotifyLogin = lazy(() => import('./components/PlatformLogin').then((module) => ({ default: module.SpotifyLogin })))
+const SpotifyRedirect = lazy(() => import('./components/PlatformRedirect').then((module) => ({ default: module.SpotifyRedirect })))
 const TicTacToe = lazy(() => import('./pages/games/tic-tac-toe/TicTacToe'))
 const ClassicTicTacToe = lazy(() => import('./pages/games/tic-tac-toe/ClassicTicTacToe'))
 const UltimateTicTacToe = lazy(() => import('./pages/games/tic-tac-toe/UltimateTicTacToe'))
@@ -30,8 +31,12 @@ const withSuspense = (Component, props = {}) => (
         <Component />
     </Suspense>
 )
-
-const withProtectedRoute = (Component, isAnilistRoute = false) => <ProtectedRoute isAnilistRoute={isAnilistRoute}>{Component}</ProtectedRoute>
+const withAuthenticatedRoute = (Component, type) => <ProtectedRoute type={type}>{Component}</ProtectedRoute>
+const withUnauthenticatedRoute = (Component, type) => (
+    <ProtectedRoute type={type} reverse>
+        {Component}
+    </ProtectedRoute>
+)
 
 const router = createBrowserRouter([
     {
@@ -53,9 +58,10 @@ const router = createBrowserRouter([
             /* -------------------------------------------------------------------------- */
             {
                 path: '/anilist/:type',
-                element: withProtectedRoute(<AnilistProvider>{withSuspense(Anilist)}</AnilistProvider>, true),
+                element: withAuthenticatedRoute(<AnilistProvider>{withSuspense(Anilist)}</AnilistProvider>, 'anilist'),
             },
-            { path: '/anilist/login', element: withSuspense(AnilistLogin) },
+            { path: '/anilist/login', element: withUnauthenticatedRoute(withSuspense(AnilistLogin), 'anilist') },
+            { path: '/anilist/login/redirect', element: withUnauthenticatedRoute(withSuspense(AnilistRedirect), 'anilist') },
             /* -------------------------------------------------------------------------- */
             /*                                    Games                                   */
             /* -------------------------------------------------------------------------- */
@@ -77,8 +83,8 @@ const router = createBrowserRouter([
             /* -------------------------------------------------------------------------- */
             /*                                   Spotify                                  */
             /* -------------------------------------------------------------------------- */
-            { path: '/spotify/login', element: withSuspense(SpotifyLogin) },
-            { path: '/spotify/login/redirect', element: withSuspense(SpotifyRedirect) },
+            { path: '/spotify/login', element: withUnauthenticatedRoute(withSuspense(SpotifyLogin), 'spotify') },
+            { path: '/spotify/login/redirect', element: withUnauthenticatedRoute(withSuspense(SpotifyRedirect), 'spotify') },
 
             /* ----------------------------------- 404 ---------------------------------- */
             { path: '*', element: withSuspense(Page404) },

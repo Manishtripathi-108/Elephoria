@@ -1,8 +1,8 @@
 import axios from 'axios'
 
-import API_ROUTES, { API_TYPES } from '../constants/api.constants'
+import API_ROUTES from '../constants/api.constants'
 
-const useApiClient = (apiType, { setAuth, setLoading }) => {
+const useApiClient = (apiType, setAuth) => {
     const client = axios.create({ withCredentials: true })
     const refreshClient = axios.create({ withCredentials: true })
 
@@ -12,13 +12,12 @@ const useApiClient = (apiType, { setAuth, setLoading }) => {
             const originalRequest = error.config
 
             if (error.response?.status === 401 && !originalRequest._retry) {
-                setLoading(true)
                 originalRequest._retry = true
 
                 try {
-                    console.log('Refreshing token:-> in client', originalRequest)
+                    console.log('Refreshing token:-> in client')
 
-                    const refreshRoute = apiType === API_TYPES.APP ? API_ROUTES.APP.REFRESH_TOKEN : API_ROUTES.ANILIST.REFRESH_TOKEN
+                    const refreshRoute = API_ROUTES[apiType.toUpperCase()].REFRESH_TOKEN
                     const { data } = await refreshClient.post(refreshRoute)
 
                     if (data.success) {
@@ -32,8 +31,6 @@ const useApiClient = (apiType, { setAuth, setLoading }) => {
                     setAuth(false)
                     console.error('Error during token refresh:', err)
                     throw err
-                } finally {
-                    setLoading(false)
                 }
             }
 

@@ -71,7 +71,6 @@ const AudioMetaExtractor = () => {
                 },
             })
 
-            console.log('Upload Response:', response.data)
             if (response.data?.success) {
                 window.addToast('Metadata extracted successfully!', 'success')
                 const { metadata, coverImage, audioFileName } = response.data
@@ -81,9 +80,10 @@ const AudioMetaExtractor = () => {
                 throw new Error(response.data?.message || 'Metadata extraction failed.')
             }
         } catch (err) {
-            if (!err.name === 'CanceledError') console.error('Upload failed:', err)
-            setUploadState({ ...INITIAL_UPLOAD_STATE, errorMessage: err.response?.data?.message || err.message || 'Metadata extraction failed.' })
-            window.addToast(err.response?.data?.message || err.message || 'Metadata extraction failed.', 'error')
+            if (!err.name === 'CanceledError') {
+                setUploadState({ ...INITIAL_UPLOAD_STATE, errorMessage: err.response?.data?.message || err.message || 'Metadata extraction failed.' })
+                window.addToast(err.response?.data?.message || err.message || 'Metadata extraction failed.', 'error')
+            }
         }
     }
 
@@ -167,7 +167,7 @@ const AudioMetaExtractor = () => {
                             <button onClick={() => resetStates('idle')} className="button">
                                 Edit More
                             </button>
-                            <Link to={APP_ROUTES.ROOT} className="button">
+                            <Link to={APP_ROUTES.INDEX} className="button">
                                 Home
                             </Link>
                         </div>

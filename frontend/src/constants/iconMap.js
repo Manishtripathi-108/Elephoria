@@ -1,5 +1,6 @@
 const iconMap = {
     anime: 'custom:anime',
+    anilist: 'simple-icons:anilist',
     arrowOpenLeft: 'line-md:arrow-open-left',
     arrowOpenRight: 'line-md:arrow-open-right',
     broom: 'game-icons:broom',

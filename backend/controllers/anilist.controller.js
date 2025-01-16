@@ -24,7 +24,12 @@ const handleTokenResponse = (res, data) => {
 
 export const handleCodeExchange = async (req, res) => {
     try {
-        const data = await exchangeCodeForToken(req.body.pin);
+        const code = req.body.code;
+        if (!code) {
+            return res.status(400).json({ message: 'Invalid code.' });
+        }
+
+        const data = await exchangeCodeForToken(code);
         return handleTokenResponse(res, data);
     } catch (error) {
         return anilistErrorResponse(res, 'Failed to Login. Please try again', error);

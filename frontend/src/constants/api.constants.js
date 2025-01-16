@@ -1,4 +1,8 @@
 const API_ROUTES = {
+    APP: {
+        CHECK_AUTH: '/api/app/check-auth',
+        REFRESH_TOKEN: '/api/app/refresh-token',
+    },
     TOKEN_FETCH: '/api/token',
     AUDIO: {
         UPLOAD: '/api/audio/upload',
@@ -23,12 +27,17 @@ const API_ROUTES = {
         TOGGLE_FAVOURITE: '/api/anilist/toggle-favourite',
         DELETE: '/api/anilist/delete',
     },
+    SPOTIFY: {
+        CHECK_AUTH: '/api/spotify/check-auth',
+        LOGIN: '/api/spotify/login',
+        REFRESH_TOKEN: '/api/spotify/refresh-token',
+    },
     LOGS: {
         FRONTEND: '/api/logs/frontend',
     },
 }
 
-export const API_TYPES = {
+export const API_TYPE = {
     APP: 'app',
     ANILIST: 'anilist',
     SPOTIFY: 'spotify',

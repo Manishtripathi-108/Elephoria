@@ -1,28 +1,26 @@
 const APP_ROUTES = {
-    ROOT: '/',
+    INDEX: '/',
     SHADOWS: '/shadows',
     AUDIO: {
         TAGS_EDITOR: '/audio/tags-editor',
     },
     ANILIST: {
+        INDEX: '/anilist/anime',
         ANIME: '/anilist/anime',
         MANGA: '/anilist/manga',
         FAVOURITES: '/anilist/favourites',
         IMPORT_EXPORT: '/anilist/import-export',
         LOGIN: '/anilist/login',
     },
-    ANILIST: {
-        ROOT: '/anilist',
-        LOGIN: '/anilist/auth',
-    },
     GAMES: {
         TIC_TAC_TOE: {
-            ROOT: '/games/tic-tac-toe',
+            INDEX: '/games/tic-tac-toe/classic',
             CLASSIC: '/games/tic-tac-toe/classic',
             ULTIMATE: '/games/tic-tac-toe/ultimate',
         },
     },
     SPOTIFY: {
+        INDEX: '/',
         LOGIN: '/spotify/login',
     },
     NOT_FOUND: '*',

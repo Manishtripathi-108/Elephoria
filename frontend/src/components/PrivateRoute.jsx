@@ -6,28 +6,44 @@ import APP_ROUTES from '../constants/app.constants'
 import useAuthToken from '../context/AuthTokenContext'
 import Loading from './Loading'
 
-const ProtectedRoute = ({ children, isAnilistRoute = false }) => {
+/**
+ * ProtectedRoute Component
+ * Redirects users based on their authentication status and type.
+ *
+ * @param {React.ReactNode} children - The content to render if the user passes the authentication check.
+ * @param {string} type - The type of authentication to validate (e.g., 'user', 'admin').
+ * @param {boolean} [reverse=false] - If true, redirects authenticated users instead of unauthenticated ones.
+ * @returns {React.ReactNode} The children or a redirection.
+ */
+const ProtectedRoute = ({ children, type, reverse = false }) => {
     const { loading, isAuth } = useAuthToken()
     const navigate = useNavigate()
-    // console.log('ProtectedRoute:', { loading, isAuth, isAnilistRoute })
+
+    // Helper to determine if the user satisfies the authentication condition
+    const isAuthorized = reverse ? !isAuth?.[type.toLowerCase()] : isAuth?.[type.toLowerCase()]
+
+    // Get the appropriate redirection route
+    const getRedirectRoute = () => {
+        const typeKey = type.toUpperCase()
+        if (reverse) {
+            return APP_ROUTES[typeKey]?.INDEX || '/'
+        } else {
+            window.addToast(`Please login to ${typeKey} to continue`, 'info')
+            return APP_ROUTES[typeKey]?.LOGIN || '/login'
+        }
+    }
 
     useEffect(() => {
-        if (loading) return
-        if (isAnilistRoute && !isAuth.anilist) {
-            window.addToast('Please login to Anilist to continue', 'info')
-            navigate(APP_ROUTES.ANILIST.LOGIN, { replace: true })
-        } else if (!isAnilistRoute && !isAuth.app) {
-            console.log('Navigating to root login route')
-            navigate(APP_ROUTES.ROOT, { replace: true })
+        if (!loading && !isAuthorized) {
+            navigate(getRedirectRoute(), { replace: true })
         }
-    }, [loading, isAuth, isAnilistRoute, navigate])
+    }, [loading, isAuthorized, navigate])
 
+    // Show loading state while authentication status is being determined
     if (loading) return <Loading />
 
-    // Render children only if isAuth are valid
-    if ((isAnilistRoute && !isAuth.anilist) || (!isAnilistRoute && !isAuth.app)) return null
-
-    return children
+    // Render children if authorized, otherwise render nothing
+    return isAuthorized ? children : null
 }
 
 export default ProtectedRoute
