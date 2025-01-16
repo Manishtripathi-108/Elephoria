@@ -1,5 +1,4 @@
 import {
-    exchangeCodeForToken,
     fetchUserData,
     fetchUserMedia,
     fetchUserFavourites,
@@ -8,33 +7,7 @@ import {
     toggleFavourite,
     deleteMediaEntry,
 } from '../services/anilist.service.js';
-import { setSecureCookie } from '../utils/cookie.utils.js';
 import { successResponse, anilistErrorResponse } from '../utils/response.utils.js';
-
-const handleTokenResponse = (res, data) => {
-    if (data.access_token) {
-        setSecureCookie(res, 'anilistAccessToken', data.access_token, data.expires_in);
-        setSecureCookie(res, 'anilistRefreshToken', data.refresh_token);
-
-        return successResponse(res);
-    } else {
-        return anilistErrorResponse(res, 'Failed to Login. Please try again', data);
-    }
-};
-
-export const handleCodeExchange = async (req, res) => {
-    try {
-        const code = req.body.code;
-        if (!code) {
-            return res.status(400).json({ message: 'Invalid code.' });
-        }
-
-        const data = await exchangeCodeForToken(code);
-        return handleTokenResponse(res, data);
-    } catch (error) {
-        return anilistErrorResponse(res, 'Failed to Login. Please try again', error);
-    }
-};
 
 export const getUserData = async (req, res) => {
     try {

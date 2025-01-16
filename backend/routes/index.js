@@ -1,4 +1,4 @@
-import refreshAllTokens from '../services/refreshAllTokens.service.js';
+import checkAllAuthStatus from '../middlewares/auth.middleware.js';
 import anilistRoutes from './anilist.routes.js';
 import audioRoutes from './audio.routes.js';
 import logs from './logs.routes.js';
@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
         message: 'Welcome to the Elephoria API!',
     });
 });
-router.post('/token', refreshAllTokens);
+router.post('/check-all-auth', checkAllAuthStatus);
 router.use('/anilist', anilistRoutes);
 router.use('/audio', audioRoutes);
 router.use('/spotify', spotifyRoutes);

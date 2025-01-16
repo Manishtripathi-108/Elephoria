@@ -1,34 +1,4 @@
 import anilistConfig from '../config/anilist.config.js';
-import { backendLogger } from '../utils/logger.utils.js';
-
-const exchangeCodeForToken = async (pin) => {
-    const response = await anilistConfig.post('https://anilist.co/api/v2/oauth/token', {
-        grant_type: 'authorization_code',
-        client_id: process.env.ANILIST_CLIENT_ID,
-        client_secret: process.env.ANILIST_CLIENT_SECRET,
-        redirect_uri: process.env.ANILIST_REDIRECT_URI,
-        code: pin,
-    });
-
-    return response.data;
-};
-
-const renewAniListToken = async (refreshToken) => {
-    const response = await anilistConfig.post('https://anilist.co/api/v2/oauth/token', {
-        grant_type: 'refresh_token',
-        refresh_token: refreshToken,
-        client_id: process.env.ANILIST_CLIENT_ID,
-        client_secret: process.env.ANILIST_CLIENT_SECRET,
-    });
-
-    backendLogger.info('Renewed AniList token', {
-        userId: response.data.user_id,
-    });
-
-    response.data.expires_in = parseInt(response.data.expires_in) / 1000;
-
-    return response.data;
-};
 
 const fetchUserId = async (token) => {
     const query = `
@@ -360,8 +330,6 @@ const deleteMediaEntry = async (token, entryId) => {
 };
 
 export {
-    exchangeCodeForToken,
-    renewAniListToken,
     fetchUserId,
     fetchUserData,
     fetchUserMedia,

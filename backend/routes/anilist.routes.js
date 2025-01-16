@@ -1,5 +1,4 @@
 import {
-    handleCodeExchange,
     getUserData,
     getUserMedia,
     getUserMediaIds,
@@ -10,25 +9,25 @@ import {
     toggleFavouriteMedia,
     deleteMedia,
 } from '../controllers/anilist.controller.js';
-import verifyAuth from '../middlewares/auth.middleware.js';
-import { refreshAnilistToken } from '../services/refreshAllTokens.service.js';
+import { anilistGetAccessToken, refreshAniListToken } from '../controllers/auth.controller.js';
+import { verifyAnilistAuth } from '../middlewares/auth.middleware.js';
 import { Router } from 'express';
 
 const router = Router();
 
-router.post('/login', handleCodeExchange);
-router.post('/refresh-token', refreshAnilistToken);
-router.post('/check-auth', verifyAuth, (req, res) => res.status(200).json({ success: true }));
+router.post('/login', anilistGetAccessToken);
+router.post('/refresh-token', refreshAniListToken);
+router.post('/check-auth', verifyAnilistAuth, (req, res) => res.status(200).json({ success: true }));
 
-router.post('/user-data', verifyAuth, getUserData);
-router.post('/user-media', verifyAuth, getUserMedia);
-router.post('/user-media-ids', verifyAuth, getUserMediaIds);
-router.post('/favourite', verifyAuth, getUserFavourites);
-router.post('/anilist-ids', verifyAuth, getAniListIds);
+router.post('/user-data', verifyAnilistAuth, getUserData);
+router.post('/user-media', verifyAnilistAuth, getUserMedia);
+router.post('/user-media-ids', verifyAnilistAuth, getUserMediaIds);
+router.post('/favourite', verifyAnilistAuth, getUserFavourites);
+router.post('/anilist-ids', verifyAnilistAuth, getAniListIds);
 
-router.post('/save', verifyAuth, saveMedia);
-router.post('/toggle-favourite', verifyAuth, toggleFavouriteMedia);
-router.post('/delete', verifyAuth, deleteMedia);
+router.post('/save', verifyAnilistAuth, saveMedia);
+router.post('/toggle-favourite', verifyAnilistAuth, toggleFavouriteMedia);
+router.post('/delete', verifyAnilistAuth, deleteMedia);
 router.post('/logout', logoutUser);
 
 export default router;
