@@ -31,6 +31,7 @@ const API_ROUTES = {
 export const API_TYPES = {
     APP: 'app',
     ANILIST: 'anilist',
+    SPOTIFY: 'spotify',
 }
 
 // Dynamic API Endpoints

@@ -11,7 +11,7 @@ import UploadInput from '../../components/common/form/UploadInput'
 import API_ROUTES from '../../constants/api.constants'
 import APP_ROUTES from '../../constants/app.constants'
 import iconMap from '../../constants/iconMap'
-import { useAuthToken } from '../../context/AuthTokenProvider'
+import useAuthToken from '../../context/AuthTokenContext'
 import AudioMetadataEditor from './AudioMetaEditor'
 
 const INITIAL_UPLOAD_STATE = {

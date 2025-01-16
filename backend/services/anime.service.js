@@ -1,17 +1,8 @@
-import anilistApi from '../config/anilist.config.js';
+import anilistConfig from '../config/anilist.config.js';
 import { backendLogger } from '../utils/logger.utils.js';
 
-// const fetchAnimeList = async (req) => {
-// 	const response = await anilistApi.post("/", {
-// 		query: req.body.query,
-// 		variables: req.body.variables,
-// 	});
-
-// 	return res.json(response.data);
-// };
-
 const exchangeCodeForToken = async (pin) => {
-    const response = await anilistApi.post('https://anilist.co/api/v2/oauth/token', {
+    const response = await anilistConfig.post('https://anilist.co/api/v2/oauth/token', {
         grant_type: 'authorization_code',
         client_id: process.env.ANILIST_CLIENT_ID,
         client_secret: process.env.ANILIST_CLIENT_SECRET,
@@ -23,7 +14,7 @@ const exchangeCodeForToken = async (pin) => {
 };
 
 const renewAniListToken = async (refreshToken) => {
-    const response = await anilistApi.post('https://anilist.co/api/v2/oauth/token', {
+    const response = await anilistConfig.post('https://anilist.co/api/v2/oauth/token', {
         grant_type: 'refresh_token',
         refresh_token: refreshToken,
         client_id: process.env.ANILIST_CLIENT_ID,
@@ -48,7 +39,7 @@ const fetchUserId = async (token) => {
         }
     `;
 
-    const response = await anilistApi.post(
+    const response = await anilistConfig.post(
         '/',
         { query },
         {
@@ -73,7 +64,7 @@ const fetchUserData = async (token) => {
         }
     `;
 
-    const response = await anilistApi.post(
+    const response = await anilistConfig.post(
         '/',
         { query },
         {
@@ -150,7 +141,7 @@ const fetchUserMedia = async (token, userId, mediaType, onlyIds = false) => {
 
     const query = onlyIds ? onlyIdsQuery : allMedia;
 
-    const response = await anilistApi.post(
+    const response = await anilistConfig.post(
         '/',
         {
             query,
@@ -230,7 +221,7 @@ const fetchUserFavourites = async (token, userId) => {
         }
     `;
 
-    const response = await anilistApi.post(
+    const response = await anilistConfig.post(
         '/',
         { query, variables: { userId } },
         {
@@ -255,7 +246,7 @@ const fetchAniListIds = async (malIds, mediaType) => {
         }
     `;
 
-    const response = await anilistApi.post('/', {
+    const response = await anilistConfig.post('/', {
         query,
         variables: {
             idMals: malIds,
@@ -277,7 +268,7 @@ const saveMediaEntry = async (token, mediaId, status, progress) => {
         }
     `;
 
-    const response = await anilistApi.post(
+    const response = await anilistConfig.post(
         '/',
         {
             query: mutation,
@@ -322,7 +313,7 @@ const toggleFavourite = async (token, mediaId, mediaType) => {
     // Choose the correct mutation based on mediaType
     const mutation = mediaType === 'anime' ? mutationAnime : mutationManga;
 
-    const response = await anilistApi.post(
+    const response = await anilistConfig.post(
         '/',
         {
             query: mutation,
@@ -352,7 +343,7 @@ const deleteMediaEntry = async (token, entryId) => {
 		}
 	`;
 
-    const response = await anilistApi.post(
+    const response = await anilistConfig.post(
         '/',
         {
             query: mutation,

@@ -22,6 +22,9 @@ const APP_ROUTES = {
             ULTIMATE: '/games/tic-tac-toe/ultimate',
         },
     },
+    SPOTIFY: {
+        LOGIN: '/spotify/login',
+    },
     NOT_FOUND: '*',
 }
 

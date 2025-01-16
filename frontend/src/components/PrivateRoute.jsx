@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import APP_ROUTES from '../constants/app.constants'
-import { useAuthToken } from '../context/AuthTokenProvider'
+import useAuthToken from '../context/AuthTokenContext'
 import Loading from './Loading'
 
 const ProtectedRoute = ({ children, isAnilistRoute = false }) => {

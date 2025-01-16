@@ -17,10 +17,10 @@ const AuthTokenContext = createContext()
  * @property {Object} appApiClient - API client for the app.
  * @property {Object} anilistApiClient - API client for AniList.
  */
-export const useAuthToken = () => useContext(AuthTokenContext)
+const useAuthToken = () => useContext(AuthTokenContext)
 
-const AuthTokenProvider = ({ children }) => {
-    const [isAuth, setIsAuth] = useState({ app: false, anilist: false })
+export const AuthTokenProvider = ({ children }) => {
+    const [isAuth, setIsAuth] = useState({ app: false, anilist: false, spotify: false })
     const [loading, setLoading] = useState(true)
     const abortControllerRef = useRef(null)
 
@@ -31,6 +31,10 @@ const AuthTokenProvider = ({ children }) => {
     })
     const anilistApiClient = useApiClient(API_TYPES.ANILIST, {
         setAuth: (isAuthenticated) => setIsAuth((prev) => ({ ...prev, anilist: isAuthenticated })),
+        setLoading,
+    })
+    const spotifyApiClient = useApiClient(API_TYPES.SPOTIFY, {
+        setAuth: (isAuthenticated) => setIsAuth((prev) => ({ ...prev, spotify: isAuthenticated })),
         setLoading,
     })
 
@@ -69,6 +73,7 @@ const AuthTokenProvider = ({ children }) => {
             // console.log('AuthTokenProvider: Initializing authentication checks.')
             // await checkAuth(API_TYPES.APP)
             await checkAuth(API_TYPES.ANILIST)
+            // await checkAuth(API_TYPES.SPOTIFY)
         })()
     }, [])
 
@@ -82,10 +87,11 @@ const AuthTokenProvider = ({ children }) => {
                 checkAuth,
                 appApiClient,
                 anilistApiClient,
+                spotifyApiClient,
             }}>
             {children}
         </AuthTokenContext.Provider>
     )
 }
 
-export default AuthTokenProvider
+export default useAuthToken

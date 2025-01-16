@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 // Load environment variables
 dotenv.config();
 
-const anilistConfig = axios.create({
+const spotifyConfig = axios.create({
     baseURL: process.env.ANILIST_API_URL,
     headers: {
         'Content-Type': 'application/json',
@@ -12,6 +12,6 @@ const anilistConfig = axios.create({
     },
 });
 
-console.log('Anilist API configured!');
+console.log('Spotify API configured!');
 
-export default anilistConfig;
+export default spotifyConfig;

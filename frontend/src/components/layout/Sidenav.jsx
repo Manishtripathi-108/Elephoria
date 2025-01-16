@@ -15,6 +15,8 @@ export const sidenavMenuItems = [
         children: [
             { name: 'Anime', link: APP_ROUTES.ANILIST.ANIME },
             { name: 'Manga', link: APP_ROUTES.ANILIST.MANGA },
+            { name: 'Favourites', link: APP_ROUTES.ANILIST.FAVOURITES },
+            { name: 'Import/Export', link: APP_ROUTES.ANILIST.IMPORT_EXPORT },
         ],
     },
     {
@@ -40,7 +42,7 @@ export const sidenavMenuItems = [
         title: 'Profile',
         badge: 14,
         icon: iconMap.person,
-        link: '/profile',
+        link: APP_ROUTES.SPOTIFY.LOGIN,
     },
 ]
 
