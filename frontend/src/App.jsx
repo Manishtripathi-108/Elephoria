@@ -6,7 +6,7 @@ import LoadingState from './components/Loading'
 import ProtectedRoute from './components/PrivateRoute'
 import RootLayout from './components/layout/RootLayout'
 import { AnilistProvider } from './context/AnilistContext'
-import AuthTokenProvider from './context/AuthTokenProvider'
+import { AuthTokenProvider } from './context/AuthTokenContext'
 import { LoadingBarProvider } from './context/LoadingBarContext'
 import { TicTacToeProvider } from './context/TicTacToe/TicTacToeContext'
 import './utils/iconUtils'
@@ -18,6 +18,8 @@ const Shadows = lazy(() => import('./pages/ShadowsGrid'))
 const Anilist = lazy(() => import('./pages/anilist/Anilist'))
 const AnilistLogin = lazy(() => import('./pages/anilist/AnilistLogin'))
 const AudioMetaExtractor = lazy(() => import('./pages/audio/AudioMetaExtractor'))
+const SpotifyLogin = lazy(() => import('./pages/spotify/SpotifyLogin'))
+const SpotifyRedirect = lazy(() => import('./pages/spotify/SpotifyRedirect'))
 const TicTacToe = lazy(() => import('./pages/games/tic-tac-toe/TicTacToe'))
 const ClassicTicTacToe = lazy(() => import('./pages/games/tic-tac-toe/ClassicTicTacToe'))
 const UltimateTicTacToe = lazy(() => import('./pages/games/tic-tac-toe/UltimateTicTacToe'))
@@ -72,6 +74,13 @@ const router = createBrowserRouter([
                     },
                 ],
             },
+            /* -------------------------------------------------------------------------- */
+            /*                                   Spotify                                  */
+            /* -------------------------------------------------------------------------- */
+            { path: '/spotify/login', element: withSuspense(SpotifyLogin) },
+            { path: '/spotify/login/redirect', element: withSuspense(SpotifyRedirect) },
+
+            /* ----------------------------------- 404 ---------------------------------- */
             { path: '*', element: withSuspense(Page404) },
         ],
     },

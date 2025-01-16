@@ -42,6 +42,7 @@ const iconMap = {
     settingsOutlined: 'solar:settings-outline',
     share: 'solar:share-bold-duotone',
     showPassword: 'line-md:watch-off-loop',
+    spotify: 'line-md:spotify-filled',
     success: 'line-md:confirm-circle-filled',
     sun: 'meteocons:clear-day-fill',
     trash: 'entypo:trash',

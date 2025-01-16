@@ -5,7 +5,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { exchangeCode } from '../../api/animeHubApi'
 import LoadingState from '../../components/Loading'
 import APP_ROUTES from '../../constants/app.constants'
-import { useAuthToken } from '../../context/AuthTokenProvider'
+import useAuthToken from '../../context/AuthTokenContext'
 
 const AnilistLogin = () => {
     const navigate = useNavigate()

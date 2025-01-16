@@ -8,7 +8,7 @@ import JelloButton from '../../components/common/buttons/JelloButton'
 import API_ROUTES from '../../constants/api.constants'
 import { META_TAGS } from '../../constants/audio.constants'
 import iconMap from '../../constants/iconMap'
-import { useAuthToken } from '../../context/AuthTokenProvider'
+import useAuthToken from '../../context/AuthTokenContext'
 
 const AudioMetadataEditor = ({ metadata, coverImage, audioFileName, onCancel, onSuccess }) => {
     const { appApiClient } = useAuthToken()
