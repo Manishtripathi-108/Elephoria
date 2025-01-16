@@ -4,7 +4,7 @@ import { Icon } from '@iconify/react'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
-import { deleteMediaEntry, saveMediaEntry, toggleFavourite } from '../../../api/animeHubApi'
+import { deleteMediaEntry, saveMediaEntry, toggleFavourite } from '../../../api/anilistApi'
 import Modal, { closeModal } from '../../../components/common/Modals'
 import JelloButton from '../../../components/common/buttons/JelloButton'
 import iconMap from '../../../constants/iconMap'

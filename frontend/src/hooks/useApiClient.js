@@ -18,7 +18,7 @@ const useApiClient = (apiType, { setAuth, setLoading }) => {
                 try {
                     console.log('Refreshing token:-> in client', originalRequest)
 
-                    const refreshRoute = apiType === API_TYPES.APP ? API_ROUTES.APP.REFRESH_TOKEN : API_ROUTES.ANIME_HUB.REFRESH_TOKEN
+                    const refreshRoute = apiType === API_TYPES.APP ? API_ROUTES.APP.REFRESH_TOKEN : API_ROUTES.ANILIST.REFRESH_TOKEN
                     const { data } = await refreshClient.post(refreshRoute)
 
                     if (data.success) {

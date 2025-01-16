@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { Icon } from '@iconify/react'
 
-import { logoutUser } from '../../../api/animeHubApi'
+import { logoutUser } from '../../../api/anilistApi'
 import { ConfirmationModal, openModal } from '../../../components/common/Modals'
 import iconMap from '../../../constants/iconMap'
 import { useAnimeHubContext } from '../../../context/AnimeHubContext'
@@ -15,7 +15,7 @@ const NavigationBar = () => {
 
     const handleLogOut = () => {
         logoutUser()
-            .then(() => navigate('/anime-hub/auth'))
+            .then(() => navigate('/anilist/auth'))
             .then(() => window.addToast('Logged out successfully', 'success'))
             .catch(() => window.addToast('Error logging out', 'error'))
     }
@@ -59,7 +59,7 @@ const NavigationBar = () => {
                     <button
                         type="button"
                         title="Log Out"
-                        onClick={() => openModal('anime-hub-logout-modal')}
+                        onClick={() => openModal('anilist-logout-modal')}
                         className="button inline-flex items-center justify-center gap-1 gap-2 px-2 py-2 text-sm text-nowrap text-red-500 md:gap-2 md:px-4 md:py-2 md:text-base dark:text-red-500">
                         <Icon icon={iconMap.logOut} className="size-4 shrink-0 md:size-5" />
                         Log Out
@@ -68,7 +68,7 @@ const NavigationBar = () => {
             </nav>
 
             <ConfirmationModal
-                modalId="anime-hub-logout-modal"
+                modalId="anilist-logout-modal"
                 icon={iconMap.error}
                 confirmText="Log Out"
                 isConfirmDanger={true}

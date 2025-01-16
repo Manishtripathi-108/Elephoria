@@ -3,7 +3,7 @@ import { use } from 'react'
 
 import { useParams } from 'react-router-dom'
 
-import { fetchUserMediaList } from '../api/animeHubApi'
+import { fetchUserMediaList } from '../api/anilistApi'
 import Page404 from '../pages/Page404'
 
 const AnilistContext = createContext()

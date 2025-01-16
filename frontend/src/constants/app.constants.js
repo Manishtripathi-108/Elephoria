@@ -11,9 +11,9 @@ const APP_ROUTES = {
         IMPORT_EXPORT: '/anilist/import-export',
         LOGIN: '/anilist/login',
     },
-    ANIME_HUB: {
-        ROOT: '/anime-hub',
-        LOGIN: '/anime-hub/auth',
+    ANILIST: {
+        ROOT: '/anilist',
+        LOGIN: '/anilist/auth',
     },
     GAMES: {
         TIC_TAC_TOE: {

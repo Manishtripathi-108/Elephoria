@@ -7,7 +7,7 @@ import {
     saveMediaEntry,
     toggleFavourite,
     deleteMediaEntry,
-} from '../services/anime.service.js';
+} from '../services/anilist.service.js';
 import { setSecureCookie } from '../utils/cookie.utils.js';
 import { successResponse, anilistErrorResponse } from '../utils/response.utils.js';
 

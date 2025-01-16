@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
-import { exchangeCode } from '../../api/animeHubApi'
+import { exchangeCode } from '../../api/anilistApi'
 import LoadingState from '../../components/Loading'
 import APP_ROUTES from '../../constants/app.constants'
 import useAuthToken from '../../context/AuthTokenContext'

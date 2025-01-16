@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import axios from 'axios'
 
-import { fetchAniListIds, fetchUserMediaListIDs, saveMediaEntry } from '../../api/animeHubApi'
+import { fetchAniListIds, fetchUserMediaListIDs, saveMediaEntry } from '../../api/anilistApi'
 import ProgressBar from '../../components/common/ProgressBar'
 import UploadInput from '../../components/common/form/UploadInput'
 import CorrectInvalidStatuses from './components/CorrectInvalidStatuses'

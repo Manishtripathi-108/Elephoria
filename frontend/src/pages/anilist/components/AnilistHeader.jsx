@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useState } from 'react'
 
-import { fetchUserData } from '../../../api/animeHubApi'
+import { fetchUserData } from '../../../api/anilistApi'
 
 const AnilistHeader = () => {
     const [userData, setUserData] = useState(null)

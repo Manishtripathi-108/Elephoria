@@ -1,7 +1,7 @@
 import { setSecureCookie } from '../utils/cookie.utils.js';
 import { backendLogger } from '../utils/logger.utils.js';
 import { errorResponse, successResponse } from '../utils/response.utils.js';
-import { renewAniListToken } from './anime.service.js';
+import { renewAniListToken } from './anilist.service.js';
 
 /**
  * Renews a token and stores the new tokens in secure cookies.

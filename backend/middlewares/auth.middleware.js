@@ -1,4 +1,4 @@
-import { fetchUserId } from '../services/anime.service.js';
+import { fetchUserId } from '../services/anilist.service.js';
 import jwt from 'jsonwebtoken';
 
 const verifyAuth = async (req, res, next) => {

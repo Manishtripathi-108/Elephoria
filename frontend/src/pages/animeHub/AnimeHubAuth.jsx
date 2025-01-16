@@ -6,7 +6,7 @@ import axios from 'axios'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
-import { exchangeCode } from '../../api/animeHubApi'
+import { exchangeCode } from '../../api/anilistApi'
 
 const validationSchema = Yup.object().shape({
     pin: Yup.string()
@@ -21,7 +21,7 @@ const AnimeHubAuth = () => {
         const result = await exchangeCode(values.pin)
         if (result.success) {
             window.addToast('Authorization successful!', 'success')
-            navigate('/anime-hub')
+            navigate('/anilist')
         } else {
             if (result.retryAfterSeconds) {
                 window.addToast(`Rate limit exceeded. Please try again after ${result.retryAfterSeconds} seconds.`, 'error')

@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useRef, useState } from 'react'
 
-import { fetchUserData } from '../../../api/animeHubApi'
+import { fetchUserData } from '../../../api/anilistApi'
 import { useAnimeHubContext } from '../../../context/AnimeHubContext'
 
 const Header = () => {

@@ -231,7 +231,6 @@
 }
 
 @layer base {
-
     *,
     ::after,
     ::before,
@@ -440,19 +439,19 @@
     .radio-field {
         @apply appearance-none;
 
-        &:not(:disabled, :checked):focus-visible~.radio-indicator {
+        &:not(:disabled, :checked):focus-visible ~ .radio-indicator {
             @apply outline;
         }
 
-        &:checked~.form-text {
+        &:checked ~ .form-text {
             @apply text-highlight translate-x-2;
         }
 
-        &:checked~.radio-indicator:before {
+        &:checked ~ .radio-indicator:before {
             @apply shadow-neumorphic-inset-xs;
         }
 
-        &:not(:disabled, :checked):focus~.form-text {
+        &:not(:disabled, :checked):focus ~ .form-text {
             @apply text-primary translate-x-2;
         }
     }
@@ -461,7 +460,7 @@
         @apply shadow-neumorphic-xs before:shadow-neumorphic-xs relative size-5 overflow-hidden rounded-full before:absolute before:top-[10%] before:left-[10%] before:size-4/5 before:rounded-full;
     }
 
-    &:hover .radio-field:not(:disabled, :checked)~.form-text {
+    &:hover .radio-field:not(:disabled, :checked) ~ .form-text {
         @apply text-primary translate-x-2;
     }
 }
@@ -471,22 +470,22 @@
     @apply inline-flex cursor-pointer items-center;
 
     .form-text {
-        @apply ml-2 text-base cursor-pointer;
+        @apply ml-2 cursor-pointer text-base;
     }
 
     .checkbox-field {
         @apply bg-primary checked:shadow-neumorphic-inset-xs disabled:bg-secondary checked:text-primary flex size-4 shrink-0 cursor-pointer appearance-none items-center justify-center overflow-hidden rounded-sm border text-center text-xs transition-shadow duration-300 ease-in-out checked:after:size-full checked:after:font-bold checked:after:content-['\2713'];
 
-        &:checked~.form-text {
+        &:checked ~ .form-text {
             @apply text-highlight translate-x-2;
         }
 
-        &:not(:disabled, :checked):focus~.form-text {
+        &:not(:disabled, :checked):focus ~ .form-text {
             @apply text-primary translate-x-2;
         }
     }
 
-    &:hover .checkbox-field:not(:disabled, :checked)~.form-text {
+    &:hover .checkbox-field:not(:disabled, :checked) ~ .form-text {
         @apply text-primary translate-x-2;
     }
 }

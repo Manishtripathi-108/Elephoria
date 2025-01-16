@@ -9,7 +9,7 @@ import {
     saveMedia,
     toggleFavouriteMedia,
     deleteMedia,
-} from '../controllers/anime.controller.js';
+} from '../controllers/anilist.controller.js';
 import verifyAuth from '../middlewares/auth.middleware.js';
 import { refreshAnilistToken } from '../services/refreshAllTokens.service.js';
 import { Router } from 'express';

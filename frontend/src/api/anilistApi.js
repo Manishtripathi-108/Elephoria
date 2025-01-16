@@ -30,7 +30,7 @@ const handleError = (message, error) => {
  */
 export const isAuthenticated = async (abortSignal) => {
     try {
-        const result = await axios.post(API_ROUTES.ANIME_HUB.CHECK_AUTH, { withCredentials: true, signal: abortSignal })
+        const result = await axios.post(API_ROUTES.ANILIST.CHECK_AUTH, { withCredentials: true, signal: abortSignal })
         return result.data.success
     } catch (error) {
         return false
@@ -44,7 +44,7 @@ export const isAuthenticated = async (abortSignal) => {
  */
 export const logoutUser = async (abortSignal) => {
     try {
-        const response = await axios.post(API_ROUTES.ANIME_HUB.LOGOUT, { withCredentials: true, signal: abortSignal })
+        const response = await axios.post(API_ROUTES.ANILIST.LOGOUT, { withCredentials: true, signal: abortSignal })
         return { success: response.data.success }
     } catch (error) {
         return handleError('Failed to log out. Please try again later.', error)
@@ -61,7 +61,7 @@ export const logoutUser = async (abortSignal) => {
  */
 export const exchangeCode = async (pin, abortSignal) => {
     try {
-        const response = await axios.post(API_ROUTES.ANIME_HUB.LOGIN, { pin }, { signal: abortSignal })
+        const response = await axios.post(API_ROUTES.ANILIST.LOGIN, { pin }, { signal: abortSignal })
         if (!response.data.success) {
             return { success: false, message: response.data?.message }
         }
@@ -81,7 +81,7 @@ export const exchangeCode = async (pin, abortSignal) => {
  */
 export const fetchUserData = async (abortSignal) => {
     try {
-        const response = await axios.post(API_ROUTES.ANIME_HUB.USER_DATA, { withCredentials: true, signal: abortSignal })
+        const response = await axios.post(API_ROUTES.ANILIST.USER_DATA, { withCredentials: true, signal: abortSignal })
         return {
             ...response.data,
         }
@@ -102,7 +102,7 @@ export const fetchUserMediaList = async (mediaType, abortSignal = null) => {
     try {
         mediaType = mediaType.toUpperCase()
         const favourite = mediaType === 'FAVOURITES'
-        const endpoint = favourite ? API_ROUTES.ANIME_HUB.FAVOURITE : API_ROUTES.ANIME_HUB.USER_MEDIA
+        const endpoint = favourite ? API_ROUTES.ANILIST.FAVOURITE : API_ROUTES.ANILIST.USER_MEDIA
         const response = await axios.post(endpoint, { mediaType }, { withCredentials: true, signal: abortSignal })
 
         const { success, mediaList } = response.data
@@ -131,7 +131,7 @@ export const fetchUserMediaList = async (mediaType, abortSignal = null) => {
  */
 export const fetchAniListIds = async (malIds, mediaType, abortSignal) => {
     try {
-        const response = await axios.post(API_ROUTES.ANIME_HUB.ANILIST_IDS, { malIds, mediaType }, { signal: abortSignal })
+        const response = await axios.post(API_ROUTES.ANILIST.ANILIST_IDS, { malIds, mediaType }, { signal: abortSignal })
 
         // Return AniList ID mapping and rate limit information
         return {
@@ -155,7 +155,7 @@ export const fetchAniListIds = async (malIds, mediaType, abortSignal) => {
  */
 export const fetchUserMediaListIDs = async (mediaType, abortSignal) => {
     try {
-        const response = await axios.post(API_ROUTES.ANIME_HUB.USER_MEDIA_IDS, { mediaType }, { withCredentials: true, signal: abortSignal })
+        const response = await axios.post(API_ROUTES.ANILIST.USER_MEDIA_IDS, { mediaType }, { withCredentials: true, signal: abortSignal })
         return {
             success: response.data.success,
             mediaListIDs: response.data,
@@ -176,7 +176,7 @@ export const fetchUserMediaListIDs = async (mediaType, abortSignal) => {
  */
 export const saveMediaEntry = async (mediaId, status, progress = 0, abortSignal) => {
     try {
-        const response = await axios.post(API_ROUTES.ANIME_HUB.SAVE, { mediaId, status, progress }, { withCredentials: true, signal: abortSignal })
+        const response = await axios.post(API_ROUTES.ANILIST.SAVE, { mediaId, status, progress }, { withCredentials: true, signal: abortSignal })
 
         // Return success status and rate limit information
         console.log(response.data)
@@ -202,11 +202,7 @@ export const saveMediaEntry = async (mediaId, status, progress = 0, abortSignal)
  */
 export const toggleFavourite = async (mediaId, mediaType, abortSignal) => {
     try {
-        const response = await axios.post(
-            API_ROUTES.ANIME_HUB.TOGGLE_FAVOURITE,
-            { mediaId, mediaType },
-            { withCredentials: true, signal: abortSignal }
-        )
+        const response = await axios.post(API_ROUTES.ANILIST.TOGGLE_FAVOURITE, { mediaId, mediaType }, { withCredentials: true, signal: abortSignal })
 
         return {
             success: response.data.success,
@@ -227,7 +223,7 @@ export const toggleFavourite = async (mediaId, mediaType, abortSignal) => {
  */
 export const deleteMediaEntry = async (entryId, abortSignal) => {
     try {
-        const response = await axios.post(API_ROUTES.ANIME_HUB.DELETE, { entryId }, { withCredentials: true, signal: abortSignal })
+        const response = await axios.post(API_ROUTES.ANILIST.DELETE, { entryId }, { withCredentials: true, signal: abortSignal })
 
         return {
             success: response.data,
