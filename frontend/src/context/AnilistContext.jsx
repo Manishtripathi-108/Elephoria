@@ -4,6 +4,8 @@ import { use } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { fetchUserMediaList } from '../api/anilistApi'
+import API_ROUTES from '../constants/api.constants'
+import useSafeApiCall from '../hooks/useSafeApiCall'
 import Page404 from '../pages/Page404'
 import useAuthToken from './AuthTokenContext'
 
@@ -11,54 +13,27 @@ const AnilistContext = createContext()
 
 export const AnilistProvider = ({ children }) => {
     const [watchList, setWatchList] = useState([])
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState(null)
     const [editEntry, setEditEntry] = useState(null)
-    const abortControllerRef = useRef(null)
     const params = useParams()
     const mediaType = params?.type || 'anime'
     const { anilistApiClient } = useAuthToken()
+    const { isLoading, error, makeApiCall, cancelRequest } = useSafeApiCall({ apiClient: anilistApiClient })
     console.log(mediaType)
-
-    const abortPreviousRequest = () => {
-        if (abortControllerRef.current) {
-            abortControllerRef.current.abort()
-        }
-        abortControllerRef.current = new AbortController()
-        abortControllerRef.current = new AbortController()
-    }
-
-    const fetchWatchList = useCallback(async () => {
-        try {
-            console.log('Fetching media content...')
-
-            abortPreviousRequest()
-            setLoading(true)
-            setError(null)
-            setWatchList([])
-
-            const { success, mediaList, message } = await fetchUserMediaList(mediaType, abortControllerRef.current.signal, anilistApiClient)
-
-            if (success) {
-                console.log('Media content fetched successfully.', mediaList)
-                setWatchList(mediaList)
-            } else {
-                setError(message)
-                console.warn(message)
-            }
-        } catch (error) {
-            setError('Failed to fetch media content.')
-            console.error('Error fetching media content:', error)
-        } finally {
-            setLoading(false)
-        }
-    }, [mediaType])
 
     useEffect(() => {
         if (['anime', 'manga', 'favourites'].includes(mediaType)) {
-            fetchWatchList()
+            cancelRequest('Media type changed')
+            makeApiCall({
+                url: mediaType === 'favourites' ? API_ROUTES.ANILIST.FAVOURITE : API_ROUTES.ANILIST.USER_MEDIA,
+                method: 'POST',
+                data: { mediaType },
+                onSuccess: (data) => {
+                    console.log('Media content fetched successfully.', data)
+                    setWatchList(data.mediaList)
+                },
+            })
         }
-    }, [fetchWatchList])
+    }, [mediaType])
 
     useEffect(() => {
         const editModal = document.getElementById('modal-anilist-edit-media')
@@ -68,7 +43,7 @@ export const AnilistProvider = ({ children }) => {
     }, [editEntry])
 
     return (
-        <AnilistContext.Provider value={{ mediaType, watchList, loading, error, editEntry, setEditEntry, fetchWatchList }}>
+        <AnilistContext.Provider value={{ mediaType, watchList, isLoading, error, editEntry, setEditEntry }}>
             {['anime', 'manga', 'favourites'].includes(mediaType) ? children : <Page404 />}
         </AnilistContext.Provider>
     )

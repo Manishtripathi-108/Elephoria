@@ -21,7 +21,7 @@ import NavigationBar from './components/NavigationBar'
 const ITEMS_PER_PAGE = 50
 
 const Anilist = () => {
-    const { mediaType, watchList, loading, editEntry, setEditEntry } = useAnilist()
+    const { mediaType, watchList, isLoading, editEntry, setEditEntry } = useAnilist()
     const [viewMode, setViewMode] = useState('card')
     const [filters, setFilters] = useState({})
     const [selectedTab, setSelectedTab] = useState('All')
@@ -55,7 +55,7 @@ const Anilist = () => {
         <div className="bg-inherit">
             <AnilistHeader />
 
-            {loading ? (
+            {isLoading ? (
                 <AnilistSkeleton />
             ) : (
                 <>

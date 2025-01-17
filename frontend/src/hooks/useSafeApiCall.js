@@ -43,6 +43,8 @@ function useSafeApiCall({ apiClient = axios, retryCount = 0 } = {}) {
      */
     const makeApiCall = useCallback(
         async ({ url, method = 'GET', data = null, params = null, headers = {}, responseType = 'json', onSuccess = null, onError = null }) => {
+            console.log('Making API call:', { url, method, data, params, headers, responseType })
+
             setIsLoading(true)
             setError(null)
             let attempts = 0
@@ -78,7 +80,8 @@ function useSafeApiCall({ apiClient = axios, retryCount = 0 } = {}) {
                     return // Exit on success
                 } catch (err) {
                     attempts++
-                    if (isMounted.current && (!axios.isCancel(err) || attempts > retryCount)) {
+                    if (isMounted.current && err.name !== 'CanceledError' && attempts > retryCount) {
+                        console.error('API request failed:', err)
                         setError(err.message || err.response?.data?.message || 'An error occurred')
 
                         // Trigger error callback, if provided
@@ -87,8 +90,8 @@ function useSafeApiCall({ apiClient = axios, retryCount = 0 } = {}) {
                         }
                     }
 
-                    if (axios.isCancel(err)) {
-                        console.log('Request cancelled:', err.message)
+                    if (err.name === 'CanceledError') {
+                        console.warn('Request cancelled:', err.message)
                     }
 
                     // Stop retrying if the component is unmounted or retries are exhausted
