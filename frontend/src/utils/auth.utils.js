@@ -28,6 +28,8 @@ export const redirectToAnilistLogin = () => {
     window.location.href = authUrl
 }
 
+/* -------------------------------- Exchange -------------------------------- */
+
 /**
  * Logs the user into Spotify and saves the access token in session storage
  * @param {string} code Authorization code returned by Spotify

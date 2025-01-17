@@ -98,12 +98,12 @@ export const fetchUserData = async (abortSignal) => {
  * The "mediaList" property is an array of media items, or undefined if the fetch fails.
  * If the fetch fails, the "success" property is false and an error message is provided.
  */
-export const fetchUserMediaList = async (mediaType, abortSignal = null) => {
+export const fetchUserMediaList = async (mediaType, abortSignal = null, client) => {
     try {
         mediaType = mediaType.toUpperCase()
         const favourite = mediaType === 'FAVOURITES'
         const endpoint = favourite ? API_ROUTES.ANILIST.FAVOURITE : API_ROUTES.ANILIST.USER_MEDIA
-        const response = await axios.post(endpoint, { mediaType }, { withCredentials: true, signal: abortSignal })
+        const response = await client.post(endpoint, { mediaType }, { withCredentials: true, signal: abortSignal })
 
         const { success, mediaList } = response.data
 

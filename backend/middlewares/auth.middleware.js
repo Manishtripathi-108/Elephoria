@@ -3,6 +3,8 @@ import { errorResponse, successResponse } from '../utils/response.utils.js';
 import jwt from 'jsonwebtoken';
 
 const verifyToken = (token, clientId, tokenType) => {
+    console.log(`Verifying ${tokenType} token...`);
+
     if (!token) throw new Error(`${tokenType} token missing.`);
     const decoded = jwt.decode(token);
     if (!decoded) throw new Error(`${tokenType} token is invalid.`);
@@ -36,11 +38,10 @@ export const verifyAnilistAuth = async (req, res, next) => {
 };
 
 export const verifySpotifyAuth = async (req, res, next) => {
+    console.log('Verifying spotify auth...');
     try {
         const token = req.cookies?.spotifyAccessToken;
         if (!token) return errorResponse(res, 'Unauthorized: Please log in again.', null, 401);
-
-        verifyToken(token, process.env.SPOTIFY_CLIENT_ID, 'Spotify');
 
         // Attach token to request
         req.body.spotifyAccessToken = token;
@@ -52,6 +53,8 @@ export const verifySpotifyAuth = async (req, res, next) => {
 };
 
 export const checkAllAuthStatus = async (req, res) => {
+    console.log('Checking all auth status...');
+
     const anilistToken = req.cookies?.anilistAccessToken;
     const spotifyToken = req.cookies?.spotifyAccessToken;
 
@@ -67,7 +70,6 @@ export const checkAllAuthStatus = async (req, res) => {
         }
 
         if (spotifyToken) {
-            verifyToken(spotifyToken, process.env.SPOTIFY_CLIENT_ID, 'Spotify');
             Auth.spotify = true;
         }
     } catch (error) {

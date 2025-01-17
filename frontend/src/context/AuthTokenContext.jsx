@@ -1,4 +1,6 @@
-import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+
+import axios from 'axios'
 
 import API_ROUTES, { API_TYPE } from '../constants/api.constants'
 import useApiClient from '../hooks/useApiClient'
@@ -13,9 +15,10 @@ const AuthTokenContext = createContext()
  * @property {Function} setIsAuth - Function to update the authentication state.
  * @property {boolean} loading - The loading state indicating if authentication check is in progress.
  * @property {Function} setLoading - Function to update the loading state.
- * @property {Function} checkAuth - Function to check authentication status for a given API type.
+ * @property {Function} checkAuth - Function to check the authentication status for all APIs.
  * @property {Object} appApiClient - API client for the app.
  * @property {Object} anilistApiClient - API client for AniList.
+ * @property {Object} spotifyApiClient - API client for Spotify.
  */
 const useAuthToken = () => useContext(AuthTokenContext)
 
@@ -29,60 +32,77 @@ export const AuthTokenProvider = ({ children }) => {
     const anilistApiClient = useApiClient(API_TYPE.ANILIST, (isAuthenticated) => setIsAuth((prev) => ({ ...prev, anilist: isAuthenticated })))
     const spotifyApiClient = useApiClient(API_TYPE.SPOTIFY, (isAuthenticated) => setIsAuth((prev) => ({ ...prev, spotify: isAuthenticated })))
 
-    const checkAuth = useCallback(
-        async (apiType) => {
-            apiType = apiType.toLowerCase()
+    const refreshTokens = async (data) => {
+        const refreshToken = async (route, key) => {
+            try {
+                const response = await axios.post(route)
+                setIsAuth((prev) => ({ ...prev, [key]: response?.data?.success }))
+            } catch (error) {
+                console.error(`Error refreshing ${key} token:`, error)
+            }
+        }
+
+        if (!data.app) await refreshToken(API_ROUTES.APP.REFRESH_TOKEN, 'app')
+        if (!data.anilist) await refreshToken(API_ROUTES.ANILIST.REFRESH_TOKEN, 'anilist')
+        if (!data.spotify) await refreshToken(API_ROUTES.SPOTIFY.REFRESH_TOKEN, 'spotify')
+    }
+
+    /* ------------- Checks the authentication status for all APIs. ------------- */
+    const checkAuth = useCallback(async () => {
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort()
+        }
+
+        abortControllerRef.current = new AbortController()
+        setLoading(true)
+        let currentAuth = isAuth
+        try {
+            const response = await axios.post(API_ROUTES.CHECK_ALL_AUTH, { signal: abortControllerRef.current.signal, withCredentials: true })
+
+            if (response?.data?.success) {
+                console.log('Authentication status:', response.data)
+
+                const { anilist, spotify } = response.data
+
+                currentAuth = { ...currentAuth, anilist, spotify }
+                setIsAuth((prev) => ({ ...prev, anilist, spotify }))
+            } else {
+                throw new Error('Failed to check authentication status.')
+            }
+        } catch (error) {
+            console.error('Error checking authentication status:', error)
+        } finally {
+            abortControllerRef.current = null
+            await refreshTokens(currentAuth)
+            setLoading(false)
+        }
+    }, [setIsAuth, setLoading])
+
+    useEffect(() => {
+        checkAuth()
+
+        return () => {
             if (abortControllerRef.current) {
                 abortControllerRef.current.abort()
             }
+        }
+    }, [checkAuth])
 
-            abortControllerRef.current = new AbortController()
-            setLoading(true)
-            try {
-                if (apiType === API_TYPE.APP) {
-                    // Example: Uncomment this line when the API is ready
-                    // const { data } = await appApiClient.post(API_ROUTES.APP.CHECK_AUTH);
-                    // setIsAuth((prev) => ({ ...prev, app: data.success }));
-                    // console.log('Checked App authentication.')
-                } else if (apiType === API_TYPE.ANILIST) {
-                    const { data } = await anilistApiClient.post(API_ROUTES.ANILIST.CHECK_AUTH, { signal: abortControllerRef.current.signal })
-                    setIsAuth((prev) => ({ ...prev, anilist: data.success }))
-                    // console.log('Checked AniList authentication.')
-                }
-            } catch (error) {
-                console.error(`Error checking authentication for ${apiType}:`, error)
-            } finally {
-                abortControllerRef.current = null
-                setLoading(false)
-            }
-        },
-        [appApiClient, anilistApiClient]
+    const contextValue = useMemo(
+        () => ({
+            isAuth,
+            setIsAuth,
+            loading,
+            setLoading,
+            checkAuth,
+            appApiClient,
+            anilistApiClient,
+            spotifyApiClient,
+        }),
+        [isAuth, loading, checkAuth, appApiClient, anilistApiClient, spotifyApiClient]
     )
 
-    useEffect(() => {
-        ;(async () => {
-            // console.log('AuthTokenProvider: Initializing authentication checks.')
-            // await checkAuth(API_TYPE.APP)
-            await checkAuth(API_TYPE.ANILIST)
-            // await checkAuth(API_TYPE.SPOTIFY)
-        })()
-    }, [])
-
-    return (
-        <AuthTokenContext.Provider
-            value={{
-                isAuth,
-                setIsAuth,
-                loading,
-                setLoading,
-                checkAuth,
-                appApiClient,
-                anilistApiClient,
-                spotifyApiClient,
-            }}>
-            {children}
-        </AuthTokenContext.Provider>
-    )
+    return <AuthTokenContext.Provider value={contextValue}>{children}</AuthTokenContext.Provider>
 }
 
 export default useAuthToken

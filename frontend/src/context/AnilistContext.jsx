@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom'
 
 import { fetchUserMediaList } from '../api/anilistApi'
 import Page404 from '../pages/Page404'
+import useAuthToken from './AuthTokenContext'
 
 const AnilistContext = createContext()
 
@@ -16,6 +17,7 @@ export const AnilistProvider = ({ children }) => {
     const abortControllerRef = useRef(null)
     const params = useParams()
     const mediaType = params?.type || 'anime'
+    const { anilistApiClient } = useAuthToken()
     console.log(mediaType)
 
     const abortPreviousRequest = () => {
@@ -33,8 +35,9 @@ export const AnilistProvider = ({ children }) => {
             abortPreviousRequest()
             setLoading(true)
             setError(null)
+            setWatchList([])
 
-            const { success, mediaList, message } = await fetchUserMediaList(mediaType, abortControllerRef.current.signal)
+            const { success, mediaList, message } = await fetchUserMediaList(mediaType, abortControllerRef.current.signal, anilistApiClient)
 
             if (success) {
                 console.log('Media content fetched successfully.', mediaList)

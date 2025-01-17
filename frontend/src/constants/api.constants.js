@@ -1,9 +1,9 @@
 const API_ROUTES = {
+    CHECK_ALL_AUTH: '/api/check-all-auth',
     APP: {
         CHECK_AUTH: '/api/app/check-auth',
         REFRESH_TOKEN: '/api/app/refresh-token',
     },
-    TOKEN_FETCH: '/api/token',
     AUDIO: {
         UPLOAD: '/api/audio/upload',
         EXTRACT_METADATA: '/api/audio/extract-metadata',

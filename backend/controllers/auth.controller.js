@@ -15,8 +15,11 @@ const handleTokenResponse = (res, tokenRes, type) => {
         if (type === 'anilist') {
             tokenRes.data.expires_in = parseInt(tokenRes.data.expires_in) / 1000;
         }
+
         setSecureCookie(res, `${type}AccessToken`, tokenRes.data.access_token, tokenRes.data.expires_in);
-        setSecureCookie(res, `${type}RefreshToken`, tokenRes.data.refresh_token);
+        if (tokenRes.data.refresh_token) {
+            setSecureCookie(res, `${type}RefreshToken`, tokenRes.data.refresh_token);
+        }
 
         return successResponse(res);
     } else {
@@ -101,5 +104,40 @@ export const refreshAniListToken = async (req, res) => {
         return handleTokenResponse(res, response, 'anilist');
     } catch (error) {
         return errorResponse(res, 'Unauthorized: Please log in again.', error, 401);
+    }
+};
+
+export const refreshSpotifyToken = async (req, res) => {
+    const refreshToken = req.cookies?.spotifyRefreshToken;
+
+    if (!refreshToken) {
+        return errorResponse(res, 'Unauthorized: Please log in again.', null, 401);
+    }
+
+    try {
+        const authHeader = Buffer.from(
+            `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
+        ).toString('base64');
+
+        const response = await axios.post(
+            'https://accounts.spotify.com/api/token',
+            new URLSearchParams({
+                grant_type: 'refresh_token',
+                refresh_token: refreshToken,
+            }).toString(),
+            {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    Authorization: `Basic ${authHeader}`,
+                },
+            }
+        );
+
+        //! Note: A refresh token might not be included in each response.
+        //! When a refresh token is not returned, continue using the existing token.
+        return handleTokenResponse(res, response, 'spotify');
+    } catch (err) {
+        backendLogger.error('Failed to refresh Spotify token', err);
+        return errorResponse(res, 'Unauthorized: Please log in again.', err, 401);
     }
 };

@@ -23,7 +23,7 @@ function safeStringify(obj) {
 const logFormat = format.combine(
     format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
     format.printf(({ timestamp, level, message, ...metadata }) => {
-        let logMessage = `${timestamp} [${level.toUpperCase()}]: ${message}`;
+        let logMessage = `${timestamp} [${level?.toUpperCase()}]: ${message}`;
         if (Object.keys(metadata).length > 0) {
             logMessage += ` | Metadata: ${safeStringify(metadata)}`;
         }
