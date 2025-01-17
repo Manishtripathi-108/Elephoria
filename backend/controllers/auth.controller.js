@@ -9,7 +9,7 @@ const handleTokenResponse = (res, tokenRes, type) => {
         return errorResponse(res, `Failed to Authorize with ${type}!`, tokenRes, 400);
     }
 
-    backendLogger.info(`Received ${type} token`, tokenRes.data);
+    backendLogger.info(`Refreshed ${type} token`, tokenRes.data);
 
     if (tokenRes.data.access_token) {
         if (type === 'anilist') {
