@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { Suspense, lazy, useEffect, useRef, useState } from 'react'
 
 import { Link } from 'react-router-dom'
 
@@ -12,7 +12,9 @@ import API_ROUTES from '../../constants/api.constants'
 import APP_ROUTES from '../../constants/app.constants'
 import iconMap from '../../constants/iconMap'
 import useAuthToken from '../../context/AuthTokenContext'
-import AudioMetadataEditor from './AudioMetaEditor'
+import useSafeApiCall from '../../hooks/useSafeApiCall'
+
+const AudioMetadataEditor = lazy(() => import('./AudioMetaEditor'))
 
 const INITIAL_UPLOAD_STATE = {
     status: 'idle', // idle | uploading | extracting | extracted | complete
@@ -28,75 +30,46 @@ const INITIAL_EXTRACT_STATE = {
 
 const AudioMetaExtractor = () => {
     const { appApiClient } = useAuthToken()
+    const { makeApiCall, error: apiError, cancelRequest } = useSafeApiCall({ apiClient: appApiClient })
     const [selectedAudioFile, setSelectedAudioFile] = useState(null)
     const [uploadState, setUploadState] = useState(INITIAL_UPLOAD_STATE)
     const [extractedData, setExtractedData] = useState(INITIAL_EXTRACT_STATE)
-    const abortControllerRef = useRef(null)
 
     const { status, progress, errorMessage } = uploadState
 
-    useEffect(() => {
-        return () => {
-            if (abortControllerRef.current) {
-                abortControllerRef.current.abort()
-                abortControllerRef.current = null
-            }
-        }
-    }, [])
-
-    // Handles audio file upload
     const handleExtraction = async (e) => {
-        try {
-            e.preventDefault()
+        e.preventDefault()
 
-            if (!selectedAudioFile) {
-                setUploadState({ ...INITIAL_UPLOAD_STATE, errorMessage: 'Please select an audio file to upload.' })
-                return
-            }
+        if (!selectedAudioFile) {
+            setUploadState({ ...INITIAL_UPLOAD_STATE, errorMessage: 'Please select an audio file to upload.' })
+            return
+        }
 
-            setUploadState({ ...INITIAL_UPLOAD_STATE, status: 'uploading' })
+        setUploadState({ ...INITIAL_UPLOAD_STATE, status: 'uploading' })
 
-            const formData = new FormData()
-            formData.append('audio', selectedAudioFile)
+        const formData = new FormData()
+        formData.append('audio', selectedAudioFile)
 
-            // Set up AbortController for cancellation
-            abortControllerRef.current = new AbortController()
-            const signal = abortControllerRef.current.signal
-
-            const response = await appApiClient.post(API_ROUTES.AUDIO.EXTRACT_METADATA, formData, {
-                signal,
-                onUploadProgress: (event) => {
-                    setUploadState((prev) => ({ ...prev, progress: event }))
-                    if (event.loaded === event.total) setUploadState((prev) => ({ ...prev, status: 'extracting' }))
-                },
-            })
-
-            if (response.data?.success) {
-                window.addToast('Metadata extracted successfully!', 'success')
-                const { metadata, coverImage, audioFileName } = response.data
+        makeApiCall({
+            url: API_ROUTES.AUDIO.EXTRACT_METADATA,
+            method: 'POST',
+            data: formData,
+            onUploadProgress: (event) => {
+                setUploadState((prev) => ({ ...prev, progress: event }))
+                if (event.loaded === event.total) setUploadState((prev) => ({ ...prev, status: 'extracting' }))
+            },
+            onSuccess: (data) => {
+                const { metadata, coverImage, audioFileName } = data
                 setExtractedData({ metadata, coverImage, audioFileName })
                 setUploadState({ ...INITIAL_UPLOAD_STATE, status: 'extracted' })
-            } else {
-                throw new Error(response.data?.message || 'Metadata extraction failed.')
-            }
-        } catch (err) {
-            if (!err.name === 'CanceledError') {
-                setUploadState({ ...INITIAL_UPLOAD_STATE, errorMessage: err.response?.data?.message || err.message || 'Metadata extraction failed.' })
-                window.addToast(err.response?.data?.message || err.message || 'Metadata extraction failed.', 'error')
-            }
-        }
+            },
+            onError: () => {
+                setUploadState(INITIAL_UPLOAD_STATE)
+            },
+            onEnd: () => setUploadState((prev) => ({ ...prev, status: prev.status === 'uploading' ? 'extracting' : prev.status })),
+        })
     }
 
-    // Cancels ongoing upload or metadata extraction
-    const cancelExtraction = () => {
-        if (abortControllerRef.current) {
-            abortControllerRef.current.abort()
-            abortControllerRef.current = null
-            setUploadState(INITIAL_UPLOAD_STATE)
-        }
-    }
-
-    // Resets the component states
     const resetStates = (status = 'idle') => {
         setUploadState({ ...INITIAL_UPLOAD_STATE, status })
         setExtractedData(INITIAL_EXTRACT_STATE)
@@ -126,7 +99,7 @@ const AudioMetaExtractor = () => {
                             Edit Tags
                         </JelloButton>
 
-                        {errorMessage && <p className="mt-4 text-red-500">{errorMessage}</p>}
+                        {(errorMessage || apiError) && <p className="mt-4 text-red-500">{errorMessage || apiError}</p>}
                     </div>
                 </form>
             )}
@@ -137,7 +110,10 @@ const AudioMetaExtractor = () => {
                     bytesUploaded={progress.loaded || 0}
                     totalBytes={progress.total || 0}
                     fileName={selectedAudioFile?.name || 'Unknown File'}
-                    onCancel={cancelExtraction}
+                    onCancel={() => {
+                        resetStates('idle')
+                        cancelRequest()
+                    }}
                 />
             )}
 
@@ -146,13 +122,15 @@ const AudioMetaExtractor = () => {
 
             {/* extracted */}
             {status === 'extracted' && (
-                <AudioMetadataEditor
-                    metadata={extractedData.metadata}
-                    coverImage={extractedData.coverImage}
-                    audioFileName={extractedData.audioFileName}
-                    onSuccess={() => resetStates('complete')}
-                    onCancel={() => resetStates('idle')}
-                />
+                <Suspense fallback={<LoadingState width="w-60 sm:w-96" height="h-60 sm:h-96" />}>
+                    <AudioMetadataEditor
+                        metadata={extractedData.metadata}
+                        coverImage={extractedData.coverImage}
+                        audioFileName={extractedData.audioFileName}
+                        onSuccess={() => resetStates('complete')}
+                        onCancel={() => resetStates('idle')}
+                    />
+                </Suspense>
             )}
 
             {/* Complete */}

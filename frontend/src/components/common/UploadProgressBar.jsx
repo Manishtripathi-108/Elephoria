@@ -6,16 +6,18 @@ import JelloButton from './buttons/JelloButton'
 /**
  * UploadProgressBar Component
  *
- * Displays the progress of a file upload with retry and cancel actions.
+ * Renders a progress bar for file uploads with a customizable appearance.
  *
- * Props:
- * - `bytesUploaded` (number): Number of bytes uploaded so far.
- * - `totalBytes` (number): Total number of bytes to be uploaded.
- * - `fileName` (string): Name of the file being uploaded.
- * - `className` (string): Additional classes for styling.
- * - `onRetry` (function): Callback for retrying the upload.
- * - `onCancel` (function): Callback for canceling the upload.
- * - `hasError` (boolean): Indicates if there was an error during upload.
+ * @param {number} bytesUploaded - The number of bytes already uploaded.
+ * @param {number} totalBytes - The total number of bytes to upload.
+ * @param {string} fileName - The name of the file being uploaded.
+ * @param {string} className - Additional classes to apply to the component.
+ * @param {Function} onRetry - Function to call when the user wants to retry the upload.
+ * @param {Function} onCancel - Function to call when the user wants to cancel the upload.
+ * @param {boolean} hasError - Whether the upload has failed.
+ *
+ * @returns {JSX.Element} The rendered component with file upload progress bar
+ * and visual feedback for file upload status.
  */
 const UploadProgressBar = ({ bytesUploaded, totalBytes, fileName, className, onRetry, onCancel, hasError = false }) => {
     // Helper function to format file size
@@ -67,9 +69,11 @@ const UploadProgressBar = ({ bytesUploaded, totalBytes, fileName, className, onR
                         </div>
                     </>
                 ) : (
-                    <JelloButton className="ml-auto" variant="danger" onClick={onCancel}>
-                        Cancel
-                    </JelloButton>
+                    onCancel && (
+                        <JelloButton className="ml-auto" variant="danger" onClick={onCancel}>
+                            Cancel
+                        </JelloButton>
+                    )
                 )}
             </div>
         </div>

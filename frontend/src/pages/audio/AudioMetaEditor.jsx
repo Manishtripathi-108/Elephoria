@@ -9,22 +9,13 @@ import API_ROUTES from '../../constants/api.constants'
 import { META_TAGS } from '../../constants/audio.constants'
 import iconMap from '../../constants/iconMap'
 import useAuthToken from '../../context/AuthTokenContext'
+import useSafeApiCall from '../../hooks/useSafeApiCall'
 
 const AudioMetadataEditor = ({ metadata, coverImage, audioFileName, onCancel, onSuccess }) => {
     const { appApiClient } = useAuthToken()
-
+    const { error, makeApiCall, cancelRequest } = useSafeApiCall({ apiClient: appApiClient })
     const [cover, setCover] = useState(coverImage)
-    const [error, setError] = useState(null)
     const [showAllTags, setShowAllTags] = useState(false)
-    const abortControllerRef = useRef(null)
-
-    useEffect(() => {
-        return () => {
-            if (abortControllerRef.current) {
-                abortControllerRef.current.abort()
-            }
-        }
-    }, [])
 
     const validationSchema = Yup.object({
         ...Object.entries(META_TAGS).reduce((schema, [key, { validate }]) => {
@@ -39,40 +30,37 @@ const AudioMetadataEditor = ({ metadata, coverImage, audioFileName, onCancel, on
     })
 
     const handleMetadataEdit = async (values, { setSubmitting }) => {
-        try {
-            setSubmitting(true)
-            setError(null)
+        await makeApiCall({
+            url: API_ROUTES.AUDIO.EDIT_METADATA,
+            method: 'post',
+            responseType: 'blob',
+            onStart: () => {
+                setSubmitting(true)
+                const formData = new FormData()
+                formData.append('audioFileName', audioFileName)
+                if (values.cover) formData.append('cover', values.cover || '')
+                values.cover = ''
 
-            const formData = new FormData()
-            formData.append('audioFileName', audioFileName)
-            if (values.cover) formData.append('cover', values.cover || '')
-            values.cover = ''
+                formData.append('metadata', JSON.stringify(values))
+                return formData
+            },
+            onSuccess: (data) => {
+                const url = window.URL.createObjectURL(new Blob([data]))
+                const link = document.createElement('a')
+                link.href = url
+                link.setAttribute('download', `${values.title || 'edited_audio_file'}.${audioFileName.split('.').pop()}`)
+                document.body.appendChild(link)
+                link.click()
 
-            formData.append('metadata', JSON.stringify(values))
+                link.parentNode.removeChild(link)
+                window.URL.revokeObjectURL(url)
 
-            abortControllerRef.current = new AbortController()
-            const signal = abortControllerRef.current.signal
-
-            const response = await appApiClient.post(API_ROUTES.AUDIO.EDIT_METADATA, formData, { signal, responseType: 'blob' })
-
-            const url = window.URL.createObjectURL(new Blob([response.data]))
-            const link = document.createElement('a')
-            link.href = url
-            link.setAttribute('download', `${values.title || 'edited_audio_file'}.${audioFileName.split('.').pop()}`)
-            document.body.appendChild(link)
-            link.click()
-
-            link.parentNode.removeChild(link)
-            window.URL.revokeObjectURL(url)
-
-            if (onSuccess) onSuccess()
-        } catch (error) {
-            if (error.name !== 'AbortError') {
-                setError(error.response?.data?.message || 'Failed to edit metadata.')
-            }
-        } finally {
-            setSubmitting(false)
-        }
+                if (onSuccess) onSuccess()
+            },
+            onEnd: () => {
+                setSubmitting(false)
+            },
+        })
     }
 
     const initialFormValues = {
@@ -110,6 +98,7 @@ const AudioMetadataEditor = ({ metadata, coverImage, audioFileName, onCancel, on
                                     type="file"
                                     className="sr-only"
                                     accept="image/*"
+                                    disabled={isSubmitting}
                                     onChange={(e) => {
                                         const file = e.target.files[0]
                                         setFieldValue('cover', file)
@@ -135,6 +124,7 @@ const AudioMetadataEditor = ({ metadata, coverImage, audioFileName, onCancel, on
                                             as={type === 'textarea' ? 'textarea' : 'input'}
                                             rows={type === 'textarea' ? 6 : undefined}
                                             type={type || 'text'}
+                                            disabled={isSubmitting}
                                             placeholder={placeholder}
                                             autoComplete="off"
                                             className="form-field scrollbar-thin"
@@ -169,18 +159,17 @@ const AudioMetadataEditor = ({ metadata, coverImage, audioFileName, onCancel, on
                                         variant="danger"
                                         onClick={(e) => {
                                             e.preventDefault()
-                                            abortControllerRef.current?.abort()
+                                            cancelRequest()
                                             onCancel()
                                         }}>
                                         Cancel
                                     </JelloButton>
                                 </div>
                             </div>
-
-                            {error && <p className="col-span-full text-red-500 dark:text-red-500">{error}</p>}
                         </Form>
                     )}
                 </Formik>
+                {error && <p className="col-span-full text-red-500 dark:text-red-500">{error}</p>}
             </div>
         </section>
     )
