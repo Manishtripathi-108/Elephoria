@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 
-@variant dark (&:where(.dark, .dark *));
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 @theme {
     --font-indie-flower: 'Indie Flower', cursive, serif;
@@ -13,26 +13,23 @@
     /* -------------------------------------------------------------------------- */
     /*                                   Colors                                   */
     /* -------------------------------------------------------------------------- */
-    --color-light-primary: #ffb6b9;
-    --color-light-secondary: #ffe6e6;
-    --color-light-text-primary: #333333;
-    --color-light-text-secondary: #666666;
-    --color-light-accent: #dc2626;
-    --color-light-highlight: #4169e1;
-    --color-dark-primary: #1f2937;
-    --color-dark-secondary: #334155;
-    --color-dark-text-primary: #ffffff;
-    --color-dark-text-secondary: #9ca3af;
-    --color-dark-accent: #ff6347;
-    --color-dark-highlight: #1e90ff;
+    --color-theme-primary: #ffb6b9;
+    --color-theme-secondary: #ffe6e6;
+    --color-theme-text-primary: #333333;
+    --color-theme-text-secondary: #666666;
+    --color-theme-accent: #dc2626;
+    --color-theme-highlight: #4169e1;
+    /* --------------------------------- Shadows -------------------------------- */
+    --lower-shadow: #db9d9f;
+    --upper-shadow: #ffcfd3;
 
     /* -------------------------------------------------------------------------- */
     /*                                  Gradients                                 */
     /* -------------------------------------------------------------------------- */
     --background-image-primary-gradient: linear-gradient(to left, #ffb6b9 0%, #ffe6e6 10%, #ffe6e6 90%, #ffb6b9 100%);
     --background-image-secondary-gradient: linear-gradient(to left, #ffb6b9 0%, #ffd9da 10%, #ffd9da 90%, #ffb6b9 100%);
-    --background-image-dark-primary-gradient: linear-gradient(to left, #1f2937 0%, #334155 10%, #334155 90%, #1f2937 100%);
-    --background-image-dark-secondary-gradient: linear-gradient(to left, #1f2937 0%, #575d65 10%, #575d65 90%, #1f2937 100%);
+    --background-image-primary-gradient: linear-gradient(to left, #1f2937 0%, #334155 10%, #334155 90%, #1f2937 100%);
+    --background-image-secondary-gradient: linear-gradient(to left, #1f2937 0%, #575d65 10%, #575d65 90%, #1f2937 100%);
     --background-image-yellow-gradient: linear-gradient(to left, #a37b00 0%, #ffdf20 10%, #ffdf20 90%, #a37b00 100%);
     --background-image-green-gradient: linear-gradient(to left, #009335 0%, #4ade80 10%, #4ade80 90%, #009335 100%);
     --background-image-blue-gradient: linear-gradient(to left, #003688 0%, #50a2ff 10%, #50a2ff 90%, #003688 100%);
@@ -230,62 +227,40 @@
     }
 }
 
+[data-theme='dark'] {
+    --color-theme-primary: #1f2937;
+    --color-theme-secondary: #334155;
+    --color-theme-text-primary: #ffffff;
+    --color-theme-text-secondary: #9ca3af;
+    --color-theme-accent: #ff6347;
+    --color-theme-highlight: #1e90ff;
+
+    /* --------------------------------- Shadows -------------------------------- */
+    --lower-shadow: #0c1016;
+    --upper-shadow: #324258;
+}
+
+@theme inline {
+    --color-primary: var(--color-theme-primary);
+    --color-secondary: var(--color-theme-secondary);
+    --color-text-primary: var(--color-theme-text-primary);
+    --color-text-secondary: var(--color-theme-text-secondary);
+    --color-accent: var(--color-theme-accent);
+    --color-highlight: var(--color-theme-highlight);
+}
+
 @layer base {
     *,
     ::after,
     ::before,
     ::backdrop,
     ::file-selector-button {
-        border-color: var(--color-light-secondary, currentColor);
+        border-color: var(--color-secondary, currentColor);
 
         &:where(.dark, .dark *) {
-            border-color: var(--color-dark-secondary, currentColor);
+            border-color: var(--color-secondary, currentColor);
         }
     }
-}
-
-/* -------------------------------------------------------------------------- */
-/*                                Color Scheme                                */
-/* -------------------------------------------------------------------------- */
-@utility bg-primary {
-    @apply bg-light-primary dark:bg-dark-primary;
-}
-
-@utility bg-secondary {
-    @apply bg-light-secondary dark:bg-dark-secondary;
-}
-
-@utility bg-accent {
-    @apply bg-light-accent dark:bg-dark-accent;
-}
-
-@utility bg-highlight {
-    @apply bg-light-highlight dark:bg-dark-highlight;
-}
-
-/* ------------------------------- Text Colors ------------------------------ */
-@utility text-primary {
-    @apply text-light-text-primary dark:text-dark-text-primary;
-}
-
-@utility text-secondary {
-    @apply text-light-text-secondary dark:text-dark-text-secondary;
-}
-
-@utility text-accent {
-    @apply text-light-accent dark:text-dark-accent;
-}
-
-@utility text-highlight {
-    @apply text-light-highlight dark:text-dark-highlight;
-}
-
-@utility text-theme-primary {
-    @apply text-light-primary dark:text-dark-primary;
-}
-
-@utility text-theme-secondary {
-    @apply text-light-secondary dark:text-dark-secondary;
 }
 
 @utility scrollbar-thin {
@@ -298,12 +273,12 @@
 
     /* Set the color of the scrollbar thumb */
     &::-webkit-scrollbar-thumb {
-        @apply bg-dark-secondary dark:bg-light-secondary rounded-lg;
+        @apply bg-secondary dark:bg-secondary rounded-lg;
     }
 
     /* Set the color of the scrollbar thumb on hover */
     &::-webkit-scrollbar-thumb:hover {
-        @apply bg-light-highlight dark:bg-dark-highlight;
+        @apply bg-highlight dark:bg-highlight;
     }
 
     &::-webkit-scrollbar-track {
@@ -315,16 +290,16 @@
 /*                                   Button                                   */
 /* -------------------------------------------------------------------------- */
 @utility button {
-    @apply text-secondary bg-primary shadow-neumorphic-xs cursor-pointer rounded-lg border px-4 py-2 text-center text-sm transition-all duration-300;
+    @apply text-text-secondary bg-primary shadow-neumorphic-xs cursor-pointer rounded-lg border px-4 py-2 text-center text-sm transition-all duration-300;
 
     &.active,
     &:active {
-        @apply text-primary shadow-neumorphic-inset-xs;
+        @apply text-text-primary shadow-neumorphic-inset-xs;
     }
 
     &:hover:not(.active),
     &:focus:not(.active) {
-        @apply text-primary scale-105 transform;
+        @apply text-text-primary scale-105 transform;
     }
 
     /*----------------------------------- button Variants -------------------------------- */
@@ -362,17 +337,17 @@
 
     &:has(.form-field:not(:placeholder-shown)) label,
     &:has(.form-field:focus) label {
-        @apply text-primary;
+        @apply text-text-primary;
     }
 }
 
 @utility form-text {
-    @apply text-secondary text-xs leading-3 capitalize transition-all duration-300;
+    @apply text-text-secondary text-xs leading-3 capitalize transition-all duration-300;
 }
 
 /* ---------------------------------- Field --------------------------------- */
 @utility form-field {
-    @apply bg-primary text-primary placeholder:text-secondary shadow-neumorphic-xs focus:shadow-neumorphic-inset-xs field-sizing-content w-full appearance-none rounded-lg border px-3 py-2 text-sm outline-hidden transition duration-300;
+    @apply bg-primary text-text-primary placeholder:text-text-secondary shadow-neumorphic-xs focus:shadow-neumorphic-inset-xs file:bg-accent field-sizing-content w-full appearance-none rounded-xl border px-3 py-2 text-sm outline-hidden transition duration-300 file:mr-5 file:cursor-pointer file:rounded-lg file:border-none file:px-3 file:py-2 file:text-white file:transition file:duration-200 file:ease-in-out;
 
     select& {
         @apply cursor-pointer bg-no-repeat pr-10 ring-black focus-visible:ring-1 dark:ring-white;
@@ -386,6 +361,55 @@
         @apply min-h-5;
     }
 
+    input[type='range']& {
+        @apply shadow-neumorphic-inset-xs flex h-fit cursor-pointer items-center justify-center rounded-full p-0;
+
+        &,
+        &::-webkit-slider-runnable-track,
+        &::-webkit-slider-thumb {
+            -webkit-appearance: none;
+        }
+
+        &::-webkit-slider-container {
+            /* --value-percentage: ((value - min) / (max - min)) * 100 */
+
+            @apply m-1.5 h-3 rounded-full;
+            background:
+                linear-gradient(var(--color-theme-accent), #aa1a00) 0 / var(--value-percentage) no-repeat,
+                linear-gradient(#ffd4d6, #e49fa2);
+        }
+
+        @variant dark {
+            &::-webkit-slider-container {
+                background:
+                    linear-gradient(var(--color-theme-accent), #aa1a00) 0 / var(--value-percentage) no-repeat,
+                    linear-gradient(#334760, #141b26);
+            }
+        }
+
+        &::-webkit-slider-runnable-track {
+            -webkit-user-modify: read-write !important;
+            margin: -0.375em;
+        }
+
+        &::-webkit-slider-thumb {
+            @apply size-6 cursor-ew-resize rounded-full border-5 border-transparent shadow-xs shadow-black transition-transform duration-500;
+            background:
+                linear-gradient(#d72100, var(--color-theme-accent)) padding-box,
+                linear-gradient(var(--color-theme-accent), #aa1a00) border-box;
+        }
+
+        &:focus {
+            outline: none;
+            &::-webkit-slider-thumb {
+                @apply scale-120;
+            }
+        }
+        &:focus-visible::-webkit-slider-thumb {
+            @apply outline;
+        }
+    }
+
     &:user-invalid,
     &[data-error='true'] {
         @apply border-red-500 text-red-500 dark:border-red-500 dark:text-red-500;
@@ -393,7 +417,7 @@
 }
 
 @utility form-field-wrapper {
-    @apply shadow-neumorphic-xs text-secondary hover:text-primary focus-within:text-primary flex w-full items-center justify-center divide-x rounded-lg border;
+    @apply shadow-neumorphic-xs text-text-secondary hover:text-text-primary focus-within:text-text-primary flex w-full items-center justify-center divide-x rounded-lg border;
 
     & .form-field {
         @apply my-0.5 rounded-md border-none text-inherit shadow-none;
@@ -420,7 +444,7 @@
     }
 
     &:has(.form-field:not(:placeholder-shown)) .form-icon {
-        @apply text-primary;
+        @apply text-text-primary;
     }
 
     &:has(.form-field:user-invalid) .form-icon {
@@ -452,7 +476,7 @@
         }
 
         &:not(:disabled, :checked):focus ~ .form-text {
-            @apply text-primary translate-x-2;
+            @apply text-text-primary translate-x-2;
         }
     }
 
@@ -461,7 +485,7 @@
     }
 
     &:hover .radio-field:not(:disabled, :checked) ~ .form-text {
-        @apply text-primary translate-x-2;
+        @apply text-text-primary translate-x-2;
     }
 }
 
@@ -474,19 +498,19 @@
     }
 
     .checkbox-field {
-        @apply bg-primary checked:shadow-neumorphic-inset-xs disabled:bg-secondary checked:text-primary flex size-4 shrink-0 cursor-pointer appearance-none items-center justify-center overflow-hidden rounded-sm border text-center text-xs transition-shadow duration-300 ease-in-out checked:after:size-full checked:after:font-bold checked:after:content-['\2713'];
+        @apply bg-primary checked:shadow-neumorphic-inset-xs disabled:bg-secondary checked:text-text-primary flex size-4 shrink-0 cursor-pointer appearance-none items-center justify-center overflow-hidden rounded-sm border text-center text-xs transition-shadow duration-300 ease-in-out checked:after:size-full checked:after:font-bold checked:after:content-['\2713'];
 
         &:checked ~ .form-text {
             @apply text-highlight translate-x-2;
         }
 
         &:not(:disabled, :checked):focus ~ .form-text {
-            @apply text-primary translate-x-2;
+            @apply text-text-primary translate-x-2;
         }
     }
 
     &:hover .checkbox-field:not(:disabled, :checked) ~ .form-text {
-        @apply text-primary translate-x-2;
+        @apply text-text-primary translate-x-2;
     }
 }
 

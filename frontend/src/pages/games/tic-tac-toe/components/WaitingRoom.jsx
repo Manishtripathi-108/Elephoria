@@ -76,7 +76,7 @@ const WaitingRoom = ({ onExit, onStart, playerO = '', playerX = '', roomId, room
                 className="shadow-neumorphic-md rounded-lg border border-inherit p-6">
                 <div
                     className={`shadow-neumorphic-inset-md mx-auto flex size-20 items-center justify-center rounded-full border border-inherit p-4 text-6xl md:size-44 md:text-8xl ${
-                        player ? 'text-highlight' : 'text-secondary animate-blob'
+                        player ? 'text-highlight' : 'text-text-secondary animate-blob'
                     }`}>
                     {label}
                 </div>
@@ -94,7 +94,7 @@ const WaitingRoom = ({ onExit, onStart, playerO = '', playerX = '', roomId, room
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
-            className="bg-primary text-primary flex min-h-[calc(100dvh-5rem)] flex-col items-center justify-center p-4">
+            className="bg-primary text-text-primary flex min-h-[calc(100dvh-5rem)] flex-col items-center justify-center p-4">
             {/* Room Details */}
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
@@ -105,7 +105,7 @@ const WaitingRoom = ({ onExit, onStart, playerO = '', playerX = '', roomId, room
                 <h2 className="text-accent text-2xl font-semibold md:text-4xl">{`Room: ${roomName}`}</h2>
                 <div className="mt-2 flex items-center justify-center gap-x-4">
                     <p
-                        className="hover:text-highlight text-light-secondary cursor-pointer"
+                        className="hover:text-highlight text-text-secondary cursor-pointer"
                         onClick={copyToClipboard}
                         title="Click to copy"
                         aria-label={`Room code ${roomId}`}>

@@ -101,7 +101,7 @@ const EditMedia = ({ entry = [] }) => {
             </div>
 
             {/* Title */}
-            <h2 className="text-primary font-aladin mt-4 mb-6 ml-7 text-xl leading-none font-normal tracking-widest capitalize">
+            <h2 className="text-text-primary font-aladin mt-4 mb-6 ml-7 text-xl leading-none font-normal tracking-widest capitalize">
                 {entry.media?.title?.english || entry.media?.title?.native || entry.media?.title?.romaji || 'Unknown Title'}
             </h2>
 

@@ -18,23 +18,25 @@ const MediaRow = ({ mediaItem, isFavourite = false }) => {
                 </div>
             </td>
             {/* Title and Progress (for small screens) */}
-            <td className="text-primary p-3 align-middle tracking-wide">
+            <td className="text-text-primary p-3 align-middle tracking-wide">
                 <div className="line-clamp-3 leading-5">
                     {media?.title?.english || media?.title?.native || 'Unknown Title'} (
-                    <span className="text-secondary text-sm">{media?.title?.romaji || 'Unknown romaji Title'}</span>)
+                    <span className="text-text-secondary text-sm">{media?.title?.romaji || 'Unknown romaji Title'}</span>)
                 </div>
                 {/* Display progress on small screens */}
-                <p className="text-secondary mt-1 text-sm sm:hidden">
+                <p className="text-text-secondary mt-1 text-sm sm:hidden">
                     <span className="mr-1 font-bold md:sr-only">Progress:</span>
                     {mediaItem?.progress ?? 0}/{media?.episodes ?? media?.chapters ?? 'Unknown'}
                 </p>
             </td>
             {/* Progress (for larger screens) */}
-            <td className="text-secondary hidden p-3 text-center align-middle tracking-wide sm:table-cell">
+            <td className="text-text-secondary hidden p-3 text-center align-middle tracking-wide sm:table-cell">
                 {mediaItem?.progress ?? 0}/{media?.episodes ?? media?.chapters ?? 'Unknown'}
             </td>
             {/* Media format */}
-            <td className="text-secondary hidden p-3 text-center align-middle tracking-wide sm:table-cell">{media?.format || 'Unknown Format'}</td>
+            <td className="text-text-secondary hidden p-3 text-center align-middle tracking-wide sm:table-cell">
+                {media?.format || 'Unknown Format'}
+            </td>
         </tr>
     )
 }

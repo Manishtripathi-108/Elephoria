@@ -59,7 +59,7 @@ const PlayerNameModal = () => {
     return (
         <Modal modalId="playerNameModal" showCloseButton={false} className="w-full max-w-96">
             <div className="bg-primary grid gap-5 p-5">
-                <h2 className="text-primary text-center text-xl font-bold">Set Player Names</h2>
+                <h2 className="text-text-primary text-center text-xl font-bold">Set Player Names</h2>
 
                 {/* Error Message */}
                 {validationError && (

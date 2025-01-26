@@ -10,7 +10,7 @@ const TicTacToeHeader = ({ title, playingOnline }) => {
 
     return (
         <div className={`grid border-b py-3 md:grid-cols-2 ${playingOnline ? 'grid-cols-2' : 'grid-cols-4'}`}>
-            <h1 className="text-primary flex items-center justify-center text-center text-lg font-bold tracking-wider capitalize md:text-2xl">
+            <h1 className="text-text-primary flex items-center justify-center text-center text-lg font-bold tracking-wider capitalize md:text-2xl">
                 {title}
             </h1>
             <div className={`flex flex-wrap items-center justify-center gap-3 md:col-span-1 ${playingOnline ? '' : 'col-span-3'}`}>

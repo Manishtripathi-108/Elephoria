@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useEffect, useRef, useState } from 'react'
+import React, { Suspense, lazy, useState } from 'react'
 
 import { Link } from 'react-router-dom'
 
@@ -84,8 +84,8 @@ const AudioMetaExtractor = () => {
                     onSubmit={handleExtraction}
                     className="shadow-neumorphic-lg flex w-full max-w-2xl rounded-3xl border p-2 sm:p-6">
                     <div className="grid size-full place-items-center rounded-2xl border p-6 sm:rounded-xl">
-                        <h2 className="text-primary font-aladin mb-2 text-2xl tracking-wider">Upload Audio</h2>
-                        <p className="text-primary mb-6 text-center">Upload an audio file to extract metadata and edit tags.</p>
+                        <h2 className="text-text-primary font-aladin mb-2 text-2xl tracking-wider">Upload Audio</h2>
+                        <p className="text-text-primary mb-6 text-center">Upload an audio file to extract metadata and edit tags.</p>
 
                         <UploadInput
                             acceptType="audio/*"
@@ -138,8 +138,8 @@ const AudioMetaExtractor = () => {
                 <section className="bg-primary shadow-neumorphic-sm w-full max-w-md rounded-3xl border p-2 text-center sm:p-6">
                     <div className="size-full rounded-2xl border p-6 sm:rounded-xl">
                         <Icon icon={iconMap.success} className="mx-auto mb-2 size-16 text-green-500" />
-                        <h1 className="text-primary mb-2 text-2xl font-semibold">Success!</h1>
-                        <p className="text-secondary mb-6">The meta tags for the audio file have been successfully updated.</p>
+                        <h1 className="text-text-primary mb-2 text-2xl font-semibold">Success!</h1>
+                        <p className="text-text-secondary mb-6">The meta tags for the audio file have been successfully updated.</p>
 
                         <div className="flex justify-center space-x-4">
                             <button onClick={() => resetStates('idle')} className="button">

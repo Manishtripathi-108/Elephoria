@@ -2,7 +2,7 @@ import React from 'react'
 
 const SkeletonFilter = () => {
     return (
-        <div className="bg-primary text-primary h-full w-full p-2 md:max-w-64">
+        <div className="bg-primary text-text-primary h-full w-full p-2 md:max-w-64">
             {/* Search Section Skeleton */}
             <div className="flex items-center justify-between gap-3 md:mb-4">
                 <div className="bg-secondary shadow-neumorphic-sm h-10 w-full animate-pulse rounded-sm"></div>

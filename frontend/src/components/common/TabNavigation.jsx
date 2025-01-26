@@ -38,7 +38,7 @@ const TabNavigation = ({ tabs, currentTab, setCurrentTab, className = '' }) => {
 
     return (
         <nav className={cn('bg-secondary relative flex w-fit flex-wrap gap-1 rounded-xl p-1', className)}>
-            {tabs.map((tab, index) => (
+            {tabs?.map((tab, index) => (
                 <button
                     key={index}
                     role="tab"
@@ -47,7 +47,7 @@ const TabNavigation = ({ tabs, currentTab, setCurrentTab, className = '' }) => {
                     data-selected={currentTab === tab}
                     aria-selected={currentTab === tab}
                     onClick={() => setCurrentTab(tab)}
-                    className="hover:text-primary text-secondary data-[selected=true]:text-primary z-30 flex-1 cursor-pointer rounded-lg px-4 py-2 text-sm font-medium transition-colors">
+                    className="hover:text-text-primary text-text-secondary data-[selected=true]:text-text-primary z-30 flex-1 cursor-pointer rounded-lg px-4 py-2 text-sm font-medium transition-colors">
                     {tab}
                 </button>
             ))}

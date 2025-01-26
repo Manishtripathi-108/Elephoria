@@ -82,12 +82,12 @@ const Anilist = () => {
                             </div>
                             <div className="flex items-center justify-end pr-4">
                                 <button
-                                    className={`text-primary button rounded-e-none border-r-0 p-2 shadow-none ${viewMode === 'list' ? 'active' : ''}`}
+                                    className={`text-text-primary button rounded-e-none border-r-0 p-2 shadow-none ${viewMode === 'list' ? 'active' : ''}`}
                                     onClick={() => setViewMode('list')}>
                                     <Icon icon={iconMap.list} className="size-4" />
                                 </button>
                                 <button
-                                    className={`text-primary button rounded-s-none p-2 shadow-none ${viewMode === 'card' ? 'active' : ''}`}
+                                    className={`text-text-primary button rounded-s-none p-2 shadow-none ${viewMode === 'card' ? 'active' : ''}`}
                                     onClick={() => setViewMode('card')}>
                                     <Icon icon={iconMap.card} className="size-4" />
                                 </button>

@@ -12,8 +12,8 @@ const PlatformLogin = ({ platform, icon, iconClassName, description, onAuthorize
                 <div className="rounded-xl border p-6">
                     {icon && <Icon icon={iconMap[icon]} className={`mb-6 inline-block size-20 shrink-0 ${iconClassName}`} />}
 
-                    <h1 className="text-primary mb-4 text-3xl font-bold">Login with {platform}</h1>
-                    <p className="text-secondary mb-6">{description}</p>
+                    <h1 className="text-text-primary mb-4 text-3xl font-bold">Login with {platform}</h1>
+                    <p className="text-text-secondary mb-6">{description}</p>
 
                     <button title={`Authorize with ${platform}`} type="button" onClick={onAuthorize} className="button inline-block font-semibold">
                         Authorize with {platform}

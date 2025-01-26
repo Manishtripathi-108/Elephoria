@@ -129,7 +129,7 @@ const FilterPanel = ({ data = [], onFilterUpdate, onFilterStatusChange, onFilter
     const listOptions = ['All', ...(Array.isArray(data) ? data.map((list) => list.name) : [])]
 
     return (
-        <div className="bg-primary text-primary h-full w-full p-2 md:max-w-64">
+        <div className="bg-primary text-text-primary h-full w-full p-2 md:max-w-64">
             {/* Search Input */}
             <div className="flex items-center justify-between gap-3 md:mb-4">
                 <div className="form-field-wrapper">
@@ -196,13 +196,13 @@ const FilterPanel = ({ data = [], onFilterUpdate, onFilterStatusChange, onFilter
                 </div>
 
                 <div className="mt-4 w-full">
-                    <label htmlFor="filter-year" className="form-text text-secondary flex items-center justify-between text-base">
+                    <label htmlFor="filter-year" className="form-text text-text-secondary flex items-center justify-between text-base">
                         <span>Year: {filters.year}</span>
                         <button
                             aria-label="Reset Year Filter"
                             type="button"
                             onClick={() => handleFilterChange('year', '')}
-                            className="text-secondary text-sm">
+                            className="text-text-secondary text-sm">
                             ✕
                         </button>
                     </label>

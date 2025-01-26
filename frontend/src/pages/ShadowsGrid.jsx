@@ -15,12 +15,12 @@ const shadowsLightInset = [
 const ShadowsGrid = () => {
     return (
         <div className="flex w-full flex-col items-center justify-center">
-            <div className="bg-light-primary w-full p-4 lg:p-8">
-                <h1 className="text-primary mb-8 text-center text-3xl font-bold">Neumorphic Shadows</h1>
+            <div className="bg-primary w-full p-4 lg:p-8">
+                <h1 className="text-text-primary mb-8 text-center text-3xl font-bold">Neumorphic Shadows</h1>
                 <ShadowsItem shadows={shadowsLight} />
             </div>
-            <div className="bg-light-primary w-full p-4 lg:p-8">
-                <h1 className="text-primary mb-8 text-center text-3xl font-bold">Neumorphic Inset Shadows</h1>
+            <div className="bg-primary w-full p-4 lg:p-8">
+                <h1 className="text-text-primary mb-8 text-center text-3xl font-bold">Neumorphic Inset Shadows</h1>
                 <ShadowsItem shadows={shadowsLightInset} />
             </div>
         </div>

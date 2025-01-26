@@ -17,7 +17,7 @@ const CorrectInvalidStatuses = ({ correctedStatusList, setCorrectedStatusList, v
 
     return (
         <div className="bg-primary shadow-neumorphic-lg my-3 w-full max-w-lg rounded-lg border p-6">
-            <h2 className="text-primary font-aladin mb-6 text-2xl font-semibold tracking-widest">Correct Invalid Statuses</h2>
+            <h2 className="text-text-primary font-aladin mb-6 text-2xl font-semibold tracking-widest">Correct Invalid Statuses</h2>
 
             <div className="space-y-4">
                 {correctedStatusList.map((statusItem, index) => (

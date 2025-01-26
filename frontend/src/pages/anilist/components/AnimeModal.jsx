@@ -99,7 +99,7 @@ const AnimeModal = ({ entryId, modalId, media, mediaStatus = '', mediaProgress =
             </div>
 
             {/* Title */}
-            <h2 className="text-primary font-aladin mt-4 mb-6 ml-7 text-xl leading-none font-normal tracking-widest capitalize">
+            <h2 className="text-text-primary font-aladin mt-4 mb-6 ml-7 text-xl leading-none font-normal tracking-widest capitalize">
                 {media?.title?.english || media?.title?.native || media?.title?.romaji || 'Unknown Title'}
             </h2>
 

@@ -57,8 +57,8 @@ const TicTacToe = () => {
             <TicTacToeHeader title={isPlayingOnline ? `Welcome, to ${roomName} ${roomId} (${mode})` : mode} playingOnline={isPlayingOnline} />
 
             <div className="container mx-auto grid place-items-center gap-5 px-2 py-5">
-                <div className="text-primary flex w-full max-w-4xl items-center justify-evenly">
-                    <span className="text-secondary font-julee text-4xl">{isXNext ? 'X' : 'O'}</span>
+                <div className="text-text-primary flex w-full max-w-4xl items-center justify-evenly">
+                    <span className="text-text-secondary font-julee text-4xl">{isXNext ? 'X' : 'O'}</span>
                     <h2 className="text-accent line-clamp-1 text-center text-2xl font-bold tracking-wider capitalize">{renderGameStatus()}</h2>
                     {isPlayingOnline ? (
                         <span className="text-highlight font-julee text-4xl">{playerSymbol}</span>

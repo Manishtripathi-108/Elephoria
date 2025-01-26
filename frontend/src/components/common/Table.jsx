@@ -18,7 +18,7 @@ const Table = ({ heading, columns, rows }) => {
         <div className="bg-primary w-full max-w-2xl rounded-2xl shadow-xl">
             {/* Table heading */}
             <header className="border-b border-slate-200 px-4 py-3">
-                <h2 className="text-primary font-semibold">{heading}</h2>
+                <h2 className="text-text-primary font-semibold">{heading}</h2>
             </header>
 
             {/* Table structure */}
@@ -26,7 +26,7 @@ const Table = ({ heading, columns, rows }) => {
                 <div className="scrollbar-thin overflow-x-auto">
                     <table className="w-full table-auto">
                         {/* Table header */}
-                        <thead className="text-secondary text-[13px]">
+                        <thead className="text-text-secondary text-[13px]">
                             <tr>
                                 {columns.map((column, index) => (
                                     <th
@@ -41,17 +41,17 @@ const Table = ({ heading, columns, rows }) => {
                             </tr>
                         </thead>
 
-                        <tbody className="text-primary text-sm font-medium">
+                        <tbody className="text-text-primary text-sm font-medium">
                             {rows.map((row, rowIndex) => (
                                 <tr key={rowIndex}>
                                     {row.map((cell, cellIndex) => (
                                         <td
                                             key={cellIndex}
-                                            className="last:to-light-primary dark:last:to-dark-primary border-b border-slate-200 px-5 py-3 first:pl-3 last:sticky last:right-0 last:border-none last:bg-linear-to-r last:from-transparent last:to-[12px] last:pr-3 last:pl-5">
+                                            className="last:to-primary border-b border-slate-200 px-5 py-3 first:pl-3 last:sticky last:right-0 last:border-none last:bg-linear-to-r last:from-transparent last:to-[12px] last:pr-3 last:pl-5">
                                             {cell}
                                         </td>
                                     ))}
-                                    <td className="last:to-light-primary dark:last:to-dark-primary border-b border-slate-200 px-5 py-3 first:pl-3 last:sticky last:right-0 last:border-none last:bg-linear-to-r last:from-transparent last:to-[12px] last:pr-3 last:pl-5">
+                                    <td className="last:to-primary border-b border-slate-200 px-5 py-3 first:pl-3 last:sticky last:right-0 last:border-none last:bg-linear-to-r last:from-transparent last:to-[12px] last:pr-3 last:pl-5">
                                         <NeuButton>Edit</NeuButton>
                                     </td>
                                 </tr>

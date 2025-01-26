@@ -310,8 +310,8 @@ const ImportMedia = () => {
 
             {importState.importStatus === 'IN_PROGRESS' && (
                 <>
-                    <h2 className="text-primary font-aladin text-center text-2xl font-semibold tracking-widest">Import Media</h2>
-                    <p className="text-secondary text-center tracking-wide">Import your anime or manga list from a JSON file to AniList</p>
+                    <h2 className="text-text-primary font-aladin text-center text-2xl font-semibold tracking-widest">Import Media</h2>
+                    <p className="text-text-secondary text-center tracking-wide">Import your anime or manga list from a JSON file to AniList</p>
                     <div className="mt-5 grid w-full place-items-center gap-5">
                         <ProgressBar total={importState.totalItems} current={importState.itemsProcessed} name={importState.currentItem} />
                         <button

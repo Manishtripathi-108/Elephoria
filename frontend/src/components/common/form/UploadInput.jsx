@@ -51,9 +51,9 @@ const UploadInput = ({ acceptType, className, file, id, setFile }) => {
             )}>
             <label
                 htmlFor={id}
-                className="text-highlight border-light-highlight dark:border-dark-highlight flex w-full flex-1 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed">
+                className="text-highlight border-highlight flex w-full flex-1 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed">
                 <Icon icon={file ? iconMap.success : iconMap.upload} className="size-28" />
-                <p className="text-primary p-1 text-center tracking-wider">
+                <p className="text-text-primary p-1 text-center tracking-wider">
                     {fileName !== 'Upload File' ? 'File Uploaded! Click on the button below to upload!' : 'Browse File to upload!'}
                 </p>
             </label>

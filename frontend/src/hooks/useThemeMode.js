@@ -35,12 +35,12 @@ const useThemeMode = () => {
 
     const applyTheme = (theme) => {
         if (theme === 'dark') {
-            document.documentElement.classList.add('dark')
-            setThemeColor('#1f2937') // Dark mode color
+            document.documentElement.setAttribute('data-theme', 'dark')
         } else if (theme === 'light') {
-            document.documentElement.classList.remove('dark')
-            setThemeColor('#FFB6B9') // Light mode color
+            document.documentElement.setAttribute('data-theme', 'light')
         }
+
+        setThemeColor()
     }
 
     const applySystemTheme = () => {
@@ -65,9 +65,9 @@ const useThemeMode = () => {
         handleThemeChange(nextTheme)
     }
 
-    const setThemeColor = (color) => {
-        const metaThemeColor = document.querySelector('meta[name="theme-color"]')
-        if (metaThemeColor) metaThemeColor.setAttribute('content', color)
+    const setThemeColor = () => {
+        const color = getComputedStyle(document.documentElement).getPropertyValue('--color-primary')
+        document.querySelector('meta[name="theme-color"]').setAttribute('content', color)
     }
 
     return { theme, handleThemeChange, cycleTheme }

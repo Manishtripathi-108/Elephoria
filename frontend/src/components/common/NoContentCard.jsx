@@ -9,7 +9,7 @@ const NoContentCard = ({ title, message, className }) => {
 
             <h2 className="text-accent font-aladin mb-2 text-center text-4xl font-semibold tracking-widest">No {title} Found!</h2>
 
-            <p className="text-secondary mb-4 text-center text-lg">
+            <p className="text-text-secondary mb-4 text-center text-lg">
                 {message ? message : `Unfortunately, we couldn't find any data related to ${title}.`}
             </p>
         </div>
