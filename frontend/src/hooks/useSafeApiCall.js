@@ -111,7 +111,7 @@ function useSafeApiCall({ apiClient = axios, retryCount = 0 } = {}) {
                     } catch (err) {
                         attempts++
                         if (isMounted.current && err.name !== 'CanceledError' && (attempts > retryCount || retryCount === 0)) {
-                            console.warn('[useSafeApiCall] Request failed:', err)
+                            console.error('[useSafeApiCall] Request failed:', err)
                             setError(err.response?.data?.message || err.message || 'An error occurred')
 
                             // Trigger error callback if provided
