@@ -1,6 +1,6 @@
 import cloudinary from '../config/cloudinary.config.js';
 import { backendLogger } from '../utils/logger.utils.js';
-import { cleanupFile } from '../utils/pathAndFile.utils.js';
+import { cleanupFiles } from '../utils/pathAndFile.utils.js';
 
 /**
  * Uploads a file to Cloudinary.
@@ -56,7 +56,7 @@ export const uploadFileToCloudinary = async (file, options) => {
         };
     } finally {
         if (shouldDeleteLocalFile && typeof file === 'string') {
-            cleanupFile(file);
+            cleanupFiles([file]);
         }
     }
 };

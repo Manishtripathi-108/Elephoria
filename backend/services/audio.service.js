@@ -112,7 +112,10 @@ export const editAudioMetadata = async (fileUrl, fileExtension, metadata, coverI
 
         // Attach cover image if provided
         if (coverImagePath) {
-            command.input(coverImagePath).outputOptions('-map', '0:a', '-map', '1', '-disposition:v', 'attached_pic');
+            command
+                .input(coverImagePath)
+                .outputOptions('-map', '0:a', '-map', '1', '-disposition:v', 'attached_pic')
+                .outputOptions('-metadata:s:v', 'comment=Cover (front)');
         }
 
         // Add metadata
@@ -132,5 +135,31 @@ export const editAudioMetadata = async (fileUrl, fileExtension, metadata, coverI
     } catch (error) {
         backendLogger.error('Unexpected error in editAudioMetadata', error);
         return { success: false, message: 'Failed to edit audio metadata', error };
+    }
+};
+
+export const convertAudioFormat = async (fileUrl, targetFormat, bitrate = 192, frequency = 44100) => {
+    try {
+        const outputFilePath = getTempPath('audio', `converted_${Date.now()}.${targetFormat}`);
+        await createDirectoryIfNotExists(getTempPath('audio'));
+
+        console.log('Converting audio file:', { fileUrl, targetFormat, bitrate, frequency });
+
+        await new Promise((resolve, reject) => {
+            ffmpeg(fileUrl)
+                .audioBitrate(bitrate)
+                .audioFrequency(frequency)
+                .save(outputFilePath)
+                .on('start', (cmdLine) => {
+                    console.log('FFmpeg command:', cmdLine);
+                })
+                .on('end', resolve)
+                .on('error', (error) => reject(error));
+        });
+
+        return { success: true, fileUrl: outputFilePath };
+    } catch (error) {
+        backendLogger.error('Unexpected error in convertAudioFormat', error);
+        return { success: false, message: 'Failed to convert audio format', error };
     }
 };

@@ -4,11 +4,40 @@ import { Icon } from '@iconify/react/dist/iconify.js'
 
 import TabNavigation from '../../components/common/TabNavigation'
 import JelloButton from '../../components/common/buttons/JelloButton'
+import API_ROUTES from '../../constants/api.constants'
 import iconMap from '../../constants/iconMap'
+import useAuthToken from '../../context/AuthTokenContext'
+import useSafeApiCall from '../../hooks/useSafeApiCall'
 
 const AudioConverter = () => {
-    const [quality, setQuality] = useState(128) // Default quality set to Standard (128 kbps)
-    const [format, setFormat] = useState('MP3') // Default format set to mp3
+    const { appApiClient } = useAuthToken()
+    const [quality, setQuality] = useState(128)
+    const [file, setFile] = useState(null)
+    const [format, setFormat] = useState('MP3')
+    const { isLoading, error, data, makeApiCall, cancelRequest } = useSafeApiCall(appApiClient)
+
+    const convertAudio = async () => {
+        const formData = new FormData()
+        formData.append('audio', file)
+        formData.append('format', format.toLowerCase())
+        formData.append('quality', quality)
+
+        makeApiCall({
+            url: API_ROUTES.AUDIO.CONVERT_AUDIO,
+            method: 'POST',
+            data: formData,
+            responseType: 'blob',
+            onSuccess: (response) => {
+                const url = window.URL.createObjectURL(new Blob([response]))
+                const link = document.createElement('a')
+                link.href = url
+                link.setAttribute('download', `${file.name.split('.')[0]}.${format.toLowerCase()}`)
+                document.body.appendChild(link)
+                link.click()
+                link.remove()
+            },
+        })
+    }
 
     return (
         <div className="min-h-calc-full-height text-text-secondary grid place-items-center p-2">
@@ -18,14 +47,22 @@ const AudioConverter = () => {
                         <h1 className="text-text-primary text-4xl font-bold">Audio Converter</h1>
                         <p>Upload an audio file to convert it to a different format and quality.</p>
                     </div>
+
                     {/* Step 1: File Upload */}
                     <div className="form-group flex flex-col items-center justify-center pb-6">
                         <label htmlFor="file" className="sr-only">
                             Upload File
                         </label>
-                        <input type="file" accept="audio/*" multiple className="form-field field-sizing-fixed max-w-sm p-1" />
+                        <input
+                            type="file"
+                            // accept="audio/*"
+                            multiple
+                            className="form-field field-sizing-fixed max-w-sm p-1"
+                            onChange={(e) => setFile(e.target.files[0])}
+                        />
                     </div>
-                    /* Step 2: Format and Quality Selection */
+
+                    {/* Step 2: Format and Quality Selection */}
                     <div className="w-full pb-6">
                         <label htmlFor="format" className="text-text-primary text-base">
                             Format
@@ -61,7 +98,7 @@ const AudioConverter = () => {
                                         type="button"
                                         tabIndex={-1}
                                         onClick={() => setQuality(parseInt(val))}
-                                        className={`cursor-pointer focus:outline-none ${quality == val ? 'text-highlight' : ''}`}>
+                                        className={`hover:text-text-primary cursor-pointer focus:outline-none ${quality == val ? 'text-highlight' : ''}`}>
                                         {
                                             ['Economy (64 kbps)', 'Standard (128 kbps)', 'Good (192 kbps)', 'Ultra (256 kbps)', 'Best (320 kbps)'][
                                                 index
@@ -71,14 +108,16 @@ const AudioConverter = () => {
                                 ))}
                             </div>
                         </div>
-                        <div className="mt-4 flex justify-between">
-                            <button className="text-blue-500 underline">Advanced Settings</button>
-                            <button className="text-blue-500 underline">Edit Track Info</button>
+                        <div className="mt-4 flex justify-end">
+                            <button className="button flex items-center justify-center gap-2">
+                                <Icon icon={iconMap.settings} className="size-5" />
+                                Advanced Settings
+                            </button>
                         </div>
                     </div>
                     {/* Step 3: Convert Button */}
                     <div className="w-full text-center">
-                        <JelloButton variant="info" className="button">
+                        <JelloButton variant="info" isSubmitting={isLoading} onClick={convertAudio}>
                             Convert
                         </JelloButton>
                     </div>

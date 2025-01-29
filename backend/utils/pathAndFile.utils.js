@@ -131,18 +131,20 @@ export const createDirectoryIfNotExists = async (dirPath) => {
 };
 
 /**
- * Utility to clean up a file.
- * @param {string} filePath - Path to the file to delete.
+ * Utility to clean up multiple files.
+ * @param {string[]} filePaths - Array of paths to the files to delete.
  * @example
- * cleanupFile('/path/to/file.txt');
+ * cleanupFiles(['/path/to/file1.txt', '/path/to/file2.txt']);
  */
-export const cleanupFile = (filePath) => {
+export const cleanupFiles = (filePaths) => {
     try {
-        if (existsSync(filePath)) {
-            unlinkSync(filePath);
-            backendLogger.info(`Deleted file: ${filePath}`);
-        }
+        filePaths?.forEach((filePath) => {
+            if (existsSync(filePath)) {
+                unlinkSync(filePath);
+                backendLogger.info(`Deleted file: ${filePath}`);
+            }
+        });
     } catch (error) {
-        backendLogger.error(`Failed to delete file ${filePath}:`, error);
+        backendLogger.error('Failed to delete files:', error);
     }
 };
