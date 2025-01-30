@@ -68,7 +68,7 @@ const AudioConverter = () => {
                             Format
                         </label>
                         <TabNavigation
-                            tabs={['AAC', 'AMR', 'MP3', 'WMA', 'AIFF', 'FLAC', 'OGG', 'ALAC', 'M4A', 'WAV']}
+                            tabs={['AAC', 'MP3', 'WMA', 'AIFF', 'FLAC', 'OGG', 'M4A', 'WAV']}
                             currentTab={format}
                             setCurrentTab={setFormat}
                             className="mt-2"

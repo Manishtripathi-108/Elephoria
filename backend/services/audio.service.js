@@ -143,10 +143,33 @@ export const convertAudioFormat = async (fileUrl, targetFormat, bitrate = 192, f
         const outputFilePath = getTempPath('audio', `converted_${Date.now()}.${targetFormat}`);
         await createDirectoryIfNotExists(getTempPath('audio'));
 
+        console.log('Checking available encoders...');
+        const encoders = await new Promise((resolve, reject) => {
+            ffmpeg().availableEncoders((err, encoders) => {
+                if (err) return reject(err);
+                resolve(encoders);
+            });
+        });
+
+        // Determine the best available AAC encoder
+        let aacEncoder = 'aac'; // Default to 'aac' if nothing else is available
+        if (encoders.aac_at) {
+            aacEncoder = 'aac_at';
+        } else if (encoders.libfdk_aac) {
+            aacEncoder = 'libfdk_aac';
+        }
+
+        console.log('Selected AAC encoder:', aacEncoder);
+
         console.log('Converting audio file:', { fileUrl, targetFormat, bitrate, frequency });
+        const command = ffmpeg(fileUrl);
+
+        if (targetFormat === 'm4a') {
+            command.audioCodec(aacEncoder).videoCodec('copy').outputOptions('-metadata:s:v', 'comment=Cover (front)');
+        }
 
         await new Promise((resolve, reject) => {
-            ffmpeg(fileUrl)
+            command
                 .audioBitrate(bitrate)
                 .audioFrequency(frequency)
                 .save(outputFilePath)
