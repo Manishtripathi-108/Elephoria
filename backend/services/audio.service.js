@@ -138,9 +138,12 @@ export const editAudioMetadata = async (fileUrl, fileExtension, metadata, coverI
     }
 };
 
-export const convertAudioFormat = async (fileUrl, targetFormat, bitrate = 192, frequency = 44100) => {
+export const convertAudioFormat = async (fileUrl, fileName, targetFormat, bitrate = 192, frequency = 44100) => {
     try {
-        const outputFilePath = getTempPath('audio', `converted_${Date.now()}.${targetFormat}`);
+        const outputFilePath = getTempPath(
+            'audio',
+            `converted_${fileName || `${Date.now()}`}.${targetFormat}`
+        );
         await createDirectoryIfNotExists(getTempPath('audio'));
 
         console.log('Checking available encoders...');

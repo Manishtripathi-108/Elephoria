@@ -1,6 +1,7 @@
 import { extractAudioMetadata, editAudioMetadata, convertAudioFormat } from '../services/audio.service.js';
+import { createZipFile } from '../utils/archiver.utils.js';
 import { asyncHandler } from '../utils/errorHandler.utils.js';
-import { cleanupFiles, getTempPath } from '../utils/pathAndFile.utils.js';
+import { cleanupFiles, createDirectoryIfNotExists, getTempPath } from '../utils/pathAndFile.utils.js';
 import { successResponse, errorResponse } from '../utils/response.utils.js';
 import { resizeAndCropImage } from '../utils/sharp.utils.js';
 import { existsSync } from 'fs';
@@ -69,6 +70,8 @@ export const handleEditMetadata = asyncHandler(async (req, res) => {
     res.download(editResult.fileUrl, `edited_audio${fileExt}`, (err) => {
         if (err) {
             return errorResponse(res, 'Failed to download the edited file.', err);
+        } else {
+            setTimeout(() => cleanupFiles([editResult.fileUrl]), 20 * 60 * 1000); // Deletes after 20 minutes
         }
     });
 
@@ -76,12 +79,12 @@ export const handleEditMetadata = asyncHandler(async (req, res) => {
 });
 
 export const handleConvertAudio = asyncHandler(async (req, res) => {
-    if (!req.file) {
-        return errorResponse(res, 'No file uploaded. Please upload a valid audio file.', null, 400);
+    if (!req.files || req.files.length === 0) {
+        return res.status(400).json({ success: false, message: 'No files uploaded' });
     }
 
     const { format, quality } = req.body;
-    console.log(format, quality);
+    console.log({ format, quality, length: req.files.length });
 
     if (!format || !quality) {
         return errorResponse(
@@ -92,17 +95,38 @@ export const handleConvertAudio = asyncHandler(async (req, res) => {
         );
     }
 
-    const convertResult = await convertAudioFormat(req.file.path, format.toLowerCase(), quality);
+    const convertedFiles = [];
+    const targetFormat = format.toLowerCase();
 
-    if (!convertResult.success) {
-        return errorResponse(res, convertResult.message, convertResult.error);
+    // Convert all uploaded files
+    for (const file of req.files) {
+        console.log('Converting file:', file);
+
+        const { success, fileUrl } = await convertAudioFormat(file.path, file?.originalname, targetFormat, quality);
+        if (success) convertedFiles.push(fileUrl);
+        cleanupFiles([file.path]);
     }
 
-    res.download(convertResult.fileUrl, req.file.originalname, (err) => {
+    if (convertedFiles.length === 0) {
+        return res.status(500).json({ success: false, message: 'Conversion failed for all files' });
+    }
+
+    // Create ZIP file
+    const zipFilePath = getTempPath('zip', `converted_${Date.now()}.zip`);
+    await createDirectoryIfNotExists(getTempPath('zip'));
+    await createZipFile(convertedFiles, zipFilePath);
+
+    // Delete converted files after zipping
+    cleanupFiles(convertedFiles);
+
+    // Send ZIP file as response
+    res.download(zipFilePath, `converted_${Date.now()}.zip`, (err) => {
         if (err) {
-            return errorResponse(res, 'Failed to download the converted file.', err);
+            console.error('Error sending ZIP file:', err);
+            res.status(500).json({ success: false, message: 'Failed to send zip file' });
+        } else {
+            // Delete zip file after download
+            setTimeout(() => cleanupFiles([zipFilePath]), 60 * 1000); // Deletes after 1 minute
         }
     });
-
-    cleanupFiles([req.file.path]);
 });

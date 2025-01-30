@@ -1,3 +1,5 @@
+import { errorResponse } from "./response.utils.js";
+
 /**
  * Wraps an async function with error handling to be used as an Express
  * middleware. Catches any errors that occur, and sends an error response

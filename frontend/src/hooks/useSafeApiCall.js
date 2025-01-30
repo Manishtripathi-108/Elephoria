@@ -105,7 +105,7 @@ function useSafeApiCall({ apiClient = axios, retryCount = 0 } = {}) {
                             setData(response.data)
 
                             // Trigger success callback if provided
-                            if (onSuccess) onSuccess(response.data)
+                            if (onSuccess) onSuccess(response.data, response)
                         }
                         return // Exit on successful request
                     } catch (err) {
