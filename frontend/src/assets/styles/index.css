@@ -24,18 +24,6 @@
     --upper-shadow: #ffcfd3;
 
     /* -------------------------------------------------------------------------- */
-    /*                                  Gradients                                 */
-    /* -------------------------------------------------------------------------- */
-    --background-image-primary-gradient: linear-gradient(to left, #ffb6b9 0%, #ffe6e6 10%, #ffe6e6 90%, #ffb6b9 100%);
-    --background-image-secondary-gradient: linear-gradient(to left, #ffb6b9 0%, #ffd9da 10%, #ffd9da 90%, #ffb6b9 100%);
-    --background-image-primary-gradient: linear-gradient(to left, #1f2937 0%, #334155 10%, #334155 90%, #1f2937 100%);
-    --background-image-secondary-gradient: linear-gradient(to left, #1f2937 0%, #575d65 10%, #575d65 90%, #1f2937 100%);
-    --background-image-yellow-gradient: linear-gradient(to left, #a37b00 0%, #ffdf20 10%, #ffdf20 90%, #a37b00 100%);
-    --background-image-green-gradient: linear-gradient(to left, #009335 0%, #4ade80 10%, #4ade80 90%, #009335 100%);
-    --background-image-blue-gradient: linear-gradient(to left, #003688 0%, #50a2ff 10%, #50a2ff 90%, #003688 100%);
-    --background-image-red-gradient: linear-gradient(to left, #8f0007 0%, #ff6467 10%, #ff6467 90%, #8f0007 100%);
-
-    /* -------------------------------------------------------------------------- */
     /*                                   Shadows                                  */
     /* -------------------------------------------------------------------------- */
     --shadow-neumorphic-xs: 3px 3px 5px var(--lower-shadow), -3px -3px 5px var(--upper-shadow);
@@ -263,6 +251,19 @@
     }
 }
 
+@utility bg-layer-gradient {
+    --gradient-dark: var(--color-primary);
+    --gradient-light: var(--color-secondary);
+
+    background-image: linear-gradient(
+        to left,
+        var(--gradient-dark) 0%,
+        var(--gradient-light) 10%,
+        var(--gradient-light) 90%,
+        var(--gradient-dark) 100%
+    );
+}
+
 @utility scrollbar-thin {
     &::-webkit-scrollbar {
         width: 6px;
@@ -308,7 +309,7 @@
     }
 
     &.button-icon-only-square {
-        @apply rounded-lg p-2;
+        @apply rounded-xl p-2;
     }
 
     /*----------------------------------- button Sizes -------------------------------- */

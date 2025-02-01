@@ -8,39 +8,45 @@ import cn from '../../../utils/cn'
 const variants = {
     primary: {
         backgroundClass: 'bg-primary',
-        gradientClass: 'bg-primary-gradient -gradient',
+        gradientColors: '',
         textClass: 'text-text-primary',
         borderClass: '',
     },
     secondary: {
         backgroundClass: 'bg-secondary',
-        gradientClass: 'bg-secondary-gradient dark:bg-secondary-gradient',
+        gradientColors: 'dark:[--gradient-light:#575d65] dark:[--gradient-dark:#1f2937]',
         textClass: 'text-text-primary',
         borderClass: 'border-primary ',
     },
     danger: {
         backgroundClass: 'bg-red-600',
-        gradientClass: 'bg-red-gradient',
+        gradientColors: '[--gradient-light:#ff6467] [--gradient-dark:#8f0007]',
         textClass: 'text-white',
         borderClass: 'border-red-400',
     },
     warning: {
-        backgroundClass: 'dark:bg-yellow-500 bg-yellow-400',
-        gradientClass: 'bg-yellow-gradient',
+        backgroundClass: 'bg-yellow-500',
+        gradientColors: '[--gradient-light:#ffdf20] [--gradient-dark:#a37b00]',
         textClass: 'text-black',
         borderClass: 'border-yellow-300',
     },
     success: {
         backgroundClass: 'bg-green-500',
-        gradientClass: 'bg-green-gradient',
-        textClass: 'text-white',
+        gradientColors: '[--gradient-light:#4ade80] [--gradient-dark:#009335]',
+        textClass: 'text-black',
         borderClass: 'border-green-300',
     },
     info: {
         backgroundClass: 'dark:bg-blue-600 bg-blue-500',
-        gradientClass: 'bg-blue-gradient',
+        gradientColors: '[--gradient-light:#50a2ff] [--gradient-dark:#003688]',
         textClass: 'text-white',
         borderClass: 'border-blue-400',
+    },
+    accent: {
+        backgroundClass: 'bg-accent',
+        gradientColors: '[--gradient-light:#ffac9d] [--gradient-dark:#a5260f]',
+        textClass: 'text-white',
+        borderClass: 'border-[#ffac9d]',
     },
 }
 
@@ -61,7 +67,7 @@ const variants = {
  * @param {string} [props.roundness='rounded-lg'] - Rounding style for the button.
  * @param {string} [props.title] - Tooltip text for the button.
  * @param {string} [props.type='button'] - Type of the button element.
- * @param {string} [props.variant='primary'] - Visual variant of the button. i.e., primary, secondary, danger, warning, success, info.
+ * @param {string} [props.variant='primary'] - Visual variant of the button. i.e., accent, primary, secondary, danger, warning, success, info.
  * @returns {React.Element}
  */
 const JelloButton = ({
@@ -79,7 +85,7 @@ const JelloButton = ({
     type = 'button',
     variant = 'primary',
 }) => {
-    const { backgroundClass, gradientClass, textClass, borderClass } = variants[variant] || variants.primary
+    const { backgroundClass, gradientColors, textClass, borderClass } = variants[variant] || variants.primary
 
     return (
         <button
@@ -98,7 +104,7 @@ const JelloButton = ({
                 className={`${roundness} absolute top-0 left-0 h-full w-full translate-y-0.5 bg-black/25 transition-transform duration-[600ms] ease-[cubic-bezier(0.3,0.7,0.4,1)] group-hover:translate-y-1 group-hover:duration-[250ms] group-focus:translate-y-1 group-focus:duration-[250ms] group-active:translate-y-px group-active:duration-[34ms]`}></span>
 
             {/* Gradient Layer */}
-            <span className={`${gradientClass} ${roundness} absolute top-0 left-0 h-full w-full`}></span>
+            <span className={`${gradientColors} ${roundness} bg-layer-gradient absolute top-0 left-0 h-full w-full`}></span>
 
             {/* Button Content */}
             <div
