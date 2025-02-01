@@ -113,7 +113,7 @@ const WaitingRoom = ({ onExit, onStart, playerO = '', playerX = '', roomId, room
                     </p>
                     <button
                         onClick={shareRoom}
-                        className="button button-icon-only button-sm shrink-0"
+                        className="button button-sm shrink-0 rounded-full p-2"
                         title="Share Room Code"
                         aria-label="Share Room Code">
                         <Icon icon={iconMap.share} className="size-5" />

@@ -63,7 +63,7 @@ const TicTacToe = () => {
                     {isPlayingOnline ? (
                         <span className="text-highlight font-julee text-4xl">{playerSymbol}</span>
                     ) : (
-                        <button onClick={() => openModal('game_action')} type="button" title="Clear Board" className="button button-icon-only-square">
+                        <button onClick={() => openModal('game_action')} type="button" title="Clear Board" className="button rounded-xl p-2">
                             <Icon icon={iconMap.broom} className="size-6" />
                         </button>
                     )}

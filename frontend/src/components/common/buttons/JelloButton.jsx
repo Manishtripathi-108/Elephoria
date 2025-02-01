@@ -9,13 +9,13 @@ const variants = {
     primary: {
         backgroundClass: 'bg-primary',
         gradientColors: '',
-        textClass: 'text-text-primary',
+        textClass: 'group-hover:text-text-primary text-text-secondary',
         borderClass: '',
     },
     secondary: {
         backgroundClass: 'bg-secondary',
         gradientColors: 'dark:[--gradient-light:#575d65] dark:[--gradient-dark:#1f2937]',
-        textClass: 'text-text-primary',
+        textClass: 'group-hover:text-text-primary text-text-secondary',
         borderClass: 'border-primary ',
     },
     danger: {
@@ -63,7 +63,6 @@ const variants = {
  * @param {Function} [props.onClick] - Function to call on button click.
  * @param {string} [props.icon] - Icon to display in the button.
  * @param {string} [props.iconClasses] - CSS classes for the icon.
- * @param {boolean} [props.iconOnly=false] - If true, only shows the icon.
  * @param {string} [props.roundness='rounded-lg'] - Rounding style for the button.
  * @param {string} [props.title] - Tooltip text for the button.
  * @param {string} [props.type='button'] - Type of the button element.
@@ -79,7 +78,6 @@ const JelloButton = ({
     onClick = null,
     icon = null,
     iconClasses = '',
-    iconOnly = false,
     roundness = 'rounded-lg',
     title = '',
     type = 'button',
@@ -111,16 +109,16 @@ const JelloButton = ({
                 className={cn(
                     `${backgroundClass} ${textClass} ${borderClass} ${roundness}`,
                     'relative flex items-center justify-center gap-1 border px-2.5 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm',
-                    '-translate-y-1 transition-transform duration-[600ms] ease-[cubic-bezier(0.3,0.7,0.4,1)] group-hover:-translate-y-1.5 group-hover:duration-[250ms] group-focus:-translate-y-1.5 group-focus:duration-[250ms] group-active:-translate-y-0.5 group-active:duration-[34ms]',
-                    iconOnly ? 'p-1' : '',
+                    '-translate-y-1 transition-all duration-[600ms] ease-[cubic-bezier(0.3,0.7,0.4,1)] group-hover:-translate-y-1.5 group-hover:duration-[250ms] group-focus:-translate-y-1.5 group-focus:duration-[250ms] group-active:-translate-y-0.5 group-active:duration-[34ms]',
+                    icon ? 'p-1' : '',
                     contentClasses
                 )}>
                 {isSubmitting ? (
-                    <Icon icon={iconMap.loading} className="size-5" />
+                    <Icon icon={iconMap.loading} className="size-6" />
                 ) : (
                     <>
-                        {icon && <Icon icon={icon} className={cn('size-4 shrink-0', iconClasses)} />}
-                        {!iconOnly && children}
+                        {icon && <Icon icon={icon} className={cn('size-5 shrink-0', iconClasses)} />}
+                        {children}
                     </>
                 )}
             </div>

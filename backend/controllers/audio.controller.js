@@ -80,35 +80,33 @@ export const handleEditMetadata = asyncHandler(async (req, res) => {
 
 export const handleConvertAudio = asyncHandler(async (req, res) => {
     if (!req.files || req.files.length === 0) {
-        return res.status(400).json({ success: false, message: 'No files uploaded' });
+        return errorResponse(res, 'No files uploaded. Please upload valid audio files to convert.', null, 400);
     }
 
-    const { format, quality } = req.body;
-    console.log({ format, quality, length: req.files.length });
+    const { formats, qualities } = req.body;
 
-    if (!format || !quality) {
-        return errorResponse(
-            res,
-            'Format or quality is missing. Please provide a valid format and quality to convert the audio.',
-            null,
-            400
-        );
+    if (!formats) {
+        return errorResponse(res, 'Format is missing. Please provide a valid format to convert the audio.', null, 400);
     }
 
     const convertedFiles = [];
-    const targetFormat = format.toLowerCase();
 
-    // Convert all uploaded files
-    for (const file of req.files) {
+    // Convert each file
+    await Promise.all(req.files.map(async (file, index) => {
         console.log('Converting file:', file);
 
-        const { success, fileUrl } = await convertAudioFormat(file.path, file?.originalname, targetFormat, quality);
+        const { success, fileUrl } = await convertAudioFormat(
+            file.path,
+            file?.originalname,
+            formats[index]?.toLowerCase(),
+            qualities[index]?.toLowerCase()
+        );
         if (success) convertedFiles.push(fileUrl);
         cleanupFiles([file.path]);
-    }
+    }));
 
     if (convertedFiles.length === 0) {
-        return res.status(500).json({ success: false, message: 'Conversion failed for all files' });
+        return errorResponse(res, 'Failed to convert any files', null, 500);
     }
 
     // Create ZIP file

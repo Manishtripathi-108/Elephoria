@@ -138,12 +138,18 @@ export const editAudioMetadata = async (fileUrl, fileExtension, metadata, coverI
     }
 };
 
-export const convertAudioFormat = async (fileUrl, fileName, targetFormat, bitrate = 192, frequency = 44100) => {
+/**
+ * Converts an audio file to a target format.
+ * @param {string} fileUrl - URL of the audio file to convert.
+ * @param {string} [fileName] - Name of the output file (without extension).
+ * @param {string} [targetFormat='m4a'] - Target format of the output file.
+ * @param {number} [bitrate=192] - Bitrate to use for the output file (in kbps).
+ * @param {number} [frequency=44100] - Sample frequency to use for the output file (in Hz).
+ * @returns {Promise<{success: boolean, fileUrl?: string, message?: string, error?: object}>}
+ */
+export const convertAudioFormat = async (fileUrl, fileName, targetFormat = 'm4a', bitrate = 192, frequency = 44100) => {
     try {
-        const outputFilePath = getTempPath(
-            'audio',
-            `converted_${fileName || `${Date.now()}`}.${targetFormat}`
-        );
+        const outputFilePath = getTempPath('audio', `converted_${fileName || `${Date.now()}`}.${targetFormat}`);
         await createDirectoryIfNotExists(getTempPath('audio'));
 
         console.log('Checking available encoders...');

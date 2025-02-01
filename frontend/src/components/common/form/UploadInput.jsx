@@ -65,7 +65,7 @@ const UploadInput = ({ acceptType, className, file, id, setFile }) => {
                     <p className="line-clamp-1 w-full text-center tracking-wider">{fileName}</p>
                 </label>
                 {file && (
-                    <button type="button" title="Remove File" onClick={handleFileRemove} className="button button-icon-only-square shadow-none">
+                    <button type="button" title="Remove File" onClick={handleFileRemove} className="button rounded-xl p-2 shadow-none">
                         <Icon icon={iconMap.trash} className="size-5" />
                     </button>
                 )}

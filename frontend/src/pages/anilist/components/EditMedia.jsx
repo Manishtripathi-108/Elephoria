@@ -108,7 +108,7 @@ const EditMedia = ({ entry = [] }) => {
             {/* Favourite button */}
             <button
                 type="button"
-                className={`button button-icon-only absolute top-2/4 right-8 cursor-pointer ${isLiked ? 'shadow-neumorphic-inset-xs text-red-500 dark:text-red-500' : ''}`}
+                className={`button absolute top-2/4 right-8 cursor-pointer rounded-full p-2 ${isLiked ? 'shadow-neumorphic-inset-xs text-red-500 dark:text-red-500' : ''}`}
                 onClick={toggleLike}
                 disabled={isToggling}>
                 <Icon icon={iconMap.heart} className="size-5 text-inherit" />
