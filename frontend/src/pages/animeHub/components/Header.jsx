@@ -71,7 +71,7 @@ const Header = () => {
                         alt={`${userData?.name}'s avatar`}
                         className="max-h-36 w-full max-w-28 rounded-t-lg align-text-top md:max-h-48 md:max-w-36"
                     />
-                    <h1 className="text-primary font-aladin mb-5 text-3xl font-bold tracking-widest">{userData?.name}</h1>
+                    <h1 className="text-text-primary font-aladin mb-5 text-3xl font-bold tracking-widest">{userData?.name}</h1>
                 </div>
             </div>
         </header>

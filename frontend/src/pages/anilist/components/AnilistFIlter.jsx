@@ -30,16 +30,16 @@ const AnilistFilter = ({ filters, setFilters }) => {
         <form onSubmit={formik.handleSubmit} className="space-y-6 rounded-lg bg-inherit p-6 shadow-lg">
             {/* Format */}
             <div className="form-group relative">
-                <p className="form-text text-primary text-base">Format:</p>
+                <p className="form-text text-text-primary text-base">Format:</p>
                 <TabNavigation
                     tabs={FILTER_OPTIONS.format}
                     currentTab={formik.values.format}
                     className="w-full text-nowrap"
-                    setCurrentTab={(format) => formik.setFieldValue('format', format)}
+                    onTabChange={(format) => formik.setFieldValue('format', format)}
                 />
                 <button
                     type="button"
-                    className="text-secondary hover:text-primary absolute -top-2 right-4 cursor-pointer text-2xl"
+                    className="text-text-secondary hover:text-text-primary absolute -top-2 right-4 cursor-pointer text-2xl"
                     onClick={() => formik.setFieldValue('format', null)}
                     title="Clear">
                     x
@@ -48,7 +48,7 @@ const AnilistFilter = ({ filters, setFilters }) => {
 
             {/* Genres */}
             <div>
-                <p className="form-text text-primary text-base">Genres:</p>
+                <p className="form-text text-text-primary text-base">Genres:</p>
                 <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-3">
                     {FILTER_OPTIONS.genres.map((genre, index) => {
                         return (
@@ -78,16 +78,16 @@ const AnilistFilter = ({ filters, setFilters }) => {
 
             {/* Status */}
             <div className="form-group relative">
-                <p className="form-text text-primary text-base">Status:</p>
+                <p className="form-text text-text-primary text-base">Status:</p>
                 <TabNavigation
                     tabs={FILTER_OPTIONS.status}
                     currentTab={formik.values.status}
                     className="w-full text-nowrap"
-                    setCurrentTab={(status) => formik.setFieldValue('status', status)}
+                    onTabChange={(status) => formik.setFieldValue('status', status)}
                 />
                 <button
                     type="button"
-                    className="text-secondary hover:text-primary absolute -top-2 right-4 cursor-pointer text-2xl"
+                    className="text-text-secondary hover:text-text-primary absolute -top-2 right-4 cursor-pointer text-2xl"
                     onClick={() => formik.setFieldValue('status', null)}
                     title="Clear">
                     x
@@ -97,7 +97,7 @@ const AnilistFilter = ({ filters, setFilters }) => {
             {/* Sort */}
             <div className="flex gap-4">
                 <div className="form-group">
-                    <label htmlFor="sort" className="form-text text-primary text-base">
+                    <label htmlFor="sort" className="form-text text-text-primary text-base">
                         Sort By:
                     </label>
                     <select id="sort" name="sort" value={formik.values.sort} onChange={formik.handleChange} className="form-field">
@@ -113,7 +113,7 @@ const AnilistFilter = ({ filters, setFilters }) => {
 
                 {/* Year */}
                 <div className="form-group">
-                    <label htmlFor="year" className="form-text text-primary text-base">
+                    <label htmlFor="year" className="form-text text-text-primary text-base">
                         Year:
                     </label>
                     <input

@@ -76,7 +76,7 @@ const AudioMetadataEditor = ({ metadata, coverImage, audioFileName, onCancel, on
     return (
         <section aria-labelledby="editor-title" className="shadow-neumorphic-lg w-full max-w-(--breakpoint-lg) rounded-3xl border p-2 sm:p-6">
             <div className="grid place-items-center gap-4 rounded-2xl border p-6 sm:rounded-xl">
-                <h1 className="text-primary font-aladin text-center text-3xl tracking-wider">Edit Tags</h1>
+                <h1 className="text-text-primary font-aladin text-center text-3xl tracking-wider">Edit Tags</h1>
 
                 <Formik initialValues={initialFormValues} validationSchema={validationSchema} onSubmit={handleMetadataEdit}>
                     {({ isSubmitting, setFieldValue, resetForm }) => (

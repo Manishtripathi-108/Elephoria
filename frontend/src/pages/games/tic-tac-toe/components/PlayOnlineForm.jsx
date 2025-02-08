@@ -30,7 +30,7 @@ const PlayOnlineForm = () => {
         <div className="bg-primary relative max-h-full w-full max-w-md p-8 md:p-10">
             <Icon icon={iconMap.gamePadTurbo} className="mx-auto mb-4 h-12 w-12 text-red-500" />
             <h2 className="text-highlight font-aladin mb-3 text-center text-4xl font-bold tracking-widest">Play Online</h2>
-            <h3 className="text-primary mb-5 text-center font-normal tracking-wider">Join a room or create a new one to start playing</h3>
+            <h3 className="text-text-primary mb-5 text-center font-normal tracking-wider">Join a room or create a new one to start playing</h3>
 
             <div className="mb-5 flex justify-center gap-x-4">
                 <button className={`button ${isJoinForm ? 'active' : ''}`} title="Join a Room" onClick={() => handleFormToggle(true)}>

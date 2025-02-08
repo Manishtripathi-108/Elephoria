@@ -82,17 +82,17 @@ const Anilist = () => {
                             </div>
                             <div className="flex items-center justify-end pr-4">
                                 <button
-                                    className={`text-primary button rounded-e-none border-r-0 p-2 shadow-none ${viewMode === 'list' ? 'active' : ''}`}
+                                    className={`text-text-primary button rounded-e-none border-r-0 p-2 shadow-none ${viewMode === 'list' ? 'active' : ''}`}
                                     onClick={() => setViewMode('list')}>
                                     <Icon icon={iconMap.list} className="size-4" />
                                 </button>
                                 <button
-                                    className={`text-primary button rounded-s-none p-2 shadow-none ${viewMode === 'card' ? 'active' : ''}`}
+                                    className={`text-text-primary button rounded-s-none p-2 shadow-none ${viewMode === 'card' ? 'active' : ''}`}
                                     onClick={() => setViewMode('card')}>
                                     <Icon icon={iconMap.card} className="size-4" />
                                 </button>
 
-                                <button className="button button-icon-only-square text-highlight ml-4" onClick={() => openModal('filters-modal')}>
+                                <button className="button text-highlight ml-4 rounded-xl p-2" onClick={() => openModal('filters-modal')}>
                                     <Icon icon={iconMap.filter} className="size-4" />
                                 </button>
                             </div>
@@ -103,7 +103,7 @@ const Anilist = () => {
                             className="mb-6"
                             tabs={getTabOptions(mediaType)}
                             currentTab={selectedTab}
-                            setCurrentTab={(tab) => {
+                            onTabChange={(tab) => {
                                 setSearchParams({ tab, page: 1 })
                             }}
                         />

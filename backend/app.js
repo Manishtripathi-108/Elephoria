@@ -20,9 +20,10 @@ const server = createServer(app);
 
 /* --------------------------- CORS configuration --------------------------- */
 const corsOptions = {
-    origin: process.env.NODE_ENV === 'production' ? process.env.CLIENT_URL : 'http://localhost',
+    origin: process.env.CLIENT_URL,
     credentials: true,
 };
+
 // Socket.io with CORS options
 const io = new Server(server, { cors: corsOptions });
 
@@ -31,9 +32,19 @@ app.use(cors(corsOptions));
 /* ------------------------ Middleware configuration ------------------------ */
 app.use(express.json());
 app.use(cookieParser());
+// Error handling middleware
+// app.use((err, req, res, next) => {
+//     console.error('Error:', err.message);
+//     res.status(500).json({
+//         success: false,
+//         error: true,
+//         message: err.message || 'An unexpected error occurred.',
+//     });
+// });
 
 /* ------------------------------- API routes ------------------------------- */
 app.use('/api', routes);
+
 gameRoutes(io);
 
 /* ------------------ Serve Static Files for Uploaded Images ---------------- */

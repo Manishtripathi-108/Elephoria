@@ -33,16 +33,15 @@
                 const userPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
 
                 if (darkTheme === 'true' || (!darkTheme && userPrefersDark)) {
-                    document.documentElement.classList.add('dark')
+                    document.documentElement.setAttribute('data-theme', 'dark')
                 } else {
-                    document.documentElement.classList.remove('dark')
+                    document.documentElement.removeAttribute('data-theme')
                 }
             })()
         </script>
     </head>
 
-    <body
-        class="bg-primary scrollbar-thin font-indie-flower tracking-wider transition-colors duration-300 [--lower-shadow:#db9d9f] [--upper-shadow:#ffcfd3] dark:[--lower-shadow:#0c1016] dark:[--upper-shadow:#324258]">
+    <body class="bg-primary scrollbar-thin font-indie-flower tracking-wider transition-colors duration-300">
         <div id="root"></div>
         <script type="module" src="/src/main.jsx"></script>
     </body>

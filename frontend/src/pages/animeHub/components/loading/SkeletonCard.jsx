@@ -15,7 +15,7 @@ const SkeletonCard = () => {
                             <div className="bg-secondary h-4 w-full animate-pulse rounded-sm"></div>
                             <div className="flex items-center space-x-2">
                                 <div className="bg-secondary h-4 w-12 animate-pulse rounded-sm"></div>
-                                <span className="text-secondary animate-pulse text-xs">&#9679;</span>
+                                <span className="text-text-secondary animate-pulse text-xs">&#9679;</span>
                                 <div className="bg-secondary h-4 w-4 animate-pulse rounded-sm"></div>
                             </div>
                         </div>

@@ -76,8 +76,8 @@ const Page404 = () => {
                 </svg>
 
                 <div className="mt-4 text-center tracking-widest">
-                    <span className="text-primary font-aladin block text-6xl">4 0 4</span>
-                    <span className="text-primary text-xl">Sorry, We couldn't find what you are looking for!</span>
+                    <span className="text-text-primary font-aladin block text-6xl">4 0 4</span>
+                    <span className="text-text-primary text-xl">Sorry, We couldn't find what you are looking for!</span>
                 </div>
 
                 <JelloButton className="mt-8" variant="info">

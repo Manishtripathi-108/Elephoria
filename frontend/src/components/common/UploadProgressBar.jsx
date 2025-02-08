@@ -31,15 +31,15 @@ const UploadProgressBar = ({ bytesUploaded, totalBytes, fileName, className, onR
 
     return (
         <div className={cn('bg-primary shadow-neumorphic-lg mx-auto w-full max-w-md rounded-xl border p-6', className)}>
-            <h2 className="text-primary font-aladin mb-4 text-xl font-semibold tracking-widest">Uploading File</h2>
+            <h2 className="text-text-primary font-aladin mb-4 text-xl font-semibold tracking-widest">Uploading File</h2>
 
             {/* File Info */}
             <div className="bg-secondary my-4 flex items-center justify-between gap-3 rounded-lg p-3">
                 <div>
-                    <p className="text-primary line-clamp-1 font-medium" title={fileName}>
+                    <p className="text-text-primary line-clamp-1 font-medium" title={fileName}>
                         {fileName}
                     </p>
-                    <p className="text-secondary text-xs">{formatFileSize(bytesUploaded, totalBytes)}</p>
+                    <p className="text-text-secondary text-xs">{formatFileSize(bytesUploaded, totalBytes)}</p>
                 </div>
                 <p className="text-accent text-sm">{Math.min(uploadPercentage, 100)}%</p>
             </div>
@@ -51,7 +51,7 @@ const UploadProgressBar = ({ bytesUploaded, totalBytes, fileName, className, onR
                         width: `${Math.min(uploadPercentage, 100)}%`,
                         transition: 'width 0.3s ease-in-out',
                     }}
-                    className="from-light-accent/70 to-light-accent after:animate-progress-after dark:from-dark-accent/70 dark:to-dark-accent relative inline-block h-5 overflow-hidden rounded-full border border-inherit bg-linear-to-t bg-cover align-middle after:absolute after:inset-0 after:bg-[linear-gradient(_45deg,#ffffff_25%,rgba(0,0,0,0)_25%,rgba(0,0,0,0)_50%,#ffffff_50%,#ffffff_75%,rgba(0,0,0,0)_75%,rgba(0,0,0,0)_)] after:bg-[length:30px_30px] after:opacity-30"></span>
+                    className="from-accent/70 to-accent after:animate-progress-after relative inline-block h-5 overflow-hidden rounded-full border border-inherit bg-linear-to-t bg-cover align-middle after:absolute after:inset-0 after:bg-[linear-gradient(_45deg,#ffffff_25%,rgba(0,0,0,0)_25%,rgba(0,0,0,0)_50%,#ffffff_50%,#ffffff_75%,rgba(0,0,0,0)_75%,rgba(0,0,0,0)_)] after:bg-[length:30px_30px] after:opacity-30"></span>
             </div>
 
             {/* Actions */}

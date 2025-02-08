@@ -3,6 +3,7 @@ const APP_ROUTES = {
     SHADOWS: '/shadows',
     AUDIO: {
         TAGS_EDITOR: '/audio/tags-editor',
+        CONVERTER: '/audio/converter',
     },
     ANILIST: {
         INDEX: '/anilist/anime',

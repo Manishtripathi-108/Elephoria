@@ -8,6 +8,7 @@ const API_ROUTES = {
         UPLOAD: '/api/audio/upload',
         EXTRACT_METADATA: '/api/audio/extract-metadata',
         EDIT_METADATA: '/api/audio/edit-metadata',
+        CONVERT_AUDIO: '/api/audio/convert-audio',
     },
     USER: {
         LOGIN: '/api/user/login',

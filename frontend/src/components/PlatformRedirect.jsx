@@ -31,7 +31,7 @@ const PlatformRedirect = ({ platform, onRedirect }) => {
         <div className="h-calc-full-height grid place-items-center p-2">
             <section className="shadow-neumorphic-lg w-full max-w-md rounded-2xl border p-2 text-center sm:p-6">
                 <div className="rounded-xl border p-6">
-                    <h1 className="text-primary mb-4 text-3xl font-bold">Logging in...</h1>
+                    <h1 className="text-text-primary mb-4 text-3xl font-bold">Logging in...</h1>
                 </div>
             </section>
         </div>

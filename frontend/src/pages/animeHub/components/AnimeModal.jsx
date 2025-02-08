@@ -103,14 +103,14 @@ const AnimeModal = ({ entryId, modalId, media, mediaStatus = '', mediaProgress =
             </div>
 
             {/* Title */}
-            <h2 className="text-primary font-aladin mt-4 mb-6 ml-7 text-xl leading-none font-normal tracking-widest capitalize">
+            <h2 className="text-text-primary font-aladin mt-4 mb-6 ml-7 text-xl leading-none font-normal tracking-widest capitalize">
                 {media?.title?.english || media?.title?.native || media?.title?.romaji || 'Unknown Title'}
             </h2>
 
             {/* Favourite button */}
             <button
                 type="button"
-                className={`button button-icon-only absolute top-2/4 right-8 ${isLiked ? 'active' : ''}`}
+                className={`button absolute top-2/4 right-8 rounded-full p-2 ${isLiked ? 'active' : ''}`}
                 onClick={toggleLike}
                 disabled={isToggling}>
                 <Icon icon={iconMap.heart} className={`size-5 ${isLiked ? 'text-[#ff4545]' : ''}`} />

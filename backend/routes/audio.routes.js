@@ -1,92 +1,30 @@
-import { handleExtractMetadata, handleEditMetadata } from '../controllers/audio.controller.js';
-import { createDirectoryIfNotExists, getTempPath } from '../utils/pathAndFile.utils.js';
+import { handleExtractMetadata, handleEditMetadata, handleConvertAudio } from '../controllers/audio.controller.js';
+import { checkFileType, createTempStorage, createUploadMiddleware } from '../utils/multer.utils.js';
 import { Router } from 'express';
-import multer, { diskStorage } from 'multer';
-import { extname } from 'path';
+import multer from 'multer';
 
 const router = Router();
 
-/* ------------------ Multer configuration for file uploads ----------------- */
-const audioStorage = diskStorage({
-    destination: async (req, file, cb) => {
-        const uploadPath = getTempPath('audio');
-        try {
-            await createDirectoryIfNotExists(uploadPath);
-            cb(null, uploadPath);
-        } catch (error) {
-            cb(error, uploadPath);
-        }
-    },
-    filename: (req, file, cb) => {
-        const filenameFormat = `audio_${Date.now()}${extname(file.originalname)}`;
-        cb(null, filenameFormat);
-    },
+/* ------------------ Multer Configuration for File Uploads ----------------- */
+const uploadAudio = multer({
+    storage: createTempStorage('audio'),
+    limits: { fileSize: 50 * 1024 * 1024 }, // 50MB limit
+    fileFilter: checkFileType('audio'),
 });
-
-const imageStorage = diskStorage({
-    destination: async (req, file, cb) => {
-        const uploadPath = getTempPath('images');
-        try {
-            await createDirectoryIfNotExists(uploadPath);
-            cb(null, uploadPath);
-        } catch (error) {
-            cb(error, uploadPath);
-        }
-    },
-    filename: (req, file, cb) => {
-        const filenameFormat = `image_${Date.now()}${extname(file.originalname)}`;
-        cb(null, filenameFormat);
-    },
+const uploadImage = multer({
+    storage: createTempStorage('images'),
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+    fileFilter: checkFileType('image'),
 });
-
-const audioFileFilter = (req, file, cb) => {
-    if (file.mimetype.startsWith('audio/')) {
-        return cb(null, true);
-    } else {
-        return cb(new Error('Invalid file type. Please upload an audio file.'));
-    }
-};
-
-const imageFileFilter = (req, file, cb) => {
-    if (file.mimetype.startsWith('image/')) {
-        return cb(null, true);
-    } else {
-        return cb(new Error('Invalid file type. Please upload an image file.'));
-    }
-};
-
-// * Change the code here (if not using Buffer)
-const uploadAudio = multer({ storage: audioStorage, fileFilter: audioFileFilter });
-
-const uploadImage = multer({ storage: imageStorage, fileFilter: imageFileFilter });
 
 /* ------------------------ Error Handling Middleware ----------------------- */
-const uploadAudioMiddleware = (req, res, next) => {
-    uploadAudio.single('audio')(req, res, (err) => {
-        if (err instanceof multer.MulterError || err instanceof Error) {
-            return res.status(400).json({
-                success: false,
-                message: err.message || 'File upload error.',
-            });
-        }
-        next();
-    });
-};
+const uploadAudioMiddleware = createUploadMiddleware(uploadAudio.single('audio'));
+const uploadMultipleAudioMiddleware = createUploadMiddleware(uploadAudio.array('files', 10));
+const uploadImageMiddleware = createUploadMiddleware(uploadImage.single('cover'));
 
-const uploadImageMiddleware = (req, res, next) => {
-    uploadImage.single('cover')(req, res, (err) => {
-        if (err instanceof multer.MulterError || err instanceof Error) {
-            return res.status(400).json({
-                success: false,
-                message: err.message || 'File upload error.',
-            });
-        }
-        next();
-    });
-};
-
-/* ------------------------------ Routes Setup ------------------------------ */
+/* ----------------------------- Routes Setup ------------------------------ */
 router.post('/extract-metadata', uploadAudioMiddleware, handleExtractMetadata);
 router.post('/edit-metadata', uploadImageMiddleware, handleEditMetadata);
+router.post('/convert-audio', uploadMultipleAudioMiddleware, handleConvertAudio);
 
 export default router;

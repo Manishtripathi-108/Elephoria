@@ -45,7 +45,7 @@ const AnilistHeader = () => {
         <header className="shadow-neumorphic-inset-lg flex w-full items-end justify-center border-b bg-white/20 dark:bg-black/30" style={bannerStyle}>
             <div className="mt-10 flex w-5/6 max-w-(--breakpoint-md) items-end justify-start gap-5 opacity-100 md:mt-20">
                 <img src={userData?.avatar?.large} alt={`${userData?.name}'s avatar`} className="w-28 rounded-t-lg align-text-top md:w-36" />
-                <h1 className="text-primary font-aladin mb-5 w-full truncate text-3xl font-bold tracking-widest">{userData?.name}</h1>
+                <h1 className="text-text-primary font-aladin mb-5 w-full truncate text-3xl font-bold tracking-widest">{userData?.name}</h1>
             </div>
         </header>
     )

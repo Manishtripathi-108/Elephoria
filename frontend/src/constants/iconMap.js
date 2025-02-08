@@ -31,6 +31,7 @@ const iconMap = {
     moon: 'meteocons:clear-night-fill',
     moreDots: 'pepicons-pop:dots-y',
     music: 'solar:music-note-bold',
+    musicConvert: 'custom:musicConvert',
     password: 'line-md:watch-loop',
     person: 'line-md:person-filled',
     player: 'game-icons:centurion-helmet',

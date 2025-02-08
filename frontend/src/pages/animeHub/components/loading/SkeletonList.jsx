@@ -7,7 +7,7 @@ const SkeletonList = () => {
                 <div className="bg-primary m-3 h-8 w-1/3 animate-pulse rounded-lg"></div>
             </div>
             <table className="w-full table-auto">
-                <thead className="bg-primary text-secondary border-x border-b">
+                <thead className="bg-primary text-text-secondary border-x border-b">
                     <tr className="hidden sm:table-row">
                         <th className="sr-only"></th>
                         <th className="w-2/3 p-2">

@@ -9,7 +9,7 @@ import { AnilistProvider } from './context/AnilistContext'
 import { AuthTokenProvider } from './context/AuthTokenContext'
 import { LoadingBarProvider } from './context/LoadingBarContext'
 import { TicTacToeProvider } from './context/TicTacToe/TicTacToeContext'
-import './utils/iconUtils'
+import './utils/icons.utils'
 
 // Lazy-loaded components
 const Home = lazy(() => import('./pages/Home'))
@@ -19,6 +19,7 @@ const Anilist = lazy(() => import('./pages/anilist/Anilist'))
 const AnilistLogin = lazy(() => import('./components/PlatformLogin').then((module) => ({ default: module.AnilistLogin })))
 const AnilistRedirect = lazy(() => import('./components/PlatformRedirect').then((module) => ({ default: module.AnilistRedirect })))
 const AudioMetaExtractor = lazy(() => import('./pages/audio/AudioMetaExtractor'))
+const AudioConverter = lazy(() => import('./pages/audio/AudioConverter'))
 const SpotifyLogin = lazy(() => import('./components/PlatformLogin').then((module) => ({ default: module.SpotifyLogin })))
 const SpotifyRedirect = lazy(() => import('./components/PlatformRedirect').then((module) => ({ default: module.SpotifyRedirect })))
 const TicTacToe = lazy(() => import('./pages/games/tic-tac-toe/TicTacToe'))
@@ -53,6 +54,7 @@ const router = createBrowserRouter([
             /*                                    Audio                                   */
             /* -------------------------------------------------------------------------- */
             { path: '/audio/tags-editor', element: withSuspense(AudioMetaExtractor) },
+            { path: '/audio/converter', element: withSuspense(AudioConverter) },
             /* -------------------------------------------------------------------------- */
             /*                                    Anilist                                 */
             /* -------------------------------------------------------------------------- */

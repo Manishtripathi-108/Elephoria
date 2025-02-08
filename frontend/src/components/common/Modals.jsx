@@ -25,14 +25,15 @@ const openModal = (modalId) => {
 }
 
 /**
- * A modal dialog component with a backdrop and a close button.
+ * A modal dialog component that can be opened and closed programmatically.
  *
  * @param {string} modalId - The ID of the modal element to open.
- * @param {string} [className] - Additional CSS classes for the modal.
- * @param {boolean} [showCloseButton=true] - Whether to show the close button.
- * @param {React.ReactNode} children - The content of the modal.
- * @param {Function} [shouldClose=() => true] - A function to call to determine whether the modal
- * should be closed when the user clicks the backdrop.
+ * @param {string} [className] - Additional CSS classes for the modal element.
+ * @param {boolean} [showCloseButton=true] - Whether to show a close button.
+ * @param {React.ReactNode} children - The content of the modal dialog.
+ * @param {Function} [shouldClose=() => true] - A function to call to determine whether the modal should be closed when the user clicks the backdrop.
+ * @param {Function} [onClose] - A function to call when the modal is closed.
+ *
  */
 const Modal = ({ modalId, className = '', showCloseButton = true, children, shouldClose = () => true, onClose }) => {
     const handleBackdropClick = (e) => {
@@ -57,17 +58,18 @@ const Modal = ({ modalId, className = '', showCloseButton = true, children, shou
             onClick={handleBackdropClick}
             onClose={handleDialogClose}
             className={cn(
-                'bg-light-primary dark:bg-dark-primary shadow-neumorphic-inset-md m-auto hidden w-full max-w-2xl scale-0 overflow-visible rounded-xl border p-5 opacity-0 outline-hidden transition-all transition-discrete duration-300 ease-in-out',
-                'backdrop:bg-light-primary dark:backdrop:bg-dark-primary backdrop:opacity-75 backdrop:transition-all backdrop:transition-discrete backdrop:duration-300 backdrop:ease-in',
+                'bg-primary shadow-neumorphic-inset-md m-auto hidden w-full max-w-2xl scale-0 overflow-visible rounded-2xl border p-5 opacity-0 outline-hidden transition-all transition-discrete duration-300 ease-in-out',
+                'backdrop:bg-primary backdrop:opacity-75 backdrop:transition-all backdrop:transition-discrete backdrop:duration-300 backdrop:ease-in',
                 'open:block open:scale-100 open:opacity-100 open:delay-300 open:backdrop:scale-100',
                 'starting:open:scale-0 starting:open:opacity-0 starting:open:backdrop:scale-x-100 starting:open:backdrop:scale-y-0',
                 className
             )}>
-            <div className="shadow-neumorphic-md w-full max-w-full overflow-hidden rounded-lg border">
+            <div className="shadow-neumorphic-md w-full max-w-full overflow-hidden rounded-xl border">
                 {showCloseButton && (
                     <button
                         title="Close Modal"
-                        className="text-secondary hover:text-primary bg-light-secondary dark:bg-dark-secondary absolute top-2 right-2 z-20 cursor-pointer rounded-full p-1 text-lg select-none"
+                        type="button"
+                        className="text-text-secondary hover:text-text-primary bg-secondary absolute top-2 right-2 z-20 cursor-pointer rounded-full p-1 text-lg select-none"
                         onClick={handleCloseClick}
                         aria-label="Close Modal">
                         <Icon icon={iconMap.close} className="size-6" />
@@ -138,11 +140,11 @@ const ConfirmationModal = ({
             id={modalId}
             onClick={handleBackdropClick}
             onClose={handleDialogClose}
-            className="bg-light-primary dark:bg-dark-primary shadow-neumorphic-inset-md backdrop:bg-light-primary dark:backdrop:bg-dark-primary m-auto hidden w-fit max-w-2xl scale-0 rounded-xl border p-5 opacity-0 outline-hidden transition-all transition-discrete duration-300 ease-in-out backdrop:opacity-75 backdrop:transition-all backdrop:transition-discrete backdrop:duration-300 backdrop:ease-in open:block open:scale-100 open:opacity-100 open:delay-300 open:backdrop:scale-100 starting:open:scale-0 starting:open:opacity-0 starting:open:backdrop:scale-x-100 starting:open:backdrop:scale-y-0">
+            className="bg-primary shadow-neumorphic-inset-md backdrop:bg-primary m-auto hidden w-fit max-w-2xl scale-0 rounded-xl border p-5 opacity-0 outline-hidden transition-all transition-discrete duration-300 ease-in-out backdrop:opacity-75 backdrop:transition-all backdrop:transition-discrete backdrop:duration-300 backdrop:ease-in open:block open:scale-100 open:opacity-100 open:delay-300 open:backdrop:scale-100 starting:open:scale-0 starting:open:opacity-0 starting:open:backdrop:scale-x-100 starting:open:backdrop:scale-y-0">
             <div className="shadow-neumorphic-md overflow-hidden rounded-lg border">
                 <div className="relative max-h-full w-full max-w-md p-8 text-center md:p-10">
                     <Icon icon={icon} className="mx-auto mb-4 size-12 text-red-500" />
-                    <h3 className="text-primary mb-5 text-lg font-normal">{children}</h3>
+                    <h3 className="text-text-primary mb-5 text-lg font-normal">{children}</h3>
                     <JelloButton onClick={handleConfirmClick} title={confirmText} variant={isConfirmDanger ? 'danger' : 'primary'}>
                         {confirmText}
                     </JelloButton>
