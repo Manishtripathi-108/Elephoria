@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { Icon } from '@iconify/react'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 
+import Waves from '../../components/Waves'
 import Modal, { closeModal, openModal } from '../../components/common/Modals'
 import ProgressBar from '../../components/common/ProgressBar'
 import TabNavigation from '../../components/common/TabNavigation'
@@ -29,9 +30,6 @@ const AudioConverter = () => {
     const [open, setOpen] = useState({ values: null, name: null })
 
     const handleSubmit = async (values) => {
-        // console.log('Form Values:', values)
-        // return
-
         makeApiCall({
             url: API_ROUTES.AUDIO.CONVERT_AUDIO,
             method: 'POST',
@@ -43,7 +41,10 @@ const AudioConverter = () => {
                 values.fileSettings.forEach((settings) => {
                     formData.append('formats', values.sameFormatForAll ? values.global.format : settings.format)
                     formData.append('qualities', values.sameFormatForAll ? values.global.quality : settings.quality)
-                    formData.append('advanceSettings', values.sameFormatForAll ? values.global.advanceSettings : settings.advanceSettings)
+                    formData.append(
+                        'advanceSettings',
+                        values.sameFormatForAll ? JSON.stringify(values.global.advanceSettings) : JSON.stringify(settings.advanceSettings)
+                    )
                 })
 
                 return formData
@@ -89,42 +90,33 @@ const AudioConverter = () => {
                                     <>
                                         <Form className="space-y-6">
                                             {/* File Upload */}
-                                            <div
-                                                className={`form-group flex flex-col items-center justify-center ${values.files.length > 0 ? 'hidden' : ''}`}>
-                                                <div className="relative m-20 aspect-square w-full max-w-32">
-                                                    <span className="shadow-neumorphic-sm animate-waves absolute inset-0 h-full w-full rounded-full" />
-                                                    <span
-                                                        className="shadow-neumorphic-sm animate-waves absolute inset-0 h-full w-full rounded-full"
-                                                        style={{ animationDelay: '2.5s' }}
-                                                    />
-                                                    <label className="bg-primary button relative aspect-square w-full cursor-pointer rounded-full p-2">
-                                                        <input
-                                                            id="file-upload"
-                                                            type="file"
-                                                            multiple
-                                                            accept="audio/*"
-                                                            className="hidden"
-                                                            onChange={(e) => {
-                                                                const newFiles = Array.from(e.target.files)
-                                                                const validFiles = [...values.files, ...newFiles]
-                                                                    .slice(0, MAX_FILES)
-                                                                    .filter(
-                                                                        (file, index, self) =>
-                                                                            self.findIndex((f) => f.name === file.name && f.size === file.size) ===
-                                                                            index
-                                                                    )
-
-                                                                setFieldValue('files', validFiles)
-                                                                setFieldValue(
-                                                                    'fileSettings',
-                                                                    validFiles.map((file, index) => values.fileSettings[index] || values.global)
+                                            <Waves className={`mx-auto my-20 block ${values.files.length > 0 ? 'hidden' : ''}`}>
+                                                <label className="bg-primary button relative aspect-square w-full cursor-pointer rounded-full p-2">
+                                                    <input
+                                                        id="file-upload"
+                                                        type="file"
+                                                        multiple
+                                                        accept="audio/*"
+                                                        className="hidden"
+                                                        onChange={(e) => {
+                                                            const newFiles = Array.from(e.target.files)
+                                                            const validFiles = [...values.files, ...newFiles]
+                                                                .slice(0, MAX_FILES)
+                                                                .filter(
+                                                                    (file, index, self) =>
+                                                                        self.findIndex((f) => f.name === file.name && f.size === file.size) === index
                                                                 )
-                                                            }}
-                                                        />
-                                                        <Icon icon={iconMap.upload} className="text-accent size-15" />
-                                                    </label>
-                                                </div>
-                                            </div>
+
+                                                            setFieldValue('files', validFiles)
+                                                            setFieldValue(
+                                                                'fileSettings',
+                                                                validFiles.map((file, index) => values.fileSettings[index] || values.global)
+                                                            )
+                                                        }}
+                                                    />
+                                                    <Icon icon={iconMap.upload} className="text-accent size-15" />
+                                                </label>
+                                            </Waves>
 
                                             {/* File List */}
                                             {values.files.length > 0 && (
@@ -133,9 +125,9 @@ const AudioConverter = () => {
                                                         {values.files.map((file, index) => (
                                                             <div
                                                                 key={index}
-                                                                className="shadow-neumorphic-inset-xs mb-2 flex w-full flex-col items-center justify-between gap-4 rounded-xl border p-4 sm:flex-row">
+                                                                className="shadow-neumorphic-inset-xs relative mb-2 flex w-full flex-col items-center justify-between gap-4 rounded-xl border p-4 sm:flex-row">
                                                                 {/* File Info */}
-                                                                <div className="relative flex w-full min-w-0 shrink items-center gap-4">
+                                                                <div className="flex w-full min-w-0 shrink items-center gap-4">
                                                                     <span className="shadow-neumorphic-xs block rounded-lg border p-1.5">
                                                                         <Icon icon={iconMap.music} className="size-7" />
                                                                     </span>
@@ -154,80 +146,63 @@ const AudioConverter = () => {
                                                                             className="ml-4 inline-block text-center text-sm text-red-500"
                                                                         />
                                                                     </span>
-
-                                                                    {/* Mobile Delete Button */}
-                                                                    <button
-                                                                        type="button"
-                                                                        className="absolute top-1 right-2 text-red-500 transition hover:text-red-600 sm:hidden"
-                                                                        onClick={() => {
-                                                                            const newFiles = values.files.filter((_, i) => i !== index)
-                                                                            const newFileSettings = values.fileSettings.filter((_, i) => i !== index)
-                                                                            setFieldValue('files', newFiles)
-                                                                            setFieldValue('fileSettings', newFileSettings)
-                                                                        }}>
-                                                                        <Icon icon={iconMap.closeAnimated} className="size-5" />
-                                                                    </button>
                                                                 </div>
 
                                                                 {/* Actions (Format Select + Buttons) */}
-                                                                <div className="flex w-full items-center justify-between sm:w-auto sm:space-x-4">
-                                                                    {!values.sameFormatForAll && values.files.length > 1 && (
-                                                                        <>
-                                                                            {/* Format Selection */}
-                                                                            <Field
-                                                                                as="select"
-                                                                                name={`fileSettings.${index}.format`}
-                                                                                className="form-field w-fit text-sm">
-                                                                                {SUPPORTED_FORMATS.map((format) => (
-                                                                                    <option key={format} value={format}>
-                                                                                        {format}
-                                                                                    </option>
-                                                                                ))}
-                                                                            </Field>
+                                                                {!values.sameFormatForAll && values.files.length > 1 && (
+                                                                    <div className="flex w-full items-center justify-between sm:w-auto sm:space-x-4">
+                                                                        {/* Format Selection */}
+                                                                        <Field
+                                                                            as="select"
+                                                                            name={`fileSettings.${index}.format`}
+                                                                            className="form-field w-fit text-sm">
+                                                                            {SUPPORTED_FORMATS.map((format) => (
+                                                                                <option key={format} value={format}>
+                                                                                    {format}
+                                                                                </option>
+                                                                            ))}
+                                                                        </Field>
 
-                                                                            {/* Settings Button */}
-                                                                            <button
-                                                                                type="button"
-                                                                                className="sm:button rounded-full p-2"
-                                                                                onClick={() =>
-                                                                                    openAdvancedSettings(
-                                                                                        values.fileSettings[index]?.advanceSettings,
-                                                                                        `fileSettings.${index}.advanceSettings`
-                                                                                    )
-                                                                                }>
-                                                                                <Icon icon={iconMap.settingsOutlined} className="size-5" />
-                                                                            </button>
-                                                                        </>
-                                                                    )}
+                                                                        {/* Settings Button */}
+                                                                        <button
+                                                                            title="Settings"
+                                                                            type="button"
+                                                                            className="sm:button cursor-pointer rounded-full p-2"
+                                                                            onClick={() =>
+                                                                                openAdvancedSettings(
+                                                                                    values.fileSettings[index]?.advanceSettings,
+                                                                                    `fileSettings.${index}.advanceSettings`
+                                                                                )
+                                                                            }>
+                                                                            <Icon icon={iconMap.settingsOutlined} className="size-5" />
+                                                                        </button>
+                                                                    </div>
+                                                                )}
 
-                                                                    {/* Desktop Delete Button */}
-                                                                    <button
-                                                                        type="button"
-                                                                        className="button hidden rounded-xl p-2 text-red-500 sm:block"
-                                                                        onClick={() => {
-                                                                            const newFiles = values.files.filter((_, i) => i !== index)
-                                                                            const newFileSettings = values.fileSettings.filter((_, i) => i !== index)
-                                                                            setFieldValue('files', newFiles)
-                                                                            setFieldValue('fileSettings', newFileSettings)
-                                                                        }}>
-                                                                        <Icon icon={iconMap.closeAnimated} className="size-5" />
-                                                                    </button>
-                                                                </div>
+                                                                <button
+                                                                    type="button"
+                                                                    title="Remove"
+                                                                    className="sm:button absolute top-4 right-3 cursor-pointer text-red-500 sm:relative sm:top-0 sm:right-0 sm:rounded-xl sm:p-2 dark:text-red-500"
+                                                                    onClick={() => {
+                                                                        const newFiles = values.files.filter((_, i) => i !== index)
+                                                                        const newFileSettings = values.fileSettings.filter((_, i) => i !== index)
+                                                                        setFieldValue('files', newFiles)
+                                                                        setFieldValue('fileSettings', newFileSettings)
+                                                                    }}>
+                                                                    <Icon icon={iconMap.closeAnimated} className="size-5" />
+                                                                </button>
                                                             </div>
                                                         ))}
 
                                                         {/* Same Format for All */}
                                                         {values.files.length > 1 && (
-                                                            <div className="mt-4 ml-4 w-full">
-                                                                <label className="form-checkbox">
-                                                                    <Field type="checkbox" name="sameFormatForAll" className="checkbox-field" />
-                                                                    <span className="form-text text-sm">
-                                                                        Use the same format and quality for all files
-                                                                    </span>
-                                                                </label>
-                                                            </div>
+                                                            <label className="form-checkbox mt-4">
+                                                                <Field type="checkbox" name="sameFormatForAll" className="checkbox-field" />
+                                                                <span className="form-text text-sm">
+                                                                    Use the same format and quality for all files
+                                                                </span>
+                                                            </label>
                                                         )}
-
                                                         <ErrorMessage name="files" component="p" className="mt-1 text-center text-sm text-red-500" />
 
                                                         {/* Add More Files Button */}
@@ -292,6 +267,7 @@ const AudioConverter = () => {
                                                             </div>
 
                                                             <JelloButton
+                                                                title="Advanced Settings"
                                                                 icon={iconMap.settings}
                                                                 className="mt-4 ml-auto block"
                                                                 onClick={() =>

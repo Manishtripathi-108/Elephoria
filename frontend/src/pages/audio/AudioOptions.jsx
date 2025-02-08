@@ -215,6 +215,7 @@ const AudioOptions = ({ values, onApply }) => {
                                                 className="form-field mt-1"
                                                 placeholder="00:00:00"
                                             />
+                                            <p className="form-text">Set the start time of the trimmed audio.</p>
                                             <ErrorMessage name="trim.trimStart" component="p" className="text-sm text-red-500" />
                                         </div>
 
@@ -230,6 +231,7 @@ const AudioOptions = ({ values, onApply }) => {
                                                 className="form-field mt-1"
                                                 placeholder="00:00:00"
                                             />
+                                            <p className="form-text">Set the end time of the trimmed audio.</p>
                                             <ErrorMessage name="trim.trimEnd" component="p" className="text-sm text-red-500" />
                                         </div>
                                     </div>

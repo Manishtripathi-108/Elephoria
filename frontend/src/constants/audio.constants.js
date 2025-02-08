@@ -195,8 +195,41 @@ export const audioOptionsValidationSchema = Yup.object().shape({
     }),
 
     trim: Yup.object().shape({
-        trimStart: Yup.string().matches(/^(\d{2}:\d{2}:\d{2})$/, 'Format must be HH:MM:SS'),
-        trimEnd: Yup.string().matches(/^(\d{2}:\d{2}:\d{2})$/, 'Format must be HH:MM:SS'),
+        trimStart: Yup.string()
+            .matches(/^(\d{2}):(\d{2}):(\d{2})$/, 'Format must be HH:MM:SS')
+            .test('isValidTime', 'Time is invalid', (value) => {
+                if (value) {
+                    const [hours, minutes, seconds] = value.split(':').map(Number)
+                    return hours >= 0 && hours < 24 && minutes >= 0 && minutes < 60 && seconds >= 0 && seconds < 60
+                }
+                return false
+            })
+            .required('Trim start time is required'),
+
+        trimEnd: Yup.string()
+            .matches(/^(\d{2}):(\d{2}):(\d{2})$/, 'Format must be HH:MM:SS')
+            .test('isValidTime', 'Time is invalid', (value) => {
+                if (value) {
+                    const [hours, minutes, seconds] = value.split(':').map(Number)
+                    return hours >= 0 && hours < 24 && minutes >= 0 && minutes < 60 && seconds >= 0 && seconds < 60
+                }
+                return false
+            })
+            .test('isAfterTrimStart', 'End time must be after start time', function (value) {
+                const trimStart = this.parent.trimStart
+                if (value && trimStart) {
+                    const [startHours, startMinutes, startSeconds] = trimStart.split(':').map(Number)
+                    const [endHours, endMinutes, endSeconds] = value.split(':').map(Number)
+
+                    return (
+                        endHours > startHours ||
+                        (endHours === startHours && endMinutes > startMinutes) ||
+                        (endHours === startHours && endMinutes === startMinutes && endSeconds > startSeconds)
+                    )
+                }
+                return true
+            })
+            .required('Trim end time is required'),
     }),
 })
 

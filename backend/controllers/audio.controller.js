@@ -71,7 +71,7 @@ export const handleEditMetadata = asyncHandler(async (req, res) => {
         if (err) {
             return errorResponse(res, 'Failed to download the edited file.', err);
         } else {
-            setTimeout(() => cleanupFiles([editResult.fileUrl]), 20 * 60 * 1000); // Deletes after 20 minutes
+            setTimeout(() => cleanupFiles([editResult.fileUrl]), process.env.TEMP_FILE_DELETE_DELAY);
         }
     });
 
@@ -83,48 +83,62 @@ export const handleConvertAudio = asyncHandler(async (req, res) => {
         return errorResponse(res, 'No files uploaded. Please upload valid audio files to convert.', null, 400);
     }
 
-    const { formats, qualities } = req.body;
+    const { formats, qualities, advanceSettings } = req.body;
 
     if (!formats) {
         return errorResponse(res, 'Format is missing. Please provide a valid format to convert the audio.', null, 400);
     }
 
-    const convertedFiles = [];
+    let downloadFilePath = null;
 
     // Convert each file
-    await Promise.all(req.files.map(async (file, index) => {
-        console.log('Converting file:', file);
-
+    if (req.files.length === 1) {
         const { success, fileUrl } = await convertAudioFormat(
-            file.path,
-            file?.originalname,
-            formats[index]?.toLowerCase(),
-            qualities[index]?.toLowerCase()
+            req.files[0].path,
+            req.files[0]?.originalname,
+            formats?.toLowerCase(),
+            qualities?.toLowerCase(),
+            JSON.parse(advanceSettings) || {}
         );
-        if (success) convertedFiles.push(fileUrl);
-        cleanupFiles([file.path]);
-    }));
+        if (success) downloadFilePath = fileUrl;
+        cleanupFiles([req.files[0].path]);
+    } else {
+        const convertedFiles = [];
 
-    if (convertedFiles.length === 0) {
-        return errorResponse(res, 'Failed to convert any files', null, 500);
+        await Promise.all(
+            req.files.map(async (file, index) => {
+                const { success, fileUrl } = await convertAudioFormat(
+                    file.path,
+                    file?.originalname,
+                    formats[index]?.toLowerCase(),
+                    qualities[index]?.toLowerCase(),
+                    JSON.parse(advanceSettings[index]) || {}
+                );
+                if (success) convertedFiles.push(fileUrl);
+                cleanupFiles([file.path]);
+            })
+        );
+
+        if (convertedFiles.length === 0) {
+            return errorResponse(res, 'Failed to convert any files', null, 500);
+        }
+
+        // Create ZIP file
+        downloadFilePath = getTempPath('zip', `converted_${Date.now()}.zip`);
+        await createDirectoryIfNotExists(getTempPath('zip'));
+        await createZipFile(convertedFiles, downloadFilePath);
+
+        // Delete converted files after zipping
+        cleanupFiles(convertedFiles);
     }
 
-    // Create ZIP file
-    const zipFilePath = getTempPath('zip', `converted_${Date.now()}.zip`);
-    await createDirectoryIfNotExists(getTempPath('zip'));
-    await createZipFile(convertedFiles, zipFilePath);
-
-    // Delete converted files after zipping
-    cleanupFiles(convertedFiles);
-
     // Send ZIP file as response
-    res.download(zipFilePath, `converted_${Date.now()}.zip`, (err) => {
+    res.download(downloadFilePath, `converted_${Date.now()}.${extname(downloadFilePath)}`, (err) => {
         if (err) {
             console.error('Error sending ZIP file:', err);
             res.status(500).json({ success: false, message: 'Failed to send zip file' });
         } else {
-            // Delete zip file after download
-            setTimeout(() => cleanupFiles([zipFilePath]), 60 * 1000); // Deletes after 1 minute
+            setTimeout(() => cleanupFiles([downloadFilePath]), process.env.TEMP_FILE_DELETE_DELAY);
         }
     });
 });
