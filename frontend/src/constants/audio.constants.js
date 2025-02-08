@@ -148,7 +148,7 @@ export const QUALITY_OPTIONS = [
 /* ----------------------------- Initial Values ----------------------------- */
 export const AUDIO_OPTIONS_INITIAL_VALUES = {
     audio: {
-        channels: 'no change',
+        channels: '0',
         volume: 100,
         sampleRate: '44100 Hz',
     },
@@ -181,7 +181,7 @@ export const AUDIO_CONVERTER_INITIAL_VALUES = {
 /* --------------------------- Validation Schemas --------------------------- */
 export const audioOptionsValidationSchema = Yup.object().shape({
     audio: Yup.object().shape({
-        channels: Yup.string().oneOf(SUPPORTED_CHANNELS, 'Invalid channel selection'),
+        channels: Yup.string().oneOf(['0', '1', '2'], 'Invalid channel selection'),
         volume: Yup.number().min(0, 'Volume cannot be negative').max(500, 'Volume cannot exceed 500%'),
         sampleRate: Yup.string().oneOf(SUPPORTED_SAMPLE_RATES, 'Invalid sample rate'),
     }),
@@ -202,9 +202,8 @@ export const audioOptionsValidationSchema = Yup.object().shape({
                     const [hours, minutes, seconds] = value.split(':').map(Number)
                     return hours >= 0 && hours < 24 && minutes >= 0 && minutes < 60 && seconds >= 0 && seconds < 60
                 }
-                return false
-            })
-            .required('Trim start time is required'),
+                return true
+            }),
 
         trimEnd: Yup.string()
             .matches(/^(\d{2}):(\d{2}):(\d{2})$/, 'Format must be HH:MM:SS')
@@ -213,7 +212,7 @@ export const audioOptionsValidationSchema = Yup.object().shape({
                     const [hours, minutes, seconds] = value.split(':').map(Number)
                     return hours >= 0 && hours < 24 && minutes >= 0 && minutes < 60 && seconds >= 0 && seconds < 60
                 }
-                return false
+                return true
             })
             .test('isAfterTrimStart', 'End time must be after start time', function (value) {
                 const trimStart = this.parent.trimStart
@@ -228,8 +227,7 @@ export const audioOptionsValidationSchema = Yup.object().shape({
                     )
                 }
                 return true
-            })
-            .required('Trim end time is required'),
+            }),
     }),
 })
 

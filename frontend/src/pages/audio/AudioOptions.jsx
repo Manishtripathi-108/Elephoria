@@ -57,8 +57,8 @@ const AudioOptions = ({ values, onApply }) => {
                                                 name="audio.channels"
                                                 id="audio.channels"
                                                 className="form-field mt-1">
-                                                {SUPPORTED_CHANNELS.map((channel) => (
-                                                    <option key={channel} value={channel}>
+                                                {SUPPORTED_CHANNELS.map((channel, index) => (
+                                                    <option key={index} value={index}>
                                                         {channel}
                                                     </option>
                                                 ))}
