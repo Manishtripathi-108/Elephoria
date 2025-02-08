@@ -2,64 +2,31 @@ import React, { useState } from 'react'
 
 import { Icon } from '@iconify/react'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
-import * as Yup from 'yup'
 
+import Modal, { closeModal, openModal } from '../../components/common/Modals'
 import ProgressBar from '../../components/common/ProgressBar'
 import TabNavigation from '../../components/common/TabNavigation'
 import JelloButton from '../../components/common/buttons/JelloButton'
 import API_ROUTES from '../../constants/api.constants'
+import {
+    AUDIO_CONVERTER_INITIAL_VALUES,
+    MAX_FILES,
+    QUALITY_OPTIONS,
+    SUPPORTED_FORMATS,
+    audioConverterValidationSchema,
+} from '../../constants/audio.constants'
 import iconMap from '../../constants/iconMap'
 import useAuthToken from '../../context/AuthTokenContext'
 import useSafeApiCall from '../../hooks/useSafeApiCall'
 import useUploadProgress from '../../hooks/useUploadProgress'
 import { getFileExtension } from '../../utils/file.utils'
-
-const SUPPORTED_FORMATS = ['AAC', 'MP3', 'WMA', 'AIFF', 'FLAC', 'OGG', 'M4A', 'WAV']
-const QUALITY_OPTIONS = [
-    { label: 'Economy (64 kbps)', value: 64 },
-    { label: 'Standard (128 kbps)', value: 128 },
-    { label: 'Good (192 kbps)', value: 192 },
-    { label: 'Ultra (256 kbps)', value: 256 },
-    { label: 'Best (320 kbps)', value: 320 },
-]
-
-const MAX_FILE_SIZE = 50 * 1024 * 1024 // 50MB
-const MAX_FILES = 10
-
-const validationSchema = Yup.object().shape({
-    files: Yup.array()
-        .min(1, 'Please upload at least one file')
-        .max(MAX_FILES, `You can only upload up to ${MAX_FILES} files`)
-        .of(
-            Yup.mixed()
-                .test('fileType', 'Only audio files are allowed', (file) => file && file.type.startsWith('audio/'))
-                .test('fileSize', 'Each file must be under 50MB', (file) => file && file.size <= MAX_FILE_SIZE)
-        ),
-    fileSettings: Yup.array().of(
-        Yup.object().shape({
-            format: Yup.string().oneOf(SUPPORTED_FORMATS, 'Invalid format').required('Format is required'),
-            quality: Yup.number()
-                .oneOf(
-                    QUALITY_OPTIONS.map(({ value }) => value),
-                    'Invalid quality'
-                )
-                .required('Quality is required'),
-        })
-    ),
-    globalFormat: Yup.string().oneOf(SUPPORTED_FORMATS, 'Invalid format').required('Format is required'),
-    globalQuality: Yup.number()
-        .oneOf(
-            QUALITY_OPTIONS.map(({ value }) => value),
-            'Invalid quality'
-        )
-        .required('Quality is required'),
-    sameFormatForAll: Yup.boolean(),
-})
+import AudioOptions from './AudioOptions'
 
 const AudioConverter = () => {
     const { appApiClient } = useAuthToken()
-    const { isLoading, error, makeApiCall } = useSafeApiCall(appApiClient)
-    const { uploadState, onUploadProgress } = useUploadProgress()
+    const { isLoading, error, makeApiCall, cancelRequest } = useSafeApiCall(appApiClient)
+    const { uploadState, resetUploadProgress, onUploadProgress } = useUploadProgress()
+    const [open, setOpen] = useState({ values: null, name: null })
 
     const handleSubmit = async (values) => {
         // console.log('Form Values:', values)
@@ -74,8 +41,9 @@ const AudioConverter = () => {
                 values.files.forEach((file) => formData.append('files', file))
 
                 values.fileSettings.forEach((settings) => {
-                    formData.append('formats', values.sameFormatForAll ? values.globalFormat : settings.format)
-                    formData.append('qualities', values.sameFormatForAll ? values.globalQuality : settings.quality)
+                    formData.append('formats', values.sameFormatForAll ? values.global.format : settings.format)
+                    formData.append('qualities', values.sameFormatForAll ? values.global.quality : settings.quality)
+                    formData.append('advanceSettings', values.sameFormatForAll ? values.global.advanceSettings : settings.advanceSettings)
                 })
 
                 return formData
@@ -91,11 +59,17 @@ const AudioConverter = () => {
                 link.remove()
                 window.URL.revokeObjectURL(url)
             },
-            onUploadProgress: onUploadProgress,
+            onUploadProgress,
             onEnd: () => {
+                resetUploadProgress()
                 console.log('Audio conversion completed.')
             },
         })
+    }
+
+    const openAdvancedSettings = (values, name) => {
+        setOpen({ values, name })
+        openModal('advancedSettingsModal')
     }
 
     return (
@@ -105,231 +79,288 @@ const AudioConverter = () => {
                     <h1 className="text-text-primary text-center text-4xl font-bold">Audio Converter</h1>
                     <p className="mb-6 text-center">Upload audio files and convert them to different formats and qualities.</p>
 
-                    <Formik
-                        initialValues={{ files: [], sameFormatForAll: true, globalFormat: 'M4A', globalQuality: 128, fileSettings: [] }}
-                        validationSchema={validationSchema}
-                        onSubmit={handleSubmit}>
-                        {({ setFieldValue, values, resetForm }) => (
-                            <Form className="space-y-6">
-                                {/* File Upload */}
-                                <div className={`form-group flex flex-col items-center justify-center ${values.files.length > 0 ? 'hidden' : ''}`}>
-                                    <div className="relative m-20 aspect-square w-full max-w-32">
-                                        <span className="shadow-neumorphic-sm animate-waves absolute inset-0 h-full w-full rounded-full" />
-                                        <span
-                                            className="shadow-neumorphic-sm animate-waves absolute inset-0 h-full w-full rounded-full"
-                                            style={{ animationDelay: '2.5s' }}
-                                        />
-                                        <label className="bg-primary button relative aspect-square w-full cursor-pointer rounded-full p-2">
-                                            <input
-                                                id="file-upload"
-                                                type="file"
-                                                multiple
-                                                accept="audio/*"
-                                                className="hidden"
-                                                onChange={(e) => {
-                                                    const newFiles = Array.from(e.target.files)
-                                                    const validFiles = [...values.files, ...newFiles].slice(0, MAX_FILES)
-
-                                                    setFieldValue('files', validFiles)
-                                                    setFieldValue(
-                                                        'fileSettings',
-                                                        validFiles.map(
-                                                            (file, index) =>
-                                                                values.fileSettings[index] || {
-                                                                    format: values.globalFormat,
-                                                                    quality: values.globalQuality,
-                                                                }
-                                                        )
-                                                    )
-                                                }}
-                                            />
-                                            <Icon icon={iconMap.upload} className="text-accent size-15" />
-                                        </label>
-                                    </div>
-                                </div>
-
-                                {/* File List */}
-                                {values.files.length > 0 && (
+                    {!isLoading && (
+                        <>
+                            <Formik
+                                initialValues={AUDIO_CONVERTER_INITIAL_VALUES}
+                                validationSchema={audioConverterValidationSchema}
+                                onSubmit={handleSubmit}>
+                                {({ setFieldValue, values, resetForm }) => (
                                     <>
-                                        <div className="w-full border-b pb-6">
-                                            {values.files.map((file, index) => (
-                                                <div key={index} className="shadow-neumorphic-inset-xs mb-2 rounded-xl border p-4">
-                                                    <div className="flex w-full flex-col items-center justify-between gap-4 sm:flex-row">
-                                                        {/* File Info */}
-                                                        <div className="relative flex w-full min-w-0 shrink items-center gap-4">
-                                                            <span className="shadow-neumorphic-xs block rounded-lg border p-1.5">
-                                                                <Icon icon={iconMap.music} className="size-7" />
-                                                            </span>
-                                                            <span>
-                                                                <p
-                                                                    className="text-text-primary mr-10 line-clamp-1 text-sm font-medium"
-                                                                    title={file.name}>
-                                                                    {file.name}
-                                                                </p>
-                                                                <p className="text-text-secondary inline text-xs">
-                                                                    {`${getFileExtension(file.name).toUpperCase()} . ${(file.size / 1024 ** 2).toFixed(2)} MB ${isLoading ? '. ' + uploadState?.formattedEstimated : ''}`}
-                                                                </p>
-                                                                <ErrorMessage
-                                                                    name={`fileSettings.${index}.format`}
-                                                                    component="p"
-                                                                    className="ml-4 inline-block text-center text-sm text-red-500"
-                                                                />
-                                                                <p className="ml-4 inline-block text-center text-sm text-red-500">
-                                                                    Lorem ipsum dolor sit amet.
-                                                                </p>
-                                                            </span>
+                                        <Form className="space-y-6">
+                                            {/* File Upload */}
+                                            <div
+                                                className={`form-group flex flex-col items-center justify-center ${values.files.length > 0 ? 'hidden' : ''}`}>
+                                                <div className="relative m-20 aspect-square w-full max-w-32">
+                                                    <span className="shadow-neumorphic-sm animate-waves absolute inset-0 h-full w-full rounded-full" />
+                                                    <span
+                                                        className="shadow-neumorphic-sm animate-waves absolute inset-0 h-full w-full rounded-full"
+                                                        style={{ animationDelay: '2.5s' }}
+                                                    />
+                                                    <label className="bg-primary button relative aspect-square w-full cursor-pointer rounded-full p-2">
+                                                        <input
+                                                            id="file-upload"
+                                                            type="file"
+                                                            multiple
+                                                            accept="audio/*"
+                                                            className="hidden"
+                                                            onChange={(e) => {
+                                                                const newFiles = Array.from(e.target.files)
+                                                                const validFiles = [...values.files, ...newFiles]
+                                                                    .slice(0, MAX_FILES)
+                                                                    .filter(
+                                                                        (file, index, self) =>
+                                                                            self.findIndex((f) => f.name === file.name && f.size === file.size) ===
+                                                                            index
+                                                                    )
 
-                                                            {/* Mobile Delete Button */}
-                                                            <button
-                                                                type="button"
-                                                                className="absolute top-1 right-2 text-red-500 transition hover:text-red-600 sm:hidden"
-                                                                onClick={() => {
-                                                                    const newFiles = values.files.filter((_, i) => i !== index)
-                                                                    const newFileSettings = values.fileSettings.filter((_, i) => i !== index)
-                                                                    setFieldValue('files', newFiles)
-                                                                    setFieldValue('fileSettings', newFileSettings)
-                                                                }}>
-                                                                <Icon icon={iconMap.closeAnimated} className="size-5" />
-                                                            </button>
-                                                        </div>
-
-                                                        {/* Actions (Format Select + Buttons) */}
-                                                        <div className="flex w-full items-center justify-between sm:w-auto sm:space-x-4">
-                                                            {!values.sameFormatForAll && values.files.length > 1 && (
-                                                                <>
-                                                                    {/* Format Selection */}
-                                                                    <Field
-                                                                        as="select"
-                                                                        name={`fileSettings.${index}.format`}
-                                                                        className="form-field w-fit text-sm">
-                                                                        {SUPPORTED_FORMATS.map((format) => (
-                                                                            <option key={format} value={format}>
-                                                                                {format}
-                                                                            </option>
-                                                                        ))}
-                                                                    </Field>
-
-                                                                    {/* Settings Button */}
-                                                                    <button type="button" className="sm:button rounded-full p-2">
-                                                                        <Icon icon={iconMap.settingsOutlined} className="size-5" />
-                                                                    </button>
-                                                                </>
-                                                            )}
-
-                                                            {/* Desktop Delete Button */}
-                                                            <button
-                                                                type="button"
-                                                                className="button hidden rounded-xl p-2 text-red-500 sm:block"
-                                                                onClick={() => {
-                                                                    const newFiles = values.files.filter((_, i) => i !== index)
-                                                                    const newFileSettings = values.fileSettings.filter((_, i) => i !== index)
-                                                                    setFieldValue('files', newFiles)
-                                                                    setFieldValue('fileSettings', newFileSettings)
-                                                                }}>
-                                                                <Icon icon={iconMap.closeAnimated} className="size-5" />
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                    <ProgressBar percentage={uploadState.progress} className="mt-2 h-2 p-0" />
-                                                </div>
-                                            ))}
-
-                                            {/* Same Format for All */}
-                                            {values.files.length > 1 && (
-                                                <div className="mt-4 ml-4 w-full">
-                                                    <label className="form-checkbox">
-                                                        <Field type="checkbox" name="sameFormatForAll" className="checkbox-field" />
-                                                        <span className="form-text text-sm">Use the same format and quality for all files</span>
+                                                                setFieldValue('files', validFiles)
+                                                                setFieldValue(
+                                                                    'fileSettings',
+                                                                    validFiles.map((file, index) => values.fileSettings[index] || values.global)
+                                                                )
+                                                            }}
+                                                        />
+                                                        <Icon icon={iconMap.upload} className="text-accent size-15" />
                                                     </label>
                                                 </div>
-                                            )}
-
-                                            <ErrorMessage name="files" component="p" className="mt-1 text-center text-sm text-red-500" />
-
-                                            {/* Add More Files Button */}
-                                            <div className="mt-4 flex w-full justify-end">
-                                                <JelloButton
-                                                    icon={iconMap.filePlus}
-                                                    disabled={isLoading || values.files.length >= MAX_FILES}
-                                                    onClick={() => {
-                                                        if (values.files.length >= MAX_FILES) return
-                                                        document.getElementById('file-upload').click()
-                                                    }}>
-                                                    Add more Files
-                                                </JelloButton>
                                             </div>
-                                        </div>
 
-                                        {(values.files.length < 2 || values.sameFormatForAll) && (
-                                            <div className="w-full border-b pb-6">
-                                                <label className="text-text-primary text-base">Format</label>
-                                                <TabNavigation
-                                                    tabs={SUPPORTED_FORMATS}
-                                                    currentTab={values.globalFormat}
-                                                    setCurrentTab={(tab) => setFieldValue('globalFormat', tab)}
-                                                    className="mt-2"
-                                                />
-                                                <ErrorMessage name="globalFormat" component="p" className="mt-2 text-sm text-red-500" />
+                                            {/* File List */}
+                                            {values.files.length > 0 && (
+                                                <>
+                                                    <div className="w-full border-b pb-6">
+                                                        {values.files.map((file, index) => (
+                                                            <div
+                                                                key={index}
+                                                                className="shadow-neumorphic-inset-xs mb-2 flex w-full flex-col items-center justify-between gap-4 rounded-xl border p-4 sm:flex-row">
+                                                                {/* File Info */}
+                                                                <div className="relative flex w-full min-w-0 shrink items-center gap-4">
+                                                                    <span className="shadow-neumorphic-xs block rounded-lg border p-1.5">
+                                                                        <Icon icon={iconMap.music} className="size-7" />
+                                                                    </span>
+                                                                    <span>
+                                                                        <p
+                                                                            className="text-text-primary mr-10 line-clamp-1 text-sm font-medium"
+                                                                            title={file.name}>
+                                                                            {file.name}
+                                                                        </p>
+                                                                        <p className="text-text-secondary inline text-xs">
+                                                                            {`${getFileExtension(file.name).toUpperCase()} - ${(file.size / 1024 ** 2).toFixed(2)} MB`}
+                                                                        </p>
+                                                                        <ErrorMessage
+                                                                            name={`fileSettings.${index}.format`}
+                                                                            component="p"
+                                                                            className="ml-4 inline-block text-center text-sm text-red-500"
+                                                                        />
+                                                                    </span>
 
-                                                <div className="mt-4">
-                                                    <label className="text-text-primary text-base">Quality</label>
-                                                    <Field
-                                                        as="input"
-                                                        type="range"
-                                                        name="globalQuality"
-                                                        min="64"
-                                                        max="320"
-                                                        step="64"
-                                                        style={{
-                                                            '--value-percentage': `${((values.globalQuality - 64) / (320 - 64)) * 100}%`,
-                                                        }}
-                                                        onChange={(e) => setFieldValue('globalQuality', Number(e.target.value))}
-                                                        className="form-field mt-2 w-full"
-                                                    />
-                                                    <div className="mt-2 flex justify-between text-sm">
-                                                        {QUALITY_OPTIONS.map(({ label, value }) => (
-                                                            <button
-                                                                key={value}
-                                                                type="button"
-                                                                className={`cursor-pointer focus:outline-none ${
-                                                                    values.globalQuality === value ? 'text-highlight font-bold' : ''
-                                                                }`}
-                                                                onClick={() => setFieldValue('globalQuality', value)}>
-                                                                {label}
-                                                            </button>
+                                                                    {/* Mobile Delete Button */}
+                                                                    <button
+                                                                        type="button"
+                                                                        className="absolute top-1 right-2 text-red-500 transition hover:text-red-600 sm:hidden"
+                                                                        onClick={() => {
+                                                                            const newFiles = values.files.filter((_, i) => i !== index)
+                                                                            const newFileSettings = values.fileSettings.filter((_, i) => i !== index)
+                                                                            setFieldValue('files', newFiles)
+                                                                            setFieldValue('fileSettings', newFileSettings)
+                                                                        }}>
+                                                                        <Icon icon={iconMap.closeAnimated} className="size-5" />
+                                                                    </button>
+                                                                </div>
+
+                                                                {/* Actions (Format Select + Buttons) */}
+                                                                <div className="flex w-full items-center justify-between sm:w-auto sm:space-x-4">
+                                                                    {!values.sameFormatForAll && values.files.length > 1 && (
+                                                                        <>
+                                                                            {/* Format Selection */}
+                                                                            <Field
+                                                                                as="select"
+                                                                                name={`fileSettings.${index}.format`}
+                                                                                className="form-field w-fit text-sm">
+                                                                                {SUPPORTED_FORMATS.map((format) => (
+                                                                                    <option key={format} value={format}>
+                                                                                        {format}
+                                                                                    </option>
+                                                                                ))}
+                                                                            </Field>
+
+                                                                            {/* Settings Button */}
+                                                                            <button
+                                                                                type="button"
+                                                                                className="sm:button rounded-full p-2"
+                                                                                onClick={() =>
+                                                                                    openAdvancedSettings(
+                                                                                        values.fileSettings[index]?.advanceSettings,
+                                                                                        `fileSettings.${index}.advanceSettings`
+                                                                                    )
+                                                                                }>
+                                                                                <Icon icon={iconMap.settingsOutlined} className="size-5" />
+                                                                            </button>
+                                                                        </>
+                                                                    )}
+
+                                                                    {/* Desktop Delete Button */}
+                                                                    <button
+                                                                        type="button"
+                                                                        className="button hidden rounded-xl p-2 text-red-500 sm:block"
+                                                                        onClick={() => {
+                                                                            const newFiles = values.files.filter((_, i) => i !== index)
+                                                                            const newFileSettings = values.fileSettings.filter((_, i) => i !== index)
+                                                                            setFieldValue('files', newFiles)
+                                                                            setFieldValue('fileSettings', newFileSettings)
+                                                                        }}>
+                                                                        <Icon icon={iconMap.closeAnimated} className="size-5" />
+                                                                    </button>
+                                                                </div>
+                                                            </div>
                                                         ))}
+
+                                                        {/* Same Format for All */}
+                                                        {values.files.length > 1 && (
+                                                            <div className="mt-4 ml-4 w-full">
+                                                                <label className="form-checkbox">
+                                                                    <Field type="checkbox" name="sameFormatForAll" className="checkbox-field" />
+                                                                    <span className="form-text text-sm">
+                                                                        Use the same format and quality for all files
+                                                                    </span>
+                                                                </label>
+                                                            </div>
+                                                        )}
+
+                                                        <ErrorMessage name="files" component="p" className="mt-1 text-center text-sm text-red-500" />
+
+                                                        {/* Add More Files Button */}
+                                                        <JelloButton
+                                                            icon={iconMap.filePlus}
+                                                            className="mt-4 ml-auto block"
+                                                            disabled={isLoading || values.files.length >= MAX_FILES}
+                                                            onClick={() => {
+                                                                if (values.files.length >= MAX_FILES) return
+                                                                document.getElementById('file-upload').click()
+                                                            }}>
+                                                            Add more Files
+                                                        </JelloButton>
                                                     </div>
-                                                    <ErrorMessage name="globalQuality" component="p" className="mt-2 text-sm text-red-500" />
-                                                </div>
 
-                                                <div className="mt-4 flex justify-end">
-                                                    <button type="button" className="button flex items-center justify-center gap-2">
-                                                        <Icon icon={iconMap.settings} className="size-5" />
-                                                        Advanced Settings
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        )}
+                                                    {(values.files.length < 2 || values.sameFormatForAll) && (
+                                                        <div className="w-full border-b pb-6">
+                                                            <p className="text-text-primary text-base">Format</p>
+                                                            <TabNavigation
+                                                                tabs={SUPPORTED_FORMATS}
+                                                                currentTab={values.global.format}
+                                                                onTabChange={(tab) => setFieldValue('global.format', tab)}
+                                                                className="mt-2"
+                                                            />
+                                                            <ErrorMessage name="global.format" component="p" className="mt-2 text-sm text-red-500" />
 
-                                        <div className="mt-5 flex w-full justify-between">
-                                            <JelloButton
-                                                disabled={isLoading}
-                                                className="mr-2"
-                                                onClick={() => resetForm()}
-                                                variant="danger"
-                                                iconClasses="size-4"
-                                                icon={iconMap.trash}>
-                                                Clear
-                                            </JelloButton>
-                                            <JelloButton type="submit" isSubmitting={isLoading} variant="accent" icon={iconMap.musicConvert}>
-                                                Convert
-                                            </JelloButton>
-                                        </div>
+                                                            <div className="mt-4">
+                                                                <label htmlFor="global.quality" className="text-text-primary text-base">
+                                                                    Quality
+                                                                </label>
+                                                                <Field
+                                                                    as="input"
+                                                                    type="range"
+                                                                    name="global.quality"
+                                                                    min="64"
+                                                                    max="320"
+                                                                    step="64"
+                                                                    style={{
+                                                                        '--value-percentage': `${((values.global.quality - 64) / (320 - 64)) * 100}%`,
+                                                                    }}
+                                                                    onChange={(e) => setFieldValue('global.quality', Number(e.target.value))}
+                                                                    className="form-field mt-2 w-full"
+                                                                />
+                                                                <div className="mt-2 flex justify-between text-sm">
+                                                                    {QUALITY_OPTIONS.map(({ label, value }) => (
+                                                                        <button
+                                                                            key={value}
+                                                                            type="button"
+                                                                            className={`cursor-pointer focus:outline-none ${
+                                                                                values.global.quality === value ? 'text-highlight font-bold' : ''
+                                                                            }`}
+                                                                            onClick={() => setFieldValue('global.quality', value)}>
+                                                                            {label}
+                                                                        </button>
+                                                                    ))}
+                                                                </div>
+                                                                <ErrorMessage
+                                                                    name="global.quality"
+                                                                    component="p"
+                                                                    className="mt-2 text-sm text-red-500"
+                                                                />
+                                                            </div>
+
+                                                            <JelloButton
+                                                                icon={iconMap.settings}
+                                                                className="mt-4 ml-auto block"
+                                                                onClick={() =>
+                                                                    openAdvancedSettings(values.global.advanceSettings, 'global.advanceSettings')
+                                                                }>
+                                                                Advanced Settings
+                                                            </JelloButton>
+                                                        </div>
+                                                    )}
+
+                                                    <div className="mt-5 flex w-full justify-between">
+                                                        <JelloButton
+                                                            disabled={isLoading}
+                                                            className="mr-2"
+                                                            onClick={() => resetForm()}
+                                                            variant="danger"
+                                                            iconClasses="size-4"
+                                                            icon={iconMap.trash}>
+                                                            Clear
+                                                        </JelloButton>
+                                                        <JelloButton
+                                                            type="submit"
+                                                            isSubmitting={isLoading}
+                                                            variant="accent"
+                                                            icon={iconMap.musicConvert}>
+                                                            Convert
+                                                        </JelloButton>
+                                                    </div>
+                                                </>
+                                            )}
+                                        </Form>
+
+                                        <Modal modalId="advancedSettingsModal" title="Advanced Settings">
+                                            <AudioOptions
+                                                values={open.values}
+                                                onApply={(values) => {
+                                                    setFieldValue(open.name, values)
+                                                    setOpen({ values: null, name: null })
+                                                    closeModal('advancedSettingsModal')
+                                                }}
+                                            />
+                                        </Modal>
                                     </>
                                 )}
-                            </Form>
-                        )}
-                    </Formik>
+                            </Formik>
+                        </>
+                    )}
+
+                    {/* Progress Bar */}
+                    {isLoading && (
+                        <div className="rounded-xl border p-6">
+                            <h2 className="text-text-primary text-center text-2xl font-bold">Uploading...</h2>
+
+                            <p className="mt-4 text-center text-lg">{`${uploadState.formattedLoaded}/${uploadState.formattedTotal}`}</p>
+                            <p className="mt-4 text-center text-lg">{uploadState.formattedRate}</p>
+                            <p className="mt-4 text-center text-lg">{uploadState.formattedEstimated}</p>
+                            <p className="mt-4 text-center text-lg">{uploadState.formattedProgress}</p>
+
+                            <ProgressBar percentage={uploadState.progress} className="mt-6 h-3 p-0" />
+
+                            {/* cancel btn */}
+                            <div className="flex justify-center">
+                                <JelloButton className="mt-6" variant="danger" onClick={cancelRequest}>
+                                    Cancel
+                                </JelloButton>
+                            </div>
+                        </div>
+                    )}
+
                     {/* Error Handling */}
                     {error && <p className="mt-4 text-center text-red-500">{error}</p>}
                 </div>

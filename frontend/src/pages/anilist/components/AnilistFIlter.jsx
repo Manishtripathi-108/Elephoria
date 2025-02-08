@@ -35,7 +35,7 @@ const AnilistFilter = ({ filters, setFilters }) => {
                     tabs={FILTER_OPTIONS.format}
                     currentTab={formik.values.format}
                     className="w-full text-nowrap"
-                    setCurrentTab={(format) => formik.setFieldValue('format', format)}
+                    onTabChange={(format) => formik.setFieldValue('format', format)}
                 />
                 <button
                     type="button"
@@ -83,7 +83,7 @@ const AnilistFilter = ({ filters, setFilters }) => {
                     tabs={FILTER_OPTIONS.status}
                     currentTab={formik.values.status}
                     className="w-full text-nowrap"
-                    setCurrentTab={(status) => formik.setFieldValue('status', status)}
+                    onTabChange={(status) => formik.setFieldValue('status', status)}
                 />
                 <button
                     type="button"

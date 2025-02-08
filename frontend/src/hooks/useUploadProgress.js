@@ -1,78 +1,67 @@
 import { useState } from 'react'
 
+import { formatDuration, formatFileSize } from '../utils/format.utils'
+
+const UPLOAD_PROGRESS = {
+    loaded: 0,
+    total: 0,
+    formattedLoaded: '0 B',
+    formattedTotal: '0 B',
+    progress: 0,
+    formattedProgress: '0.00%',
+    bytes: 0,
+    rate: 0,
+    formattedRate: 'Calculating...',
+    estimated: 0,
+    formattedEstimated: 'Calculating...',
+    upload: null,
+    lengthComputable: null,
+    event: {
+        isTrusted: null,
+    },
+}
+
 /**
- * useUploadProgress
- *
- * A custom React hook to track file upload progress.
+ * Provides a convenient way to track and manage file upload progress.
  *
  * @returns {Object} An object containing:
- * @property {Object} uploadState - Raw upload data.
- * @property {Object} formattedUpload - Formatted state for UI (`progress`, `rate`, `estimated`).
- * @property {Function} onUploadProgress - Function to update state from Axios event.
+ *   {Object} uploadState - Details of the current upload, including:
+ *       - loaded {number} Bytes uploaded so far.
+ *       - total {number} Total bytes to be uploaded.
+ *       - progress {number} The percentage of the upload that is complete.
+ *       - formattedLoaded {string} A human-readable string of bytes uploaded.
+ *       - formattedTotal {string} A human-readable string of the total bytes.
+ *       - formattedProgress {string} A human-readable upload percentage.
+ *       - bytes {number} Additional uploaded bytes info.
+ *       - rate {number} The current upload rate in bytes per second.
+ *       - formattedRate {string} A human-readable upload rate, e.g., "150 KB/s".
+ *       - estimated {number} Estimated time remaining in seconds.
+ *       - formattedEstimated {string} A human-readable estimated time remaining.
+ *
+ *   {Function} resetUploadProgress - Resets all upload progress data.
+ *
+ *   {Function} onUploadProgress - Updates the upload state when progress events occur.
  */
 function useUploadProgress() {
-    const [uploadState, setUploadState] = useState({
-        loaded: 0,
-        total: 0,
-        progress: 0,
-        formattedProgress: '0.00%',
-        bytes: 0,
-        rate: 0,
-        formattedRate: 'Calculating...',
-        estimated: 0,
-        formattedEstimated: 'Calculating...',
-        upload: null,
-        lengthComputable: null,
-        event: {
-            isTrusted: null,
-        },
-    })
+    const [uploadState, setUploadState] = useState(UPLOAD_PROGRESS)
 
     const onUploadProgress = (event) => {
         if (!event.lengthComputable) return
         setUploadState((prev) => ({
             ...prev,
             ...event,
-            progress: (event.progress || 0) * 100,
-            formattedProgress: `${((event.progress || 0) * 100).toFixed(2)}%`,
-            formattedRate: event.rate > 0 ? `${formatFileSize(event.rate)}/s` : '0 B/s',
-            formattedEstimated: event.estimated > 0 ? formatDuration(event.estimated) : '0s',
+            progress: (event?.progress || 0) * 100,
+            formattedLoaded: formatFileSize(event?.loaded),
+            formattedTotal: formatFileSize(event?.total),
+            formattedProgress: `${((event?.progress || 0) * 100).toFixed(2)}%`,
+            formattedRate: event?.rate > 0 ? `${formatFileSize(event?.rate)}/s` : '0 B/s',
+            formattedEstimated: event?.estimated > 0 ? formatDuration(event?.estimated) : '0s',
         }))
     }
 
-    return { uploadState, onUploadProgress }
-}
+    const resetUploadProgress = () => setUploadState(UPLOAD_PROGRESS)
 
-/**
- * Convert bytes to human-readable format
- */
-const formatFileSize = (bytes, decimals = 2) => {
-    if (bytes <= 0) return '0 B'
-    const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
-    const i = Math.floor(Math.log(bytes) / Math.log(1024))
-    return `${(bytes / Math.pow(1024, i)).toFixed(decimals)} ${sizes[i]}`
-}
-
-/**
- * Convert seconds to a human-readable time format
- */
-const formatDuration = (seconds) => {
-    if (seconds < 1) return 'Less than 1s'
-
-    const days = Math.floor(seconds / 86400)
-    seconds -= days * 86400
-    const hours = Math.floor(seconds / 3600)
-    seconds -= hours * 3600
-    const minutes = Math.floor(seconds / 60)
-    seconds -= minutes * 60
-
-    const parts = []
-    if (days) parts.push(`${days}d`)
-    if (hours) parts.push(`${hours}h`)
-    if (minutes) parts.push(`${minutes}min`)
-    if (seconds) parts.push(`${Math.floor(seconds)}s`)
-
-    return parts.join(' ') || '0s'
+    return { uploadState, resetUploadProgress, onUploadProgress }
 }
 
 export default useUploadProgress

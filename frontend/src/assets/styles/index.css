@@ -345,6 +345,7 @@
     @apply w-full space-y-2;
 
     &:has(.form-field:not(:placeholder-shown)) label,
+    &:has(.form-field:hover) label,
     &:has(.form-field:focus) label {
         @apply text-text-primary;
     }

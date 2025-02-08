@@ -103,7 +103,7 @@ const Anilist = () => {
                             className="mb-6"
                             tabs={getTabOptions(mediaType)}
                             currentTab={selectedTab}
-                            setCurrentTab={(tab) => {
+                            onTabChange={(tab) => {
                                 setSearchParams({ tab, page: 1 })
                             }}
                         />

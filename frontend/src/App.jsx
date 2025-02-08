@@ -9,7 +9,7 @@ import { AnilistProvider } from './context/AnilistContext'
 import { AuthTokenProvider } from './context/AuthTokenContext'
 import { LoadingBarProvider } from './context/LoadingBarContext'
 import { TicTacToeProvider } from './context/TicTacToe/TicTacToeContext'
-import './utils/iconUtils'
+import './utils/icons.utils'
 
 // Lazy-loaded components
 const Home = lazy(() => import('./pages/Home'))
