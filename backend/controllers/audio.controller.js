@@ -97,8 +97,8 @@ export const handleConvertAudio = asyncHandler(async (req, res) => {
             req.files[0].path,
             req.files[0]?.originalname,
             formats?.toLowerCase(),
-            qualities?.toLowerCase(),
-            JSON.parse(advanceSettings) || {}
+            parseInt(qualities),
+            advanceSettings ? JSON.parse(advanceSettings) : {}
         );
         if (success) downloadFilePath = fileUrl;
         cleanupFiles([req.files[0].path]);
@@ -111,8 +111,8 @@ export const handleConvertAudio = asyncHandler(async (req, res) => {
                     file.path,
                     file?.originalname,
                     formats[index]?.toLowerCase(),
-                    qualities[index]?.toLowerCase(),
-                    JSON.parse(advanceSettings[index]) || {}
+                    parseInt(qualities[index]),
+                    advanceSettings[index] ? JSON.parse(advanceSettings[index]) : {}
                 );
                 if (success) convertedFiles.push(fileUrl);
                 cleanupFiles([file.path]);
@@ -132,13 +132,21 @@ export const handleConvertAudio = asyncHandler(async (req, res) => {
         cleanupFiles(convertedFiles);
     }
 
-    // Send ZIP file as response
-    res.download(downloadFilePath, `converted_${Date.now()}.${extname(downloadFilePath)}`, (err) => {
-        if (err) {
-            console.error('Error sending ZIP file:', err);
-            res.status(500).json({ success: false, message: 'Failed to send zip file' });
-        } else {
-            setTimeout(() => cleanupFiles([downloadFilePath]), process.env.TEMP_FILE_DELETE_DELAY);
-        }
-    });
+    // Send file as response
+    if (downloadFilePath) {
+        res.download(
+            downloadFilePath,
+            `converted_${req.files.length === 1 ? req.files[0].originalname.replace(/\.[^/.]+$/, '') : 'files'}`,
+            (err) => {
+                if (err) {
+                    console.error('Error sending file:', err);
+                    return errorResponse(res, 'Failed to send the converted file.', err);
+                } else {
+                    setTimeout(() => cleanupFiles([downloadFilePath]), process.env.TEMP_FILE_DELETE_DELAY);
+                }
+            }
+        );
+    } else {
+        return errorResponse(res, 'Failed to create zip file', downloadFilePath, 500);
+    }
 });

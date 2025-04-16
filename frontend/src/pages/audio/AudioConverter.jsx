@@ -50,7 +50,7 @@ const AudioConverter = () => {
                 return formData
             },
             onSuccess: (zipfile, response) => {
-                const filename = response.headers['content-disposition']?.match(/filename="(.+)"/)?.[1] || 'converted_audio.zip'
+                const filename = response.headers['content-disposition']?.match(/filename="(.+)"/)?.[1] || 'converted_audio'
                 const url = window.URL.createObjectURL(new Blob([zipfile]))
                 const link = document.createElement('a')
                 link.href = url
