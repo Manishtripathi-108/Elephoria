@@ -172,93 +172,80 @@ export const convertAudioFormat = async (fileUrl, fileName, targetFormat = 'm4a'
         );
         await createDirectoryIfNotExists(getTempPath('audio'));
 
-        console.log('Checking available encoders...');
-        const encoders = await new Promise((resolve, reject) => {
-            ffmpeg().availableEncoders((err, encoders) => {
-                if (err) return reject(err);
-                resolve(encoders);
-            });
-        });
-
-        // Determine the best available AAC encoder
-        let aacEncoder = 'aac'; // Default to 'aac' if nothing else is available
-        if (encoders.aac_at) {
-            aacEncoder = 'aac_at';
-        } else if (encoders.libfdk_aac) {
-            aacEncoder = 'libfdk_aac';
-        }
-
-        console.log('Selected AAC encoder:', aacEncoder);
         console.log('Converting audio file:', { fileUrl, targetFormat, bitrate });
         console.log(options);
 
         const command = ffmpeg(fileUrl);
 
         if (targetFormat === 'm4a') {
+            console.log('Checking available encoders...');
+            const encoders = await new Promise((resolve, reject) => {
+                ffmpeg().availableEncoders((err, encoders) => {
+                    if (err) return reject(err);
+                    resolve(encoders);
+                });
+            });
+
+            // Determine the best available AAC encoder
+            let aacEncoder = 'aac'; // Default to 'aac' if nothing else is available
+            if (encoders.aac_at) {
+                aacEncoder = 'aac_at';
+            } else if (encoders.libfdk_aac) {
+                aacEncoder = 'libfdk_aac';
+            }
             command.audioCodec(aacEncoder).videoCodec('copy').outputOptions('-metadata:s:v', 'comment=Cover (front)');
         }
 
-        // Audio Channels (No Change)
-        if (options.audio.channels !== 'no change') {
-            console.log('Setting audio channels:', options.audio.channels);
-            command.audioChannels(parseInt(options.audio.channels));
-        }
+        const channels = parseInt(options?.audio?.channels);
+        if (channels && channels > 0) command.audioChannels(channels);
 
         // Volume Adjustment (92% = -0.7 dB)
-        if (options.audio.volume !== 100) {
-            console.log('Setting audio volume:', options.audio.volume);
+        if (options?.audio?.volume && options?.audio?.volume !== 100) {
+            console.log('Adjusting volume:', options.audio.volume);
             const volumeDb = 20 * Math.log10(options.audio.volume / 100);
             command.audioFilters(`volume=${volumeDb}dB`);
         }
 
-        // Sample Rate (Default: 44100 Hz)
-        if (options.audio.sampleRate) {
-            console.log('Setting audio sample rate:', options.audio.sampleRate);
-            const sampleRate = parseInt(options.audio.sampleRate);
+        // Sample Rate
+        const sampleRate = parseInt(options?.audio?.sampleRate);
+        if (sampleRate) {
+            console.log('Setting sample rate:', sampleRate);
             command.audioFrequency(sampleRate);
         }
 
-        // Fade In & Fade Out
-        if (options.effects.fadeIn) {
-            console.log('Setting audio fade in:', options.effects.fadeIn);
-            command.audioFilters(`afade=t=in:ss=0:d=${options.effects.fadeIn}`);
+        // Effects
+        const { fadeIn, fadeOut, playbackSpeed, pitchShift, normalize } = options?.effects || {};
+
+        if (fadeIn && fadeIn !== 0) command.audioFilters(`afade=t=in:ss=0:d=${options.effects.fadeIn}`);
+
+        if (fadeOut && fadeOut !== 0) {
+            console.log('Adding fade out effect:', fadeOut);
+            const duration = await getAudioDuration(fileUrl);
+            const fadeStart = Math.max(0, duration - fadeOut);
+            command.audioFilters(`afade=t=out:st=${fadeStart}:d=${options.effects.fadeOut}`);
         }
 
-        if (options.effects.fadeOut) {
-            const audioDuration = await getAudioDuration(fileUrl);
-            console.log('Setting audio fade out:', options.effects.fadeOut);
-            console.log('Audio Duration:', audioDuration);
-            const fadeOutStart = Math.max(0, audioDuration - options.effects.fadeOut);
-            command.audioFilters(`afade=t=out:st=${fadeOutStart}:d=${options.effects.fadeOut}`);
+        if (playbackSpeed && playbackSpeed !== '1.0x (Normal)') {
+            console.log('Setting playback speed:', parseFloat(playbackSpeed));
+            command.audioFilters(`atempo=${parseFloat(playbackSpeed)}`);
         }
 
-        // Playback Speed Adjustment (Default: 1.0x)
-        if (options.effects.playbackSpeed && options.effects.playbackSpeed !== '1.0x (Normal)') {
-            console.log('Setting audio playback speed:', options.effects.playbackSpeed);
-            const speed = parseFloat(options.effects.playbackSpeed.replace('x', ''));
-            command.audioFilters(`atempo=${speed}`);
+        if (pitchShift && pitchShift !== 0) {
+            console.log('Setting pitch shift:', pitchShift);
+            command.audioFilters(`asetrate=${pitchShift}`);
         }
 
-        // Pitch Shift (If defined)
-        if (options.effects.pitchShift) {
-            console.log('Setting audio pitch shift:', options.effects.pitchShift);
-            command.audioFilters(`asetrate=${options.effects.pitchShift}`);
-        }
+        if (normalize) command.audioFilters('loudnorm');
 
-        // Normalize Audio
-        if (options.effects.normalize) {
-            console.log('Normalizing audio...');
-            command.audioFilters('loudnorm');
+        // Trim
+        const { trimStart, trimEnd } = options?.trim || {};
+        if (trimStart && trimStart !== '00:00:00') {
+            console.log('Trimming start time:', trimStart);
+            command.setStartTime(trimStart);
         }
-
-        // Trim Audio (Start & End)
-        if (options.trim.trimStart) {
-            console.log('Trimming audio start:', options.trim.trimStart);
-            command.setStartTime(options.trim.trimStart);
-        }
-        if (options.trim.trimEnd) {
-            console.log('Trimming audio end:', options.trim.trimEnd);
-            command.setDuration(options.trim.trimEnd);
+        if (trimEnd && trimEnd !== '00:00:00') {
+            console.log('Trimming end time:', trimEnd);
+            command.setDuration(trimEnd);
         }
 
         await new Promise((resolve, reject) => {

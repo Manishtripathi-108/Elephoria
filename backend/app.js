@@ -20,8 +20,9 @@ const server = createServer(app);
 
 /* --------------------------- CORS configuration --------------------------- */
 const corsOptions = {
-    origin: process.env.CLIENT_URL,
+    origin: process.env.NODE_ENV === 'production' ? process.env.CLIENT_URLS.split(',').map((url) => url.trim()) : '*',
     credentials: true,
+    exposedHeaders: ['Content-Disposition'],
 };
 
 // Socket.io with CORS options
