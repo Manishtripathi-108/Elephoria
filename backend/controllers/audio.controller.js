@@ -62,6 +62,7 @@ export const handleEditMetadata = asyncHandler(async (req, res) => {
         : null;
 
     const editResult = await editAudioMetadata(fileTempUrl, fileExt, metadata, coverUrl?.path);
+    cleanupFiles([coverUrl?.path, req.file?.path]);
 
     if (!editResult.success) {
         return errorResponse(res, editResult.message, editResult.error);
@@ -70,12 +71,9 @@ export const handleEditMetadata = asyncHandler(async (req, res) => {
     res.download(editResult.fileUrl, `edited_audio${fileExt}`, (err) => {
         if (err) {
             return errorResponse(res, 'Failed to download the edited file.', err);
-        } else {
-            setTimeout(() => cleanupFiles([editResult.fileUrl]), process.env.TEMP_FILE_DELETE_DELAY);
         }
     });
-
-    cleanupFiles([fileTempUrl, coverUrl?.path, req.file?.path]);
+    cleanupFiles([fileTempUrl]);
 });
 
 export const handleConvertAudio = asyncHandler(async (req, res) => {

@@ -1,12 +1,12 @@
 import { backendLogger } from '../utils/logger.utils.js';
-import { createDirectoryIfNotExists, getTempPath } from '../utils/pathAndFile.utils.js';
+import { cleanupFiles, createDirectoryIfNotExists, getTempPath } from '../utils/pathAndFile.utils.js';
 import { uploadImageToCloudinary } from './cloudinary.service.js';
 import { exec } from 'child_process';
 import ffmpeg from 'fluent-ffmpeg';
 
 // Constants
 const FALLBACK_IMAGE_URL =
-    'https://res.cloudinary.com/dra73suxl/image/upload/v1734726129/uploads/rnarvvwmsgqt5rs8okds.png';
+    'https://res.cloudinary.com/dra73suxl/image/upload/v1744229654/no_cover_image_fallback_jhsdj.png';
 
 /**
  * Utility to extract metadata using FFprobe.
@@ -121,8 +121,8 @@ export const extractAudioMetadata = async (fileUrl, abortSignal) => {
  * @returns {Promise<{success: boolean, fileUrl?: string, message?: string, error?: object}>}
  */
 export const editAudioMetadata = async (fileUrl, fileExtension, metadata, coverImagePath) => {
+    const outputFilePath = getTempPath('audio', `edited_${Date.now()}${fileExtension}`);
     try {
-        const outputFilePath = getTempPath('audio', `edited_${Date.now()}${fileExtension}`);
         await createDirectoryIfNotExists(getTempPath('audio'));
 
         const command = ffmpeg(fileUrl);
@@ -152,6 +152,8 @@ export const editAudioMetadata = async (fileUrl, fileExtension, metadata, coverI
     } catch (error) {
         backendLogger.error('Unexpected error in editAudioMetadata', error);
         return { success: false, message: 'Failed to edit audio metadata', error };
+    } finally {
+        setTimeout(() => cleanupFiles([outputFilePath]), process.env.TEMP_FILE_DELETE_DELAY);
     }
 };
 
