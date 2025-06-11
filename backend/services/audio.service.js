@@ -104,7 +104,7 @@ export const extractAudioMetadata = async (fileUrl, abortSignal) => {
                 backendLogger.warn('Error uploading cover image or extracting it', { error });
             }
         }
-zz
+        
         return { success: true, metadata: metadata?.format?.tags, coverImage };
     } catch (error) {
         backendLogger.error('Unexpected error in extractAudioMetadata', error);
