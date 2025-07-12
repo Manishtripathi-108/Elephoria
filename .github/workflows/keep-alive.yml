@@ -1,0 +1,16 @@
+name: Keep Render Alive (Daytime Only)
+
+on:
+  schedule:
+    # Ping every 14 minutes from 03:00 to 16:45 UTC (08:30–22:15 IST)
+    - cron: '*/14 3-16 * * *'
+  workflow_dispatch:
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Render App
+        run: |
+          echo "Pinging https://elephoria.onrender.com/api at $(date -u)"
+          curl -s https://elephoria.onrender.com/api || echo "Ping failed"
